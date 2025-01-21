@@ -97,8 +97,8 @@
       <img src="ASR Logo.png" alt="Logo" />
     </div>
     <div class="nav-links">
-      <a href="homepage.php">Home</a>
-      <a href="ServicesPage.php">Services</a>
+      <a href="HomePage.php">Home</a>
+      <a href="ServicePage.php">Services</a>
       <a href="ProductsPage.php">Products</a>
       <a href="Faq.php">FAQ</a>
       <a href="Contacts.php">Contact Us</a>
