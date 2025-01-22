@@ -40,6 +40,7 @@
       border-radius: 5px;
       cursor: pointer;
       font-size: 20px;
+      text-decoration: none;
     }
     .navbar .login-btn:hover {
       background-color: #f0f0f0;
@@ -81,10 +82,11 @@
       <a href="Homepage.php">Home</a>
       <a href="ServicePage.php">Services</a>
       <a href="ProductsPage.php">Products</a>
-      <a href="#FAQ">FAQ</a>
+      <a href="Faq.php">FAQ</a>
       <a href="#Contacts">Contact Us</a>
     </div>
-    <button class="login-btn">Login</button>
+    <a href="Login.php" class="login-btn">Login</a>
+    
   </div>
 
   
