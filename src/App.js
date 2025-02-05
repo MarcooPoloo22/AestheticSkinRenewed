@@ -1,0 +1,28 @@
+import './App.css';
+import Navbar from "./components/Customers/Navbar";
+import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+import Home from "./pages/Home";
+import Services from "./pages/Services";  
+import Products from "./pages/Products";  
+// import FAQ from "./pages/FAQ";  // Import the FAQ component
+// import Contact from "./pages/Contact";  // Import the Contact component
+
+const App = () => {
+  return (
+    <Router>
+      <Navbar />
+      <main>
+        <Routes>
+          <Route path="/" element={<Home />} />
+          <Route path="/services" element={<Services />} />
+          <Route path="/products" element={<Products />} />
+          {/* <Route path="/faq" element={<FAQ />} />
+          <Route path="/contact" element={<Contact />} /> */}
+          {/* <Route path="/login" element={<Login />} /> */}
+        </Routes>
+      </main>
+    </Router>
+  );
+};
+
+export default App;
