@@ -1,0 +1,134 @@
+body {
+    margin: 0;
+    font-family: Arial, sans-serif;
+  }
+  
+  .navbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background-color: white;
+    padding: 4px 20px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  }
+  
+  .navbar .ASRlogo img {
+    height: 85px;
+    margin-right: 10px;
+  }
+  
+  .navbar .nav-links {
+    display: flex;
+    gap: 20px;
+  }
+  
+  .navbar .nav-links a {
+    text-decoration: none;
+    color: #444;
+    font-size: 20px;
+  }
+  
+  .navbar .nav-links a:hover {
+    color: #007BFF;
+  }
+  
+  .navbar .login-btn {
+    padding: 5px 15px;
+    border: 1px solid #444;
+    background-color: transparent;
+    color: #444;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 20px;
+    text-decoration: none;
+  }
+  
+  .navbar .login-btn:hover {
+    background-color: #f0f0f0;
+  }
+  
+  .ASRImage1 {
+    position: relative;
+    text-align: center;
+    margin: 0;
+  }
+  
+  .ASRImage1 img {
+    width: 100%;
+    height: auto;
+  }
+  
+  .book-now-btn {
+    position: absolute;
+    top: 70%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background-color: #A0522D;
+    color: white;
+    border: none;
+    padding: 15px 30px;
+    border-radius: 8px;
+    font-size: 30px;
+    cursor: pointer;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  }
+  
+  .book-now-btn:hover {
+    background-color: #8B4513;
+  }
+  
+  h1 {
+    font-size: 36px;
+    margin: 30px 0;
+    margin-left: 20px;
+    text-shadow: 2px 2px 5px rgba(0, 0, 0, 0.5);
+  }
+  
+  h1 .h1promo {
+    text-align: left;
+    margin-left: 20px;
+  }
+
+
+  .PromPackage {
+    margin: 40px auto;
+    max-width: 90%;
+  }
+  
+  .card {
+    width: 100%;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    border-radius: 8px;
+    overflow: hidden;
+    margin: 10px;
+  }
+  
+  .card img {
+    height: 200px;
+    object-fit: cover;
+    width: 100%;
+  }
+  
+  .card-body {
+    padding: 25px;
+  }
+  
+  .card-text {
+    margin: 10px 0;
+    font-size: 18px;
+    color: #444;
+  }
+  
+  .row {
+    margin: 0;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+  }
+  
+  .col-md-4 {
+    flex: 0 0 calc(33.333% - 20px);
+    max-width: calc(33.333% - 20px);
+    margin: 10px;
+  }
+  
