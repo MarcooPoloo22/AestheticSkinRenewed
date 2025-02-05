@@ -4,6 +4,7 @@ import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import Home from "./pages/Home";
 import Services from "./pages/Services";  
 import Products from "./pages/Products";  
+import Login from "./pages/Login";  
 // import FAQ from "./pages/FAQ";  // Import the FAQ component
 // import Contact from "./pages/Contact";  // Import the Contact component
 
@@ -18,7 +19,7 @@ const App = () => {
           <Route path="/products" element={<Products />} />
           {/* <Route path="/faq" element={<FAQ />} />
           <Route path="/contact" element={<Contact />} /> */}
-          {/* <Route path="/login" element={<Login />} /> */}
+          <Route path="/login" element={<Login />} />
         </Routes>
       </main>
     </Router>

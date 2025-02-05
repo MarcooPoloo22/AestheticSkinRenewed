@@ -1,5 +1,5 @@
 import React from "react";
-import { NavLink } from 'react-router-dom';
+import { NavLink, Link } from 'react-router-dom';
 import logo from "../../assets/ASR_Logo.png";
 
 const Navbar = () => {
@@ -54,9 +54,9 @@ const Navbar = () => {
               </NavLink>
             </li>
           </ul>
-          <button className="btn btn-outline-success mx-5" type="button">
+          <Link className="btn btn-outline-success mx-5" to="/login" role="button">
             Login
-          </button>
+          </Link>
         </div>
       </div>
     </nav>
