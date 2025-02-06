@@ -6,25 +6,25 @@ function Home() {
     <>
       {/* Banner Section */}
       <div
-  className="position-relative overflow-hidden"
-  style={{
-    width: "100%",
-    maxHeight: "70vh",
-    aspectRatio: "16/9",
-  }}
->
-  <img
-    src={banner}
-    alt="Banner"
-    className="w-100 h-100"
-    style={{
-      objectFit: "cover", 
-    }}
-  />
-  <div className="position-absolute top-50 start-50 translate-middle text-center">
-    <button className="btn btn-success btn-lg">Book Now!</button>
-  </div>
-</div>
+        className="position-relative overflow-hidden"
+        style={{
+          width: "100%",
+          maxHeight: "70vh",
+          aspectRatio: "16/9",
+        }}
+      >
+        <img
+          src={banner}
+          alt="Banner"
+          className="w-100 h-100"
+          style={{
+            objectFit: "cover",
+          }}
+        />
+        <div className="position-absolute top-50 start-50 translate-middle text-center">
+          <button className="btn btn-success btn-lg">Book Now!</button>
+        </div>
+      </div>
 
       {/* Promos Section */}
       <div className="container my-5">
@@ -36,8 +36,8 @@ function Home() {
             <div className="card-body">
               <h5 className="card-title">Card Title</h5>
               <p className="card-text">
-                Some quick example text to build on the card title and make up the bulk of the
-                card's content.
+                Some quick example text to build on the card title and make up
+                the bulk of the card's content.
               </p>
               <a href="#" className="btn btn-primary">
                 Go somewhere
@@ -50,8 +50,8 @@ function Home() {
             <div className="card-body">
               <h5 className="card-title">Card Title</h5>
               <p className="card-text">
-                Some quick example text to build on the card title and make up the bulk of the
-                card's content.
+                Some quick example text to build on the card title and make up
+                the bulk of the card's content.
               </p>
               <a href="#" className="btn btn-primary">
                 Go somewhere
@@ -65,8 +65,8 @@ function Home() {
             <div className="card-body">
               <h5 className="card-title">Card Title</h5>
               <p className="card-text">
-                Some quick example text to build on the card title and make up the bulk of the
-                card's content.
+                Some quick example text to build on the card title and make up
+                the bulk of the card's content.
               </p>
               <a href="#" className="btn btn-primary">
                 Go somewhere
@@ -80,8 +80,8 @@ function Home() {
             <div className="card-body">
               <h5 className="card-title">Card Title</h5>
               <p className="card-text">
-                Some quick example text to build on the card title and make up the bulk of the
-                card's content.
+                Some quick example text to build on the card title and make up
+                the bulk of the card's content.
               </p>
               <a href="#" className="btn btn-primary">
                 Go somewhere
@@ -92,6 +92,6 @@ function Home() {
       </div>
     </>
   );
-};
+}
 
 export default Home;

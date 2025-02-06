@@ -1,10 +1,10 @@
-import './App.css';
+import "./App.css";
 import Navbar from "./components/Customers/Navbar";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import Home from "./pages/customer/Home";
-import Services from "./pages/customer/Services";  
-import Products from "./pages/customer/Products";  
-import Login from "./pages/customer/Login";  
+import Services from "./pages/customer/Services";
+import Products from "./pages/customer/Products";
+import Login from "./pages/customer/Login";
 // import FAQ from "./pages/FAQ";  // Import the FAQ component
 // import Contact from "./pages/Contact";  // Import the Contact component
 
