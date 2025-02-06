@@ -1,0 +1,49 @@
+body {
+    margin: 0;
+    font-family: Arial, sans-serif;
+    background-color: #f5f5f5;
+}
+
+
+.create-account-container {
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+
+.form-box {
+    background-color: white;
+    padding: 40px;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    width: 700px;
+    height: 600px;
+    max-width: 90%;
+
+
+}
+
+.form-control {
+    border-radius: 10px;
+    padding: 15px;
+    font-size: 16px;
+}
+
+
+.regsubmit{
+    padding: 12px 20px;
+    font-size: 18px;
+    border-radius: 10px;
+    width: 200px;
+    display: block;
+    margin: 0 auto;
+    background-color: black;
+    color: white;
+}
+
+
+.regsubmit:hover {
+    background-color: #333;
+}
