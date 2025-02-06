@@ -1,5 +1,5 @@
 import React from "react";
-import banner from "../assets/spa_massage.jpg";
+import banner from "../../assets/customer/spa_massage.jpg";
 
 function Home() {
   return (
