@@ -36,11 +36,9 @@ const CreateAccount = () => {
                 body: JSON.stringify(formData),
             });
     
-            // Log the raw response for debugging
             const responseText = await response.text();
             console.log("Raw Response:", responseText);
     
-            // Try to parse the response as JSON
             let result;
             try {
                 result = JSON.parse(responseText);
