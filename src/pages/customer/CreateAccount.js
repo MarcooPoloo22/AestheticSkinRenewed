@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import "bootstrap/dist/css/bootstrap.min.css";
 import "../../styles/customer/CreateAccount.css";
 import { Link } from 'react-router-dom';
+import Swal from 'sweetalert2';
 
 const CreateAccount = () => {
     const [formData, setFormData] = useState({
@@ -21,12 +22,16 @@ const CreateAccount = () => {
 
     const handleSubmit = async (e) => {
         e.preventDefault();
-    
+
         if (formData.password !== formData.confirm_password) {
-            alert("Passwords do not match!");
+            Swal.fire({
+                icon: 'error',
+                title: 'Oops...',
+                text: 'Passwords do not match!',
+            });
             return;
         }
-    
+
         try {
             const response = await fetch('http://localhost/createAccount.php', {
                 method: 'POST',
@@ -35,10 +40,10 @@ const CreateAccount = () => {
                 },
                 body: JSON.stringify(formData),
             });
-    
+
             const responseText = await response.text();
             console.log("Raw Response:", responseText);
-    
+
             let result;
             try {
                 result = JSON.parse(responseText);
@@ -46,15 +51,27 @@ const CreateAccount = () => {
                 console.error('JSON Parsing Error:', jsonError);
                 throw new Error('Invalid JSON response from server.');
             }
-    
+
             if (result.status === 'success') {
-                alert(result.message);
+                Swal.fire({
+                    icon: 'success',
+                    title: 'Success!',
+                    text: result.message,
+                });
             } else {
-                alert(result.message);
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Error',
+                    text: result.message,
+                });
             }
         } catch (error) {
             console.error('Error:', error);
-            alert('An error occurred while creating the account.');
+            Swal.fire({
+                icon: 'error',
+                title: 'Oops...',
+                text: 'An error occurred while creating the account.',
+            });
         }
     };
 
