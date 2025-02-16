@@ -1,4 +1,5 @@
 import React from "react";
+import { Link } from 'react-router-dom';
 import banner from "../../assets/customer/spa_massage.jpg";
 import PromosSection from "../../components/Customers/PromosSection";
 import EPCat from "../../components/Customers/EPCategory2";
@@ -27,7 +28,7 @@ function Home() {
           }}
         />
         <div className="position-absolute top-50 start-50 translate-middle text-center">
-          <button className="btn btn-success btn-lg">Book Now!</button>
+          <Link className="btn btn-success btn-lg" to ="/booking" role="button" >Book Now!</Link>
         </div>
       </div>
       <PromosSection />

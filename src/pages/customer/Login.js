@@ -1,8 +1,61 @@
-import react from "react";
+import React, { useState } from "react";
 import "../../styles/customer/Login.css";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
+import Home from "./Home";
+import Swal from "sweetalert2";
 
 const Login = () => {
+  const [formData, setFormData] = useState({
+    email: "",
+    password: "",
+  });
+
+  const navigate = useNavigate();
+
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    setFormData({ ...formData, [name]: value });
+  };
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+
+    try {
+      const response = await fetch("http://localhost/login.php", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(formData),
+      });
+
+      const result = await response.json();
+
+      if (result.status === 'success') {
+        Swal.fire({
+            icon: 'success',
+            title: 'Success!',
+            text: result.message,
+        }).then(() => {
+            navigate("/");
+        });
+            } else {
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Error',
+                    text: result.message,
+                });
+            }
+        } catch (error) {
+            console.error('Error:', error);
+            Swal.fire({
+                icon: 'error',
+                title: 'Oops...',
+                text: 'An error occurred while creating the account.',
+            });
+        }
+    };
+
   return (
     <div className="login-container">
       <div className="login-form-container">
@@ -11,13 +64,15 @@ const Login = () => {
         </div>
         <div className="login-form">
           <h2>Login</h2>
-          <form action="login.php" method="post">
+          <form onSubmit={handleSubmit}>
             <label htmlFor="email">Email</label>
             <input
               type="email"
               id="email"
               name="email"
               placeholder="Email"
+              value={formData.email}
+              onChange={handleChange}
               required
             />
 
@@ -27,6 +82,8 @@ const Login = () => {
               id="password"
               name="password"
               placeholder="Password"
+              value={formData.password}
+              onChange={handleChange}
               required
             />
 

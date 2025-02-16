@@ -1,0 +1,35 @@
+.contact-container {
+    max-width: 900px;
+    margin: auto;
+    padding: 40px;
+    text-align: center;
+  }
+  
+  .contact-sections {
+    display: flex;
+    justify-content: space-between;
+    gap: 20px;
+  }
+  
+  .contact-box, .social-box {
+    flex: 1;
+    background: #f4f4f4;
+    padding: 20px;
+    border-radius: 8px;
+  }
+  
+  .contact-number {
+    color: green;
+    font-weight: bold;
+  }
+  
+  .social-icons {
+    display: flex;
+    justify-content: center;
+    gap: 15px;
+    font-size: 24px;
+  }
+  
+  .social-link {
+    text-decoration: none;
+  }
