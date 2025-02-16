@@ -1,5 +1,11 @@
 import React from "react";
+import { Link } from 'react-router-dom';
 import banner from "../../assets/customer/spa_massage.jpg";
+import PromosSection from "../../components/Customers/PromosSection";
+import EPCat from "../../components/Customers/EPCategory2";
+import Con1 from "../../components/Customers/ComingSoon1";
+import Con2 from "../../components/Customers/ComingSoon3";
+import Con3 from "../../components/Customers/ComingSoon5";
 
 function Home() {
   return (
@@ -22,15 +28,15 @@ function Home() {
           }}
         />
         <div className="position-absolute top-50 start-50 translate-middle text-center">
-          <button className="btn btn-success btn-lg">Book Now!</button>
+          <Link className="btn btn-success btn-lg" to ="/booking" role="button" >Book Now!</Link>
         </div>
       </div>
-
-      {/* Promos Section */}
+      <PromosSection />
+      <EPCat />
+      {/* Promos Section
       <div className="container my-5">
         <h1>Promos/Packages</h1>
         <div className="row d-flex justify-content-center">
-          {/* Card 1 */}
           <div className="card m-4" style={{ width: "18rem" }}>
             <img src={banner} className="card-img-top" alt="..." />
             <div className="card-body">
@@ -59,7 +65,6 @@ function Home() {
             </div>
           </div>
 
-          {/* Card 2 */}
           <div className="card m-4" style={{ width: "18rem" }}>
             <img src={banner} className="card-img-top" alt="..." />
             <div className="card-body">
@@ -74,7 +79,6 @@ function Home() {
             </div>
           </div>
 
-          {/* Card 3 */}
           <div className="card m-4" style={{ width: "18rem" }}>
             <img src={banner} className="card-img-top" alt="..." />
             <div className="card-body">
@@ -89,7 +93,10 @@ function Home() {
             </div>
           </div>
         </div>
-      </div>
+      </div> */}
+      <Con1 />
+      <Con2 />
+      <Con3 />
     </>
   );
 }
