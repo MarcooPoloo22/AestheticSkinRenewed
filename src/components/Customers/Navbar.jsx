@@ -76,7 +76,8 @@ const Navbar = () => {
                   to="/faq"
                   activeClassName="active"
                 >
-                  FAQ
+                  FaQ
+                  
                 </NavLink>
               </li>
               <li className="nav-item">
@@ -90,7 +91,16 @@ const Navbar = () => {
               </li>
             </ul>
             <Link
-              className="btn btn-outline-success mx-5"
+              className="btn btn-outline-success mx-5 mb-1 d-none d-lg-inline"
+              to="/login"
+              role="button"
+            >
+              Login
+            </Link>
+
+            {/* Login Button for Small Screens (inside Offcanvas) */}
+            <Link
+              className="btn btn-outline-success mb-1 d-lg-none"
               to="/login"
               role="button"
             >
