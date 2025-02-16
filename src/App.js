@@ -8,6 +8,7 @@ import CreateAccount from "./pages/customer/CreateAccount";
 import ForgotPassword from "./pages/customer/ForgotPassword";
 import FAQ from "./pages/customer/FAQ";
 import Contact from "./pages/customer/Contact";
+import BookingPage from "./pages/customer/BookingPage";
 
 const App = () => {
   return (
@@ -23,6 +24,7 @@ const App = () => {
           <Route path="/login" element={<Login />} />
           <Route path="/create-account" element={<CreateAccount />} />
           <Route path="/forgot-password" element={<ForgotPassword />} />
+          <Route path="/booking" element={<BookingPage />} />
         </Routes>
       </main>
     </Router>
