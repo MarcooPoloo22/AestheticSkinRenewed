@@ -14,9 +14,13 @@
     "react-dom": "^19.0.0",
     "react-router-dom": "^7.1.3",
     "react-scripts": "5.0.1",
+<<<<<<< HEAD
     "react-slick": "^0.30.3",
     "slick-carousel": "^1.8.1",
     "sweetalert2": "^11.16.0"
+=======
+    "sweetalert2": "^11.17.1"
+>>>>>>> 02426e500e00d4fb5f4c2bd0d5b570a05409f8f6
   },
   "scripts": {
     "start": "react-scripts start",
