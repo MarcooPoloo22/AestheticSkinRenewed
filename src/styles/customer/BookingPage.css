@@ -76,19 +76,17 @@
     text-align: left;  
     font-weight: bold; 
     margin-bottom: 5px; 
-    display: inline-block; /* Ensure label stays on one line */
-    white-space: nowrap; /* Prevents text from breaking into multiple lines */
 }
 
 
 .staff-dropdown {
-    width: 300px;  /* Adjust width specifically for Staff Selection */
+    width: 300px;  
 }
 
 
 .short-dropdown {
-    width: 100px; /* Adjusted to match input box height */
-    height: 38px; /* Ensures it aligns properly */
+    width: 100px; 
+    height: 38px; 
 }
 
 
@@ -110,4 +108,27 @@
 }
 .btn-primary:hover {
     background-color: #333;
+}
+
+
+.fname-label {
+    text-align: left;  
+    font-weight: bold; 
+    margin-bottom: 5px; 
+}
+
+.lname-label {
+    text-align: left;  
+    font-weight: bold; 
+    margin-bottom: 5px; 
+}
+.email-label {
+    text-align: left;  
+    font-weight: bold; 
+    margin-bottom: 5px; 
+}
+.connumb-label {
+    text-align: left;  
+    font-weight: bold; 
+    margin-bottom: 5px; 
 }
