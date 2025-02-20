@@ -1,7 +1,7 @@
 import React from "react";
-import { Link } from 'react-router-dom';
+import { Link } from "react-router-dom";
 import banner from "../../assets/customer/spa_massage.jpg";
-import PromosSection from "../../components/Customers/PromosSection";
+import PromosSection from "../../components/Customers/PromoSection";
 import EPCat from "../../components/Customers/EPCategory2";
 import Con1 from "../../components/Customers/ComingSoon1";
 import Con2 from "../../components/Customers/ComingSoon3";
@@ -28,11 +28,14 @@ function Home() {
           }}
         />
         <div className="position-absolute top-50 start-50 translate-middle text-center">
-          <Link className="btn btn-success btn-lg" to ="/booking" role="button" >Book Now!</Link>
+          <Link className="btn btn-success btn-lg" to="/booking" role="button">
+            Book Now!
+          </Link>
         </div>
       </div>
-      <PromosSection />
       <EPCat />
+      <Con3 />
+      <PromosSection />
       {/* Promos Section
       <div className="container my-5">
         <h1>Promos/Packages</h1>
@@ -96,7 +99,6 @@ function Home() {
       </div> */}
       <Con1 />
       <Con2 />
-      <Con3 />
     </>
   );
 }
