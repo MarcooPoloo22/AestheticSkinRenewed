@@ -12,8 +12,7 @@ const FAQ = () => {
             <Accordion.Header>Are the treatments safe?</Accordion.Header>
             <Accordion.Body>
               Yes, all our treatments are dermatologically tested and approved
-              by experts. sunt in culpa qui officia deserunt mollit anim id est
-              laborum.
+              by experts.
             </Accordion.Body>
           </Accordion.Item>
           <Accordion.Item eventKey="1">
