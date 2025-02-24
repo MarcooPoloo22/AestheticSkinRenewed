@@ -88,13 +88,11 @@ const ComingSoon5 = () => {
             className="d-flex flex-column justify-content-center text-center text-lg-start"
           >
             <h2 className="ezy__comingsoon5-heading mb-4">
-              New Book Coming Soon!
+              Exclusive Offers Await!
             </h2>
             <p className="ezy__comingsoon5-sub-heading mb-5 mb-lg-0">
-              An activity that requires a person's mental or physical effort is
-              work.If a person is trained for a certain type of job, they may
-              have a profession. Typically, a job would be a subset of someone's
-              career.
+              Book your appointment today and enjoy special discounts on our
+              signature treatments.
             </p>
           </Col>
           <Col xs={12} lg={5} className="text-center">

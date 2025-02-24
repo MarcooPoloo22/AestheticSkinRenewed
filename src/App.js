@@ -16,23 +16,25 @@ import CustomerPay from "./pages/customer/CustomerPayment";
 const App = () => {
   return (
     <>
-      <Router>
-        <Navbar />
-        <main>
-          <Routes>
-            <Route path="/" element={<Home />} />
-            <Route path="/services" element={<Services />} />
-            <Route path="/products" element={<Products />} />
-            <Route path="/faq" element={<FAQ />} />
-            <Route path="/contact" element={<Contact />} />
-            <Route path="/login" element={<Login />} />
-            <Route path="/create-account" element={<CreateAccount />} />
-            <Route path="/forgot-password" element={<ForgotPassword />} />
-            <Route path="/booking" element={<BookingPage />} />
-          </Routes>
-        </main>
-      </Router>
-      <Footer />
+      <div className="main-content">
+        <Router>
+          <Navbar />
+          <main>
+            <Routes>
+              <Route path="/" element={<Home />} />
+              <Route path="/services" element={<Services />} />
+              <Route path="/products" element={<Products />} />
+              <Route path="/faq" element={<FAQ />} />
+              <Route path="/contact" element={<Contact />} />
+              <Route path="/login" element={<Login />} />
+              <Route path="/create-account" element={<CreateAccount />} />
+              <Route path="/forgot-password" element={<ForgotPassword />} />
+              <Route path="/booking" element={<BookingPage />} />
+            </Routes>
+          </main>
+        </Router>
+        <Footer />
+      </div>
     </>
   );
 };

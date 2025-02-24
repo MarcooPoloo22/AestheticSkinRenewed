@@ -50,13 +50,11 @@ const ComingSoon3 = () => {
             className="d-flex flex-column justify-content-center text-center text-lg-start"
           >
             <h2 className="ezy__comingsoon3-heading mb-4 mt-0 mt-md-5">
-              Good News Coming Soon.
+              Expert Care for Radiant Skin
             </h2>
             <p className="ezy__comingsoon3-sub-heading mb-5 mb-lg-0">
-              An activity that requires a person's mental or physical effort is
-              work.If a person is trained for a certain type of job, they may
-              have a profession. Typically, a job would be a subset of someone's
-              career.
+              From facials to advanced skin treatments, our specialists ensure
+              you leave feeling refreshed and confident.
             </p>
           </Col>
           <Col xs={12} lg={5} className="text-center">
