@@ -2,6 +2,7 @@ import React from "react";
 import "../../styles/customer/BookingPage.css";
 import "bootstrap/dist/css/bootstrap.min.css";
 
+
 const BookingPageRegistered = () => {
   return (
     <>
@@ -13,6 +14,7 @@ const BookingPageRegistered = () => {
         />
         <h1 className="booking-title">Booking Appointment</h1>
       </div>
+
 
       <br />
       <div className="white-box my-5">
@@ -39,6 +41,7 @@ const BookingPageRegistered = () => {
             </div>
           </div>
 
+
           <div className="row mb-3">
             <div className="col-md-6">
               <p className="bookdate-label">Booking Date</p>
@@ -58,6 +61,7 @@ const BookingPageRegistered = () => {
               </select>
             </div>
           </div>
+
 
           <div className="row mb-3 justify-content-center">
             <div className="col-md-6 text-center">
@@ -83,6 +87,7 @@ const BookingPageRegistered = () => {
   );
 };
 
+
 const BookingPageGuest = () => {
   return (
     <>
@@ -95,10 +100,12 @@ const BookingPageGuest = () => {
         <h1 className="booking-title">Booking Appointment</h1>
       </div>
 
+
       <br />
       <div className="white-box my-5">
         <div className="container">
         <div class="row g-3">
+
 
   <div class="row g-3">
   <div class="col">
@@ -120,6 +127,7 @@ const BookingPageGuest = () => {
   <p class="connumb-label">Contact No.</p>
   <input type="text" class="form-control" id="exampleFormControlInput1" placeholder="0912314567" />
 </div>
+
 
           {/* Branch, Service, Date, Time, and Staff Selection */}
           <div className="row mb-3">
@@ -144,6 +152,7 @@ const BookingPageGuest = () => {
               </select>
             </div>
           </div>
+
 
           <div className="row mb-3">
             <div className="col-md-6">
@@ -190,4 +199,7 @@ const BookingPageGuest = () => {
   );
 };
 
+
 export default BookingPageGuest;
+
+

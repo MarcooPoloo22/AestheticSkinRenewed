@@ -11,6 +11,7 @@ import Footer from "./components/Customers/Footer4";
 import FAQ from "./pages/customer/FAQ";
 import Contact from "./pages/customer/Contact";
 import BookingPage from "./pages/customer/BookingPage";
+import CustomerPay from "./pages/customer/CustomerPayment"; 
 
 const App = () => {
   return (
