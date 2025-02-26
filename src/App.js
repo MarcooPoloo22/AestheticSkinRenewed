@@ -12,6 +12,7 @@ import FAQ from "./pages/customer/FAQ";
 import Contact from "./pages/customer/Contact";
 import BookingPage from "./pages/customer/BookingPage";
 import CustomerPay from "./pages/customer/CustomerPayment"; 
+import SurgAppoint from "./pages/customer/SurgeryAppointment";
 
 const App = () => {
   return (
@@ -30,6 +31,8 @@ const App = () => {
               <Route path="/create-account" element={<CreateAccount />} />
               <Route path="/forgot-password" element={<ForgotPassword />} />
               <Route path="/booking" element={<BookingPage />} />
+              <Route path="/payment" element={<CustomerPay />} />
+              <Route path="/surgery" element={<SurgAppoint />} />
             </Routes>
           </main>
         </Router>
