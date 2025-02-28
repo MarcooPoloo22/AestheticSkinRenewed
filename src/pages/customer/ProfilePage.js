@@ -4,7 +4,6 @@ import "../../styles/customer/ProfilePage.css";
 const ProfilePage = () => {
   const [activeTab, setActiveTab] = useState("account");
 
-  // Editable user information state
   const [userData, setUserData] = useState({
     fullName: "John Doe",
     email: "johndoe@example.com",
@@ -14,7 +13,6 @@ const ProfilePage = () => {
   const [editing, setEditing] = useState(false);
   const [newData, setNewData] = useState({ ...userData });
 
-  // Password state
   const [passwords, setPasswords] = useState({
     currentPassword: "",
     newPassword: "",
@@ -23,31 +21,26 @@ const ProfilePage = () => {
 
   const [passwordError, setPasswordError] = useState("");
 
-  // Handle input changes for account info
   const handleInputChange = (e) => {
     const { name, value } = e.target;
     setNewData({ ...newData, [name]: value });
   };
 
-  // Save changes and disable editing mode
   const handleSave = () => {
     setUserData(newData);
     setEditing(false);
   };
 
-  // Cancel editing
   const handleCancel = () => {
     setNewData({ ...userData });
     setEditing(false);
   };
 
-  // Handle password change
   const handlePasswordChange = (e) => {
     const { name, value } = e.target;
     setPasswords({ ...passwords, [name]: value });
   };
 
-  // Validate and update password
   const updatePassword = () => {
     if (passwords.newPassword !== passwords.confirmPassword) {
       setPasswordError("New passwords do not match!");
@@ -63,7 +56,6 @@ const ProfilePage = () => {
       <div className="profile-card">
         <h3 className="profile-welcome">Welcome, {userData.fullName}!</h3>
 
-        {/* Sidebar Navigation */}
         <div className="profile-sidebar">
           <button
             className={activeTab === "account" ? "active" : ""}
@@ -79,9 +71,7 @@ const ProfilePage = () => {
           </button>
         </div>
 
-        {/* Main Content */}
         <div className="profile-content">
-          {/* Account Information */}
           {activeTab === "account" && (
             <div className="account-details">
               <h4>Account Information</h4>
@@ -135,7 +125,6 @@ const ProfilePage = () => {
             </div>
           )}
 
-          {/* Change Password */}
           {activeTab === "changePassword" && (
             <div className="password-change">
               <h4>Change Password</h4>
