@@ -6,6 +6,7 @@ import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
 import banner from "../../assets/customer/spa_massage.jpg";
 import "./EPCategory2.css";
+import { Link } from "react-router-dom";
 
 /*
 {
@@ -105,9 +106,9 @@ const Epcategory2 = () => {
           </Col>
           {/* button start  */}
           <Col xs={4} className="text-end">
-            <Button variant="" className="ezy__epcategory2-btn">
+            <Link className="ezy__epcategory2-btn" to="/services" role="button">
               See All
-            </Button>
+            </Link>
           </Col>
           {/* button end  */}
         </Row>
@@ -121,9 +122,13 @@ const Epcategory2 = () => {
                   <div className="card-body text-center">
                     <h5 className="card-title">Promo {index + 1}</h5>
                     <p className="card-text">Exclusive deal for you!</p>
-                    <a href="#" className="btn btn-primary">
-                      Learn More
-                    </a>
+                    <Link
+                      className="btn btn-primary"
+                      to="/booking"
+                      role="button"
+                    >
+                      Book Now!
+                    </Link>
                   </div>
                 </div>
               </div>

@@ -91,10 +91,11 @@
 }
 
 .ezy__epcategory2-btn {
-  font-size: 18px;
-  font-weight: 700;
+  font-size: 16px;
+  font-weight: normal;
   line-height: 1.5;
   color: var(--bs-body-color);
+  margin-right: 5%;
 }
 
 .ezy__epcategory2-btn:hover {

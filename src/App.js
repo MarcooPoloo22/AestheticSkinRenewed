@@ -11,8 +11,9 @@ import Footer from "./components/Customers/Footer4";
 import FAQ from "./pages/customer/FAQ";
 import Contact from "./pages/customer/Contact";
 import BookingPage from "./pages/customer/BookingPage";
-import CustomerPay from "./pages/customer/CustomerPayment"; 
+import CustomerPay from "./pages/customer/CustomerPayment";
 import SurgAppoint from "./pages/customer/SurgeryAppointment";
+import ProfilePage from "./pages/customer/ProfilePage";
 
 const App = () => {
   return (
@@ -33,6 +34,7 @@ const App = () => {
               <Route path="/booking" element={<BookingPage />} />
               <Route path="/payment" element={<CustomerPay />} />
               <Route path="/surgery" element={<SurgAppoint />} />
+              <Route path="/profile" element={<ProfilePage />} />
             </Routes>
           </main>
         </Router>

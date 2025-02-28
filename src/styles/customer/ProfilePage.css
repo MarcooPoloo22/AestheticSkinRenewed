@@ -1,0 +1,103 @@
+/* Profile Page - Business/Booking Site Style */
+.profile-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 100vh;
+  background-color: #f8f9fa;
+  font-family: "Arial", sans-serif;
+}
+
+.profile-card {
+  display: flex;
+  background: white;
+  padding: 30px;
+  border-radius: 10px;
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+  width: 700px;
+  min-height: 350px;
+}
+
+.profile-sidebar {
+  display: flex;
+  flex-direction: column;
+  width: 200px;
+  padding-right: 20px;
+  border-right: 2px solid #e0e0e0;
+}
+
+.profile-sidebar button {
+  background-color: #ffffff;
+  border: 1px solid #007bff;
+  padding: 12px;
+  margin: 8px 0;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 16px;
+  color: #007bff;
+  font-weight: bold;
+}
+
+.profile-sidebar .active,
+.profile-sidebar button:hover {
+  background-color: #007bff;
+  color: white;
+}
+
+.profile-content {
+  flex-grow: 1;
+  padding: 20px;
+}
+
+.account-details,
+.password-change {
+  background: #ffffff;
+  padding: 20px;
+  border-radius: 8px;
+  box-shadow: 0 3px 10px rgba(0, 0, 0, 0.1);
+}
+
+.info-row,
+input {
+  background: #f1f1f1;
+  padding: 12px;
+  margin: 8px 0;
+  border-radius: 6px;
+  font-size: 16px;
+  width: 100%;
+  border: 1px solid #ccc;
+}
+
+.edit-button,
+.save-button,
+.cancel-button,
+.update-password {
+  background-color: #007bff;
+  color: white;
+  border: none;
+  padding: 12px;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 16px;
+  font-weight: bold;
+  margin-top: 10px;
+}
+
+.cancel-button {
+  background-color: #dc3545;
+}
+
+.update-password:hover,
+.save-button:hover {
+  background-color: #0056b3;
+}
+
+.cancel-button:hover {
+  background-color: #b52a37;
+}
+
+.error-message {
+  color: red;
+  font-size: 14px;
+}

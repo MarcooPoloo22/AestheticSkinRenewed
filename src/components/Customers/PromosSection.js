@@ -61,9 +61,9 @@ const PromosSection = () => {
               <div className="card-body text-center">
                 <h5 className="card-title">Promo {index + 1}</h5>
                 <p className="card-text">Exclusive deal for you!</p>
-                <a href="#" className="btn btn-primary">
-                  Learn More
-                </a>
+                <Link className="btn btn-primary" to="/booking" role="button">
+                  Book Now!
+                </Link>
               </div>
             </div>
           </div>

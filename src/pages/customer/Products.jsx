@@ -1,5 +1,6 @@
 import React from "react";
 import Card from "../../components/Customers/ServiceCard";
+import ProductHead from "../../components/Customers/productshead";
 
 const products = [
   {
@@ -48,26 +49,25 @@ const products = [
 
 function ProductsPage() {
   return (
-    <div className="container my-4">
-      <div className="row">
-        <div className="col-6">
-          <h1 className="page-title">Our Products</h1>
+    <>
+      <ProductHead />
+      <div className="container my-4">
+        <div className="row"></div>
+
+        <div className="row mt-3">
+          {products.map((products) => (
+            <div className="col-md-12 col-lg-6" key={products.id}>
+              <Card
+                title={products.title}
+                description={products.description}
+                image={products.image}
+                updated={products.updated}
+              />
+            </div>
+          ))}
         </div>
       </div>
-
-      <div className="row mt-3">
-        {products.map((products) => (
-          <div className="col-md-12 col-lg-6" key={products.id}>
-            <Card
-              title={products.title}
-              description={products.description}
-              image={products.image}
-              updated={products.updated}
-            />
-          </div>
-        ))}
-      </div>
-    </div>
+    </>
   );
 }
 
