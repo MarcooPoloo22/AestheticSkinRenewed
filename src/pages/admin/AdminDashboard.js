@@ -2,7 +2,7 @@ import { useState } from "react";
 import logo from "../../assets/admin/ASR Logo.png";
 import frame1 from "../../assets/admin/DashboardDesign.png";
 import welcome from "../../assets/admin/Welcome.png";
-import './css/admin/adminDashboard.css';
+import '../../styles/admin/adminDashboard.css';
 
 //icons for dashboard
 import { BsPeople } from "react-icons/bs";
