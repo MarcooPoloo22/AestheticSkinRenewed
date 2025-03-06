@@ -1,66 +1,34 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import Card from "../../components/Customers/ServiceCard";
 import ServiceHead from "../../components/Customers/HeroHeaderSmall3";
 
-const services = [
-  {
-    id: 1,
-    title: "Facial Treatments",
-    description: "Rejuvenate your skin with our luxurious facials.",
-    image: "../assets/spa_massage.jpg",
-    updated: "3 mins ago",
-  },
-  {
-    id: 2,
-    title: "Massage Therapy",
-    description: "Relax your body and mind with therapeutic massages.",
-    image: "../assets/spa_massage.jpg",
-    updated: "10 mins ago",
-  },
-  {
-    id: 3,
-    title: "Skin Rejuvenation",
-    description: "Advanced treatments for glowing, youthful skin.",
-    image: "../assets/spa_massage.jpg",
-    updated: "15 mins ago",
-  },
-  {
-    id: 4,
-    title: "Body Scrubs",
-    description: "Exfoliate your skin for a smooth and refreshed feel.",
-    image: "../assets/spa_massage.jpg",
-    updated: "1 hour ago",
-  },
-  {
-    id: 5,
-    title: "Hair Treatments",
-    description: "Revive and restore your hair with specialized treatments.",
-    image: "../assets/spa_massage.jpg",
-    updated: "2 hours ago",
-  },
-  {
-    id: 6,
-    title: "Nail Services",
-    description: "Indulge in luxurious manicures and pedicures.",
-    image: "../assets/spa_massage.jpg",
-    updated: "5 hours ago",
-  },
-];
-
 function ServicePage() {
+  const [services, setServices] = useState([]);
+
+  // Fetch services from backend
+  useEffect(() => {
+    fetch('http://localhost/admin_dashboard_backend/fetch_services.php')
+      .then(response => response.json())
+      .then(data => {
+        console.log("Fetched services:", data); // Debugging
+        setServices(data);
+      })
+      .catch(error => console.error('Error fetching services:', error));
+  }, []);
+
   return (
     <>
       <ServiceHead />
 
-      <div className="container my-5 ">
+      <div className="container my-5">
         <div className="row mt-3">
           {services.map((service) => (
             <div className="col-md-12 col-lg-6" key={service.id}>
               <Card
-                title={service.title}
+                title={service.name}
                 description={service.description}
-                image={service.image}
-                updated={service.updated}
+                image={service.file_url} // Use the file_url from the backend
+                updated={`Price: ₱${service.price}`} // Display the price with the Peso sign
               />
             </div>
           ))}

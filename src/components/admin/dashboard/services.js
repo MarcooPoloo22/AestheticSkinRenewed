@@ -1,7 +1,7 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import DataTable from 'react-data-table-component';
-
 import "../../../styles/admin/dashboard/faqs.css";
+import Swal from 'sweetalert2';
 
 // Icons
 import { FaRegTrashAlt, FaRegEdit } from "react-icons/fa";
@@ -16,7 +16,61 @@ const customStyles = {
   },
 };
 
-const FAQTable = ({ setActivePage, activePage, data }) => {
+const FAQTable = ({ setActivePage, activePage, data, setServices, setServiceToEdit }) => {
+  const handleDelete = (id) => {
+    console.log("Deleting service with ID:", id); // Debugging
+    Swal.fire({
+      title: 'Are you sure?',
+      text: 'You will not be able to recover this service!',
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonText: 'Yes, delete it!',
+      cancelButtonText: 'No, cancel!',
+    }).then((result) => {
+      if (result.isConfirmed) {
+        fetch('http://localhost/admin_dashboard_backend/delete_service.php', {
+          method: 'DELETE',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({ id }),
+        })
+          .then(response => {
+            if (!response.ok) {
+              throw new Error(`HTTP error! Status: ${response.status}`);
+            }
+            return response.json();
+          })
+          .then(data => {
+            console.log("Delete response data:", data); // Debugging
+            Swal.fire({
+              title: 'Deleted!',
+              text: data.message,
+              icon: 'success',
+              confirmButtonText: 'OK',
+            });
+            // Refresh services list
+            fetch('http://localhost/admin_dashboard_backend/fetch_services.php')
+              .then(response => response.json())
+              .then(data => {
+                console.log("Updated services after delete:", data); // Debugging
+                setServices(data);
+              })
+              .catch(error => console.error('Error fetching services:', error));
+          })
+          .catch(error => {
+            console.error('Error deleting service:', error);
+            Swal.fire({
+              title: 'Error!',
+              text: 'Failed to delete service. Please check the console for details.',
+              icon: 'error',
+              confirmButtonText: 'OK',
+            });
+          });
+      }
+    });
+  };
+
   // Define columns
   const columns = [
     {
@@ -37,7 +91,7 @@ const FAQTable = ({ setActivePage, activePage, data }) => {
     {
       name: 'File',
       cell: row => (
-        <a href={row.fileUrl} target="_blank" rel="noopener noreferrer">
+        <a href={row.file_url} target="_blank" rel="noopener noreferrer">
           View File
         </a>
       ),
@@ -48,10 +102,10 @@ const FAQTable = ({ setActivePage, activePage, data }) => {
       name: 'Action',
       cell: row => (
         <div>
-          <button onClick={() => setActivePage("ManageFAQEdit")} className="edit-button">
+          <button onClick={() => { setServiceToEdit(row); setActivePage("ManageFAQEdit"); }} className="edit-button">
             <FaRegEdit />
           </button>
-          <button className="delete-button">
+          <button onClick={() => handleDelete(row.id)} className="delete-button">
             <FaRegTrashAlt />
           </button>
         </div>
@@ -74,7 +128,62 @@ const FAQTable = ({ setActivePage, activePage, data }) => {
   );
 };
 
-const ManageFAQEdit = ({ setActivePage, activePage }) => {
+const ManageFAQEdit = ({ setActivePage, activePage, serviceToEdit, setServices }) => {
+  const [name, setName] = useState(serviceToEdit.name);
+  const [description, setDescription] = useState(serviceToEdit.description);
+  const [price, setPrice] = useState(serviceToEdit.price);
+  const [file, setFile] = useState(null);
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+
+    const formData = new FormData();
+    formData.append("id", serviceToEdit.id);
+    formData.append("name", name);
+    formData.append("description", description);
+    formData.append("price", price);
+    if (file) {
+      formData.append("file", file);
+    }
+
+    fetch('http://localhost/admin_dashboard_backend/update_service.php', {
+      method: 'POST',
+      body: formData,
+    })
+      .then(response => {
+        if (!response.ok) {
+          throw new Error(`HTTP error! Status: ${response.status}`);
+        }
+        return response.json();
+      })
+      .then(data => {
+        Swal.fire({
+          title: 'Success!',
+          text: data.message,
+          icon: 'success',
+          confirmButtonText: 'OK',
+        });
+        setActivePage("FAQs"); // Redirect back to Services page
+        // Refresh services list
+        fetch('http://localhost/admin_dashboard_backend/fetch_services.php')
+          .then(response => response.json())
+          .then(data => {
+            console.log("Updated services after edit:", data); // Debugging
+            setServices(data);
+          })
+          .catch(error => console.error('Error fetching services:', error));
+      })
+      .catch(error => {
+        console.error('Error updating service:', error);
+        Swal.fire({
+          title: 'Error!',
+          text: 'Failed to update service. Please check the console for details.',
+          icon: 'error',
+          confirmButtonText: 'OK',
+        });
+      });
+  };
+
   return (
     <div className="faq-main-container">
       <button onClick={() => setActivePage("FAQs")} className="faq-edit-backbutton">
@@ -84,31 +193,113 @@ const ManageFAQEdit = ({ setActivePage, activePage }) => {
         <div className="align-left">
           <p className="faq-text">Edit Service</p>
         </div>
-        <form className="faq-edit">
+        <form className="faq-edit" onSubmit={handleSubmit}>
           <div className="form-group">
             <label className="questionLabel" htmlFor="nameInput">Name</label>
-            <input className="questionInput" id="nameInput" name="nameInput" placeholder="Value" required />
+            <input
+              className="questionInput"
+              id="nameInput"
+              name="nameInput"
+              placeholder="Value"
+              value={name}
+              onChange={(e) => setName(e.target.value)}
+              required
+            />
           </div>
           <div className="form-group">
             <label className="answerLabel" htmlFor="descriptionInput">Description</label>
-            <input className="answerInput" id="descriptionInput" name="descriptionInput" placeholder="Value" required />
+            <input
+              className="answerInput"
+              id="descriptionInput"
+              name="descriptionInput"
+              placeholder="Value"
+              value={description}
+              onChange={(e) => setDescription(e.target.value)}
+              required
+            />
           </div>
           <div className="form-group">
             <label className="answerLabel" htmlFor="priceInput">Price</label>
-            <input className="answerInput" id="priceInput" name="priceInput" placeholder="Value" required />
+            <input
+              className="answerInput"
+              id="priceInput"
+              name="priceInput"
+              placeholder="Value"
+              value={price}
+              onChange={(e) => setPrice(e.target.value)}
+              required
+            />
           </div>
           <div className="form-group">
             <label className="answerLabel" htmlFor="fileInput">File</label>
-            <input type="file" className="fileInput" id="fileInput" name="fileInput" required />
+            <input
+              type="file"
+              className="answerInput"
+              id="fileInput"
+              name="fileInput"
+              onChange={(e) => setFile(e.target.files[0])}
+            />
           </div>
-          <button className="button-ManageFAQEdit">Save</button>
+          <button type="submit" className="button-ManageFAQEdit">Save</button>
         </form>
       </div>
     </div>
   );
 };
 
-const ManageFAQAdd = ({ setActivePage, activePage }) => {
+const ManageFAQAdd = ({ setActivePage, activePage, setServices }) => {
+  const [name, setName] = useState("");
+  const [description, setDescription] = useState("");
+  const [price, setPrice] = useState("");
+  const [file, setFile] = useState(null);
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+
+    const formData = new FormData();
+    formData.append("name", name);
+    formData.append("description", description);
+    formData.append("price", price);
+    formData.append("file", file);
+
+    fetch('http://localhost/admin_dashboard_backend/add_service.php', {
+      method: 'POST',
+      body: formData,
+    })
+      .then(response => {
+        if (!response.ok) {
+          throw new Error(`HTTP error! Status: ${response.status}`);
+        }
+        return response.json();
+      })
+      .then(data => {
+        Swal.fire({
+          title: 'Success!',
+          text: data.message,
+          icon: 'success',
+          confirmButtonText: 'OK',
+        });
+        setActivePage("FAQs"); // Redirect back to Services page
+        // Refresh services list
+        fetch('http://localhost/admin_dashboard_backend/fetch_services.php')
+          .then(response => response.json())
+          .then(data => {
+            console.log("Updated services after add:", data); // Debugging
+            setServices(data);
+          })
+          .catch(error => console.error('Error fetching services:', error));
+      })
+      .catch(error => {
+        console.error('Error adding service:', error);
+        Swal.fire({
+          title: 'Error!',
+          text: 'Failed to add service. Please check the console for details.',
+          icon: 'error',
+          confirmButtonText: 'OK',
+        });
+      });
+  };
+
   return (
     <div className="faq-main-container">
       <button onClick={() => setActivePage("FAQs")} className="faq-edit-backbutton">
@@ -118,24 +309,55 @@ const ManageFAQAdd = ({ setActivePage, activePage }) => {
         <div className="align-left">
           <p className="faq-text">Add Service</p>
         </div>
-        <form className="faq-edit">
+        <form className="faq-edit" onSubmit={handleSubmit}>
           <div className="form-group">
             <label className="questionLabel" htmlFor="nameInput">Name</label>
-            <input className="questionInput" id="nameInput" name="nameInput" placeholder="Value" required />
+            <input
+              className="questionInput"
+              id="nameInput"
+              name="nameInput"
+              placeholder="Value"
+              value={name}
+              onChange={(e) => setName(e.target.value)}
+              required
+            />
           </div>
           <div className="form-group">
             <label className="answerLabel" htmlFor="descriptionInput">Description</label>
-            <input className="answerInput" id="descriptionInput" name="descriptionInput" placeholder="Value" required />
+            <input
+              className="answerInput"
+              id="descriptionInput"
+              name="descriptionInput"
+              placeholder="Value"
+              value={description}
+              onChange={(e) => setDescription(e.target.value)}
+              required
+            />
           </div>
           <div className="form-group">
             <label className="answerLabel" htmlFor="priceInput">Price</label>
-            <input className="answerInput" id="priceInput" name="priceInput" placeholder="Value" required />
+            <input
+              className="answerInput"
+              id="priceInput"
+              name="priceInput"
+              placeholder="Value"
+              value={price}
+              onChange={(e) => setPrice(e.target.value)}
+              required
+            />
           </div>
           <div className="form-group">
             <label className="answerLabel" htmlFor="fileInput">File</label>
-            <input type="file" style={{top:"100px"}} className="fileInput" id="fileInput" name="fileInput" required />
+            <input
+              type="file"
+              className="answerInput"
+              id="fileInput"
+              name="fileInput"
+              onChange={(e) => setFile(e.target.files[0])}
+              required
+            />
           </div>
-          <button className="button-ManageFAQEdit">Save</button>
+          <button type="submit" className="button-ManageFAQEdit">Save</button>
         </form>
       </div>
     </div>
@@ -145,35 +367,26 @@ const ManageFAQAdd = ({ setActivePage, activePage }) => {
 const FAQs = () => {
   const [activePage, setActivePage] = useState("FAQs");
   const [searchText, setSearchText] = useState("");
+  const [services, setServices] = useState([]);
+  const [serviceToEdit, setServiceToEdit] = useState(null);
 
-  // Sample data
-  const initialData = [
-    {
-      id: 1,
-      name: 'Service 1',
-      description: 'This is the description for Service 1.',
-      price: 'P500',
-      fileUrl: 'https://example.com/file1.pdf',
-    },
-    {
-      id: 2,
-      name: 'Service 2',
-      description: 'This is the description for Service 2.',
-      price: 'P600',
-      fileUrl: 'https://example.com/file2.pdf',
-    },
-    {
-      id: 3,
-      name: 'Service 3',
-      description: 'This is the description for Service 3.',
-      price: 'P700',
-      fileUrl: 'https://example.com/file3.pdf',
-    },
-    // Add more items here
-  ];
+  // Fetch services from backend
+  useEffect(() => {
+    console.log("Fetching services..."); // Debugging
+    fetch('http://localhost/admin_dashboard_backend/fetch_services.php')
+      .then(response => {
+        console.log("Fetch response:", response); // Debugging
+        return response.json();
+      })
+      .then(data => {
+        console.log("Fetched services:", data); // Debugging
+        setServices(data);
+      })
+      .catch(error => console.error('Error fetching services:', error));
+  }, []);
 
   // Filter data based on search text
-  const filteredData = initialData.filter(item =>
+  const filteredData = services.filter(item =>
     item.name.toLowerCase().includes(searchText.toLowerCase()) ||
     item.description.toLowerCase().includes(searchText.toLowerCase()) ||
     item.price.toLowerCase().includes(searchText.toLowerCase())
@@ -186,7 +399,7 @@ const FAQs = () => {
           <div className="faq-header">
             <p className="faq-text">Services</p>
             <div className="faq-header-actions">
-              <button className="add-faq-button" style={{width: "120px"}} onClick={() => setActivePage("ManageFAQAdd")}>
+              <button className="add-faq-button" style={{ width: "120px" }} onClick={() => setActivePage("ManageFAQAdd")}>
                 + Add Service
               </button>
               <div className="search-container">
@@ -201,12 +414,27 @@ const FAQs = () => {
               </div>
             </div>
           </div>
-          <FAQTable setActivePage={setActivePage} activePage={activePage} data={filteredData} />
+          <FAQTable
+            setActivePage={setActivePage}
+            activePage={activePage}
+            data={filteredData}
+            setServices={setServices}
+            setServiceToEdit={setServiceToEdit}
+          />
         </div>
       ) : activePage === "ManageFAQEdit" ? (
-        <ManageFAQEdit setActivePage={setActivePage} activePage={activePage} />
+        <ManageFAQEdit
+          setActivePage={setActivePage}
+          activePage={activePage}
+          serviceToEdit={serviceToEdit}
+          setServices={setServices}
+        />
       ) : (
-        <ManageFAQAdd setActivePage={setActivePage} activePage={activePage} />
+        <ManageFAQAdd
+          setActivePage={setActivePage}
+          activePage={activePage}
+          setServices={setServices}
+        />
       )}
     </>
   );
