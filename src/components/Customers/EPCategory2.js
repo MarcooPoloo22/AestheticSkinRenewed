@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import { Button, Card, Col, Container, Row } from "react-bootstrap";
 import PropTypes from "prop-types";
 import Slider from "react-slick";
@@ -15,25 +15,6 @@ import { Link } from "react-router-dom";
 	"prop-types": "PropTypes",
 }
 */
-
-const products = [
-  {
-    img: "https://cdn.easyfrontend.com/pictures/ecommerce/product23.png",
-    title: "Fashion",
-  },
-  {
-    img: "https://cdn.easyfrontend.com/pictures/ecommerce/product12.png",
-    title: "Perfume",
-  },
-  {
-    img: "https://cdn.easyfrontend.com/pictures/ecommerce/product18.png",
-    title: "Shoes",
-  },
-  {
-    img: "https://cdn.easyfrontend.com/pictures/ecommerce/product8.png",
-    title: "Kitchen",
-  },
-];
 
 const ProductItem = ({ product }) => {
   return (
@@ -55,6 +36,30 @@ ProductItem.propTypes = {
 };
 
 const Epcategory2 = () => {
+  const [services, setServices] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+
+  // Fetch services from backend
+  useEffect(() => {
+    const fetchServices = async () => {
+      try {
+        const response = await fetch("http://localhost/admin_dashboard_backend/fetch_services.php");
+        if (!response.ok) {
+          throw new Error("Failed to fetch services");
+        }
+        const data = await response.json();
+        setServices(data);
+      } catch (error) {
+        setError(error.message);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchServices();
+  }, []);
+
   const settings = {
     dots: false,
     infinite: true,
@@ -62,10 +67,6 @@ const Epcategory2 = () => {
     speed: 500,
     slidesToShow: 4,
     slidesToScroll: 1,
-
-    // customPaging: function (i) {
-    //   return <p>{i + 1}</p>;
-    // },
 
     responsive: [
       {
@@ -77,7 +78,6 @@ const Epcategory2 = () => {
           dots: true,
         },
       },
-
       {
         breakpoint: 1124,
         settings: {
@@ -97,6 +97,10 @@ const Epcategory2 = () => {
       },
     ],
   };
+
+  if (loading) return <div>Loading...</div>;
+  if (error) return <div>Error: {error}</div>;
+
   return (
     <section className="ezy__epcategory2">
       <Container>
@@ -104,24 +108,23 @@ const Epcategory2 = () => {
           <Col xs={8}>
             <h2 className="ezy__epcategory2-heading">Services</h2>
           </Col>
-          {/* button start  */}
           <Col xs={4} className="text-end">
             <Link className="ezy__epcategory2-btn" to="/services" role="button">
               See All
             </Link>
           </Col>
-          {/* button end  */}
         </Row>
 
         <Row className="text-center justify-content-start justify-content-xl-center mt-4 mt-md-5">
           <Slider {...settings}>
-            {[...Array(8)].map((_, index) => (
+            {services.map((service, index) => (
               <div key={index} className="p-3">
                 <div className="card mx-auto" style={{ width: "18rem" }}>
-                  <img src={banner} className="card-img-top" alt="Promo" />
+                  <img src={banner} className="card-img-top" alt="Service" />
                   <div className="card-body text-center">
-                    <h5 className="card-title">Promo {index + 1}</h5>
-                    <p className="card-text">Exclusive deal for you!</p>
+                    <h5 className="card-title">{service.name}</h5>
+                    <p className="card-text">{service.description}</p>
+                    <p className="card-text">Price: {service.price}</p>
                     <Link
                       className="btn btn-primary"
                       to="/booking"
