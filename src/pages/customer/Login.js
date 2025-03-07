@@ -1,10 +1,9 @@
 import React, { useState } from "react";
 import "../../styles/customer/Login.css";
 import { Link, useNavigate } from "react-router-dom";
-import Home from "./Home";
 import Swal from "sweetalert2";
 
-const Login = () => {
+const Login = ({ setIsLoggedIn }) => { // Accept setIsLoggedIn as a prop
   const [formData, setFormData] = useState({
     email: "",
     password: "",
@@ -27,34 +26,48 @@ const Login = () => {
           "Content-Type": "application/json",
         },
         body: JSON.stringify(formData),
+        credentials: "include", // Include cookies for session management
       });
 
       const result = await response.json();
 
-      if (result.status === 'success') {
+      if (result.status === "success") {
+        setIsLoggedIn(true); // Update the login state
         Swal.fire({
-            icon: 'success',
-            title: 'Success!',
-            text: result.message,
+          icon: "success",
+          title: "Success!",
+          text: result.message,
         }).then(() => {
-            navigate("/");
+          // Redirect based on user role
+          if (result.role === "admin") {
+            navigate("/admindashboard"); // Redirect to Admin Dashboard
+          } else {
+            navigate("/"); // Redirect to Home Page for customers
+          }
         });
-            } else {
-                Swal.fire({
-                    icon: 'error',
-                    title: 'Error',
-                    text: result.message,
-                });
-            }
-        } catch (error) {
-            console.error('Error:', error);
-            Swal.fire({
-                icon: 'error',
-                title: 'Oops...',
-                text: 'An error occurred while creating the account.',
-            });
-        }
-    };
+      } else if (result.message === "Your account is not verified. Please check your email to verify your account.") {
+        // Show SweetAlert for unverified accounts
+        Swal.fire({
+          icon: "warning",
+          title: "Account Not Verified",
+          text: result.message,
+        });
+      } else {
+        Swal.fire({
+          icon: "error",
+          title: "Error",
+          text: result.message,
+        });
+      }
+    } catch (error) {
+      console.error("Error:", error);
+      Swal.fire({
+        icon: "error",
+        title: "Oops...",
+        text: "An error occurred while logging in.",
+      });
+    }
+  };
 
   return (
     <div className="login-container">

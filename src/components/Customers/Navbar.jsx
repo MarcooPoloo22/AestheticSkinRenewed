@@ -1,8 +1,46 @@
-import React from "react";
-import { NavLink, Link } from "react-router-dom";
+import React, { useEffect } from "react";
+import { NavLink, Link, useNavigate } from "react-router-dom";
 import logo from "../../assets/customer/ASR_Logo.png";
 
-const Navbar = () => {
+const Navbar = ({ isLoggedIn, setIsLoggedIn }) => { // Accept isLoggedIn and setIsLoggedIn as props
+  const navigate = useNavigate();
+
+  // Check if the user is logged in on component mount
+  useEffect(() => {
+    const checkLoginStatus = async () => {
+      try {
+        const response = await fetch("http://localhost/checklogin.php", {
+          method: "GET",
+          credentials: "include",
+        });
+
+        const result = await response.json();
+        setIsLoggedIn(result.status === "success");
+      } catch (error) {
+        console.error("Error checking login status:", error);
+      }
+    };
+
+    checkLoginStatus();
+  }, [setIsLoggedIn]); // Add setIsLoggedIn to dependency array
+
+  const handleLogout = async () => {
+    try {
+      const response = await fetch("http://localhost/logout.php", {
+        method: "POST",
+        credentials: "include",
+      });
+
+      const result = await response.json();
+      if (result.status === "success") {
+        setIsLoggedIn(false); // Update the login state
+        navigate("/login");
+      }
+    } catch (error) {
+      console.error("Error logging out:", error);
+    }
+  };
+
   return (
     <nav className="navbar navbar-expand-lg bg-white shadow-sm p-1">
       <div className="container-fluid">
@@ -77,7 +115,6 @@ const Navbar = () => {
                   activeClassName="active"
                 >
                   FaQ
-                  
                 </NavLink>
               </li>
               <li className="nav-item">
@@ -90,22 +127,42 @@ const Navbar = () => {
                 </NavLink>
               </li>
             </ul>
-            <Link
-              className="btn btn-outline-success mx-5 mb-1 d-none d-lg-inline"
-              to="/login"
-              role="button"
-            >
-              Login
-            </Link>
 
-            {/* Login Button for Small Screens (inside Offcanvas) */}
-            <Link
-              className="btn btn-outline-success mb-1 d-lg-none"
-              to="/login"
-              role="button"
-            >
-              Login
-            </Link>
+            {/* Conditionally render Login or Logout button */}
+            {isLoggedIn ? (
+              <button
+                className="btn btn-outline-danger mx-5 mb-1 d-none d-lg-inline"
+                onClick={handleLogout}
+              >
+                Log Out
+              </button>
+            ) : (
+              <Link
+                className="btn btn-outline-success mx-5 mb-1 d-none d-lg-inline"
+                to="/login"
+                role="button"
+              >
+                Login
+              </Link>
+            )}
+
+            {/* Conditionally render Login or Logout button for small screens */}
+            {isLoggedIn ? (
+              <button
+                className="btn btn-outline-danger mb-1 d-lg-none"
+                onClick={handleLogout}
+              >
+                Log Out
+              </button>
+            ) : (
+              <Link
+                className="btn btn-outline-success mb-1 d-lg-none"
+                to="/login"
+                role="button"
+              >
+                Login
+              </Link>
+            )}
           </div>
         </div>
       </div>
