@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import { useNavigate } from "react-router-dom"; // Import useNavigate
 import Swal from 'sweetalert2';
 import "bootstrap/dist/css/bootstrap.min.css";
 import "../../styles/customer/CreateAccount.css";
@@ -13,6 +14,8 @@ const CreateAccount = () => {
         confirm_password: '',
         contact_no: ''
     });
+
+    const navigate = useNavigate(); // Initialize useNavigate
 
     const handleChange = (e) => {
         const { name, value } = e.target;
@@ -56,6 +59,9 @@ const CreateAccount = () => {
                     icon: 'success',
                     title: 'Success!',
                     text: result.message,
+                }).then(() => {
+                    // Redirect to the Login page after the user clicks "OK" on the success alert
+                    navigate("/login");
                 });
             } else {
                 Swal.fire({

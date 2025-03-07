@@ -8,14 +8,14 @@ use PHPMailer\PHPMailer\Exception;
 $mail = new PHPMailer(true);
 
 try {
-    // Server settings
-    $mail->isSMTP(); // Send using SMTP
-    $mail->Host       = 'smtp.gmail.com'; // Set the SMTP server (e.g., smtp.gmail.com for Gmail)
-    $mail->SMTPAuth   = true; // Enable SMTP authentication
-    $mail->Username   = 'aestheticskinrenewed1@gmail.com'; // SMTP username (your email address)
-    $mail->Password   = 'asrkatipunan1'; // SMTP password (your email password or app password)
-    $mail->SMTPSecure = PHPMailer::ENCRYPTION_STARTTLS; // Enable TLS encryption
-    $mail->Port       = 587; // TCP port to connect to (587 for TLS, 465 for SSL)
+   
+    $mail->isSMTP(); 
+    $mail->Host       = 'smtp.gmail.com';
+    $mail->SMTPAuth   = true;
+    $mail->Username   = 'aestheticskinrenewed1@gmail.com';
+    $mail->Password   = 'asrkatipunan1'; 
+    $mail->SMTPSecure = PHPMailer::ENCRYPTION_STARTTLS; 
+    $mail->Port       = 587; 
 
     // Recipients
     $mail->setFrom('your-email@gmail.com', 'Your Name'); 
