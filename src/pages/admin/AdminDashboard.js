@@ -16,6 +16,7 @@ import { RiDiscountPercentLine } from "react-icons/ri";
 import { AiOutlineShopping } from "react-icons/ai";
 import { VscSettings } from "react-icons/vsc";
 import { IoCallOutline } from "react-icons/io5";
+import { MdOutlineMedicalServices } from "react-icons/md";
 
 //imports for buttons
 import Admin from '../../components/admin/dashboard/admin.js';
@@ -28,6 +29,7 @@ import Messages from '../../components/admin/dashboard/messages.js';
 import Products from '../../components/admin/dashboard/products.js';
 import Promos from '../../components/admin/dashboard/promos.js';
 import Services from '../../components/admin/dashboard/services.js';
+import Surgeries from '../../components/admin/dashboard/surgeries.js';
 import Users from '../../components/admin/dashboard/users.js';
 
 
@@ -70,6 +72,10 @@ const Dashboard = (faqs) => {
     ),
     ManageFAQ: (
         <Faqs />
+    ),
+
+    ManageSurgeries: (
+      <Surgeries />
     ),
 
     ManageContact: (
@@ -125,6 +131,11 @@ const Dashboard = (faqs) => {
         <div className="button-page">
           <Button onClick={() => setActivePage("ManageProducts")} isActive={activePage === "ManageProducts"}>
             <AiOutlineShopping className="icon" />Manage Products
+          </Button>
+        </div>
+        <div className="button-page">
+          <Button onClick={() => setActivePage("ManageSurgeries")} isActive={activePage === "ManageSurgeries"}>
+            <MdOutlineMedicalServices className="icon" />Manage Surgeries
           </Button>
         </div>
         <div className="button-page">
