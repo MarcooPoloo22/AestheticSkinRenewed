@@ -362,3 +362,34 @@
 .table-cell {
   background-color: #fff;
 }
+
+/* admin contact */
+
+.contact-input{
+  display: flex;
+  align-items: center;
+  flex-wrap: nowrap;
+  flex-shrink: 0;
+  gap: 227px;
+  position: relative;
+  width: 436px;
+  height: 44px;
+  background: #ffffff;
+  border: 1px solid #3a57e8;
+  border-radius: 4px;
+  margin-top: 1.5%;
+  margin-bottom: 1.5%;
+}
+
+.contact-label{
+  position: relative;
+  color: #8a92a6;
+  font-family: Inter, var(--default-font-family);
+  font-size: 16px;
+  font-weight: 400;
+  line-height: 28px;
+  text-align: left;
+  white-space: nowrap;
+  z-index: 9;
+  margin-bottom: 4.8%;
+}

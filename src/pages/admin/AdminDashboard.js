@@ -15,10 +15,12 @@ import { FaRegHandPaper } from "react-icons/fa";
 import { RiDiscountPercentLine } from "react-icons/ri";
 import { AiOutlineShopping } from "react-icons/ai";
 import { VscSettings } from "react-icons/vsc";
+import { IoCallOutline } from "react-icons/io5";
 
 //imports for buttons
 import Admin from '../../components/admin/dashboard/admin.js';
 import Appointments from '../../components/admin/dashboard/appointments.js';
+import Contact from '../../components/admin/dashboard/contact.js';
 import DashboardCalendar from '../../components/admin/dashboard/dashboard.js';
 import Faqs from '../../components/admin/dashboard/faqs.js';
 import Logs from '../../components/admin/dashboard/logs.js';
@@ -68,7 +70,11 @@ const Dashboard = (faqs) => {
     ),
     ManageFAQ: (
         <Faqs />
-      ),
+    ),
+
+    ManageContact: (
+      <Contact />
+    ),
   
     ManageAppointments: (
       <Appointments />
@@ -124,6 +130,11 @@ const Dashboard = (faqs) => {
         <div className="button-page">
           <Button onClick={() => setActivePage("ManageFAQ")} isActive={activePage === "ManageFAQ"}>
             <RiEditBoxLine className="icon" />Manage FAQ
+          </Button>
+        </div>
+        <div className="button-page">
+          <Button onClick={() => setActivePage("ManageContact")} isActive={activePage === "ManageContact"}>
+            <IoCallOutline className="icon" />Manage Contact
           </Button>
         </div>
         <div className="divider" />
