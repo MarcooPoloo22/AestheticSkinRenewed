@@ -9,50 +9,19 @@
 
   background-color: var(--bs-body-bg);
   color: var(--bs-body-color);
-  padding: 40px 0;
-}
-
-@media (min-width: 768px) {
-  .ezy__footer4 {
-    padding: 60px 0;
-  }
-}
-
-/* Gray Block Style */
-.gray .ezy__footer4,
-.ezy__footer4.gray {
-  /* Bootstrap variables */
-  --bs-body-bg: rgb(246, 246, 246);
-}
-
-/* Dark Gray Block Style */
-.dark-gray .ezy__footer4,
-.ezy__footer4.dark-gray {
-  /* Bootstrap variables */
-  --bs-body-color: #ffffff;
-  --bs-body-bg: rgb(30, 39, 53);
-}
-
-.dark .ezy__footer4,
-.ezy__footer4.dark {
-  /* Bootstrap variables */
-  --bs-body-color: #ffffff;
-  --bs-body-bg: rgb(11, 23, 39);
+  padding-top: 5px; /* Smaller padding */
+  padding-bottom: 5px; /* Smaller padding */
+  height: auto; /* Adjust to content */
 }
 
 .ezy__footer4-nav .nav-link {
   color: var(--bs-body-color);
 }
 
-.ezy__footer4-nav .nav-link:hover {
-  color: var(--bs-body-color);
-  opacity: 0.8;
-}
-
 .ezy__footer4-social li {
   list-style-type: none;
   display: inline-block;
-  margin: 6px 8px;
+  margin: 0 8px; /* Controls spacing between icons */
 }
 
 .ezy__footer4-social li a {
@@ -60,26 +29,32 @@
   width: 30px;
   height: 30px;
   text-decoration: none;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border: 1px solid #ffffff;
+  border-radius: 50%;
 }
 
-.ezy__footer4-social li a:hover {
-  background-color: var(--bs-body-color);
-  color: var(--ezy-theme-color);
+/* Align all icons and texts at the bottom */
+.footer-content {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end; /* Align everything to the bottom */
+  gap: 10px;
 }
 
-.ezy__footer4-quick-links li {
-  margin-bottom: 8px;
+/* "ASR" floating and centered */
+.footer-logo {
+  font-size: 2rem;
+  font-weight: bold;
+  text-align: center;
+  margin-bottom: 10px;
 }
 
-.ezy__footer4-quick-links li a {
-  color: var(--bs-body-color);
-  opacity: 0.7;
-  text-decoration: none;
-}
-
-.ezy__footer4-quick-links li a:hover {
-  color: var(--bs-body-color);
-  opacity: 1;
+/* Copyright aligned with social icons */
+.copyright {
+  text-align: left;
 }
 
 html,
@@ -97,5 +72,5 @@ body {
 }
 
 .main-content {
-  flex: 1; /* Pushes the footer to the bottom */
+  flex: 1; /* Push footer to the bottom */
 }
