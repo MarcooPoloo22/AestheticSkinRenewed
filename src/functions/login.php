@@ -6,12 +6,17 @@ header("Content-Type: application/json; charset=UTF-8");
 header("Access-Control-Allow-Methods: POST, OPTIONS");
 header("Access-Control-Max-Age: 3600");
 header("Access-Control-Allow-Headers: Content-Type, Access-Control-Allow-Headers, Authorization, X-Requested-With");
-header("Access-Control-Allow-Credentials: true"); // Allow credentials (cookies)
+header("Access-Control-Allow-Credentials: true");
 
 error_reporting(E_ALL);
 ini_set('display_errors', 0);
 ini_set('log_errors', 1);
 ini_set('error_log', 'C:\xampp\htdocs\error.log');
+
+if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
+    http_response_code(200);
+    exit();
+}
 
 $input = file_get_contents("php://input");
 $data = json_decode($input, true);
@@ -51,10 +56,21 @@ try {
         exit();
     }
 
-    $_SESSION['user_id'] = $user['id'];
-    $_SESSION['role'] = $user['role'];
+    // Check if the user is verified
+    if (!$user['verified']) {
+        http_response_code(403); // Forbidden
+        echo json_encode(['status' => 'error', 'message' => 'Your account is not verified. Please check your email to verify your account.']);
+        exit();
+    }
 
-    echo json_encode(['status' => 'success', 'message' => 'Login successful.', 'role' => $user['role']]);
+    // Store user data in session
+    $_SESSION['user'] = $user; // Store the full user object in the session
+
+    echo json_encode([
+        'status' => 'success',
+        'message' => 'Login successful.',
+        'user' => $user, // Return the full user object
+    ]);
 } catch (PDOException $e) {
     error_log('Database Error: ' . $e->getMessage());
     echo json_encode(['status' => 'error', 'message' => 'Failed to process your request.']);

@@ -1,8 +1,9 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import Swal from "sweetalert2";
 import "../../styles/customer/BookingPage.css";
 import "bootstrap/dist/css/bootstrap.min.css";
+
 
 const BookingPageRegistered = ({ user }) => {
   const [formData, setFormData] = useState({
@@ -15,6 +16,19 @@ const BookingPageRegistered = ({ user }) => {
 
   const navigate = useNavigate();
 
+  
+  useEffect(() => {
+    if (!user) {
+      Swal.fire({
+        icon: "error",
+        title: "Not Logged In",
+        text: "You need to log in to book an appointment.",
+      }).then(() => {
+        navigate("/login"); 
+      });
+    }
+  }, [user, navigate]);
+
   const handleChange = (e) => {
     const { name, value } = e.target;
     setFormData({ ...formData, [name]: value });
@@ -23,6 +37,16 @@ const BookingPageRegistered = ({ user }) => {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
+   
+    if (!user) {
+      Swal.fire({
+        icon: "error",
+        title: "Not Logged In",
+        text: "You need to log in to book an appointment.",
+      });
+      return;
+    }
+
     try {
       const response = await fetch("http://localhost/booking.php", {
         method: "POST",
@@ -30,8 +54,8 @@ const BookingPageRegistered = ({ user }) => {
           "Content-Type": "application/json",
         },
         body: JSON.stringify({
-          user_id: user.id, // Include user_id for registered users
-          first_name: user.first_name,
+          user_id: user.id,
+          first_name: user.first_name, 
           last_name: user.last_name,
           email: user.email,
           contact_no: user.contact_no,
@@ -49,7 +73,7 @@ const BookingPageRegistered = ({ user }) => {
           title: "Success!",
           text: result.message,
         }).then(() => {
-          navigate("/profile"); // Redirect to profile for registered users
+          navigate("/profile"); 
         });
       } else {
         Swal.fire({
@@ -183,6 +207,7 @@ const BookingPageRegistered = ({ user }) => {
   );
 };
 
+
 const BookingPageGuest = () => {
   const [formData, setFormData] = useState({
     firstName: "",
@@ -213,7 +238,7 @@ const BookingPageGuest = () => {
           "Content-Type": "application/json",
         },
         body: JSON.stringify({
-          user_id: null, // NULL for guest customers
+          user_id: null, 
           first_name: formData.firstName,
           last_name: formData.lastName,
           email: formData.email,

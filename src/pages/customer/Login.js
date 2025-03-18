@@ -3,7 +3,7 @@ import "../../styles/customer/Login.css";
 import { Link, useNavigate } from "react-router-dom";
 import Swal from "sweetalert2";
 
-const Login = ({ setIsLoggedIn }) => { // Accept setIsLoggedIn as a prop
+const Login = ({ setIsLoggedIn, setUser }) => { 
   const [formData, setFormData] = useState({
     email: "",
     password: "",
@@ -26,27 +26,28 @@ const Login = ({ setIsLoggedIn }) => { // Accept setIsLoggedIn as a prop
           "Content-Type": "application/json",
         },
         body: JSON.stringify(formData),
-        credentials: "include", // Include cookies for session management
+        credentials: "include", 
       });
 
       const result = await response.json();
 
       if (result.status === "success") {
-        setIsLoggedIn(true); // Update the login state
+        setIsLoggedIn(true); 
+        setUser(result.user); 
         Swal.fire({
           icon: "success",
           title: "Success!",
           text: result.message,
         }).then(() => {
-          // Redirect based on user role
-          if (result.role === "admin") {
-            navigate("/admindashboard"); // Redirect to Admin Dashboard
+          
+          if (result.user.role === "admin") {
+            navigate("/admindashboard"); 
           } else {
-            navigate("/"); // Redirect to Home Page for customers
+            navigate("/"); 
           }
         });
       } else if (result.message === "Your account is not verified. Please check your email to verify your account.") {
-        // Show SweetAlert for unverified accounts
+        
         Swal.fire({
           icon: "warning",
           title: "Account Not Verified",

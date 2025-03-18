@@ -63,7 +63,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
     // Check staff availability
     try {
-        // Example: Assume 2 staff members are available
         $stmt = $conn->prepare("
             SELECT COUNT(*) as total_bookings
             FROM bookings

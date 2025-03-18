@@ -24,7 +24,7 @@ const App = () => {
     <>
       <div className="main-content">
         <Router>
-          <Navbar isLoggedIn={isLoggedIn} setIsLoggedIn={setIsLoggedIn} /> {/* Pass isLoggedIn and setIsLoggedIn */}
+          <Navbar isLoggedIn={isLoggedIn} setIsLoggedIn={setIsLoggedIn} />
           <main>
             <Routes>
               <Route path="/" element={<Home />} />
@@ -32,27 +32,34 @@ const App = () => {
               <Route path="/products" element={<Products />} />
               <Route path="/faq" element={<FAQ />} />
               <Route path="/contact" element={<Contact />} />
+
+              {/* Pass setIsLoggedIn and setUser to Login */}
               <Route
                 path="/login"
-                element={<Login setIsLoggedIn={setIsLoggedIn} />} // Pass setIsLoggedIn
+                element={<Login setIsLoggedIn={setIsLoggedIn} setUser={setUser} />}
               />
+
               <Route path="/create-account" element={<CreateAccount />} />
               <Route path="/forgot-password" element={<ForgotPassword />} />
               <Route path="/admindashboard" element={<AdminDashboard />} />
 
+              {/* Conditional rendering for booking page */}
               <Route
                 path="/booking"
                 element={
-                  user ? (
+                  isLoggedIn ? (
                     <BookingPageRegistered user={user} />
                   ) : (
                     <BookingPageGuest />
                   )
                 }
               />
+
               <Route path="/payment" element={<CustomerPay />} />
               <Route path="/surgery" element={<SurgAppoint />} />
-              <Route path="/profile" element={<ProfilePage />} />
+
+              {/* Pass user to ProfilePage */}
+              <Route path="/profile" element={<ProfilePage user={user} />} />
             </Routes>
           </main>
         </Router>
