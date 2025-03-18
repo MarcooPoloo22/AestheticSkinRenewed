@@ -86,7 +86,7 @@
     background-color: transparent;
     border: none;
     padding: 0px;
-    margin-bottom: -3px;
+    margin-bottom: 12px;
     color: #4F9EF7;
     cursor: pointer;
   }
@@ -96,7 +96,7 @@
     border: none;
     margin-left: 2px;
     padding: 0px;
-    margin-bottom: -3px;
+    margin-bottom: 12px;
     color: #D20200;
     cursor: pointer;
   }
