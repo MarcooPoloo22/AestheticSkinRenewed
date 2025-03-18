@@ -194,22 +194,24 @@
   .search-container {
     position: relative;
     display: inline-block;
+    top: -1px;
   }
   
   .faq-search-bar {
+    margin-top: -1px;
     padding: 8px 10px 8px 30px;
-    height: 11px;
+    height: 28px;
     border: 1px solid #ccc;
     border-radius: 4px;
-    font-size: 12px;
-    width: 100px;
+    font-size: 14px;
+    width: 150px;
     margin-left: 5px;
   }
   
   .search-icon {
     position: absolute;
     left: 10px; 
-    top: 50%;
+    top: 35%;
     transform: translateY(-50%); 
     color: #888; 
     pointer-events: none;
