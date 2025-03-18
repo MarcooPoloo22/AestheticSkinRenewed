@@ -1,64 +1,39 @@
+/* Footer styling */
 .ezy__footer4 {
-  /* Bootstrap variables */
   --bs-body-color: #ffffff;
   --bs-body-bg: rgb(0, 0, 0);
-
-  /* Easy Frontend variables */
   --ezy-theme-color: rgb(13, 110, 253);
   --ezy-theme-color-rgb: 13, 110, 253;
 
   background-color: var(--bs-body-bg);
   color: var(--bs-body-color);
-  padding-top: 5px; /* Smaller padding */
-  padding-bottom: 5px; /* Smaller padding */
-  height: auto; /* Adjust to content */
+  padding-top: 5px; /* Small padding */
+  padding-bottom: 5px; /* Small padding */
+  height: auto;
+  text-align: center;
 }
 
-.ezy__footer4-nav .nav-link {
-  color: var(--bs-body-color);
-}
-
-.ezy__footer4-social li {
-  list-style-type: none;
-  display: inline-block;
-  margin: 0 8px; /* Controls spacing between icons */
-}
-
-.ezy__footer4-social li a {
-  color: var(--bs-body-color);
-  width: 30px;
-  height: 30px;
-  text-decoration: none;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  border: 1px solid #ffffff;
-  border-radius: 50%;
-}
-
-/* Align all icons and texts at the bottom */
-.footer-content {
-  display: flex;
-  justify-content: space-between;
-  align-items: flex-end; /* Align everything to the bottom */
-  gap: 10px;
-}
-
-/* "ASR" floating and centered */
+/* Add spacing above "ASR" */
 .footer-logo {
   font-size: 2rem;
   font-weight: bold;
   text-align: center;
+  margin-top: 30px; /* Adjusted spacing */
   margin-bottom: 10px;
 }
 
-/* Copyright aligned with social icons */
-.copyright {
-  text-align: left;
+/* Remove social media icons */
+.ezy__footer4-social {
+  display: none;
 }
 
-html,
-body {
+/* Remove copyright text */
+.copyright {
+  display: none;
+}
+
+/* Ensure footer is always at the bottom */
+html, body {
   height: 100%;
   margin: 0;
   display: flex;
