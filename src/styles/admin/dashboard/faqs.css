@@ -1,17 +1,33 @@
   /* faqs css*/
 
-  .faq-main-container{
+  .faq-main-container {
     display: flex;
     flex-direction: column;
     justify-content: center;
     padding: 20px;
-    height: -900vh;
+    width: calc(100% - 18px); /* Account for margins */
     background: white;
     border-radius: 3px;
+    margin-top: 4px;
     margin-left: 14px;
     margin-right: 4px;
     box-shadow: 0px 2px 10px rgba(0, 0, 0, 0.1);
+    overflow-x: hidden; /* Prevents horizontal scrolling */
   }
+
+  .faq-main-container * {
+    max-width: 100%; /* Prevents elements from exceeding the container */
+    box-sizing: border-box; /* Ensures padding/margins don't break width */
+  }
+
+  html, body {
+    margin: 0;
+    padding: 0;
+    overflow-x: hidden; /* Prevents horizontal scrolling */
+    width: 100%;
+  }
+
+
 
   .faq-text{
     color: #04040b;
@@ -70,7 +86,7 @@
     background-color: transparent;
     border: none;
     padding: 0px;
-    margin-bottom: -3px;
+    margin-bottom: 12px;
     color: #4F9EF7;
     cursor: pointer;
   }
@@ -80,7 +96,7 @@
     border: none;
     margin-left: 2px;
     padding: 0px;
-    margin-bottom: -3px;
+    margin-bottom: 12px;
     color: #D20200;
     cursor: pointer;
   }
@@ -178,22 +194,24 @@
   .search-container {
     position: relative;
     display: inline-block;
+    top: -1px;
   }
   
   .faq-search-bar {
+    margin-top: -1px;
     padding: 8px 10px 8px 30px;
-    height: 11px;
+    height: 28px;
     border: 1px solid #ccc;
     border-radius: 4px;
-    font-size: 12px;
-    width: 100px;
+    font-size: 14px;
+    width: 150px;
     margin-left: 5px;
   }
   
   .search-icon {
     position: absolute;
     left: 10px; 
-    top: 50%;
+    top: 35%;
     transform: translateY(-50%); 
     color: #888; 
     pointer-events: none;
@@ -202,13 +220,37 @@
 
   .date-row {
     display: flex;
+    align-items: center;
+    width: 602px;
+    justify-content: space-evenly;
     gap: 16px; /* Adjust the gap between the inputs as needed */
   }
+
   
   .date-input {
     flex: 1; /* Ensures both inputs take equal width */
+    justify-content: space-between; /* Pushes child elements to opposite ends */
+    align-items: center; /* Aligns items vertically */
   }
 
+  .dateInput {
+    padding: 2px 0 2px 12px;
+    height: 30px;
+    color: #04040b;
+    display: flex;
+    border-radius: 8px;
+    justify-content: space-between;
+    border: 1px solid #989898;
+    align-items: center;
+    font-family: Inter, var(--default-font-family);
+    font-size: 13px;
+  }
+
+  .dateInput::-webkit-calendar-picker-indicator {
+    position: absolute;
+    margin-left: 250px;
+    cursor: pointer;
+  }
 
   /* adminDashboard.css */
 .calendar-container {

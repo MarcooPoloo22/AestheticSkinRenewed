@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import { Calendar, momentLocalizer } from "react-big-calendar";
 import moment from "moment";
 import "react-big-calendar/lib/css/react-big-calendar.css";
@@ -53,6 +53,27 @@ const LogsTable = () => {
 };
 
 const DashboardCalendar = () => {
+  // State to store the total services count
+  const [totalServices, setTotalServices] = useState(0);
+  // State to store the total products count
+  const [totalProducts, setTotalProducts] = useState(0);
+
+  // Fetch total services count on component mount
+  useEffect(() => {
+    fetch("http://localhost/admin_dashboard_backend/fetch_total_services.php")
+      .then((response) => response.json())
+      .then((data) => setTotalServices(data.total_services))
+      .catch((error) => console.error("Error fetching total services:", error));
+  }, []);
+
+  // Fetch total products count on component mount
+  useEffect(() => {
+    fetch("http://localhost/admin_dashboard_backend/fetch_total_products.php")
+      .then((response) => response.json())
+      .then((data) => setTotalProducts(data.total_products))
+      .catch((error) => console.error("Error fetching total products:", error));
+  }, []);
+
   // Sample appointments data
   const appointments = [
     {
@@ -83,6 +104,7 @@ const DashboardCalendar = () => {
   return (
     <div>
       <div className="dashboard-header">
+        {/* Total Services Card */}
         <div className="dashboad-header-container ">
           <div className="dashboad-header-container-content">
             <div className="dashboad-header-container-image">
@@ -92,11 +114,12 @@ const DashboardCalendar = () => {
             </div>
             <div className="dashboad-header-container-text">
               <div className="dashboad-header-text">Total Services</div>
-              <div className="dashboad-header-count">8</div>
+              <div className="dashboad-header-count">{totalServices}</div>
             </div>
           </div>
         </div>
 
+        {/* Total Products Card */}
         <div className="dashboad-header-container ">
           <div className="dashboad-header-container-content">
             <div className="dashboad-header-container-image">
@@ -106,11 +129,12 @@ const DashboardCalendar = () => {
             </div>
             <div className="dashboad-header-container-text">
               <div className="dashboad-header-text">Total Products</div>
-              <div className="dashboad-header-count">6</div>
+              <div className="dashboad-header-count">{totalProducts}</div>
             </div>
           </div>
         </div>
 
+        {/* Weekly Appointments Card */}
         <div className="dashboad-header-container ">
           <div className="dashboad-header-container-content">
             <div className="dashboad-header-container-image">
@@ -125,6 +149,7 @@ const DashboardCalendar = () => {
           </div>
         </div>
 
+        {/* Registered Users Card */}
         <div className="dashboad-header-container ">
           <div className="dashboad-header-container-content">
             <div className="dashboad-header-container-image">

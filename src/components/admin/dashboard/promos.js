@@ -156,7 +156,7 @@ const ManageFAQEdit = ({ setActivePage, activePage, fetchPromos }) => {
       file_url: activePage.promo.file_url, // Replace with actual file URL
       start_date: startDateTime,
       end_date: endDateTime,
-    };
+    };   
 
     try {
       const response = await fetch(`http://localhost/admin_dashboard_backend/update_promo.php`, {
@@ -433,7 +433,7 @@ const ManageFAQAdd = ({ setActivePage, activePage, fetchPromos }) => {
               <label className="answerLabel" htmlFor="startDateInput">Start Date</label>
               <input
                 type="date"
-                className="answerInput"
+                className="dateInput"
                 id="startDateInput"
                 name="startDateInput"
                 value={startDate}
@@ -445,7 +445,7 @@ const ManageFAQAdd = ({ setActivePage, activePage, fetchPromos }) => {
               <label className="answerLabel" htmlFor="startTimeInput">Start Time</label>
               <input
                 type="time"
-                className="answerInput"
+                className="dateInput"
                 id="startTimeInput"
                 name="startTimeInput"
                 value={startTime}
@@ -459,7 +459,7 @@ const ManageFAQAdd = ({ setActivePage, activePage, fetchPromos }) => {
               <label className="answerLabel" htmlFor="endDateInput">End Date</label>
               <input
                 type="date"
-                className="answerInput"
+                className="dateInput"
                 id="endDateInput"
                 name="endDateInput"
                 value={endDate}
@@ -471,7 +471,7 @@ const ManageFAQAdd = ({ setActivePage, activePage, fetchPromos }) => {
               <label className="answerLabel" htmlFor="endTimeInput">End Time</label>
               <input
                 type="time"
-                className="answerInput"
+                className="dateInput"
                 id="endTimeInput"
                 name="endTimeInput"
                 value={endTime}
