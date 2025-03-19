@@ -14,6 +14,7 @@ import CustomerPay from "./pages/customer/CustomerPayment";
 import SurgAppoint from "./pages/customer/SurgeryAppointment";
 import ProfilePage from "./pages/customer/ProfilePage";
 import AdminDashboard from "./pages/admin/AdminDashboard";
+import SurgeryAppointment from "./pages/customer/SurgeryAppointment";
 import { useState } from "react";
 
 const App = () => {
@@ -32,6 +33,7 @@ const App = () => {
               <Route path="/products" element={<Products />} />
               <Route path="/faq" element={<FAQ />} />
               <Route path="/contact" element={<Contact />} />
+              <Route path="/surgery" element={<SurgeryAppointment />} />
 
               {/* Pass setIsLoggedIn and setUser to Login */}
               <Route

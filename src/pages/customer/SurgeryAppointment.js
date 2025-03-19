@@ -1,6 +1,7 @@
 import React from "react";
+import Card from "../../components/Customers/ServiceCard";
+import ServiceHead from "../../components/Customers/SurgeryHead";
 import "../../styles/customer/SurgeryAppointment.css";
-import "bootstrap/dist/css/bootstrap.min.css";
 
 const surgeryAppointments = [
   {
@@ -75,14 +76,13 @@ function AppointmentPage() {
     <div className="container my-4">
       <div className="row">
         <div className="col-6">
-          <h1 className="page-title">Surgery Appointment</h1>
         </div>
       </div>
-
+      <ServiceHead />
       <div className="row mt-3">
         {surgeryAppointments.map((appointment) => (
           <div className="col-md-12 col-lg-6" key={appointment.id}>
-            <SurgeryCard
+            <Card
               title={appointment.title}
               description={appointment.description}
               time={appointment.time}
