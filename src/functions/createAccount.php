@@ -5,6 +5,12 @@ header( 'Access-Control-Allow-Methods: POST, OPTIONS' );
 header( 'Access-Control-Max-Age: 3600' );
 header( 'Access-Control-Allow-Headers: Content-Type, Access-Control-Allow-Headers, Authorization, X-Requested-With' );
 
+// Handle preflight ( OPTIONS ) requests
+if ( $_SERVER[ 'REQUEST_METHOD' ] === 'OPTIONS' ) {
+    http_response_code( 200 );
+    exit();
+}
+
 error_reporting( E_ALL );
 ini_set( 'display_errors', 0 );
 ini_set( 'log_errors', 1 );
@@ -19,11 +25,6 @@ use PHPMailer\PHPMailer\Exception;
 
 $dotenv = Dotenv\Dotenv::createImmutable( __DIR__ );
 $dotenv->load();
-
-if ( $_SERVER[ 'REQUEST_METHOD' ] === 'OPTIONS' ) {
-    http_response_code( 200 );
-    exit();
-}
 
 $input = file_get_contents( 'php://input' );
 error_log( 'Raw Input: ' . $input );
@@ -99,7 +100,6 @@ if ( $_SERVER[ 'REQUEST_METHOD' ] === 'POST' ) {
             $mail->addAddress( $email );
 
             $verificationLink = "http://localhost/verifyemail.php?token=$verification_token";
-            ;
             $mail->isHTML( true );
             $mail->Subject = 'Verify Your Email Address';
             $mail->Body    = "
@@ -123,6 +123,6 @@ if ( $_SERVER[ 'REQUEST_METHOD' ] === 'POST' ) {
 } else {
     error_log( 'Invalid request method: ' . $_SERVER[ 'REQUEST_METHOD' ] );
     http_response_code( 405 );
-    // Method Not Allowed
     echo json_encode( [ 'status' => 'error', 'message' => 'Invalid request method.' ] );
 }
+?>

@@ -44,7 +44,9 @@ const Epcategory2 = () => {
   useEffect(() => {
     const fetchServices = async () => {
       try {
-        const response = await fetch("http://localhost/admin_dashboard_backend/fetch_services.php");
+        const response = await fetch(
+          "http://localhost/SE/AestheticSkinRenewed/src/functions/admin_dashboard_backend/fetch_services.php"
+        );
         if (!response.ok) {
           throw new Error("Failed to fetch services");
         }
