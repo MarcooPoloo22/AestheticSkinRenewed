@@ -1,16 +1,22 @@
 <?php
-header("Access-Control-Allow-Origin: http://localhost:3000");
-header("Content-Type: application/json; charset=UTF-8");
-header("Access-Control-Allow-Methods: POST, OPTIONS");
-header("Access-Control-Max-Age: 3600");
-header("Access-Control-Allow-Headers: Content-Type, Access-Control-Allow-Headers, Authorization, X-Requested-With");
+header('Access-Control-Allow-Origin: http://localhost:3000');
+header('Content-Type: application/json; charset=UTF-8');
+header('Access-Control-Allow-Methods: POST, OPTIONS');
+header('Access-Control-Max-Age: 3600');
+header('Access-Control-Allow-Headers: Content-Type, Access-Control-Allow-Headers, Authorization, X-Requested-With');
+
+// Handle preflight (OPTIONS) requests
+if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
+    http_response_code(200);
+    exit();
+}
 
 error_reporting(E_ALL);
 ini_set('display_errors', 0);
 ini_set('log_errors', 1);
 ini_set('error_log', 'C:\xampp\htdocs\error.log');
 
-error_log("Script started.");
+error_log('Script started.');
 
 require __DIR__ . '/vendor/autoload.php';
 
@@ -20,18 +26,13 @@ use PHPMailer\PHPMailer\Exception;
 $dotenv = Dotenv\Dotenv::createImmutable(__DIR__);
 $dotenv->load();
 
-if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
-    http_response_code(200);
-    exit();
-}
-
-$input = file_get_contents("php://input");
-error_log("Raw Input: " . $input);
+$input = file_get_contents('php://input');
+error_log('Raw Input: ' . $input);
 
 $data = json_decode($input, true);
 
 if (!$data) {
-    error_log("Invalid JSON input: " . json_last_error_msg());
+    error_log('Invalid JSON input: ' . json_last_error_msg());
     http_response_code(400);
     echo json_encode(['status' => 'error', 'message' => 'Invalid input data.']);
     exit();
@@ -61,7 +62,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $contact_no = htmlspecialchars($data['contact_no']);
 
     if (!$email) {
-        error_log("Invalid email address: " . $data['email']);
+        error_log('Invalid email address: ' . $data['email']);
         http_response_code(400);
         echo json_encode(['status' => 'error', 'message' => 'Invalid email address.']);
         exit();
@@ -99,7 +100,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $mail->addAddress($email);
 
             $verificationLink = "http://localhost/verifyemail.php?token=$verification_token";
-                ;
             $mail->isHTML(true);
             $mail->Subject = 'Verify Your Email Address';
             $mail->Body    = "
@@ -121,7 +121,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         echo json_encode(['status' => 'error', 'message' => 'Failed to create account: ' . $e->getMessage()]);
     }
 } else {
-    error_log("Invalid request method: " . $_SERVER['REQUEST_METHOD']);
-    http_response_code(405); // Method Not Allowed
+    error_log('Invalid request method: ' . $_SERVER['REQUEST_METHOD']);
+    http_response_code(405);
     echo json_encode(['status' => 'error', 'message' => 'Invalid request method.']);
 }
+?>
