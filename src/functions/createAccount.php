@@ -15,6 +15,22 @@ error_reporting( E_ALL );
 ini_set( 'display_errors', 0 );
 ini_set( 'log_errors', 1 );
 ini_set( 'error_log', 'C:\xampp\htdocs\error.log' );
+header( 'Access-Control-Allow-Origin: http://localhost:3000' );
+header( 'Content-Type: application/json; charset=UTF-8' );
+header( 'Access-Control-Allow-Methods: POST, OPTIONS' );
+header( 'Access-Control-Max-Age: 3600' );
+header( 'Access-Control-Allow-Headers: Content-Type, Access-Control-Allow-Headers, Authorization, X-Requested-With' );
+
+// Handle preflight ( OPTIONS ) requests
+if ( $_SERVER[ 'REQUEST_METHOD' ] === 'OPTIONS' ) {
+    http_response_code( 200 );
+    exit();
+}
+
+error_reporting( E_ALL );
+ini_set( 'display_errors', 0 );
+ini_set( 'log_errors', 1 );
+ini_set( 'error_log', 'C:\xampp\htdocs\error.log' );
 
 error_log( 'Script started.' );
 
@@ -25,6 +41,9 @@ use PHPMailer\PHPMailer\Exception;
 
 $dotenv = Dotenv\Dotenv::createImmutable( __DIR__ );
 $dotenv->load();
+
+$input = file_get_contents( 'php://input' );
+error_log( 'Raw Input: ' . $input );
 
 $input = file_get_contents( 'php://input' );
 error_log( 'Raw Input: ' . $input );
@@ -101,6 +120,7 @@ if ( $_SERVER[ 'REQUEST_METHOD' ] === 'POST' ) {
 
             $verificationLink = "http://localhost/verifyemail.php?token=$verification_token";
             $mail->isHTML( true );
+            $mail->isHTML( true );
             $mail->Subject = 'Verify Your Email Address';
             $mail->Body    = "
                 <h2>Email Verification</h2>
@@ -124,5 +144,10 @@ if ( $_SERVER[ 'REQUEST_METHOD' ] === 'POST' ) {
     error_log( 'Invalid request method: ' . $_SERVER[ 'REQUEST_METHOD' ] );
     http_response_code( 405 );
     echo json_encode( [ 'status' => 'error', 'message' => 'Invalid request method.' ] );
+    error_log( 'Invalid request method: ' . $_SERVER[ 'REQUEST_METHOD' ] );
+    http_response_code( 405 );
+    echo json_encode( [ 'status' => 'error', 'message' => 'Invalid request method.' ] );
 }
+?>
+
 ?>

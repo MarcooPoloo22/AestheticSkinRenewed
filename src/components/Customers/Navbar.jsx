@@ -111,6 +111,15 @@ const Navbar = ({ isLoggedIn, setIsLoggedIn }) => { // Accept isLoggedIn and set
               <li className="nav-item">
                 <NavLink
                   className="nav-link"
+                  to="/surgery"
+                  activeClassName="active"
+                >
+                  Surgery
+                </NavLink>
+              </li>
+              <li className="nav-item">
+                <NavLink
+                  className="nav-link"
                   to="/faq"
                   activeClassName="active"
                 >
