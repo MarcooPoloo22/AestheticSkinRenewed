@@ -29,67 +29,45 @@ const App = () => {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
 
   return (
-    /**
-     * Provide the Router at the top-level
-     */
     <Router>
-      <MainContent
-        user={user}
-        setUser={setUser}
-        isLoggedIn={isLoggedIn}
-        setIsLoggedIn={setIsLoggedIn}
-      />
+      <div className="app-container">
+        <MainContent
+          user={user}
+          setUser={setUser}
+          isLoggedIn={isLoggedIn}
+          setIsLoggedIn={setIsLoggedIn}
+        />
+      </div>
     </Router>
   );
 };
 
 const MainContent = ({ user, setUser, isLoggedIn, setIsLoggedIn }) => {
-  // Access the current location
   const location = useLocation();
-
   const hideAdminUI = location.pathname === "/admindashboard";
 
   return (
     <div className="main-content">
-      {/* Hide Navbar if on /admindashboard */}
-      {!hideAdminUI && (
-        <Navbar isLoggedIn={isLoggedIn} setIsLoggedIn={setIsLoggedIn} />
-      )}
+      {!hideAdminUI && <Navbar isLoggedIn={isLoggedIn} setIsLoggedIn={setIsLoggedIn} />}
 
-      <main>
+      <div className="content">
         <Routes>
           <Route path="/" element={<Home />} />
           <Route path="/services" element={<Services />} />
           <Route path="/products" element={<Products />} />
           <Route path="/faq" element={<FAQ />} />
           <Route path="/contact" element={<Contact />} />
-
-          <Route
-            path="/login"
-            element={<Login setIsLoggedIn={setIsLoggedIn} setUser={setUser} />}
-          />
+          <Route path="/login" element={<Login setIsLoggedIn={setIsLoggedIn} setUser={setUser} />} />
           <Route path="/create-account" element={<CreateAccount />} />
           <Route path="/forgot-password" element={<ForgotPassword />} />
           <Route path="/admindashboard" element={<AdminDashboard />} />
-
-          <Route
-            path="/booking"
-            element={
-              isLoggedIn ? (
-                <BookingPageRegistered user={user} />
-              ) : (
-                <BookingPageGuest />
-              )
-            }
-          />
-
+          <Route path="/booking" element={isLoggedIn ? <BookingPageRegistered user={user} /> : <BookingPageGuest />} />
           <Route path="/payment" element={<CustomerPay />} />
           <Route path="/surgery" element={<SurgAppoint />} />
           <Route path="/profile" element={<ProfilePage user={user} />} />
         </Routes>
-      </main>
+      </div>
 
-      {/* Hide Footer if on /admindashboard */}
       {!hideAdminUI && <Footer />}
     </div>
   );
