@@ -38,9 +38,6 @@ const FAQTable = ({ setActivePage, activePage, data }) => {
       name: 'Action',
       cell: row => (
         <div>
-          <button onClick={() => setActivePage("ManageFAQEdit")} className="edit-button">
-            <FaRegEdit />
-          </button>
           <button className="delete-button">
             <FaRegTrashAlt />
           </button>
