@@ -21,6 +21,7 @@ import { MdOutlineMedicalServices } from "react-icons/md";
 //imports for buttons
 import Admin from "../../components/admin/dashboard/admin.js";
 import Appointments from "../../components/admin/dashboard/appointments.js";
+import Branch from "../../components/admin/dashboard/branch.js";
 import Contact from "../../components/admin/dashboard/contact.js";
 import DashboardCalendar from "../../components/admin/dashboard/dashboard.js";
 import Faqs from "../../components/admin/dashboard/faqs.js";
@@ -54,7 +55,7 @@ const Dashboard = (faqs) => {
 
   const pages = {
     Home: <DashboardCalendar />,
-    Profile: <div className="page-content">This is your Profile</div>,
+    Profile: <Branch />,
     Messages: <Messages />,
     ManageServices: <Services />,
     ManagePromos: <Promos />,
