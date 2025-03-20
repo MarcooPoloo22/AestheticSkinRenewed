@@ -18,7 +18,6 @@ const customStyles = {
 
 const FAQTable = ({ setActivePage, activePage, data, setServices, setServiceToEdit }) => {
   const handleDelete = (id) => {
-    console.log("Deleting service with ID:", id); // Debugging
     Swal.fire({
       title: 'Are you sure?',
       text: 'You will not be able to recover this service!',
@@ -35,68 +34,34 @@ const FAQTable = ({ setActivePage, activePage, data, setServices, setServiceToEd
           },
           body: JSON.stringify({ id }),
         })
-          .then(response => {
-            if (!response.ok) {
-              throw new Error(`HTTP error! Status: ${response.status}`);
-            }
-            return response.json();
-          })
+          .then(response => response.json())
           .then(data => {
-            console.log("Delete response data:", data); // Debugging
             Swal.fire({
               title: 'Deleted!',
               text: data.message,
               icon: 'success',
               confirmButtonText: 'OK',
             });
-            // Refresh services list
             fetch('http://localhost/admin_dashboard_backend/fetch_services.php')
               .then(response => response.json())
-              .then(data => {
-                console.log("Updated services after delete:", data); // Debugging
-                setServices(data);
-              })
-              .catch(error => console.error('Error fetching services:', error));
+              .then(data => setServices(data));
           })
           .catch(error => {
             console.error('Error deleting service:', error);
-            Swal.fire({
-              title: 'Error!',
-              text: 'Failed to delete service. Please check the console for details.',
-              icon: 'error',
-              confirmButtonText: 'OK',
-            });
+            Swal.fire('Error!', 'Failed to delete service', 'error');
           });
       }
     });
   };
 
-  // Define columns
   const columns = [
-    {
-      name: 'Name',
-      selector: row => row.name,
-      sortable: true,
-    },
-    {
-      name: 'Description',
-      selector: row => row.description,
-      sortable: true,
-    },
-    {
-      name: 'Price',
-      selector: row => row.price,
-      sortable: true,
-    },
+    { name: 'Name', selector: row => row.name, sortable: true },
+    { name: 'Description', selector: row => row.description, sortable: true },
+    { name: 'Price', selector: row => row.price, sortable: true },
     {
       name: 'File',
-      cell: row => (
-        <a href={row.file_url} target="_blank" rel="noopener noreferrer">
-          View File
-        </a>
-      ),
+      cell: row => <a href={row.file_url} target="_blank" rel="noopener noreferrer">View File</a>,
       ignoreRowClick: true,
-      allowOverflow: true,
     },
     {
       name: 'Action',
@@ -111,192 +76,148 @@ const FAQTable = ({ setActivePage, activePage, data, setServices, setServiceToEd
         </div>
       ),
       ignoreRowClick: true,
-      allowOverflow: true,
-      button: true,
     },
   ];
 
-  return (
-    <DataTable
-      columns={columns}
-      data={data}
-      pagination
-      highlightOnHover
-      responsive
-      customStyles={customStyles}
-    />
-  );
+  return <DataTable columns={columns} data={data} pagination highlightOnHover responsive customStyles={customStyles} />;
 };
 
-const ManageFAQEdit = ({ setActivePage, activePage, serviceToEdit, setServices }) => {
-  const [name, setName] = useState(serviceToEdit.name);
-  const [description, setDescription] = useState(serviceToEdit.description);
-  const [price, setPrice] = useState(serviceToEdit.price);
-  const [file, setFile] = useState(null);
-
-  const handleSubmit = (e) => {
-    e.preventDefault();
-
-    const formData = new FormData();
-    formData.append("id", serviceToEdit.id);
-    formData.append("name", name);
-    formData.append("description", description);
-    formData.append("price", price);
-    if (file) {
-      formData.append("file", file);
-    }
-
-    fetch('http://localhost/admin_dashboard_backend/update_service.php', {
-      method: 'POST',
-      body: formData,
-    })
-      .then(response => {
-        if (!response.ok) {
-          throw new Error(`HTTP error! Status: ${response.status}`);
-        }
-        return response.json();
-      })
-      .then(data => {
-        Swal.fire({
-          title: 'Success!',
-          text: data.message,
-          icon: 'success',
-          confirmButtonText: 'OK',
-        });
-        setActivePage("FAQs"); // Redirect back to Services page
-        // Refresh services list
-        fetch('http://localhost/admin_dashboard_backend/fetch_services.php')
-          .then(response => response.json())
-          .then(data => {
-            console.log("Updated services after edit:", data); // Debugging
-            setServices(data);
-          })
-          .catch(error => console.error('Error fetching services:', error));
-      })
-      .catch(error => {
-        console.error('Error updating service:', error);
-        Swal.fire({
-          title: 'Error!',
-          text: 'Failed to update service. Please check the console for details.',
-          icon: 'error',
-          confirmButtonText: 'OK',
-        });
-      });
-  };
+const MultiSelectDropdown = ({ options, selectedValues, onToggle, placeholder, disabled }) => {
+  const [isOpen, setIsOpen] = useState(false);
 
   return (
-    <div className="faq-main-container">
-      <button onClick={() => setActivePage("FAQs")} className="faq-edit-backbutton">
-        <IoArrowBackOutline />
-      </button>
-      <div className="faq-edit">
-        <div className="align-left">
-          <p className="faq-text">Edit Service</p>
-        </div>
-        <form className="faq-edit" onSubmit={handleSubmit}>
-          <div className="form-group">
-            <label className="questionLabel" htmlFor="nameInput">Name</label>
-            <input
-              className="questionInput"
-              id="nameInput"
-              name="nameInput"
-              placeholder="Value"
-              value={name}
-              onChange={(e) => setName(e.target.value)}
-              required
-            />
-          </div>
-          <div className="form-group">
-            <label className="answerLabel" htmlFor="descriptionInput">Description</label>
-            <input
-              className="answerInput"
-              id="descriptionInput"
-              name="descriptionInput"
-              placeholder="Value"
-              value={description}
-              onChange={(e) => setDescription(e.target.value)}
-              required
-            />
-          </div>
-          <div className="form-group">
-            <label className="answerLabel" htmlFor="priceInput">Price</label>
-            <input
-              className="answerInput"
-              id="priceInput"
-              name="priceInput"
-              placeholder="Value"
-              value={price}
-              onChange={(e) => setPrice(e.target.value)}
-              required
-            />
-          </div>
-          <div className="form-group">
-            <label className="answerLabel" htmlFor="fileInput">File</label>
-            <input
-              type="file"
-              className="answerInput"
-              id="fileInput"
-              name="fileInput"
-              onChange={(e) => setFile(e.target.files[0])}
-            />
-          </div>
-          <button type="submit" className="button-ManageFAQEdit">Save</button>
-        </form>
+    <div className="multi-select-dropdown">
+      <div
+        className={`dropdown-header ${disabled ? 'disabled' : ''}`}
+        onClick={() => !disabled && setIsOpen(!isOpen)}
+      >
+        {selectedValues.length > 0
+          ? `${selectedValues.length} selected`
+          : placeholder}
       </div>
+      {isOpen && (
+        <div className="dropdown-options">
+          {options.map(option => (
+            <label
+              key={option.id}
+              className={`dropdown-option ${selectedValues.includes(option.id) ? 'selected' : ''}`}
+            >
+              <input
+                type="checkbox"
+                checked={selectedValues.includes(option.id)}
+                onChange={() => onToggle(option.id)}
+              />
+              {option.name} - {option.branch_name} 
+            </label>
+          ))}
+        </div>
+      )}
     </div>
   );
 };
 
-const ManageFAQAdd = ({ setActivePage, activePage, setServices }) => {
-  const [name, setName] = useState("");
-  const [description, setDescription] = useState("");
-  const [price, setPrice] = useState("");
-  const [file, setFile] = useState(null);
+
+
+const ServiceForm = ({ setActivePage, initialData, isEditing, setServices }) => {
+  const [formData, setFormData] = useState(initialData);
+  const [branches, setBranches] = useState([]);
+  const [staff, setStaff] = useState([]);
+  const [loadingStaff, setLoadingStaff] = useState(false);
+
+  useEffect(() => {
+    fetchBranches();
+  }, []);
+
+  useEffect(() => {
+    if (formData.selectedBranches.length > 0) {
+      fetchStaff();
+    } else {
+      setStaff([]);
+    }
+  }, [formData.selectedBranches]);
+
+  const fetchBranches = async () => {
+    try {
+      const response = await fetch("http://localhost/admin_dashboard_backend/branch_fetch_branches.php");
+      const data = await response.json();
+      setBranches(data);
+    } catch (error) {
+      console.error("Error fetching branches:", error);
+    }
+  };
+
+  const fetchStaff = async () => {
+    try {
+        setLoadingStaff(true);
+        const response = await fetch(
+            `http://localhost/admin_dashboard_backend/branch_fetch_staff.php?branch_ids=${formData.selectedBranches.join(",")}`
+        );
+        const data = await response.json();
+        setStaff(data);
+    } catch (error) {
+        console.error("Error fetching staff:", error);
+    } finally {
+        setLoadingStaff(false);
+    }
+  };
+
+
+  const handleBranchToggle = (branchId) => {
+    setFormData(prev => ({
+      ...prev,
+      selectedBranches: prev.selectedBranches.includes(branchId)
+        ? prev.selectedBranches.filter(id => id !== branchId)
+        : [...prev.selectedBranches, branchId],
+      selectedStaff: [] // Reset staff when branches change
+    }));
+  };
+
+  const handleStaffToggle = (staffId) => {
+    setFormData(prev => ({
+      ...prev,
+      selectedStaff: prev.selectedStaff.includes(staffId)
+        ? prev.selectedStaff.filter(id => id !== staffId)
+        : [...prev.selectedStaff, staffId]
+    }));
+  };
 
   const handleSubmit = (e) => {
     e.preventDefault();
-
-    const formData = new FormData();
-    formData.append("name", name);
-    formData.append("description", description);
-    formData.append("price", price);
-    formData.append("file", file);
-
-    fetch('http://localhost/admin_dashboard_backend/add_service.php', {
+  
+    const formPayload = new FormData();
+    formPayload.append('id', formData.id || '');
+    formPayload.append('name', formData.name);
+    formPayload.append('description', formData.description);
+    formPayload.append('price', formData.price);
+    formPayload.append('branch_ids', JSON.stringify(formData.selectedBranches));
+    formPayload.append('staff_ids', JSON.stringify(formData.selectedStaff));
+    formPayload.append('duration', formData.duration);
+    if (formData.file) {
+      formPayload.append('file', formData.file);
+    }
+  
+    fetch(`http://localhost/admin_dashboard_backend/${isEditing ? 'update' : 'add'}_service.php`, {
       method: 'POST',
-      body: formData,
+      body: formPayload,
     })
       .then(response => {
         if (!response.ok) {
-          throw new Error(`HTTP error! Status: ${response.status}`);
+          return response.text().then(text => {
+            throw new Error(text);
+          });
         }
         return response.json();
       })
       .then(data => {
-        Swal.fire({
-          title: 'Success!',
-          text: data.message,
-          icon: 'success',
-          confirmButtonText: 'OK',
-        });
-        setActivePage("FAQs"); // Redirect back to Services page
-        // Refresh services list
+        Swal.fire('Success!', data.message, 'success');
+        setActivePage("FAQs");
         fetch('http://localhost/admin_dashboard_backend/fetch_services.php')
           .then(response => response.json())
-          .then(data => {
-            console.log("Updated services after add:", data); // Debugging
-            setServices(data);
-          })
-          .catch(error => console.error('Error fetching services:', error));
+          .then(data => setServices(data));
       })
       .catch(error => {
-        console.error('Error adding service:', error);
-        Swal.fire({
-          title: 'Error!',
-          text: 'Failed to add service. Please check the console for details.',
-          icon: 'error',
-          confirmButtonText: 'OK',
-        });
+        console.error('Error:', error);
+        Swal.fire('Error!', 'Operation failed: ' + error.message, 'error');
       });
   };
 
@@ -307,57 +228,102 @@ const ManageFAQAdd = ({ setActivePage, activePage, setServices }) => {
       </button>
       <div className="faq-edit">
         <div className="align-left">
-          <p className="faq-text">Add Service</p>
+          <p className="faq-text">{isEditing ? 'Edit' : 'Add'} Service</p>
         </div>
         <form className="faq-edit" onSubmit={handleSubmit}>
+          {/* Service Fields */}
           <div className="form-group">
             <label className="questionLabel" htmlFor="nameInput">Name</label>
             <input
               className="questionInput"
               id="nameInput"
-              name="nameInput"
-              placeholder="Value"
-              value={name}
-              onChange={(e) => setName(e.target.value)}
+              value={formData.name}
+              onChange={e => setFormData(prev => ({ ...prev, name: e.target.value }))}
               required
             />
           </div>
+
           <div className="form-group">
             <label className="answerLabel" htmlFor="descriptionInput">Description</label>
             <input
               className="answerInput"
               id="descriptionInput"
-              name="descriptionInput"
-              placeholder="Value"
-              value={description}
-              onChange={(e) => setDescription(e.target.value)}
+              value={formData.description}
+              onChange={e => setFormData(prev => ({ ...prev, description: e.target.value }))}
               required
             />
           </div>
+
           <div className="form-group">
             <label className="answerLabel" htmlFor="priceInput">Price</label>
             <input
               className="answerInput"
               id="priceInput"
-              name="priceInput"
-              placeholder="Value"
-              value={price}
-              onChange={(e) => setPrice(e.target.value)}
+              type="number"
+              value={formData.price}
+              onChange={e => setFormData(prev => ({ ...prev, price: e.target.value }))}
               required
             />
           </div>
+
           <div className="form-group">
             <label className="answerLabel" htmlFor="fileInput">File</label>
             <input
-              type="file"
               className="answerInput"
               id="fileInput"
-              name="fileInput"
-              onChange={(e) => setFile(e.target.files[0])}
-              required
+              type="file"
+              onChange={e => setFormData(prev => ({ ...prev, file: e.target.files[0] }))}
+              required={!isEditing}
             />
           </div>
-          <button type="submit" className="button-ManageFAQEdit">Save</button>
+
+          {/* Branch Selection */}
+          <div className="form-group">
+            <label className="questionLabel">Select Branches:</label>
+            <MultiSelectDropdown
+              options={branches}
+              selectedValues={formData.selectedBranches}
+              onToggle={handleBranchToggle}
+              placeholder="Select branches..."
+            />
+            {!branches.length && <p className="text-muted">No branches available</p>}
+          </div>
+
+          {/* Staff Selection */}
+          <div className="form-group">
+            <label className="questionLabel">Select Staff:</label>
+            <MultiSelectDropdown
+              options={staff}
+              selectedValues={formData.selectedStaff}
+              onToggle={handleStaffToggle}
+              placeholder={formData.selectedBranches.length
+                ? (loadingStaff ? "Loading staff..." : "Select staff...")
+                : "Select branches first"}
+              disabled={!formData.selectedBranches.length || loadingStaff}
+            />
+          </div>
+
+          {/* Duration Selection */}
+          <div className="form-group">
+            <label className="questionLabel" htmlFor="duration">Duration (hours)</label>
+            <select
+              className="questionInput"
+              id="duration"
+              value={formData.duration}
+              onChange={e => setFormData(prev => ({ ...prev, duration: e.target.value }))}
+              disabled={!formData.selectedStaff.length}
+            >
+              {[...Array(12).keys()].map(hour => (
+                <option key={hour + 1} value={hour + 1}>
+                  {hour + 1} hour{hour + 1 > 1 ? "s" : ""}
+                </option>
+              ))}
+            </select>
+          </div>
+
+          <button type="submit" className="button-ManageFAQEdit">
+            {isEditing ? 'Update' : 'Create'} Service
+          </button>
         </form>
       </div>
     </div>
@@ -370,26 +336,17 @@ const FAQs = () => {
   const [services, setServices] = useState([]);
   const [serviceToEdit, setServiceToEdit] = useState(null);
 
-  // Fetch services from backend
   useEffect(() => {
-    console.log("Fetching services..."); // Debugging
     fetch('http://localhost/admin_dashboard_backend/fetch_services.php')
-      .then(response => {
-        console.log("Fetch response:", response); // Debugging
-        return response.json();
-      })
-      .then(data => {
-        console.log("Fetched services:", data); // Debugging
-        setServices(data);
-      })
-      .catch(error => console.error('Error fetching services:', error));
+      .then(response => response.json())
+      .then(data => setServices(data))
+      .catch(error => console.error('Error:', error));
   }, []);
 
-  // Filter data based on search text
   const filteredData = services.filter(item =>
-    item.name.toLowerCase().includes(searchText.toLowerCase()) ||
-    item.description.toLowerCase().includes(searchText.toLowerCase()) ||
-    item.price.toLowerCase().includes(searchText.toLowerCase())
+    Object.values(item).some(value =>
+      String(value).toLowerCase().includes(searchText.toLowerCase())
+    )
   );
 
   return (
@@ -399,7 +356,7 @@ const FAQs = () => {
           <div className="faq-header">
             <p className="faq-text">Services</p>
             <div className="faq-header-actions">
-              <button className="add-faq-button" style={{ width: "120px" }} onClick={() => setActivePage("ManageFAQAdd")}>
+              <button style={{width:'150px'}} className="add-faq-button" onClick={() => setActivePage("ManageFAQAdd")}>
                 + Add Service
               </button>
               <div className="search-container">
@@ -408,31 +365,31 @@ const FAQs = () => {
                   type="text"
                   placeholder="Search..."
                   value={searchText}
-                  onChange={(e) => setSearchText(e.target.value)}
+                  onChange={e => setSearchText(e.target.value)}
                   className="faq-search-bar"
                 />
               </div>
             </div>
           </div>
-          <FAQTable
-            setActivePage={setActivePage}
-            activePage={activePage}
-            data={filteredData}
-            setServices={setServices}
-            setServiceToEdit={setServiceToEdit}
-          />
+          <FAQTable {...{ setActivePage, activePage, data: filteredData, setServices, setServiceToEdit }} />
         </div>
-      ) : activePage === "ManageFAQEdit" ? (
-        <ManageFAQEdit
-          setActivePage={setActivePage}
-          activePage={activePage}
-          serviceToEdit={serviceToEdit}
-          setServices={setServices}
-        />
       ) : (
-        <ManageFAQAdd
+        <ServiceForm
           setActivePage={setActivePage}
-          activePage={activePage}
+          initialData={activePage === "ManageFAQEdit" ? {
+            ...serviceToEdit,
+            selectedBranches: serviceToEdit?.branch_ids || [],
+            selectedStaff: serviceToEdit?.staff_ids || [],
+          } : {
+            name: '',
+            description: '',
+            price: '',
+            file: null,
+            selectedBranches: [],
+            selectedStaff: [],
+            duration: 1
+          }}
+          isEditing={activePage === "ManageFAQEdit"}
           setServices={setServices}
         />
       )}

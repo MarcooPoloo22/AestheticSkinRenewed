@@ -16,104 +16,102 @@ const customStyles = {
   },
 };
 
-const SurgeryTable = ({ setActivePage, activePage, data, setAppointments, setAppointmentToEdit }) => {
-  const handleDelete = (id) => {
-    Swal.fire({
-      title: "Are you sure?",
-      text: "You will not be able to recover this appointment!",
-      icon: "warning",
+// MultiSelectDropdown Component (same as in promos.js)
+const MultiSelectDropdown = ({ options, selectedValues, onToggle, placeholder, disabled }) => {
+  const [isOpen, setIsOpen] = useState(false);
+
+  return (
+    <div className="multi-select-dropdown">
+      <div
+        className={`dropdown-header ${disabled ? 'disabled' : ''}`}
+        onClick={() => !disabled && setIsOpen(!isOpen)}
+      >
+        {selectedValues.length > 0
+          ? `${selectedValues.length} selected`
+          : placeholder}
+      </div>
+      {isOpen && (
+        <div className="dropdown-options">
+          {options.map(option => (
+            <label
+              key={option.id}
+              className={`dropdown-option ${selectedValues.includes(option.id) ? 'selected' : ''}`}
+            >
+              <input
+                type="checkbox"
+                checked={selectedValues.includes(option.id)}
+                onChange={() => onToggle(option.id)}
+              />
+              {option.name} - {option.branch_name} 
+            </label>
+          ))}
+        </div>
+      )}
+    </div>
+  );
+};
+
+const SurgeryTable = ({ setActivePage, activePage, data, fetchSurgeries }) => {
+  const handleDelete = async (id) => {
+    const result = await Swal.fire({
+      title: 'Are you sure?',
+      text: 'You will not be able to recover this surgery appointment!',
+      icon: 'warning',
       showCancelButton: true,
-      confirmButtonText: "Yes, delete it!",
-      cancelButtonText: "No, cancel!",
-    }).then((result) => {
-      if (result.isConfirmed) {
-        fetch("http://localhost/admin_dashboard_backend/delete_surgery.php", {
-          method: "DELETE",
+      confirmButtonText: 'Yes, delete it!',
+      cancelButtonText: 'No, cancel!',
+    });
+
+    if (result.isConfirmed) {
+      try {
+        const response = await fetch(`http://localhost/admin_dashboard_backend/delete_surgery.php`, {
+          method: 'DELETE',
           headers: {
-            "Content-Type": "application/json",
+            'Content-Type': 'application/json',
           },
           body: JSON.stringify({ id }),
-        })
-          .then((response) => {
-            if (!response.ok) {
-              throw new Error(`HTTP error! Status: ${response.status}`);
-            }
-            return response.json();
-          })
-          .then((data) => {
-            Swal.fire({
-              title: "Deleted!",
-              text: data.message,
-              icon: "success",
-              confirmButtonText: "OK",
-            });
-            // Refresh appointments list
-            fetch("http://localhost/admin_dashboard_backend/fetch_surgeries.php")
-              .then((response) => response.json())
-              .then((data) => setAppointments(data))
-              .catch((error) => console.error("Error fetching appointments:", error));
-          })
-          .catch((error) => {
-            console.error("Error deleting appointment:", error);
-            Swal.fire({
-              title: "Error!",
-              text: "Failed to delete appointment. Please check the console for details.",
-              icon: "error",
-              confirmButtonText: "OK",
-            });
-          });
+        });
+
+        if (!response.ok) {
+          throw new Error('Failed to delete surgery');
+        }
+
+        const result = await response.json();
+        Swal.fire({
+          title: 'Deleted!',
+          text: result.message,
+          icon: 'success',
+          confirmButtonText: 'OK',
+        });
+        fetchSurgeries();
+      } catch (error) {
+        Swal.fire({
+          title: 'Error!',
+          text: 'Failed to delete surgery. Please check the console for details.',
+          icon: 'error',
+          confirmButtonText: 'OK',
+        });
+        console.error('Error deleting surgery:', error);
       }
-    });
+    }
   };
 
-  // Define columns
   const columns = [
+    { name: 'Title', selector: row => row.title, sortable: true },
+    { name: 'Description', selector: row => row.description, sortable: true },
+    { name: 'Start Date', selector: row => new Date(row.start_date).toLocaleString(), sortable: true },
+    { name: 'End Date', selector: row => new Date(row.end_date).toLocaleString(), sortable: true },
+    { name: 'Price', selector: row => row.price, sortable: true },
     {
-      name: "Title",
-      selector: (row) => row.title,
-      sortable: true,
-    },
-    {
-      name: "Description",
-      selector: (row) => row.description,
-      sortable: true,
-    },
-    {
-      name: "Start Date & Time",
-      selector: (row) => new Date(row.start_date).toLocaleString(),
-      sortable: true,
-    },
-    {
-      name: "End Date & Time",
-      selector: (row) => new Date(row.end_date).toLocaleString(),
-      sortable: true,
-    },
-    {
-      name: "Price",
-      selector: (row) => row.price,
-      sortable: true,
-    },
-    {
-      name: "File",
-      cell: (row) => (
-        <a href={row.image} target="_blank" rel="noopener noreferrer">
-          View File
-        </a>
-      ),
+      name: 'Image',
+      cell: row => <a href={row.image_url} target="_blank" rel="noopener noreferrer">View Image</a>,
       ignoreRowClick: true,
-      allowOverflow: true,
     },
     {
-      name: "Action",
-      cell: (row) => (
+      name: 'Action',
+      cell: row => (
         <div>
-          <button
-            onClick={() => {
-              setAppointmentToEdit(row);
-              setActivePage("ManageSurgeryEdit");
-            }}
-            className="edit-button"
-          >
+          <button onClick={() => setActivePage({ page: "ManageSurgeryEdit", surgery: row })} className="edit-button">
             <FaRegEdit />
           </button>
           <button onClick={() => handleDelete(row.id)} className="delete-button">
@@ -122,87 +120,164 @@ const SurgeryTable = ({ setActivePage, activePage, data, setAppointments, setApp
         </div>
       ),
       ignoreRowClick: true,
-      allowOverflow: true,
-      button: true,
     },
   ];
 
-  return (
-    <DataTable
-      columns={columns}
-      data={data}
-      pagination
-      highlightOnHover
-      responsive
-      customStyles={customStyles}
-    />
-  );
+  return <DataTable columns={columns} data={data} pagination highlightOnHover responsive customStyles={customStyles} />;
 };
 
-const ManageSurgeryEdit = ({ setActivePage, activePage, appointmentToEdit, setAppointments }) => {
-  const [title, setTitle] = useState(appointmentToEdit.title);
-  const [description, setDescription] = useState(appointmentToEdit.description);
-  const [startDate, setStartDate] = useState(appointmentToEdit.start_date);
-  const [startTime, setStartTime] = useState(appointmentToEdit.start_time);
-  const [endDate, setEndDate] = useState(appointmentToEdit.end_date);
-  const [endTime, setEndTime] = useState(appointmentToEdit.end_time);
-  const [price, setPrice] = useState(appointmentToEdit.price);
-  const [image, setImage] = useState(null);
+const ManageSurgeryEdit = ({ setActivePage, activePage, fetchSurgeries }) => {
+  const surgery = activePage.surgery || {};
 
-  const handleSubmit = (e) => {
-    e.preventDefault();
+  // Safely parse dates and times
+  const parseDateTime = (dateTime) => {
+    if (!dateTime) return { date: '', time: '00:00' };
+    
+    try {
+      const [date, time] = dateTime.split('T');
+      return {
+        date: date || '',
+        time: time ? time.substring(0, 5) : '00:00'
+      };
+    } catch (error) {
+      console.error('Error parsing date:', error);
+      return { date: '', time: '00:00' };
+    }
+  };
 
-    const formData = new FormData();
-    formData.append("id", appointmentToEdit.id);
-    formData.append("title", title);
-    formData.append("description", description);
-    formData.append("start_date", startDate);
-    formData.append("start_time", startTime);
-    formData.append("end_date", endDate);
-    formData.append("end_time", endTime);
-    formData.append("price", price);
-    if (image) {
-      formData.append("image", image);
+  const { date: startDate, time: startTime } = parseDateTime(surgery.start_date);
+  const { date: endDate, time: endTime } = parseDateTime(surgery.end_date);
+
+  const [formData, setFormData] = useState({
+    id: surgery.id || '',
+    title: surgery.title || '',
+    description: surgery.description || '',
+    price: surgery.price || '',
+    image_url: surgery.image_url || '',
+    selectedBranches: surgery.branch_ids || [],
+    selectedStaff: surgery.staff_ids || [],
+    duration: surgery.duration || 1,
+    startDate,
+    startTime,
+    endDate,
+    endTime,
+    image: null
+  });
+
+  const [branches, setBranches] = useState([]);
+  const [staff, setStaff] = useState([]);
+  const [loadingStaff, setLoadingStaff] = useState(false);
+
+  useEffect(() => {
+    fetchBranches();
+  }, []);
+
+  useEffect(() => {
+    if (formData.selectedBranches.length > 0) {
+      fetchStaff();
+    } else {
+      setStaff([]);
+    }
+  }, [formData.selectedBranches]);
+
+  const fetchBranches = async () => {
+    try {
+      const response = await fetch("http://localhost/admin_dashboard_backend/branch_fetch_branches.php");
+      const data = await response.json();
+      setBranches(data);
+    } catch (error) {
+      console.error("Error fetching branches:", error);
+    }
+  };
+
+  const fetchStaff = async () => {
+    try {
+      setLoadingStaff(true);
+      const response = await fetch(
+        `http://localhost/admin_dashboard_backend/branch_fetch_staff.php?branch_ids=${formData.selectedBranches.join(",")}`
+      );
+      const data = await response.json();
+      setStaff(data);
+    } catch (error) {
+      console.error("Error fetching staff:", error);
+    } finally {
+      setLoadingStaff(false);
+    }
+  };
+
+  const handleBranchToggle = (branchId) => {
+    setFormData(prev => ({
+      ...prev,
+      selectedBranches: prev.selectedBranches.includes(branchId)
+        ? prev.selectedBranches.filter(id => id !== branchId)
+        : [...prev.selectedBranches, branchId],
+      selectedStaff: []
+    }));
+  };
+
+  const handleStaffToggle = (staffId) => {
+    setFormData(prev => ({
+      ...prev,
+      selectedStaff: prev.selectedStaff.includes(staffId)
+        ? prev.selectedStaff.filter(id => id !== staffId)
+        : [...prev.selectedStaff, staffId]
+    }));
+  };
+
+  const handleSubmit = async (e) => {
+  e.preventDefault();
+  const startDateTime = `${formData.startDate}T${formData.startTime}`;
+  const endDateTime = `${formData.endDate}T${formData.endTime}`;
+
+  const formPayload = new FormData();
+  formPayload.append('id', formData.id);
+  formPayload.append('title', formData.title);
+  formPayload.append('description', formData.description);
+  formPayload.append('price', formData.price);
+  formPayload.append('duration', formData.duration);
+  formPayload.append('branch_ids', JSON.stringify(formData.selectedBranches));
+  formPayload.append('staff_ids', JSON.stringify(formData.selectedStaff));
+  formPayload.append('start_date', startDateTime);
+  formPayload.append('end_date', endDateTime);
+  if (formData.image) {
+    formPayload.append('image', formData.image);
+  }
+
+  try {
+    const response = await fetch('http://localhost/admin_dashboard_backend/update_surgery.php', {
+      method: 'POST',
+      body: formPayload,
+    });
+
+    if (!response.ok) {
+      const errorData = await response.json();
+      throw new Error(errorData.error || 'Failed to update surgery');
     }
 
-    fetch("http://localhost/admin_dashboard_backend/update_surgery.php", {
-      method: "POST",
-      body: formData,
-    })
-      .then((response) => {
-        if (!response.ok) {
-          throw new Error(`HTTP error! Status: ${response.status}`);
-        }
-        return response.json();
-      })
-      .then((data) => {
-        Swal.fire({
-          title: "Success!",
-          text: data.message,
-          icon: "success",
-          confirmButtonText: "OK",
-        });
-        setActivePage("SurgeryAppointments"); // Redirect back to appointments page
-        // Refresh appointments list
-        fetch("http://localhost/admin_dashboard_backend/fetch_surgeries.php")
-          .then((response) => response.json())
-          .then((data) => setAppointments(data))
-          .catch((error) => console.error("Error fetching appointments:", error));
-      })
-      .catch((error) => {
-        console.error("Error updating appointment:", error);
-        Swal.fire({
-          title: "Error!",
-          text: "Failed to update appointment. Please check the console for details.",
-          icon: "error",
-          confirmButtonText: "OK",
-        });
-      });
-  };
+    const result = await response.json();
+    Swal.fire({
+      title: 'Success!',
+      text: result.message,
+      icon: 'success',
+      confirmButtonText: 'OK',
+    });
+
+    fetchSurgeries();
+    setActivePage({ page: "SurgeryAppointments" });
+  } catch (error) {
+    console.error('Error updating surgery:', error);
+    Swal.fire({
+      title: 'Error!',
+      text: error.message || 'Failed to update surgery. Please check the console for details.',
+      icon: 'error',
+      confirmButtonText: 'OK',
+    });
+  }
+};
 
   return (
     <div className="faq-main-container">
-      <button onClick={() => setActivePage("SurgeryAppointments")} className="faq-edit-backbutton">
+      <button onClick={() => setActivePage({ page: "SurgeryAppointments" })} className="faq-edit-backbutton">
         <IoArrowBackOutline />
       </button>
       <div className="faq-edit">
@@ -211,189 +286,263 @@ const ManageSurgeryEdit = ({ setActivePage, activePage, appointmentToEdit, setAp
         </div>
         <form className="faq-edit" onSubmit={handleSubmit}>
           <div className="form-group">
-            <label className="questionLabel" htmlFor="titleInput">
-              Title
-            </label>
+            <label className="questionLabel" htmlFor="titleInput">Title</label>
             <input
               className="questionInput"
               id="titleInput"
-              name="titleInput"
-              placeholder="Value"
-              value={title}
-              onChange={(e) => setTitle(e.target.value)}
+              value={formData.title}
+              onChange={e => setFormData(prev => ({ ...prev, title: e.target.value }))}
               required
             />
           </div>
           <div className="form-group">
-            <label className="answerLabel" htmlFor="descriptionInput">
-              Description
-            </label>
+            <label className="answerLabel" htmlFor="descriptionInput">Description</label>
             <input
               className="answerInput"
               id="descriptionInput"
-              name="descriptionInput"
-              placeholder="Value"
-              value={description}
-              onChange={(e) => setDescription(e.target.value)}
+              value={formData.description}
+              onChange={e => setFormData(prev => ({ ...prev, description: e.target.value }))}
               required
             />
           </div>
           <div className="date-row">
             <div className="date-input">
-              <label className="answerLabel" htmlFor="startDateInput">
-                Start Date
-              </label>
+              <label className="answerLabel" htmlFor="startDateInput">Start Date</label>
               <input
                 type="date"
                 className="answerInput"
                 id="startDateInput"
-                name="startDateInput"
-                value={startDate}
-                onChange={(e) => setStartDate(e.target.value)}
+                value={formData.startDate}
+                onChange={e => setFormData(prev => ({ ...prev, startDate: e.target.value }))}
                 required
               />
             </div>
             <div className="date-input">
-              <label className="answerLabel" htmlFor="startTimeInput">
-                Start Time
-              </label>
+              <label className="answerLabel" htmlFor="startTimeInput">Start Time</label>
               <input
                 type="time"
                 className="answerInput"
                 id="startTimeInput"
-                name="startTimeInput"
-                value={startTime}
-                onChange={(e) => setStartTime(e.target.value)}
+                value={formData.startTime}
+                onChange={e => setFormData(prev => ({ ...prev, startTime: e.target.value }))}
                 required
               />
             </div>
           </div>
           <div className="date-row">
             <div className="date-input">
-              <label className="answerLabel" htmlFor="endDateInput">
-                End Date
-              </label>
+              <label className="answerLabel" htmlFor="endDateInput">End Date</label>
               <input
                 type="date"
                 className="answerInput"
                 id="endDateInput"
-                name="endDateInput"
-                value={endDate}
-                onChange={(e) => setEndDate(e.target.value)}
+                value={formData.endDate}
+                onChange={e => setFormData(prev => ({ ...prev, endDate: e.target.value }))}
                 required
               />
             </div>
             <div className="date-input">
-              <label className="answerLabel" htmlFor="endTimeInput">
-                End Time
-              </label>
+              <label className="answerLabel" htmlFor="endTimeInput">End Time</label>
               <input
                 type="time"
                 className="answerInput"
                 id="endTimeInput"
-                name="endTimeInput"
-                value={endTime}
-                onChange={(e) => setEndTime(e.target.value)}
+                value={formData.endTime}
+                onChange={e => setFormData(prev => ({ ...prev, endTime: e.target.value }))}
                 required
               />
             </div>
           </div>
           <div className="form-group">
-            <label className="answerLabel" htmlFor="priceInput">
-              Price
-            </label>
+            <label className="answerLabel" htmlFor="priceInput">Price</label>
             <input
               className="answerInput"
               id="priceInput"
-              name="priceInput"
-              placeholder="Value"
-              value={price}
-              onChange={(e) => setPrice(e.target.value)}
+              type="number"
+              value={formData.price}
+              onChange={e => setFormData(prev => ({ ...prev, price: e.target.value }))}
               required
             />
           </div>
           <div className="form-group">
-            <label className="answerLabel" htmlFor="imageInput">
-              Image
-            </label>
+            <label className="answerLabel" htmlFor="imageInput">Image</label>
             <input
-              type="file"
               className="answerInput"
               id="imageInput"
-              name="imageInput"
-              onChange={(e) => setImage(e.target.files[0])}
+              type="file"
+              onChange={e => setFormData(prev => ({ ...prev, image: e.target.files[0] }))}
             />
           </div>
-          <button type="submit" className="button-ManageFAQEdit">
-            Save
-          </button>
+          <div className="form-group">
+            <label className="questionLabel">Select Branches:</label>
+            <MultiSelectDropdown
+              options={branches}
+              selectedValues={formData.selectedBranches}
+              onToggle={handleBranchToggle}
+              placeholder="Select branches..."
+            />
+          </div>
+          <div className="form-group">
+            <label className="questionLabel">Select Staff:</label>
+            <MultiSelectDropdown
+              options={staff}
+              selectedValues={formData.selectedStaff}
+              onToggle={handleStaffToggle}
+              placeholder={formData.selectedBranches.length
+                ? (loadingStaff ? "Loading staff..." : "Select staff...")
+                : "Select branches first"}
+              disabled={!formData.selectedBranches.length || loadingStaff}
+            />
+          </div>
+          <div className="form-group">
+            <label className="questionLabel" htmlFor="duration">Duration (hours)</label>
+            <select
+              className="questionInput"
+              id="duration"
+              value={formData.duration}
+              onChange={e => setFormData(prev => ({ ...prev, duration: e.target.value }))}
+              disabled={!formData.selectedStaff.length}
+            >
+              {[...Array(12).keys()].map(hour => (
+                <option key={hour + 1} value={hour + 1}>
+                  {hour + 1} hour{hour + 1 > 1 ? "s" : ""}
+                </option>
+              ))}
+            </select>
+          </div>
+          <button type="submit" className="button-ManageFAQEdit">Save</button>
         </form>
       </div>
     </div>
   );
 };
 
-const ManageSurgeryAdd = ({ setActivePage, activePage, setAppointments }) => {
-  const [title, setTitle] = useState("");
-  const [description, setDescription] = useState("");
-  const [startDate, setStartDate] = useState("");
-  const [startTime, setStartTime] = useState("");
-  const [endDate, setEndDate] = useState("");
-  const [endTime, setEndTime] = useState("");
-  const [price, setPrice] = useState("");
-  const [image, setImage] = useState(null);
+const ManageSurgeryAdd = ({ setActivePage, activePage, fetchSurgeries }) => {
+  const [formData, setFormData] = useState({
+    title: '',
+    description: '',
+    price: '',
+    image: null,
+    selectedBranches: [],
+    selectedStaff: [],
+    duration: 1,
+    startDate: '',
+    startTime: '',
+    endDate: '',
+    endTime: '',
+  });
+  const [branches, setBranches] = useState([]);
+  const [staff, setStaff] = useState([]);
+  const [loadingStaff, setLoadingStaff] = useState(false);
 
-  const handleSubmit = (e) => {
+  useEffect(() => {
+    fetchBranches();
+  }, []);
+
+  useEffect(() => {
+    if (formData.selectedBranches.length > 0) {
+      fetchStaff();
+    } else {
+      setStaff([]);
+    }
+  }, [formData.selectedBranches]);
+
+  const fetchBranches = async () => {
+    try {
+      const response = await fetch("http://localhost/admin_dashboard_backend/branch_fetch_branches.php");
+      const data = await response.json();
+      setBranches(data);
+    } catch (error) {
+      console.error("Error fetching branches:", error);
+    }
+  };
+
+  const fetchStaff = async () => {
+    try {
+      setLoadingStaff(true);
+      const response = await fetch(
+        `http://localhost/admin_dashboard_backend/branch_fetch_staff.php?branch_ids=${formData.selectedBranches.join(",")}`
+      );
+      const data = await response.json();
+      setStaff(data);
+    } catch (error) {
+      console.error("Error fetching staff:", error);
+    } finally {
+      setLoadingStaff(false);
+    }
+  };
+
+  const handleBranchToggle = (branchId) => {
+    setFormData(prev => ({
+      ...prev,
+      selectedBranches: prev.selectedBranches.includes(branchId)
+        ? prev.selectedBranches.filter(id => id !== branchId)
+        : [...prev.selectedBranches, branchId],
+      selectedStaff: []
+    }));
+  };
+
+  const handleStaffToggle = (staffId) => {
+    setFormData(prev => ({
+      ...prev,
+      selectedStaff: prev.selectedStaff.includes(staffId)
+        ? prev.selectedStaff.filter(id => id !== staffId)
+        : [...prev.selectedStaff, staffId]
+    }));
+  };
+
+  const handleSubmit = async (e) => {
     e.preventDefault();
+    const startDateTime = `${formData.startDate}T${formData.startTime}`;
+    const endDateTime = `${formData.endDate}T${formData.endTime}`;
 
-    const formData = new FormData();
-    formData.append("title", title);
-    formData.append("description", description);
-    formData.append("start_date", startDate);
-    formData.append("start_time", startTime);
-    formData.append("end_date", endDate);
-    formData.append("end_time", endTime);
-    formData.append("price", price);
-    formData.append("image", image);
+    const formPayload = new FormData();
+    formPayload.append('title', formData.title);
+    formPayload.append('description', formData.description);
+    formPayload.append('price', formData.price);
+    formPayload.append('duration', formData.duration);
+    formPayload.append('branch_ids', JSON.stringify(formData.selectedBranches));
+    formPayload.append('staff_ids', JSON.stringify(formData.selectedStaff));
+    formPayload.append('start_date', startDateTime);
+    formPayload.append('end_date', endDateTime);
+    if (formData.image) {
+      formPayload.append('image', formData.image);
+    }
 
-    fetch("http://localhost/admin_dashboard_backend/add_surgery.php", {
-      method: "POST",
-      body: formData,
-    })
-      .then((response) => {
-        if (!response.ok) {
-          throw new Error(`HTTP error! Status: ${response.status}`);
-        }
-        return response.json();
-      })
-      .then((data) => {
-        Swal.fire({
-          title: "Success!",
-          text: data.message,
-          icon: "success",
-          confirmButtonText: "OK",
-        });
-        setActivePage("SurgeryAppointments"); // Redirect back to appointments page
-        // Refresh appointments list
-        fetch("http://localhost/admin_dashboard_backend/fetch_surgeries.php")
-          .then((response) => response.json())
-          .then((data) => setAppointments(data))
-          .catch((error) => console.error("Error fetching appointments:", error));
-      })
-      .catch((error) => {
-        console.error("Error adding appointment:", error);
-        Swal.fire({
-          title: "Error!",
-          text: "Failed to add appointment. Please check the console for details.",
-          icon: "error",
-          confirmButtonText: "OK",
-        });
+    try {
+      const response = await fetch(`http://localhost/admin_dashboard_backend/add_surgery.php`, {
+        method: 'POST',
+        body: formPayload,
       });
+
+      if (!response.ok) {
+        throw new Error('Failed to add surgery');
+      }
+
+      const result = await response.json();
+      Swal.fire({
+        title: 'Success!',
+        text: result.message,
+        icon: 'success',
+        confirmButtonText: 'OK',
+      });
+
+      fetchSurgeries();
+      setActivePage({ page: "SurgeryAppointments" });
+    } catch (error) {
+      Swal.fire({
+        title: 'Error!',
+        text: 'Failed to add surgery. Please check the console for details.',
+        icon: 'error',
+        confirmButtonText: 'OK',
+      });
+      console.error('Error adding surgery:', error);
+    }
   };
 
   return (
     <div className="faq-main-container">
-      <button onClick={() => setActivePage("SurgeryAppointments")} className="faq-edit-backbutton">
+      <button onClick={() => setActivePage({ page: "SurgeryAppointments" })} className="faq-edit-backbutton">
         <IoArrowBackOutline />
       </button>
       <div className="faq-edit">
@@ -402,123 +551,132 @@ const ManageSurgeryAdd = ({ setActivePage, activePage, setAppointments }) => {
         </div>
         <form className="faq-edit" onSubmit={handleSubmit}>
           <div className="form-group">
-            <label className="questionLabel" htmlFor="titleInput">
-              Title
-            </label>
+            <label className="questionLabel" htmlFor="titleInput">Title</label>
             <input
               className="questionInput"
               id="titleInput"
-              name="titleInput"
-              placeholder="Value"
-              value={title}
-              onChange={(e) => setTitle(e.target.value)}
+              value={formData.title}
+              onChange={e => setFormData(prev => ({ ...prev, title: e.target.value }))}
               required
             />
           </div>
           <div className="form-group">
-            <label className="answerLabel" htmlFor="descriptionInput">
-              Description
-            </label>
+            <label className="answerLabel" htmlFor="descriptionInput">Description</label>
             <input
               className="answerInput"
               id="descriptionInput"
-              name="descriptionInput"
-              placeholder="Value"
-              value={description}
-              onChange={(e) => setDescription(e.target.value)}
+              value={formData.description}
+              onChange={e => setFormData(prev => ({ ...prev, description: e.target.value }))}
               required
             />
           </div>
           <div className="date-row">
             <div className="date-input">
-              <label className="answerLabel" htmlFor="startDateInput">
-                Start Date
-              </label>
+              <label className="answerLabel" htmlFor="startDateInput">Start Date</label>
               <input
                 type="date"
-                className="dateInput"
+                className="answerInput"
                 id="startDateInput"
-                name="startDateInput"
-                value={startDate}
-                onChange={(e) => setStartDate(e.target.value)}
+                value={formData.startDate}
+                onChange={e => setFormData(prev => ({ ...prev, startDate: e.target.value }))}
                 required
               />
             </div>
             <div className="date-input">
-              <label className="answerLabel" htmlFor="startTimeInput">
-                Start Time
-              </label>
+              <label className="answerLabel" htmlFor="startTimeInput">Start Time</label>
               <input
                 type="time"
-                className="dateInput"
+                className="answerInput"
                 id="startTimeInput"
-                name="startTimeInput"
-                value={startTime}
-                onChange={(e) => setStartTime(e.target.value)}
+                value={formData.startTime}
+                onChange={e => setFormData(prev => ({ ...prev, startTime: e.target.value }))}
                 required
               />
             </div>
           </div>
           <div className="date-row">
             <div className="date-input">
-              <label className="answerLabel" htmlFor="endDateInput">
-                End Date
-              </label>
+              <label className="answerLabel" htmlFor="endDateInput">End Date</label>
               <input
                 type="date"
-                className="dateInput"
+                className="answerInput"
                 id="endDateInput"
-                name="endDateInput"
-                value={endDate}
-                onChange={(e) => setEndDate(e.target.value)}
+                value={formData.endDate}
+                onChange={e => setFormData(prev => ({ ...prev, endDate: e.target.value }))}
                 required
               />
             </div>
             <div className="date-input">
-              <label className="answerLabel" htmlFor="endTimeInput">
-                End Time
-              </label>
+              <label className="answerLabel" htmlFor="endTimeInput">End Time</label>
               <input
                 type="time"
-                className="dateInput"
+                className="answerInput"
                 id="endTimeInput"
-                name="endTimeInput"
-                value={endTime}
-                onChange={(e) => setEndTime(e.target.value)}
+                value={formData.endTime}
+                onChange={e => setFormData(prev => ({ ...prev, endTime: e.target.value }))}
                 required
               />
             </div>
           </div>
           <div className="form-group">
-            <label className="answerLabel" htmlFor="priceInput">
-              Price
-            </label>
+            <label className="answerLabel" htmlFor="priceInput">Price</label>
             <input
               className="answerInput"
               id="priceInput"
-              name="priceInput"
-              placeholder="Value"
-              value={price}
-              onChange={(e) => setPrice(e.target.value)}
+              type="number"
+              value={formData.price}
+              onChange={e => setFormData(prev => ({ ...prev, price: e.target.value }))}
               required
             />
           </div>
           <div className="form-group">
-            <label className="answerLabel" htmlFor="imageInput">
-              Image
-            </label>
+            <label className="answerLabel" htmlFor="imageInput">Image</label>
             <input
-              type="file"
               className="answerInput"
               id="imageInput"
-              name="imageInput"
-              onChange={(e) => setImage(e.target.files[0])}
+              type="file"
+              onChange={e => setFormData(prev => ({ ...prev, image: e.target.files[0] }))}
               required
             />
           </div>
-          <button type="submit" className="button-ManageFAQEdit">
-            Save
-          </button>
+          <div className="form-group">
+            <label className="questionLabel">Select Branches:</label>
+            <MultiSelectDropdown
+              options={branches}
+              selectedValues={formData.selectedBranches}
+              onToggle={handleBranchToggle}
+              placeholder="Select branches..."
+            />
+          </div>
+          <div className="form-group">
+            <label className="questionLabel">Select Staff:</label>
+            <MultiSelectDropdown
+              options={staff}
+              selectedValues={formData.selectedStaff}
+              onToggle={handleStaffToggle}
+              placeholder={formData.selectedBranches.length
+                ? (loadingStaff ? "Loading staff..." : "Select staff...")
+                : "Select branches first"}
+              disabled={!formData.selectedBranches.length || loadingStaff}
+            />
+          </div>
+          <div className="form-group">
+            <label className="questionLabel" htmlFor="duration">Duration (hours)</label>
+            <select
+              className="questionInput"
+              id="duration"
+              value={formData.duration}
+              onChange={e => setFormData(prev => ({ ...prev, duration: e.target.value }))}
+              disabled={!formData.selectedStaff.length}
+            >
+              {[...Array(12).keys()].map(hour => (
+                <option key={hour + 1} value={hour + 1}>
+                  {hour + 1} hour{hour + 1 > 1 ? "s" : ""}
+                </option>
+              ))}
+            </select>
+          </div>
+          <button type="submit" className="button-ManageFAQEdit">Create Surgery</button>
         </form>
       </div>
     </div>
@@ -526,46 +684,57 @@ const ManageSurgeryAdd = ({ setActivePage, activePage, setAppointments }) => {
 };
 
 const SurgeryAppointments = () => {
-  const [activePage, setActivePage] = useState("SurgeryAppointments");
+  const [activePage, setActivePage] = useState({ page: "SurgeryAppointments" });
   const [searchText, setSearchText] = useState("");
-  const [appointments, setAppointments] = useState([]);
-  const [appointmentToEdit, setAppointmentToEdit] = useState(null);
+  const [surgeries, setSurgeries] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
 
-  // Fetch appointments from backend
+  const fetchSurgeries = async () => {
+    try {
+      const response = await fetch("http://localhost/admin_dashboard_backend/fetch_surgeries.php");
+      if (!response.ok) {
+        throw new Error('Failed to fetch surgeries');
+      }
+      const data = await response.json();
+      setSurgeries(data);
+    } catch (error) {
+      setError(error.message);
+    } finally {
+      setLoading(false);
+    }
+  };
+
   useEffect(() => {
-    fetch("http://localhost/admin_dashboard_backend/fetch_surgeries.php")
-      .then((response) => response.json())
-      .then((data) => setAppointments(data))
-      .catch((error) => console.error("Error fetching appointments:", error));
+    fetchSurgeries();
   }, []);
 
-  // Filter data based on search text
-  const filteredData = appointments.filter(
-    (item) =>
-      item.title.toLowerCase().includes(searchText.toLowerCase()) ||
-      item.description.toLowerCase().includes(searchText.toLowerCase()) ||
-      item.price.toLowerCase().includes(searchText.toLowerCase())
+  const filteredData = surgeries.filter(item =>
+    item.title.toLowerCase().includes(searchText.toLowerCase()) ||
+    item.description.toLowerCase().includes(searchText.toLowerCase()) ||
+    item.price.toLowerCase().includes(searchText.toLowerCase()) ||
+    new Date(item.start_date).toLocaleString().toLowerCase().includes(searchText.toLowerCase()) ||
+    new Date(item.end_date).toLocaleString().toLowerCase().includes(searchText.toLowerCase())
   );
+
+  if (loading) return <div>Loading...</div>;
+  if (error) return <div>Error: {error}</div>;
 
   return (
     <>
-      {activePage === "SurgeryAppointments" ? (
+      {activePage.page === "SurgeryAppointments" ? (
         <div className="faq-main-container">
           <div className="faq-header">
             <p className="faq-text">Surgery Appointments</p>
             <div className="faq-header-actions">
-              <button
-                className="add-faq-button"
-                style={{ width: "163px" }}
-                onClick={() => setActivePage("ManageSurgeryAdd")}
-              >
+              <button className="add-faq-button" style={{ width: "163px" }} onClick={() => setActivePage({ page: "ManageSurgeryAdd" })}>
                 + Add Appointment
               </button>
               <div className="search-container">
                 <CiSearch className="search-icon" />
                 <input
                   type="text"
-                  placeholder="Search"
+                  placeholder="Search..."
                   value={searchText}
                   onChange={(e) => setSearchText(e.target.value)}
                   className="faq-search-bar"
@@ -573,27 +742,12 @@ const SurgeryAppointments = () => {
               </div>
             </div>
           </div>
-          <SurgeryTable
-            setActivePage={setActivePage}
-            activePage={activePage}
-            data={filteredData}
-            setAppointments={setAppointments}
-            setAppointmentToEdit={setAppointmentToEdit}
-          />
+          <SurgeryTable setActivePage={setActivePage} activePage={activePage} data={filteredData} fetchSurgeries={fetchSurgeries} />
         </div>
-      ) : activePage === "ManageSurgeryEdit" ? (
-        <ManageSurgeryEdit
-          setActivePage={setActivePage}
-          activePage={activePage}
-          appointmentToEdit={appointmentToEdit}
-          setAppointments={setAppointments}
-        />
+      ) : activePage.page === "ManageSurgeryEdit" ? (
+        <ManageSurgeryEdit setActivePage={setActivePage} activePage={activePage} fetchSurgeries={fetchSurgeries} />
       ) : (
-        <ManageSurgeryAdd
-          setActivePage={setActivePage}
-          activePage={activePage}
-          setAppointments={setAppointments}
-        />
+        <ManageSurgeryAdd setActivePage={setActivePage} activePage={activePage} fetchSurgeries={fetchSurgeries} />
       )}
     </>
   );
