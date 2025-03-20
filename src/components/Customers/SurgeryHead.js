@@ -16,7 +16,7 @@ const Sheader3 = () => {
       <Container>
         <Row className="justify-content-center">
           <Col xs={12} md={8} className="text-center">
-            <h1 className="ezy__secheader3-heading">Our SurgeryAppointments</h1>
+            <h1 className="ezy__secheader3-heading">Our Surgery Appointments</h1>
             <p className="ezy__secheader3-sub-heading mt-4 mb-0"></p>
           </Col>
         </Row>
