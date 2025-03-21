@@ -1,204 +1,132 @@
-import React, { useState, useEffect, useRef } from "react";
-import axios from "axios";
-import "../../../styles/admin/messages.css";
+// src/components/admin/dashboard/messages.js
+import React, { useEffect, useState } from "react";
+import "../../../styles/admin/messages.css"; // Import your custom CSS file
 
-const API_BASE = "https://api.livechatinc.com/v3.5/agent/action";
-const AUTH = `Basic ${btoa(
-  `${process.env.REACT_APP_LIVECHAT_ACCOUNT_ID}:${process.env.REACT_APP_LIVECHAT_TOKEN}`
-)}`;
-
-export default function Messages() {
-  const [agentId, setAgentId] = useState(null);
-
-  useEffect(() => {
-    console.log("Fetching agent ID...");
-    console.log("Authorization Header:", AUTH);
-
-    axios
-      .post(`${API_BASE}/whoami`, {}, { headers: { Authorization: AUTH } })
-      .then((res) => {
-        console.log("API Response:", res.data);
-        setAgentId(res.data.agent.id);
-      })
-      .catch((err) => {
-        console.error("API Error:", err);
-        console.error("Error Details:", err.response?.data);
-
-        if (err.response?.status === 422) {
-          alert(
-            "Invalid credentials or request format. Please check your .env file."
-          );
-        } else {
-          alert("An error occurred while fetching agent details.");
-        }
-      });
-  }, []);
+function Messages() {
   const [chats, setChats] = useState([]);
   const [selectedChat, setSelectedChat] = useState(null);
-  const [messages, setMessages] = useState([]);
-  const [draft, setDraft] = useState("");
-  const chatBodyRef = useRef();
+  const [replyText, setReplyText] = useState("");
 
-  // Fetch active chats
-  useEffect(() => {
-    axios
-      .post(`${API_BASE}/list_chats`, {}, { headers: { Authorization: AUTH } })
-      .then((res) => setChats(res.data.chats_summary))
-      .catch(console.error);
-  }, []);
-
-  // When you pick a chat, load its full thread in one go
-  useEffect(() => {
-    if (!selectedChat) return;
-
-    axios
-      .post(
-        `${API_BASE}/get_chat`,
-        { chat_id: selectedChat.id },
-        { headers: { Authorization: AUTH } }
-      )
-      .then((res) => {
-        setMessages(res.data.thread.events);
-        setTimeout(
-          () =>
-            chatBodyRef.current?.scrollTo(0, chatBodyRef.current.scrollHeight),
-          50
-        );
-      })
-      .catch(console.error);
-  }, [selectedChat]);
-
-  const sendMessage = async () => {
-    if (!draft.trim() || !selectedChat || !agentId) return;
-
-    console.log("➤ Attempting to send reply to chat", selectedChat.id);
-
+  // Fetch list of chats (Inbox)
+  const fetchChats = async () => {
     try {
-      // First try sending directly
-      await axios.post(
-        `${API_BASE}/send_event`,
-        {
-          chat_id: selectedChat.id,
-          event: { type: "message", text: draft, visibility: "all" },
-        },
-        { headers: { Authorization: AUTH } }
-      );
-
-      console.log("✅ Message sent successfully");
+      const res = await fetch("/api/livechat/chats");
+      const data = await res.json();
+      // LiveChat returns a key "chats_summary" with an array of chat summaries
+      setChats(data.chats_summary || []);
     } catch (err) {
-      console.warn(
-        "⚠️ send_event failed:",
-        err.response?.status,
-        err.response?.data
-      );
-
-      // Only handle 403 (Forbidden) by joining chat then retrying
-      if (err.response?.status === 403) {
-        try {
-          console.log("➤ Joining chat as agent", agentId);
-          await axios.post(
-            `${API_BASE}/add_user_to_chat`,
-            {
-              chat_id: selectedChat.id,
-              user_id: agentId,
-              user_type: "agent",
-              visibility: "all",
-            },
-            { headers: { Authorization: AUTH } }
-          );
-
-          console.log("✅ Joined chat — retrying send_event");
-          await axios.post(
-            `${API_BASE}/send_event`,
-            {
-              chat_id: selectedChat.id,
-              event: { type: "message", text: draft, visibility: "all" },
-            },
-            { headers: { Authorization: AUTH } }
-          );
-
-          console.log("✅ Message sent after joining");
-        } catch (joinErr) {
-          console.error(
-            "❌ Failed to join or resend:",
-            joinErr.response?.status,
-            joinErr.response?.data
-          );
-          alert(
-            `Error sending reply: ${
-              joinErr.response?.data?.message || joinErr.message
-            }`
-          );
-          return;
-        }
-      } else {
-        console.error("❌ Unexpected error sending message:", err);
-        alert(
-          `Error sending reply: ${err.response?.data?.message || err.message}`
-        );
-        return;
-      }
+      console.error("Error fetching chats:", err);
     }
-
-    // Clear input and reload thread
-    setDraft("");
-    setSelectedChat((chat) => chat);
   };
 
-  const getCustomerName = (chat) =>
-    chat.users.find((u) => u.type === "customer")?.name || "Unknown";
+  // Fetch details for a specific chat
+  const fetchChatDetails = async (chatId) => {
+    try {
+      const res = await fetch(`/api/livechat/chats/${chatId}`);
+      const data = await res.json();
+      console.log("get_chat response:", data);
+      setSelectedChat(data);
+    } catch (err) {
+      console.error("Error fetching chat details:", err);
+    }
+  };
+
+  // Send a message reply to the selected chat
+  const sendMessage = async () => {
+    if (!selectedChat?.id || !replyText.trim()) return;
+    const chatId = selectedChat.id;
+    try {
+      await fetch(`/api/livechat/chats/${chatId}/send`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ message: replyText }),
+      });
+      setReplyText("");
+      // Refresh chat details to show the new message
+      fetchChatDetails(chatId);
+    } catch (err) {
+      console.error("Error sending message:", err);
+    }
+  };
+
+  // Fetch inbox on mount and refresh periodically (optional)
+  useEffect(() => {
+    fetchChats();
+    const interval = setInterval(fetchChats, 30000); // refresh every 30 seconds
+    return () => clearInterval(interval);
+  }, []);
 
   return (
     <div className="messages-container">
-      <aside className="chat-list">
-        <h3>Inbox</h3>
-        {chats.map((chat) => (
-          <button
-            key={chat.id}
-            className={`chat-item ${
-              selectedChat?.id === chat.id ? "active" : ""
-            }`}
-            onClick={() => setSelectedChat(chat)}
-          >
-            {getCustomerName(chat)}
-          </button>
-        ))}
-      </aside>
+      {/* Inbox Sidebar */}
+      <div className="inbox">
+        <h2 className="inbox-title">Inbox</h2>
+        <ul className="chat-list">
+          {chats.length === 0 && (
+            <li className="chat-item no-chat">No chats available.</li>
+          )}
+          {chats.map((chat) => (
+            <li
+              key={chat.id}
+              className={`chat-item ${
+                selectedChat && selectedChat.id === chat.id ? "active" : ""
+              }`}
+              onClick={() => fetchChatDetails(chat.id)}
+            >
+              <div className="chat-id">{chat.id}</div>
+              <div className="chat-snippet">
+                Last Message:{" "}
+                {chat.last_event_per_type?.message?.event?.text || "N/A"}
+              </div>
+            </li>
+          ))}
+        </ul>
+      </div>
 
-      <section className="chat-window">
-        {!selectedChat ? (
-          <div className="empty-state">Select a chat to view messages</div>
-        ) : (
+      {/* Chat Details & Reply Panel */}
+      <div className="chat-details">
+        {selectedChat ? (
           <>
-            <header className="chat-header">
-              {getCustomerName(selectedChat)}
-            </header>
-            <div className="chat-body" ref={chatBodyRef}>
-              {messages.map((m) => (
-                <div
-                  key={m.id}
-                  className={`message ${
-                    m.author_id === "agent" ? "sent" : "received"
-                  }`}
-                >
-                  {m.text}
-                  <small>
-                    {new Date(m.created_at || m.timestamp).toLocaleTimeString()}
-                  </small>
-                </div>
-              ))}
+            <div className="chat-header">
+              <span>Chat ID:</span> {selectedChat.id}
             </div>
-            <footer className="chat-footer">
+            <div className="chat-window">
+              {selectedChat.thread?.events &&
+              selectedChat.thread.events.length > 0 ? (
+                selectedChat.thread.events.map((ev) => (
+                  <div key={ev.id} className="chat-message">
+                    <div className="message-author">{ev.author_id}</div>
+                    <div className="message-text">{ev.text}</div>
+                    <div className="message-timestamp">
+                      {new Date(ev.created_at).toLocaleString()}
+                    </div>
+                  </div>
+                ))
+              ) : (
+                <div className="no-messages">No messages in this chat.</div>
+              )}
+            </div>
+            <div className="chat-reply">
               <input
-                value={draft}
-                onChange={(e) => setDraft(e.target.value)}
-                placeholder="Type your reply…"
+                type="text"
+                placeholder="Type your reply..."
+                value={replyText}
+                onChange={(e) => setReplyText(e.target.value)}
+                className="reply-input"
               />
-              <button onClick={sendMessage}>Send</button>
-            </footer>
+              <button onClick={sendMessage} className="reply-button">
+                Send
+              </button>
+            </div>
           </>
+        ) : (
+          <div className="no-chat-selected">
+            Please select a chat from your inbox to view details and reply.
+          </div>
         )}
-      </section>
+      </div>
     </div>
   );
 }
+
+export default Messages;
