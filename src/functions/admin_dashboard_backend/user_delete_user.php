@@ -1,4 +1,5 @@
 <?php
+// CORS headers
 header("Access-Control-Allow-Origin: http://localhost:3000"); // Allow requests from your frontend
 header("Access-Control-Allow-Methods: DELETE, OPTIONS"); // Allow DELETE and OPTIONS methods
 header("Access-Control-Allow-Headers: Content-Type, Authorization"); // Allow specific headers
@@ -27,13 +28,15 @@ if (empty($userId)) {
     exit();
 }
 
+// Database credentials
 $servername = "localhost";
 $username = "root";
 $password = "";
 $dbname = "asr";
 
 try {
-    $conn = new PDO("mysql:host=$host;dbname=$dbname", $username, $password);
+    // Create a PDO connection
+    $conn = new PDO("mysql:host=$servername;dbname=$dbname", $username, $password);
     $conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 
     // Prepare the SQL query to delete the user
@@ -41,7 +44,7 @@ try {
     $stmt = $conn->prepare($sql);
 
     // Bind the user ID parameter
-    $stmt->bindParam(':id', $userId);
+    $stmt->bindParam(':id', $userId, PDO::PARAM_INT);
 
     // Execute the query
     $stmt->execute();
@@ -55,6 +58,8 @@ try {
         echo json_encode(["message" => "User not found"]);
     }
 } catch (PDOException $e) {
+    // Log the error for debugging
+    error_log("Database error: " . $e->getMessage());
     http_response_code(500); // Internal Server Error
     echo json_encode(["message" => "Database error: " . $e->getMessage()]);
 } finally {
