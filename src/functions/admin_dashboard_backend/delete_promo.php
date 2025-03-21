@@ -28,14 +28,29 @@ $data = json_decode(file_get_contents("php://input"), true);
 if (isset($data['id'])) {
     $id = $data['id'];
 
-    // Delete promo
-    $sql = "DELETE FROM promos WHERE id = $id";
+    // Delete from promo_branches and promo_staff first
+    $sql = "DELETE FROM promo_branches WHERE promo_id = ?";
+    $stmt = $conn->prepare($sql);
+    $stmt->bind_param("i", $id);
+    $stmt->execute();
 
-    if ($conn->query($sql)) {
+    $sql = "DELETE FROM promo_staff WHERE promo_id = ?";
+    $stmt = $conn->prepare($sql);
+    $stmt->bind_param("i", $id);
+    $stmt->execute();
+
+    // Delete promo
+    $sql = "DELETE FROM promos WHERE id = ?";
+    $stmt = $conn->prepare($sql);
+    $stmt->bind_param("i", $id);
+
+    if ($stmt->execute()) {
         echo json_encode(["message" => "Promo deleted successfully"]);
     } else {
-        echo json_encode(["error" => "Error deleting promo: " . $conn->error]);
+        echo json_encode(["error" => "Error deleting promo: " . $stmt->error]);
     }
+
+    $stmt->close();
 } else {
     echo json_encode(["error" => "Promo ID not provided"]);
 }

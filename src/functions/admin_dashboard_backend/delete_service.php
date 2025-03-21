@@ -19,27 +19,50 @@ $conn = new mysqli($servername, $username, $password, $dbname);
 
 // Check connection
 if ($conn->connect_error) {
-    die("Connection failed: " . $conn->connect_error);
+    die(json_encode(['status' => 'error', 'message' => 'Database connection failed: ' . $conn->connect_error]));
 }
 
-// Get the raw POST data
-$data = json_decode(file_get_contents("php://input"), true);
+// Get the request body
+$data = json_decode(file_get_contents('php://input'), true);
+$id = $data['id'] ?? '';
 
-if (isset($data['id'])) {
-    $id = $data['id'];
+if (empty($id)) {
+    echo json_encode(['status' => 'error', 'message' => 'Service id is required']);
+    exit;
+}
 
-    // Delete the service from the database using prepared statements
+// Begin a transaction to ensure atomicity
+$conn->begin_transaction();
+
+try {
+    // Delete from service_branches
+    $stmt = $conn->prepare("DELETE FROM service_branches WHERE service_id = ?");
+    $stmt->bind_param("i", $id);
+    if (!$stmt->execute()) {
+        throw new Exception("Failed to delete from service_branches: " . $stmt->error);
+    }
+
+    // Delete from service_staff
+    $stmt = $conn->prepare("DELETE FROM service_staff WHERE service_id = ?");
+    $stmt->bind_param("i", $id);
+    if (!$stmt->execute()) {
+        throw new Exception("Failed to delete from service_staff: " . $stmt->error);
+    }
+
+    // Delete from services
     $stmt = $conn->prepare("DELETE FROM services WHERE id = ?");
     $stmt->bind_param("i", $id);
-
-    if ($stmt->execute()) {
-        echo json_encode(["message" => "Service deleted successfully"]);
-    } else {
-        echo json_encode(["error" => "Error deleting service: " . $stmt->error]);
+    if (!$stmt->execute()) {
+        throw new Exception("Failed to delete from services: " . $stmt->error);
     }
-    $stmt->close();
-} else {
-    echo json_encode(["error" => "Service ID not provided"]);
+
+    // Commit the transaction
+    $conn->commit();
+    echo json_encode(['status' => 'success', 'message' => 'Service deleted successfully']);
+} catch (Exception $e) {
+    // Rollback the transaction on error
+    $conn->rollback();
+    echo json_encode(['status' => 'error', 'message' => $e->getMessage()]);
 }
 
 $conn->close();

@@ -1,6 +1,6 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import DataTable from 'react-data-table-component';
-
+import Swal from 'sweetalert2';
 import "../../../styles/admin/dashboard/faqs.css";
 
 // Icons
@@ -16,12 +16,38 @@ const customStyles = {
   },
 };
 
-const FAQTable = ({ setActivePage, activePage, data }) => {
-  // Define columns
+const UserTable = ({ setActivePage, users, fetchUsers }) => {
+  const handleDeleteUser = async (id) => {
+    const result = await Swal.fire({
+      title: "Are you sure?",
+      text: "You will not be able to recover this user!",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonText: "Yes, delete it!",
+      cancelButtonText: "No, cancel!",
+    });
+
+    if (result.isConfirmed) {
+      try {
+        const response = await fetch(
+          `http://localhost/admin_dashboard_backend/user_delete_user.php?id=${id}`,
+          { method: "DELETE" }
+        );
+
+        if (!response.ok) throw new Error("Failed to delete user");
+        
+        Swal.fire("Deleted!", "User has been deleted.", "success");
+        fetchUsers();
+      } catch (error) {
+        Swal.fire("Error!", error.message, "error");
+      }
+    }
+  };
+
   const columns = [
     {
       name: 'Name',
-      selector: row => row.name,
+      selector: row => `${row.first_name} ${row.last_name}`,
       sortable: true,
     },
     {
@@ -30,23 +56,29 @@ const FAQTable = ({ setActivePage, activePage, data }) => {
       sortable: true,
     },
     {
-      name: 'Password',
-      selector: row => row.password,
+      name: 'Contact Number',
+      selector: row => row.contact_no,
       sortable: true,
     },
     {
-      name: 'Contact Number',
-      selector: row => row.contactNumber,
+      name: 'Role',
+      selector: row => row.role,
       sortable: true,
     },
     {
       name: 'Action',
       cell: row => (
         <div>
-          <button onClick={() => setActivePage("ManageFAQEdit")} className="edit-button">
+          <button 
+            onClick={() => setActivePage({ page: "ManageUserEdit", user: row })} 
+            className="edit-button"
+          >
             <FaRegEdit />
           </button>
-          <button className="delete-button">
+          <button 
+            onClick={() => handleDeleteUser(row.id)} 
+            className="delete-button"
+          >
             <FaRegTrashAlt />
           </button>
         </div>
@@ -60,7 +92,7 @@ const FAQTable = ({ setActivePage, activePage, data }) => {
   return (
     <DataTable
       columns={columns}
-      data={data}
+      data={users}
       pagination
       highlightOnHover
       responsive
@@ -69,120 +101,304 @@ const FAQTable = ({ setActivePage, activePage, data }) => {
   );
 };
 
-const ManageFAQEdit = ({ setActivePage, activePage }) => {
+const ManageUserEdit = ({ setActivePage, user, fetchUsers }) => {
+  const [formData, setFormData] = useState({
+    first_name: user.first_name,
+    middle_initial: user.middle_initial,
+    last_name: user.last_name,
+    email: user.email,
+    contact_no: user.contact_no,
+    role: user.role,
+    password: '',
+  });
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    try {
+      const response = await fetch(
+        "http://localhost/admin_dashboard_backend/user_update_user.php",
+        {
+          method: "PUT",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ ...formData, id: user.id }),
+        }
+      );
+
+      if (!response.ok) throw new Error("Failed to update user");
+      
+      Swal.fire("Success!", "User updated successfully", "success");
+      fetchUsers();
+      setActivePage({ page: "Users" });
+    } catch (error) {
+      Swal.fire("Error!", error.message, "error");
+    }
+  };
+
   return (
     <div className="faq-main-container">
-      <button onClick={() => setActivePage("FAQs")} className="faq-edit-backbutton">
+      <button onClick={() => setActivePage({ page: "Users" })} className="faq-edit-backbutton">
         <IoArrowBackOutline />
       </button>
       <div className="faq-edit">
         <div className="align-left">
-          <p className="faq-text">Edit Entry</p>
+          <p className="faq-text">Edit User</p>
         </div>
-        <form className="faq-edit">
+        <form className="faq-edit" onSubmit={handleSubmit}>
           <div className="form-group">
-            <label className="questionLabel" htmlFor="nameInput">Name</label>
-            <input className="questionInput" id="nameInput" name="nameInput" placeholder="Name" required />
+            <label className="questionLabel">First Name</label>
+            <input
+              className="questionInput"
+              value={formData.first_name}
+              onChange={(e) => setFormData({ ...formData, first_name: e.target.value })}
+              required
+            />
           </div>
           <div className="form-group">
-            <label className="answerLabel" htmlFor="emailInput">Email</label>
-            <input className="answerInput" id="emailInput" name="emailInput" placeholder="Email" required />
+            <label className="questionLabel">Middle Initial</label>
+            <input
+              className="questionInput"
+              value={formData.middle_initial}
+              onChange={(e) => setFormData({ ...formData, middle_initial: e.target.value })}
+            />
           </div>
           <div className="form-group">
-            <label className="answerLabel" htmlFor="passwordInput">Password</label>
-            <input className="answerInput" id="passwordInput" name="passwordInput" placeholder="Password" required />
+            <label className="questionLabel">Last Name</label>
+            <input
+              className="questionInput"
+              value={formData.last_name}
+              onChange={(e) => setFormData({ ...formData, last_name: e.target.value })}
+              required
+            />
           </div>
           <div className="form-group">
-            <label className="answerLabel" htmlFor="contactNumberInput">Contact Number</label>
-            <input className="answerInput" id="contactNumberInput" name="contactNumberInput" placeholder="Contact Number" required />
+            <label className="questionLabel">Email</label>
+            <input
+              className="questionInput"
+              type="email"
+              value={formData.email}
+              onChange={(e) => setFormData({ ...formData, email: e.target.value })}
+              required
+            />
           </div>
-          <button className="button-ManageFAQEdit">Save</button>
+          <div className="form-group">
+            <label className="questionLabel">Contact Number</label>
+            <input
+              className="questionInput"
+              value={formData.contact_no}
+              onChange={(e) => setFormData({ ...formData, contact_no: e.target.value })}
+              required
+            />
+          </div>
+          <div className="form-group">
+            <label className="questionLabel">Role</label>
+            <select
+              className="questionInput"
+              value={formData.role}
+              onChange={(e) => setFormData({ ...formData, role: e.target.value })}
+              required
+            >
+              <option value="admin">Admin</option>
+              <option value="employee">Employee</option>
+            </select>
+          </div>
+          <div className="form-group">
+            <label className="questionLabel">New Password (leave blank to keep current)</label>
+            <input
+              className="questionInput"
+              type="password"
+              value={formData.password}
+              onChange={(e) => setFormData({ ...formData, password: e.target.value })}
+            />
+          </div>
+          <button type="submit" className="button-ManageFAQEdit">Save Changes</button>
         </form>
       </div>
     </div>
   );
 };
 
-const ManageFAQAdd = ({ setActivePage, activePage }) => {
+const ManageUserAdd = ({ setActivePage, fetchUsers }) => {
+  const [formData, setFormData] = useState({
+    first_name: '',
+    middle_initial: '',
+    last_name: '',
+    email: '',
+    contact_no: '',
+    role: 'employee',
+    password: '',
+    password_confirmation: '',
+  });
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    try {
+      if (formData.password !== formData.password_confirmation) {
+        throw new Error("Passwords do not match");
+      }
+
+      const response = await fetch(
+        "http://localhost/admin_dashboard_backend/user_add_user.php",
+        {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(formData),
+        }
+      );
+
+      if (!response.ok) throw new Error("Failed to create user");
+      
+      Swal.fire("Success!", "User created successfully", "success");
+      fetchUsers();
+      setActivePage({ page: "Users" });
+    } catch (error) {
+      Swal.fire("Error!", error.message, "error");
+    }
+  };
+
   return (
     <div className="faq-main-container">
-      <button onClick={() => setActivePage("FAQs")} className="faq-edit-backbutton">
+      <button onClick={() => setActivePage({ page: "Users" })} className="faq-edit-backbutton">
         <IoArrowBackOutline />
       </button>
       <div className="faq-edit">
         <div className="align-left">
-          <p className="faq-text">Add Entry</p>
+          <p className="faq-text">Add New User</p>
         </div>
-        <form className="faq-edit">
+        <form className="faq-edit" onSubmit={handleSubmit}>
           <div className="form-group">
-            <label className="questionLabel" htmlFor="nameInput">Name</label>
-            <input className="questionInput" id="nameInput" name="nameInput" placeholder="Name" required />
+            <label className="questionLabel">First Name</label>
+            <input
+              className="questionInput"
+              value={formData.first_name}
+              onChange={(e) => setFormData({ ...formData, first_name: e.target.value })}
+              required
+            />
           </div>
           <div className="form-group">
-            <label className="answerLabel" htmlFor="emailInput">Email</label>
-            <input className="answerInput" id="emailInput" name="emailInput" placeholder="Email" required />
+            <label className="questionLabel">Middle Initial</label>
+            <input
+              className="questionInput"
+              value={formData.middle_initial}
+              onChange={(e) => setFormData({ ...formData, middle_initial: e.target.value })}
+            />
           </div>
           <div className="form-group">
-            <label className="answerLabel" htmlFor="passwordInput">Password</label>
-            <input className="answerInput" id="passwordInput" name="passwordInput" placeholder="Password" required />
+            <label className="questionLabel">Last Name</label>
+            <input
+              className="questionInput"
+              value={formData.last_name}
+              onChange={(e) => setFormData({ ...formData, last_name: e.target.value })}
+              required
+            />
           </div>
           <div className="form-group">
-            <label className="answerLabel" htmlFor="contactNumberInput">Contact Number</label>
-            <input className="answerInput" id="contactNumberInput" name="contactNumberInput" placeholder="Contact Number" required />
+            <label className="questionLabel">Email</label>
+            <input
+              className="questionInput"
+              type="email"
+              value={formData.email}
+              onChange={(e) => setFormData({ ...formData, email: e.target.value })}
+              required
+            />
           </div>
-          <button className="button-ManageFAQEdit">Save</button>
+          <div className="form-group">
+            <label className="questionLabel">Contact Number</label>
+            <input
+              className="questionInput"
+              value={formData.contact_no}
+              onChange={(e) => setFormData({ ...formData, contact_no: e.target.value })}
+              required
+            />
+          </div>
+          <div className="form-group">
+            <label className="questionLabel">Role</label>
+            <select
+              className="questionInput"
+              value={formData.role}
+              onChange={(e) => setFormData({ ...formData, role: e.target.value })}
+              required
+            >
+              <option value="admin">Admin</option>
+              <option value="employee">Employee</option>
+            </select>
+          </div>
+          <div className="form-group">
+            <label className="questionLabel">Password</label>
+            <input
+              className="questionInput"
+              type="password"
+              value={formData.password}
+              onChange={(e) => setFormData({ ...formData, password: e.target.value })}
+              required
+            />
+          </div>
+          <div className="form-group">
+            <label className="questionLabel">Confirm Password</label>
+            <input
+              className="questionInput"
+              type="password"
+              value={formData.password_confirmation}
+              onChange={(e) => setFormData({ ...formData, password_confirmation: e.target.value })}
+              required
+            />
+          </div>
+          <button type="submit" className="button-ManageFAQEdit">Create User</button>
         </form>
       </div>
     </div>
   );
 };
 
-const FAQs = () => {
-  const [activePage, setActivePage] = useState("FAQs");
+const UserManagement = () => {
+  const [activePage, setActivePage] = useState({ page: "Users" });
   const [searchText, setSearchText] = useState("");
+  const [users, setUsers] = useState([]);
+  const [loading, setLoading] = useState(true);
 
-  // Sample data
-  const initialData = [
-    {
-      id: 1,
-      name: 'John Doe',
-      email: 'john.doe@example.com',
-      password: 'password123',
-      contactNumber: '09111111111',
-    },
-    {
-      id: 2,
-      name: 'Jane Smith',
-      email: 'jane.smith@example.com',
-      password: 'qwerty123',
-      contactNumber: '09222222222',
-    },
-    // Add more data items here
-  ];
+  const fetchUsers = async () => {
+    try {
+      const response = await fetch(
+        "http://localhost/admin_dashboard_backend/user_fetch_users.php"
+      );
+      const data = await response.json();
+      setUsers(data);
+    } catch (error) {
+      Swal.fire("Error!", "Failed to load users", "error");
+    } finally {
+      setLoading(false);
+    }
+  };
 
-  // Filter data based on search text
-  const filteredData = initialData.filter(item =>
-    item.name.toLowerCase().includes(searchText.toLowerCase()) ||
-    item.email.toLowerCase().includes(searchText.toLowerCase()) ||
-    item.password.toLowerCase().includes(searchText.toLowerCase()) ||
-    item.contactNumber.includes(searchText)
+  useEffect(() => {
+    fetchUsers();
+  }, []);
+
+  const filteredData = users.filter(user =>
+    `${user.first_name} ${user.last_name}`.toLowerCase().includes(searchText.toLowerCase()) ||
+    user.email.toLowerCase().includes(searchText.toLowerCase()) ||
+    user.role.toLowerCase().includes(searchText.toLowerCase())
   );
+
+  if (loading) return <div>Loading...</div>;
 
   return (
     <>
-      {activePage === "FAQs" ? (
+      {activePage.page === "Users" ? (
         <div className="faq-main-container">
           <div className="faq-header">
-            <p className="faq-text">Employees List</p>
+            <p className="faq-text">User Management</p>
             <div className="faq-header-actions">
-              <button className="add-faq-button" onClick={() => setActivePage("ManageFAQAdd")}>
+              <button 
+                className="add-faq-button" 
+                onClick={() => setActivePage({ page: "ManageUserAdd" })}
+              >
                 + Add User
               </button>
               <div className="search-container">
                 <CiSearch className="search-icon" />
                 <input
                   type="text"
-                  placeholder="Search..."
+                  placeholder="Search users..."
                   value={searchText}
                   onChange={(e) => setSearchText(e.target.value)}
                   className="faq-search-bar"
@@ -190,15 +406,26 @@ const FAQs = () => {
               </div>
             </div>
           </div>
-          <FAQTable setActivePage={setActivePage} activePage={activePage} data={filteredData} />
+          <UserTable 
+            setActivePage={setActivePage} 
+            users={filteredData} 
+            fetchUsers={fetchUsers} 
+          />
         </div>
-      ) : activePage === "ManageFAQEdit" ? (
-        <ManageFAQEdit setActivePage={setActivePage} activePage={activePage} />
+      ) : activePage.page === "ManageUserEdit" ? (
+        <ManageUserEdit 
+          setActivePage={setActivePage} 
+          user={activePage.user} 
+          fetchUsers={fetchUsers} 
+        />
       ) : (
-        <ManageFAQAdd setActivePage={setActivePage} activePage={activePage} />
+        <ManageUserAdd 
+          setActivePage={setActivePage} 
+          fetchUsers={fetchUsers} 
+        />
       )}
     </>
   );
 };
 
-export default FAQs;
+export default UserManagement;

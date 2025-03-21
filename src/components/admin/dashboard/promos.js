@@ -16,6 +16,42 @@ const customStyles = {
   },
 };
 
+// MultiSelectDropdown Component
+const MultiSelectDropdown = ({ options, selectedValues, onToggle, placeholder, disabled }) => {
+  const [isOpen, setIsOpen] = useState(false);
+
+  return (
+    <div className="multi-select-dropdown">
+      <div
+        className={`dropdown-header ${disabled ? 'disabled' : ''}`}
+        onClick={() => !disabled && setIsOpen(!isOpen)}
+      >
+        {selectedValues.length > 0
+          ? `${selectedValues.length} selected`
+          : placeholder}
+      </div>
+      {isOpen && (
+        <div className="dropdown-options">
+          {options.map(option => (
+            <label
+              key={option.id}
+              className={`dropdown-option ${selectedValues.includes(option.id) ? 'selected' : ''}`}
+            >
+              <input
+                type="checkbox"
+                checked={selectedValues.includes(option.id)}
+                onChange={() => onToggle(option.id)}
+              />
+              {option.name} - {option.branch_name} 
+            </label>
+          ))}
+        </div>
+      )}
+    </div>
+  );
+};
+
+// FAQTable Component
 const FAQTable = ({ setActivePage, activePage, data, fetchPromos }) => {
   const handleDelete = async (id) => {
     const result = await Swal.fire({
@@ -49,7 +85,6 @@ const FAQTable = ({ setActivePage, activePage, data, fetchPromos }) => {
           confirmButtonText: 'OK',
         });
 
-        // Refresh the promos list
         fetchPromos();
       } catch (error) {
         Swal.fire({
@@ -63,43 +98,17 @@ const FAQTable = ({ setActivePage, activePage, data, fetchPromos }) => {
     }
   };
 
-  // Define columns
   const columns = [
-    {
-      name: 'Name',
-      selector: row => row.name,
-      sortable: true,
-    },
-    {
-      name: 'Description',
-      selector: row => row.description,
-      sortable: true,
-    },
-    {
-      name: 'Price',
-      selector: row => row.price,
-      sortable: true,
-    },
+    { name: 'Name', selector: row => row.name, sortable: true },
+    { name: 'Description', selector: row => row.description, sortable: true },
+    { name: 'Price', selector: row => row.price, sortable: true },
     {
       name: 'File',
-      cell: row => (
-        <a href={row.file_url} target="_blank" rel="noopener noreferrer">
-          View File
-        </a>
-      ),
+      cell: row => <a href={row.file_url} target="_blank" rel="noopener noreferrer">View File</a>,
       ignoreRowClick: true,
-      allowOverflow: true,
     },
-    {
-      name: 'Start Date & Time',
-      selector: row => new Date(row.start_date).toLocaleString(),
-      sortable: true,
-    },
-    {
-      name: 'End Date & Time',
-      selector: row => new Date(row.end_date).toLocaleString(),
-      sortable: true,
-    },
+    { name: 'Start Date & Time', selector: row => new Date(row.start_date).toLocaleString(), sortable: true },
+    { name: 'End Date & Time', selector: row => new Date(row.end_date).toLocaleString(), sortable: true },
     {
       name: 'Action',
       cell: row => (
@@ -113,85 +122,140 @@ const FAQTable = ({ setActivePage, activePage, data, fetchPromos }) => {
         </div>
       ),
       ignoreRowClick: true,
-      allowOverflow: true,
-      button: true,
     },
   ];
 
-  return (
-    <DataTable
-      columns={columns}
-      data={data}
-      pagination
-      highlightOnHover
-      responsive
-      customStyles={customStyles}
-    />
-  );
+  return <DataTable columns={columns} data={data} pagination highlightOnHover responsive customStyles={customStyles} />;
 };
 
+// ManageFAQEdit Component
 const ManageFAQEdit = ({ setActivePage, activePage, fetchPromos }) => {
-  const [name, setName] = useState(activePage.promo.name);
-  const [description, setDescription] = useState(activePage.promo.description);
-  const [price, setPrice] = useState(activePage.promo.price);
-  const [file, setFile] = useState(null);
-  const [startDate, setStartDate] = useState(activePage.promo.start_date.split('T')[0]);
-  const [startTime, setStartTime] = useState(activePage.promo.start_date.split('T')[1]);
-  const [endDate, setEndDate] = useState(activePage.promo.end_date.split('T')[0]);
-  const [endTime, setEndTime] = useState(activePage.promo.end_date.split('T')[1]);
+  const promo = activePage.promo || {};
+  const startDate = promo.start_date ? promo.start_date.split('T')[0] : '';
+  const startTime = promo.start_date ? promo.start_date.split('T')[1].substring(0, 5) : '00:00';
+  const endDate = promo.end_date ? promo.end_date.split('T')[0] : '';
+  const endTime = promo.end_date ? promo.end_date.split('T')[1].substring(0, 5) : '00:00';
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
+  const [formData, setFormData] = useState({
+    ...promo,
+    selectedBranches: promo.branch_ids || [],
+    selectedStaff: promo.staff_ids || [],
+    duration: promo.duration || 1,
+    startDate: startDate,
+    startTime: startTime,
+    endDate: endDate,
+    endTime: endTime,
+  });
 
-    // Combine date and time into a single datetime string
-    const startDateTime = `${startDate}T${startTime}`;
-    const endDateTime = `${endDate}T${endTime}`;
+  const [branches, setBranches] = useState([]);
+  const [staff, setStaff] = useState([]);
+  const [loadingStaff, setLoadingStaff] = useState(false);
 
-    // Prepare form data
-    const formData = {
-      id: activePage.promo.id,
-      name,
-      description,
-      price,
-      file_url: activePage.promo.file_url, // Replace with actual file URL
-      start_date: startDateTime,
-      end_date: endDateTime,
-    };   
+  useEffect(() => {
+    fetchBranches();
+  }, []);
 
+  useEffect(() => {
+    if (formData.selectedBranches.length > 0) {
+      fetchStaff();
+    } else {
+      setStaff([]);
+    }
+  }, [formData.selectedBranches]);
+
+  const fetchBranches = async () => {
     try {
-      const response = await fetch(`http://localhost/admin_dashboard_backend/update_promo.php`, {
-        method: 'PUT',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(formData),
-      });
-
-      if (!response.ok) {
-        throw new Error('Failed to update promo');
-      }
-
-      const result = await response.json();
-      Swal.fire({
-        title: 'Success!',
-        text: result.message,
-        icon: 'success',
-        confirmButtonText: 'OK',
-      });
-
-      // Refresh the promos list
-      fetchPromos();
-      setActivePage({ page: "FAQs" });
+      const response = await fetch("http://localhost/admin_dashboard_backend/branch_fetch_branches.php");
+      const data = await response.json();
+      setBranches(data);
     } catch (error) {
-      Swal.fire({
-        title: 'Error!',
-        text: 'Failed to update promo. Please check the console for details.',
-        icon: 'error',
-        confirmButtonText: 'OK',
-      });
-      console.error('Error updating promo:', error);
+      console.error("Error fetching branches:", error);
     }
   };
+
+  const fetchStaff = async () => {
+    try {
+      setLoadingStaff(true);
+      const response = await fetch(
+        `http://localhost/admin_dashboard_backend/branch_fetch_staff.php?branch_ids=${formData.selectedBranches.join(",")}`
+      );
+      const data = await response.json();
+      setStaff(data);
+    } catch (error) {
+      console.error("Error fetching staff:", error);
+    } finally {
+      setLoadingStaff(false);
+    }
+  };
+
+  const handleBranchToggle = (branchId) => {
+    setFormData(prev => ({
+      ...prev,
+      selectedBranches: prev.selectedBranches.includes(branchId)
+        ? prev.selectedBranches.filter(id => id !== branchId)
+        : [...prev.selectedBranches, branchId],
+      selectedStaff: [] // Reset staff when branches change
+    }));
+  };
+
+  const handleStaffToggle = (staffId) => {
+    setFormData(prev => ({
+      ...prev,
+      selectedStaff: prev.selectedStaff.includes(staffId)
+        ? prev.selectedStaff.filter(id => id !== staffId)
+        : [...prev.selectedStaff, staffId]
+    }));
+  };
+
+  const handleSubmit = async (e) => {
+  e.preventDefault();
+  const startDateTime = `${formData.startDate}T${formData.startTime}`;
+  const endDateTime = `${formData.endDate}T${formData.endTime}`;
+
+  const formPayload = new FormData();
+  formPayload.append('id', formData.id); // Include the promo ID for updating
+  formPayload.append('name', formData.name);
+  formPayload.append('description', formData.description);
+  formPayload.append('price', formData.price);
+  formPayload.append('duration', formData.duration);
+  formPayload.append('branch_ids', JSON.stringify(formData.selectedBranches));
+  formPayload.append('staff_ids', JSON.stringify(formData.selectedStaff));
+  formPayload.append('start_date', startDateTime);
+  formPayload.append('end_date', endDateTime);
+  if (formData.file) {
+    formPayload.append('file', formData.file); // Append the file
+  }
+
+  try {
+    const response = await fetch(`http://localhost/admin_dashboard_backend/update_promo.php`, {
+      method: 'POST',
+      body: formPayload, // Send as FormData
+    });
+
+    if (!response.ok) {
+      throw new Error('Failed to update promo');
+    }
+
+    const result = await response.json();
+    Swal.fire({
+      title: 'Success!',
+      text: result.message,
+      icon: 'success',
+      confirmButtonText: 'OK',
+    });
+
+    fetchPromos();
+    setActivePage({ page: "FAQs" });
+  } catch (error) {
+    Swal.fire({
+      title: 'Error!',
+      text: 'Failed to update promo. Please check the console for details.',
+      icon: 'error',
+      confirmButtonText: 'OK',
+    });
+    console.error('Error updating promo:', error);
+  }
+};
 
   return (
     <div className="faq-main-container">
@@ -200,7 +264,7 @@ const ManageFAQEdit = ({ setActivePage, activePage, fetchPromos }) => {
       </button>
       <div className="faq-edit">
         <div className="align-left">
-          <p className="faq-text">Edit Item</p>
+          <p className="faq-text">Edit Promo</p>
         </div>
         <form className="faq-edit" onSubmit={handleSubmit}>
           <div className="form-group">
@@ -208,10 +272,8 @@ const ManageFAQEdit = ({ setActivePage, activePage, fetchPromos }) => {
             <input
               className="questionInput"
               id="nameInput"
-              name="nameInput"
-              placeholder="Value"
-              value={name}
-              onChange={(e) => setName(e.target.value)}
+              value={formData.name}
+              onChange={e => setFormData(prev => ({ ...prev, name: e.target.value }))}
               required
             />
           </div>
@@ -220,10 +282,8 @@ const ManageFAQEdit = ({ setActivePage, activePage, fetchPromos }) => {
             <input
               className="answerInput"
               id="descriptionInput"
-              name="descriptionInput"
-              placeholder="Value"
-              value={description}
-              onChange={(e) => setDescription(e.target.value)}
+              value={formData.description}
+              onChange={e => setFormData(prev => ({ ...prev, description: e.target.value }))}
               required
             />
           </div>
@@ -232,22 +292,19 @@ const ManageFAQEdit = ({ setActivePage, activePage, fetchPromos }) => {
             <input
               className="answerInput"
               id="priceInput"
-              name="priceInput"
-              placeholder="Value"
-              value={price}
-              onChange={(e) => setPrice(e.target.value)}
+              type="number"
+              value={formData.price}
+              onChange={e => setFormData(prev => ({ ...prev, price: e.target.value }))}
               required
             />
           </div>
           <div className="form-group">
             <label className="answerLabel" htmlFor="fileInput">File</label>
             <input
-              type="file"
               className="answerInput"
               id="fileInput"
-              name="fileInput"
-              onChange={(e) => setFile(e.target.files[0])}
-              required
+              type="file"
+              onChange={e => setFormData(prev => ({ ...prev, file: e.target.files[0] }))}
             />
           </div>
           <div className="date-row">
@@ -257,9 +314,8 @@ const ManageFAQEdit = ({ setActivePage, activePage, fetchPromos }) => {
                 type="date"
                 className="answerInput"
                 id="startDateInput"
-                name="startDateInput"
-                value={startDate}
-                onChange={(e) => setStartDate(e.target.value)}
+                value={formData.startDate}
+                onChange={e => setFormData(prev => ({ ...prev, startDate: e.target.value }))}
                 required
               />
             </div>
@@ -269,9 +325,8 @@ const ManageFAQEdit = ({ setActivePage, activePage, fetchPromos }) => {
                 type="time"
                 className="answerInput"
                 id="startTimeInput"
-                name="startTimeInput"
-                value={startTime}
-                onChange={(e) => setStartTime(e.target.value)}
+                value={formData.startTime}
+                onChange={e => setFormData(prev => ({ ...prev, startTime: e.target.value }))}
                 required
               />
             </div>
@@ -283,9 +338,8 @@ const ManageFAQEdit = ({ setActivePage, activePage, fetchPromos }) => {
                 type="date"
                 className="answerInput"
                 id="endDateInput"
-                name="endDateInput"
-                value={endDate}
-                onChange={(e) => setEndDate(e.target.value)}
+                value={formData.endDate}
+                onChange={e => setFormData(prev => ({ ...prev, endDate: e.target.value }))}
                 required
               />
             </div>
@@ -295,12 +349,48 @@ const ManageFAQEdit = ({ setActivePage, activePage, fetchPromos }) => {
                 type="time"
                 className="answerInput"
                 id="endTimeInput"
-                name="endTimeInput"
-                value={endTime}
-                onChange={(e) => setEndTime(e.target.value)}
+                value={formData.endTime}
+                onChange={e => setFormData(prev => ({ ...prev, endTime: e.target.value }))}
                 required
               />
             </div>
+          </div>
+          <div className="form-group">
+            <label className="questionLabel">Select Branches:</label>
+            <MultiSelectDropdown
+              options={branches}
+              selectedValues={formData.selectedBranches}
+              onToggle={handleBranchToggle}
+              placeholder="Select branches..."
+            />
+          </div>
+          <div className="form-group">
+            <label className="questionLabel">Select Staff:</label>
+            <MultiSelectDropdown
+              options={staff}
+              selectedValues={formData.selectedStaff}
+              onToggle={handleStaffToggle}
+              placeholder={formData.selectedBranches.length
+                ? (loadingStaff ? "Loading staff..." : "Select staff...")
+                : "Select branches first"}
+              disabled={!formData.selectedBranches.length || loadingStaff}
+            />
+          </div>
+          <div className="form-group">
+            <label className="questionLabel" htmlFor="duration">Duration (hours)</label>
+            <select
+              className="questionInput"
+              id="duration"
+              value={formData.duration}
+              onChange={e => setFormData(prev => ({ ...prev, duration: e.target.value }))}
+              disabled={!formData.selectedStaff.length}
+            >
+              {[...Array(12).keys()].map(hour => (
+                <option key={hour + 1} value={hour + 1}>
+                  {hour + 1} hour{hour + 1 > 1 ? "s" : ""}
+                </option>
+              ))}
+            </select>
           </div>
           <button type="submit" className="button-ManageFAQEdit">Save</button>
         </form>
@@ -309,40 +399,103 @@ const ManageFAQEdit = ({ setActivePage, activePage, fetchPromos }) => {
   );
 };
 
+// ManageFAQAdd Component
 const ManageFAQAdd = ({ setActivePage, activePage, fetchPromos }) => {
-  const [name, setName] = useState("");
-  const [description, setDescription] = useState("");
-  const [price, setPrice] = useState("");
-  const [file, setFile] = useState(null);
-  const [startDate, setStartDate] = useState("");
-  const [startTime, setStartTime] = useState("");
-  const [endDate, setEndDate] = useState("");
-  const [endTime, setEndTime] = useState("");
+  const [formData, setFormData] = useState({
+    name: '',
+    description: '',
+    price: '',
+    file: null,
+    selectedBranches: [],
+    selectedStaff: [],
+    duration: 1,
+    startDate: '',
+    startTime: '',
+    endDate: '',
+    endTime: '',
+  });
+  const [branches, setBranches] = useState([]);
+  const [staff, setStaff] = useState([]);
+  const [loadingStaff, setLoadingStaff] = useState(false);
+
+  useEffect(() => {
+    fetchBranches();
+  }, []);
+
+  useEffect(() => {
+    if (formData.selectedBranches.length > 0) {
+      fetchStaff();
+    } else {
+      setStaff([]);
+    }
+  }, [formData.selectedBranches]);
+
+  const fetchBranches = async () => {
+    try {
+      const response = await fetch("http://localhost/admin_dashboard_backend/branch_fetch_branches.php");
+      const data = await response.json();
+      setBranches(data);
+    } catch (error) {
+      console.error("Error fetching branches:", error);
+    }
+  };
+
+  const fetchStaff = async () => {
+    try {
+      setLoadingStaff(true);
+      const response = await fetch(
+        `http://localhost/admin_dashboard_backend/branch_fetch_staff.php?branch_ids=${formData.selectedBranches.join(",")}`
+      );
+      const data = await response.json();
+      setStaff(data);
+    } catch (error) {
+      console.error("Error fetching staff:", error);
+    } finally {
+      setLoadingStaff(false);
+    }
+  };
+
+  const handleBranchToggle = (branchId) => {
+    setFormData(prev => ({
+      ...prev,
+      selectedBranches: prev.selectedBranches.includes(branchId)
+        ? prev.selectedBranches.filter(id => id !== branchId)
+        : [...prev.selectedBranches, branchId],
+      selectedStaff: [] // Reset staff when branches change
+    }));
+  };
+
+  const handleStaffToggle = (staffId) => {
+    setFormData(prev => ({
+      ...prev,
+      selectedStaff: prev.selectedStaff.includes(staffId)
+        ? prev.selectedStaff.filter(id => id !== staffId)
+        : [...prev.selectedStaff, staffId]
+    }));
+  };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    const startDateTime = `${formData.startDate}T${formData.startTime}`;
+    const endDateTime = `${formData.endDate}T${formData.endTime}`;
 
-    // Combine date and time into a single datetime string
-    const startDateTime = `${startDate}T${startTime}`;
-    const endDateTime = `${endDate}T${endTime}`;
-
-    // Prepare form data
-    const formData = {
-      name,
-      description,
-      price,
-      file_url: "https://example.com/file.pdf", // Replace with actual file URL
-      start_date: startDateTime,
-      end_date: endDateTime,
-    };
+    const formPayload = new FormData();
+    formPayload.append('name', formData.name);
+    formPayload.append('description', formData.description);
+    formPayload.append('price', formData.price);
+    formPayload.append('duration', formData.duration);
+    formPayload.append('branch_ids', JSON.stringify(formData.selectedBranches));
+    formPayload.append('staff_ids', JSON.stringify(formData.selectedStaff));
+    formPayload.append('start_date', startDateTime);
+    formPayload.append('end_date', endDateTime);
+    if (formData.file) {
+      formPayload.append('file', formData.file);
+    }
 
     try {
       const response = await fetch(`http://localhost/admin_dashboard_backend/add_promo.php`, {
         method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(formData),
+        body: formPayload,
       });
 
       if (!response.ok) {
@@ -357,7 +510,6 @@ const ManageFAQAdd = ({ setActivePage, activePage, fetchPromos }) => {
         confirmButtonText: 'OK',
       });
 
-      // Refresh the promos list
       fetchPromos();
       setActivePage({ page: "FAQs" });
     } catch (error) {
@@ -378,7 +530,7 @@ const ManageFAQAdd = ({ setActivePage, activePage, fetchPromos }) => {
       </button>
       <div className="faq-edit">
         <div className="align-left">
-          <p className="faq-text">Add Item</p>
+          <p className="faq-text">Add Promo</p>
         </div>
         <form className="faq-edit" onSubmit={handleSubmit}>
           <div className="form-group">
@@ -386,10 +538,8 @@ const ManageFAQAdd = ({ setActivePage, activePage, fetchPromos }) => {
             <input
               className="questionInput"
               id="nameInput"
-              name="nameInput"
-              placeholder="Value"
-              value={name}
-              onChange={(e) => setName(e.target.value)}
+              value={formData.name}
+              onChange={e => setFormData(prev => ({ ...prev, name: e.target.value }))}
               required
             />
           </div>
@@ -398,10 +548,8 @@ const ManageFAQAdd = ({ setActivePage, activePage, fetchPromos }) => {
             <input
               className="answerInput"
               id="descriptionInput"
-              name="descriptionInput"
-              placeholder="Value"
-              value={description}
-              onChange={(e) => setDescription(e.target.value)}
+              value={formData.description}
+              onChange={e => setFormData(prev => ({ ...prev, description: e.target.value }))}
               required
             />
           </div>
@@ -410,21 +558,19 @@ const ManageFAQAdd = ({ setActivePage, activePage, fetchPromos }) => {
             <input
               className="answerInput"
               id="priceInput"
-              name="priceInput"
-              placeholder="Value"
-              value={price}
-              onChange={(e) => setPrice(e.target.value)}
+              type="number"
+              value={formData.price}
+              onChange={e => setFormData(prev => ({ ...prev, price: e.target.value }))}
               required
             />
           </div>
           <div className="form-group">
             <label className="answerLabel" htmlFor="fileInput">File</label>
             <input
-              type="file"
               className="answerInput"
               id="fileInput"
-              name="fileInput"
-              onChange={(e) => setFile(e.target.files[0])}
+              type="file"
+              onChange={e => setFormData(prev => ({ ...prev, file: e.target.files[0] }))}
               required
             />
           </div>
@@ -433,11 +579,10 @@ const ManageFAQAdd = ({ setActivePage, activePage, fetchPromos }) => {
               <label className="answerLabel" htmlFor="startDateInput">Start Date</label>
               <input
                 type="date"
-                className="dateInput"
+                className="answerInput"
                 id="startDateInput"
-                name="startDateInput"
-                value={startDate}
-                onChange={(e) => setStartDate(e.target.value)}
+                value={formData.startDate}
+                onChange={e => setFormData(prev => ({ ...prev, startDate: e.target.value }))}
                 required
               />
             </div>
@@ -445,11 +590,10 @@ const ManageFAQAdd = ({ setActivePage, activePage, fetchPromos }) => {
               <label className="answerLabel" htmlFor="startTimeInput">Start Time</label>
               <input
                 type="time"
-                className="dateInput"
+                className="answerInput"
                 id="startTimeInput"
-                name="startTimeInput"
-                value={startTime}
-                onChange={(e) => setStartTime(e.target.value)}
+                value={formData.startTime}
+                onChange={e => setFormData(prev => ({ ...prev, startTime: e.target.value }))}
                 required
               />
             </div>
@@ -459,11 +603,10 @@ const ManageFAQAdd = ({ setActivePage, activePage, fetchPromos }) => {
               <label className="answerLabel" htmlFor="endDateInput">End Date</label>
               <input
                 type="date"
-                className="dateInput"
+                className="answerInput"
                 id="endDateInput"
-                name="endDateInput"
-                value={endDate}
-                onChange={(e) => setEndDate(e.target.value)}
+                value={formData.endDate}
+                onChange={e => setFormData(prev => ({ ...prev, endDate: e.target.value }))}
                 required
               />
             </div>
@@ -471,22 +614,59 @@ const ManageFAQAdd = ({ setActivePage, activePage, fetchPromos }) => {
               <label className="answerLabel" htmlFor="endTimeInput">End Time</label>
               <input
                 type="time"
-                className="dateInput"
+                className="answerInput"
                 id="endTimeInput"
-                name="endTimeInput"
-                value={endTime}
-                onChange={(e) => setEndTime(e.target.value)}
+                value={formData.endTime}
+                onChange={e => setFormData(prev => ({ ...prev, endTime: e.target.value }))}
                 required
               />
             </div>
           </div>
-          <button type="submit" className="button-ManageFAQEdit">Save</button>
+          <div className="form-group">
+            <label className="questionLabel">Select Branches:</label>
+            <MultiSelectDropdown
+              options={branches}
+              selectedValues={formData.selectedBranches}
+              onToggle={handleBranchToggle}
+              placeholder="Select branches..."
+            />
+          </div>
+          <div className="form-group">
+            <label className="questionLabel">Select Staff:</label>
+            <MultiSelectDropdown
+              options={staff}
+              selectedValues={formData.selectedStaff}
+              onToggle={handleStaffToggle}
+              placeholder={formData.selectedBranches.length
+                ? (loadingStaff ? "Loading staff..." : "Select staff...")
+                : "Select branches first"}
+              disabled={!formData.selectedBranches.length || loadingStaff}
+            />
+          </div>
+          <div className="form-group">
+            <label className="questionLabel" htmlFor="duration">Duration (hours)</label>
+            <select
+              className="questionInput"
+              id="duration"
+              value={formData.duration}
+              onChange={e => setFormData(prev => ({ ...prev, duration: e.target.value }))}
+              disabled={!formData.selectedStaff.length}
+            >
+              {[...Array(12).keys()].map(hour => (
+                <option key={hour + 1} value={hour + 1}>
+                  {hour + 1} hour{hour + 1 > 1 ? "s" : ""}
+                </option>
+              ))}
+            </select>
+          </div>
+          <button type="submit" className="button-ManageFAQEdit">Create Promo</button>
         </form>
       </div>
     </div>
   );
 };
 
+// FAQs Component
 const FAQs = () => {
   const [activePage, setActivePage] = useState({ page: "FAQs" });
   const [searchText, setSearchText] = useState("");
@@ -494,7 +674,6 @@ const FAQs = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
-  // Fetch promos from backend
   const fetchPromos = async () => {
     try {
       const response = await fetch("http://localhost/admin_dashboard_backend/fetch_promos.php");
@@ -514,7 +693,6 @@ const FAQs = () => {
     fetchPromos();
   }, []);
 
-  // Filter data based on search text
   const filteredData = promos.filter(item =>
     item.name.toLowerCase().includes(searchText.toLowerCase()) ||
     item.description.toLowerCase().includes(searchText.toLowerCase()) ||

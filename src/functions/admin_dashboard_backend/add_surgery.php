@@ -2,58 +2,117 @@
 header("Access-Control-Allow-Origin: http://localhost:3000");
 header("Content-Type: application/json; charset=UTF-8");
 header("Access-Control-Allow-Methods: POST, OPTIONS");
-header("Access-Control-Allow-Headers: Content-Type");
+header("Access-Control-Allow-Headers: Content-Type, Authorization");
 
-// Handle preflight requests
 if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
     http_response_code(200);
-    exit();
+    exit(0);
 }
 
-$host = 'localhost';
-$dbname = 'admin_dashboard';
-$username = 'root';
-$password = '';
+$servername = "localhost";
+$username = "root";
+$password = "";
+$dbname = "admin_dashboard";
+
+$conn = new mysqli($servername, $username, $password, $dbname);
+if ($conn->connect_error) {
+    die(json_encode(["error" => "Connection failed: " . $conn->connect_error]));
+}
+
+$data = $_POST;
+$file = $_FILES['image'] ?? null;
 
 try {
-    // Create database connection
-    $conn = new PDO("mysql:host=$host;dbname=$dbname", $username, $password);
-    $conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+    if (
+        isset($data['title'], $data['description'], $data['price'], $data['start_date'], 
+              $data['end_date'], $data['duration'], $data['branch_ids'], $data['staff_ids']) &&
+        !empty($data['title']) &&
+        !empty($data['description']) &&
+        !empty($data['price']) &&
+        !empty($data['start_date']) &&
+        !empty($data['end_date']) &&
+        !empty($data['duration']) &&
+        !empty($data['branch_ids']) &&
+        !empty($data['staff_ids'])
+    ) {
+        // Validate and sanitize input data
+        $title = htmlspecialchars($data['title']);
+        $description = htmlspecialchars($data['description']);
+        $price = floatval($data['price']);
+        $startDate = $data['start_date'];
+        $endDate = $data['end_date'];
+        $duration = intval($data['duration']);
+        $branchIds = json_decode($data['branch_ids'], true);
+        $staffIds = json_decode($data['staff_ids'], true);
 
-    // Get form data
-    $title = $_POST['title'];
-    $description = $_POST['description'];
-    $start_date = $_POST['start_date'];
-    $start_time = $_POST['start_time'];
-    $end_date = $_POST['end_date'];
-    $end_time = $_POST['end_time'];
-    $price = $_POST['price'];
-    $image = $_FILES['image']['name'];
-    $image_tmp = $_FILES['image']['tmp_name'];
+        // Validate JSON data
+        if (!is_array($branchIds)) {
+            throw new Exception("Invalid branch IDs format");
+        }
+        if (!is_array($staffIds)) {
+            throw new Exception("Invalid staff IDs format");
+        }
 
-    // Move uploaded file to a directory
-    $upload_dir = "uploads/";
-    if (!is_dir($upload_dir)) {
-        mkdir($upload_dir, 0777, true);
+        // Handle image upload
+        $imageUrl = null;
+        if ($file && $file['error'] === UPLOAD_ERR_OK) {
+            $uploadDir = 'uploads/surgeries/';
+            if (!is_dir($uploadDir)) {
+                mkdir($uploadDir, 0777, true);
+            }
+            $fileName = uniqid() . '-' . basename($file['name']);
+            $filePath = $uploadDir . $fileName;
+            if (move_uploaded_file($file['tmp_name'], $filePath)) {
+                $imageUrl = 'http://localhost/admin_dashboard_backend/' . $filePath;
+            } else {
+                throw new Exception("Failed to upload image");
+            }
+        }
+
+        // Insert surgery
+        $stmt = $conn->prepare("INSERT INTO surgeries (title, description, price, image_url, start_date, end_date, duration) VALUES (?, ?, ?, ?, ?, ?, ?)");
+        if (!$stmt) {
+            throw new Exception("Prepare failed: " . $conn->error);
+        }
+        $stmt->bind_param("ssdsssi", $title, $description, $price, $imageUrl, $startDate, $endDate, $duration);
+
+        if (!$stmt->execute()) {
+            throw new Exception("Error adding surgery: " . $stmt->error);
+        }
+
+        $surgeryId = $stmt->insert_id;
+        $stmt->close();
+
+        // Insert branches
+        $stmt = $conn->prepare("INSERT INTO surgery_branches (surgery_id, branch_id) VALUES (?, ?)");
+        foreach ($branchIds as $branchId) {
+            $branchId = intval($branchId);
+            if ($branchId <= 0) throw new Exception("Invalid branch ID");
+            $stmt->bind_param("ii", $surgeryId, $branchId);
+            if (!$stmt->execute()) {
+                throw new Exception("Failed to insert branch: " . $stmt->error);
+            }
+        }
+
+        // Insert staff
+        $stmt = $conn->prepare("INSERT INTO surgery_staff (surgery_id, staff_id) VALUES (?, ?)");
+        foreach ($staffIds as $staffId) {
+            $staffId = intval($staffId);
+            if ($staffId <= 0) throw new Exception("Invalid staff ID");
+            $stmt->bind_param("ii", $surgeryId, $staffId);
+            if (!$stmt->execute()) {
+                throw new Exception("Failed to insert staff: " . $stmt->error);
+            }
+        }
+
+        echo json_encode(["message" => "Surgery added successfully"]);
+    } else {
+        throw new Exception("Invalid or incomplete data received");
     }
-    move_uploaded_file($image_tmp, $upload_dir . $image);
-
-    // Insert into database
-    $stmt = $conn->prepare("INSERT INTO surgery_appointments (title, description, start_date, start_time, end_date, end_time, price, image) VALUES (:title, :description, :start_date, :start_time, :end_date, :end_time, :price, :image)");
-    $stmt->execute([
-        ':title' => $title,
-        ':description' => $description,
-        ':start_date' => $start_date,
-        ':start_time' => $start_time,
-        ':end_date' => $end_date,
-        ':end_time' => $end_time,
-        ':price' => $price,
-        ':image' => $image,
-    ]);
-
-    echo json_encode(["message" => "Surgery appointment added successfully"]);
-} catch (PDOException $e) {
-    http_response_code(500);
-    echo json_encode(["message" => "Failed to add appointment: " . $e->getMessage()]);
+} catch (Exception $e) {
+    http_response_code(400);
+    echo json_encode(["error" => $e->getMessage()]);
 }
+
+$conn->close();
 ?>

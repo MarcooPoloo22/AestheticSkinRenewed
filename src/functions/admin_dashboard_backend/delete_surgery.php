@@ -4,33 +4,26 @@ header("Content-Type: application/json; charset=UTF-8");
 header("Access-Control-Allow-Methods: DELETE, OPTIONS");
 header("Access-Control-Allow-Headers: Content-Type");
 
-// Handle preflight requests
-if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
-    http_response_code(200);
-    exit();
-}
+if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') exit(0);
 
-$host = 'localhost';
-$dbname = 'admin_dashboard';
-$username = 'root';
-$password = '';
+$servername = "localhost";
+$username = "root";
+$password = "";
+$dbname = "admin_dashboard";
 
-try {
-    // Create database connection
-    $conn = new PDO("mysql:host=$host;dbname=$dbname", $username, $password);
-    $conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+$conn = new mysqli($servername, $username, $password, $dbname);
+if ($conn->connect_error) die("Connection failed: " . $conn->connect_error);
 
-    // Get input data
-    $data = json_decode(file_get_contents("php://input"), true);
+$data = json_decode(file_get_contents("php://input"), true);
+
+if (isset($data['id'])) {
     $id = $data['id'];
-
-    // Delete appointment
-    $stmt = $conn->prepare("DELETE FROM surgery_appointments WHERE id = :id");
-    $stmt->execute([':id' => $id]);
-
-    echo json_encode(["message" => "Surgery appointment deleted successfully"]);
-} catch (PDOException $e) {
-    http_response_code(500);
-    echo json_encode(["message" => "Failed to delete appointment: " . $e->getMessage()]);
+    $conn->query("DELETE FROM surgery_branches WHERE surgery_id = $id");
+    $conn->query("DELETE FROM surgery_staff WHERE surgery_id = $id");
+    $conn->query("DELETE FROM surgeries WHERE id = $id");
+    echo json_encode(["message" => "Surgery deleted successfully"]);
+} else {
+    echo json_encode(["error" => "Surgery ID not provided"]);
 }
+$conn->close();
 ?>

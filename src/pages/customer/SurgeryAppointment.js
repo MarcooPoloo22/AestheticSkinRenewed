@@ -1,59 +1,7 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import Card from "../../components/Customers/ServiceCard";
 import ServiceHead from "../../components/Customers/SurgeryHead";
 import "../../styles/customer/SurgeryAppointment.css";
-
-const surgeryAppointments = [
-  {
-    id: 1,
-    title: "Surgery Details",
-    description: "Doctor's Name: Dr. Juan Dela Cruz",
-    time: "Time: 9:00 AM-12:00 PM",
-    image: "/assets/doctor_surgery.jpg", 
-    updated: "3 mins ago",
-  },
-  {
-    id: 2,
-    title: "Surgery Details",
-    description: "Doctor's Name: Dr. Juan Dela Cruz",
-    time: "Time: 9:00 AM-12:00 PM",
-    image: "/assets/doctor_surgery.jpg",
-    updated: "10 mins ago",
-  },
-  {
-    id: 3,
-    title: "Surgery Details",
-    description: "Doctor's Name: Dr. Juan Dela Cruz",
-    time: "Time: 9:00 AM-12:00 PM",
-    image: "/assets/doctor_surgery.jpg",
-    updated: "15 mins ago",
-  },
-  {
-    id: 4,
-    title: "Surgery Details",
-    description: "Doctor's Name: Dr. Juan Dela Cruz",
-    time: "Time: 9:00 AM-12:00 PM",
-    image: "/assets/doctor_surgery.jpg",
-    updated: "1 hour ago",
-  },
-  {
-    id: 5,
-    title: "Surgery Details",
-    description: "Doctor's Name: Dr. Juan Dela Cruz",
-    time: "Time: 9:00 AM-12:00 PM",
-    image: "/assets/doctor_surgery.jpg",
-    updated: "2 hours ago",
-  },
-  {
-    id: 6,
-    title: "Surgery Details",
-    description: "Doctor's Name: Dr. Juan Dela Cruz",
-    time: "Time: 9:00 AM-12:00 PM",
-    image: "/assets/doctor_surgery.jpg",
-    updated: "5 hours ago",
-  },
-];
-
 
 const SurgeryCard = ({ title, description, time, image, updated }) => {
   return (
@@ -64,7 +12,7 @@ const SurgeryCard = ({ title, description, time, image, updated }) => {
         <p className="card-text">{description}</p>
         <p className="card-text">{time}</p>
         <p className="card-text">
-          <small className="text-muted">Last updated {updated}</small>
+          <small className="text-muted">Last Updated Price: {updated}</small>
         </p>
       </div>
     </div>
@@ -72,11 +20,37 @@ const SurgeryCard = ({ title, description, time, image, updated }) => {
 };
 
 function AppointmentPage() {
+  const [surgeryAppointments, setSurgeryAppointments] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+
+  // Fetch data from the backend API
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const response = await fetch("http://localhost/admin_dashboard_backend/home_fetch_surgeries.php");
+        if (!response.ok) {
+          throw new Error("Failed to fetch data");
+        }
+        const data = await response.json();
+        setSurgeryAppointments(data);
+      } catch (error) {
+        setError(error.message);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchData();
+  }, []);
+
+  if (loading) return <div>Loading...</div>;
+  if (error) return <div>Error: {error}</div>;
+
   return (
     <div className="container my-4">
       <div className="row">
-        <div className="col-6">
-        </div>
+        <div className="col-6"></div>
       </div>
       <ServiceHead />
       <div className="row mt-3">
@@ -85,9 +59,9 @@ function AppointmentPage() {
             <Card
               title={appointment.title}
               description={appointment.description}
-              time={appointment.time}
-              image={appointment.image}
-              updated={appointment.updated}
+              time={`${appointment.start_date} - ${appointment.end_date}`}
+              image={appointment.image_url}
+              updated={`₱${appointment.price}`} // Add peso sign to the price
             />
           </div>
         ))}
