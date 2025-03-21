@@ -49,12 +49,22 @@ function Messages() {
     }
   };
 
-  // Fetch inbox on mount and refresh periodically (optional)
+  // Poll the inbox every 1 second
   useEffect(() => {
     fetchChats();
-    const interval = setInterval(fetchChats, 30000); // refresh every 30 seconds
-    return () => clearInterval(interval);
+    const inboxInterval = setInterval(fetchChats, 1000);
+    return () => clearInterval(inboxInterval);
   }, []);
+
+  // When a chat is selected, poll its details every 1 second
+  useEffect(() => {
+    if (selectedChat) {
+      const chatInterval = setInterval(() => {
+        fetchChatDetails(selectedChat.id);
+      }, 1000);
+      return () => clearInterval(chatInterval);
+    }
+  }, [selectedChat]);
 
   return (
     <div className="messages-container">
