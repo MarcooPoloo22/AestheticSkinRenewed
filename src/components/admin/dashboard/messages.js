@@ -1,37 +1,32 @@
 // src/components/admin/dashboard/messages.js
 import React, { useEffect, useState } from "react";
-import "../../../styles/admin/messages.css"; // Import your custom CSS file
+import "../../../styles/admin/messages.css";
 
 function Messages() {
   const [chats, setChats] = useState([]);
   const [selectedChat, setSelectedChat] = useState(null);
   const [replyText, setReplyText] = useState("");
 
-  // Fetch list of chats (Inbox)
   const fetchChats = async () => {
     try {
       const res = await fetch("/api/livechat/chats");
       const data = await res.json();
-      // LiveChat returns a key "chats_summary" with an array of chat summaries
       setChats(data.chats_summary || []);
     } catch (err) {
       console.error("Error fetching chats:", err);
     }
   };
 
-  // Fetch details for a specific chat
   const fetchChatDetails = async (chatId) => {
     try {
       const res = await fetch(`/api/livechat/chats/${chatId}`);
       const data = await res.json();
-      console.log("get_chat response:", data);
       setSelectedChat(data);
     } catch (err) {
       console.error("Error fetching chat details:", err);
     }
   };
 
-  // Send a message reply to the selected chat
   const sendMessage = async () => {
     if (!selectedChat?.id || !replyText.trim()) return;
     const chatId = selectedChat.id;
@@ -42,21 +37,24 @@ function Messages() {
         body: JSON.stringify({ message: replyText }),
       });
       setReplyText("");
-      // Refresh chat details to show the new message
       fetchChatDetails(chatId);
     } catch (err) {
       console.error("Error sending message:", err);
     }
   };
 
-  // Poll the inbox every 1 second
+  const handleKeyPress = (e) => {
+    if (e.key === "Enter") {
+      sendMessage();
+    }
+  };
+
   useEffect(() => {
     fetchChats();
     const inboxInterval = setInterval(fetchChats, 1000);
     return () => clearInterval(inboxInterval);
   }, []);
 
-  // When a chat is selected, poll its details every 1 second
   useEffect(() => {
     if (selectedChat) {
       const chatInterval = setInterval(() => {
@@ -68,7 +66,6 @@ function Messages() {
 
   return (
     <div className="messages-container">
-      {/* Inbox Sidebar */}
       <div className="inbox">
         <h2 className="inbox-title">Inbox</h2>
         <ul className="chat-list">
@@ -93,7 +90,6 @@ function Messages() {
         </ul>
       </div>
 
-      {/* Chat Details & Reply Panel */}
       <div className="chat-details">
         {selectedChat ? (
           <>
@@ -101,8 +97,7 @@ function Messages() {
               <span>Chat ID:</span> {selectedChat.id}
             </div>
             <div className="chat-window">
-              {selectedChat.thread?.events &&
-              selectedChat.thread.events.length > 0 ? (
+              {selectedChat.thread?.events?.length > 0 ? (
                 selectedChat.thread.events.map((ev) => (
                   <div key={ev.id} className="chat-message">
                     <div className="message-author">{ev.author_id}</div>
@@ -122,6 +117,7 @@ function Messages() {
                 placeholder="Type your reply..."
                 value={replyText}
                 onChange={(e) => setReplyText(e.target.value)}
+                onKeyPress={handleKeyPress}
                 className="reply-input"
               />
               <button onClick={sendMessage} className="reply-button">
