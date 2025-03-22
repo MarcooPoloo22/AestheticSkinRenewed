@@ -1,13 +1,25 @@
 import React, { useState } from "react";
 import "../../styles/customer/ProfilePage.css";
 
+const capitalizeLabel = (str) => {
+  return str.replace(/([A-Z])/g, ' $1') 
+            .split(' ') 
+            .map(word => word.charAt(0).toUpperCase() + word.slice(1)) 
+            .join(' '); 
+};
+
 const ProfilePage = () => {
   const [activeTab, setActiveTab] = useState("account");
-
   const [userData, setUserData] = useState({
-    fullName: "John Doe",
-    email: "johndoe@example.com",
-    contactNumber: "1234567890",
+    firstName: "John",
+    middleInitial: "H",
+    lastName: "Doe",
+    email: "johndoe@gmail.com",
+    password: "********",
+    contactNo: "09123456789",
+    verified: "Yes",
+    verificationToken: "N/A",
+    role: "Customer",
   });
 
   const [editing, setEditing] = useState(false);
@@ -52,112 +64,75 @@ const ProfilePage = () => {
 
   return (
     <div className="profile-container">
-      <h2 className="profile-title">Profile</h2>
-      <div className="profile-card">
-        <h3 className="profile-welcome">Welcome, {userData.fullName}!</h3>
+      <div className="profile-sidebar">
+        <h3>Welcome, {userData.firstName} {userData.lastName}!</h3>
+        <button className={activeTab === "account" ? "active" : ""} onClick={() => setActiveTab("account")}>Account</button>
+        <button className={activeTab === "changePassword" ? "active" : ""} onClick={() => setActiveTab("changePassword")}>Change Password</button>
+        <button className={activeTab === "bookingHistory" ? "active" : ""} onClick={() => setActiveTab("bookingHistory")}>Booking History</button>
+      </div>
 
-        <div className="profile-sidebar">
-          <button
-            className={activeTab === "account" ? "active" : ""}
-            onClick={() => setActiveTab("account")}
-          >
-            Account
-          </button>
-          <button
-            className={activeTab === "changePassword" ? "active" : ""}
-            onClick={() => setActiveTab("changePassword")}
-          >
-            Change Password
-          </button>
-        </div>
+      <div className="profile-content">
+        {activeTab === "account" && (
+          <div className="account-details">
+            <h2><strong>Account Information</strong></h2>
+            {editing ? (
+              <>
+                <div className="account-info-grid">
+                  {Object.keys(newData).map((key) => (
+                    <div key={key}>
+                      <label>{capitalizeLabel(key)}:</label>
+                      <input 
+                        type="text" 
+                        name={key} 
+                        value={newData[key]} 
+                        onChange={handleInputChange} 
+                        disabled={key === 'verified' || key === 'verificationToken' || key === 'role'} 
+                      />
+                    </div>
+                  ))}
+                </div>
+                <button className="save-button" onClick={handleSave}>Save</button>
+                <button className="cancel-button" onClick={handleCancel}>Cancel</button>
+              </>
+            ) : (
+              <>
+                <div className="account-info-grid">
+                  {Object.keys(userData).map((key) => (
+                    <p key={key}><strong>{capitalizeLabel(key)}:</strong> {userData[key]}</p>
+                  ))}
+                </div>
+                <button className="edit-button" onClick={() => setEditing(true)}>Edit Profile</button>
+              </>
+            )}
+          </div>
+        )}
 
-        <div className="profile-content">
-          {activeTab === "account" && (
-            <div className="account-details">
-              <h4>Account Information</h4>
-              {editing ? (
-                <>
-                  <input
-                    type="text"
-                    name="fullName"
-                    value={newData.fullName}
-                    onChange={handleInputChange}
-                    placeholder="Full Name"
-                  />
-                  <input
-                    type="email"
-                    name="email"
-                    value={newData.email}
-                    onChange={handleInputChange}
-                    placeholder="Email Address"
-                  />
-                  <input
-                    type="text"
-                    name="contactNumber"
-                    value={newData.contactNumber}
-                    onChange={handleInputChange}
-                    placeholder="Contact Number"
-                  />
-                  <div className="button-group">
-                    <button className="save-button" onClick={handleSave}>
-                      Save
-                    </button>
-                    <button className="cancel-button" onClick={handleCancel}>
-                      Cancel
-                    </button>
-                  </div>
-                </>
-              ) : (
-                <>
-                  <div className="info-row">Full Name: {userData.fullName}</div>
-                  <div className="info-row">Email: {userData.email}</div>
-                  <div className="info-row">
-                    Contact Number: {userData.contactNumber}
-                  </div>
-                  <button
-                    className="edit-button"
-                    onClick={() => setEditing(true)}
-                  >
-                    Edit Profile
-                  </button>
-                </>
-              )}
+        {activeTab === "changePassword" && (
+          <div className="password-change">
+            <h2><strong>Change Password</strong></h2>
+            <div>
+              <label>Current Password</label>
+              <input type="password" name="currentPassword" value={passwords.currentPassword} onChange={handlePasswordChange} placeholder="Current Password" />
             </div>
-          )}
-
-          {activeTab === "changePassword" && (
-            <div className="password-change">
-              <h4>Change Password</h4>
-              <input
-                type="password"
-                name="currentPassword"
-                value={passwords.currentPassword}
-                onChange={handlePasswordChange}
-                placeholder="Current Password"
-              />
-              <input
-                type="password"
-                name="newPassword"
-                value={passwords.newPassword}
-                onChange={handlePasswordChange}
-                placeholder="New Password"
-              />
-              <input
-                type="password"
-                name="confirmPassword"
-                value={passwords.confirmPassword}
-                onChange={handlePasswordChange}
-                placeholder="Confirm Password"
-              />
-              {passwordError && (
-                <p className="error-message">{passwordError}</p>
-              )}
-              <button className="update-password" onClick={updatePassword}>
-                Update Password
-              </button>
+            <div>
+              <label>New Password</label>
+              <input type="password" name="newPassword" value={passwords.newPassword} onChange={handlePasswordChange} placeholder="New Password" />
             </div>
-          )}
-        </div>
+            <div>
+              <label>Confirm New Password</label>
+              <input type="password" name="confirmPassword" value={passwords.confirmPassword} onChange={handlePasswordChange} placeholder="Confirm Password" />
+            </div>
+            {passwordError && <p className="error-message">{passwordError}</p>}
+            <button className="update-password" onClick={updatePassword}>Update Password</button>
+          </div>
+        )}
+
+        {activeTab === "bookingHistory" && (
+          <div className="booking-history">
+            <h2><strong>Booking History</strong></h2>
+            <p>The User's Booking History Will Be Displayed Here:</p>
+          </div>
+        )}
       </div>
     </div>
   );

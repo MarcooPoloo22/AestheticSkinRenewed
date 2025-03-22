@@ -1,71 +1,89 @@
 .profile-container {
   display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
   height: 100vh;
   background-color: #f8f9fa;
-  font-family: "Arial", sans-serif;
-}
-
-.profile-card {
-  display: flex;
-  background: white;
-  padding: 30px;
-  border-radius: 10px;
-  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
-  width: 700px;
-  min-height: 350px;
+  font-family: Arial, sans-serif;
 }
 
 .profile-sidebar {
-  display: flex;
-  flex-direction: column;
-  width: 200px;
-  padding-right: 20px;
-  border-right: 2px solid #e0e0e0;
+  width: 250px;
+  padding: 20px;
+  background: #fff;
+  box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1);
+}
+
+.profile-sidebar h3 {
+  margin-bottom: 20px;
 }
 
 .profile-sidebar button {
-  background-color: #ffffff;
-  border: 1px solid #007bff;
-  padding: 12px;
-  margin: 8px 0;
-  border-radius: 5px;
-  cursor: pointer;
+  display: block;
+  width: 100%;
+  padding: 10px;
+  margin-bottom: 10px;
+  border: none;
+  background: #007bff;
+  color: white;
   font-size: 16px;
-  color: #007bff;
-  font-weight: bold;
+  cursor: pointer;
+  border-radius: 5px;
 }
 
-.profile-sidebar .active,
+.profile-sidebar button.active,
 .profile-sidebar button:hover {
-  background-color: #007bff;
-  color: white;
+  background: #0056b3;
 }
 
 .profile-content {
-  flex-grow: 1;
-  padding: 20px;
+  flex: 1;
+  padding: 30px;
+  background: white;
+  border-radius: 10px;
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+  margin: 30px;
 }
 
 .account-details,
-.password-change {
-  background: #ffffff;
+.password-change,
+.booking-history {
+  background: white;
   padding: 20px;
   border-radius: 8px;
   box-shadow: 0 3px 10px rgba(0, 0, 0, 0.1);
 }
 
-.info-row,
-input {
-  background: #f1f1f1;
-  padding: 12px;
-  margin: 8px 0;
-  border-radius: 6px;
-  font-size: 16px;
+.account-info-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 15px;
+  margin-bottom: 20px;
+}
+
+.account-info-grid label {
+  font-weight: bold;
+}
+
+.account-info-grid input,
+.password-change input {
   width: 100%;
+  max-width: 300px;
+  padding: 8px;
+  border-radius: 5px;
   border: 1px solid #ccc;
+  font-size: 14px;
+  margin-top: 5px;
+}
+
+.password-change {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+  align-items: flex-start;
+}
+
+.password-change input {
+  width: 100%;
+  max-width: 300px;
 }
 
 .edit-button,
@@ -74,12 +92,11 @@ input {
 .update-password {
   background-color: #007bff;
   color: white;
-  border: none;
-  padding: 12px;
+  padding: 10px;
   border-radius: 5px;
   cursor: pointer;
   font-size: 16px;
-  font-weight: bold;
+  border: none;
   margin-top: 10px;
 }
 
@@ -87,8 +104,9 @@ input {
   background-color: #dc3545;
 }
 
-.update-password:hover,
-.save-button:hover {
+.edit-button:hover,
+.save-button:hover,
+.update-password:hover {
   background-color: #0056b3;
 }
 
