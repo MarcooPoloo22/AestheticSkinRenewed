@@ -195,7 +195,7 @@ const Dashboard = (faqs) => {
             isActive={activePage === "Logs"}
           >
             <IoSettingsOutline className="icon" />
-            Logs
+            Audit Trail
           </Button>
         </div>
         <div className="design-pic">
