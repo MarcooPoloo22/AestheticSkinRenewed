@@ -1,7 +1,7 @@
 <?php
 header("Access-Control-Allow-Origin: http://localhost:3000");
 header("Content-Type: application/json; charset=UTF-8");
-header("Access-Control-Allow-Methods: POST, OPTIONS");
+header("Access-Control-Allow-Methods: POST, GET, OPTIONS");
 header("Access-Control-Max-Age: 3600");
 header("Access-Control-Allow-Headers: Content-Type, Access-Control-Allow-Headers, Authorization, X-Requested-With");
 
@@ -20,15 +20,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
     exit();
 }
 
-$input = file_get_contents("php://input");
-$data = json_decode($input, true);
-
-if (!$data) {
-    http_response_code(400);
-    echo json_encode(['status' => 'error', 'message' => 'Invalid input data.']);
-    exit();
-}
-
 $host = 'localhost';
 $dbname = 'asr';
 $username = 'root';
@@ -41,6 +32,42 @@ try {
     error_log('Database Connection Error: ' . $e->getMessage());
     http_response_code(500);
     echo json_encode(['status' => 'error', 'message' => 'Database connection failed.']);
+    exit();
+}
+
+if ($_SERVER['REQUEST_METHOD'] === 'GET' && isset($_GET['date'])) {
+    $date = filter_input(INPUT_GET, 'date', FILTER_SANITIZE_STRING);
+    if (!preg_match('/^\d{4}-\d{2}-\d{2}$/', $date)) {
+        http_response_code(400);
+        echo json_encode(['status' => 'error', 'message' => 'Invalid date format.']);
+        exit();
+    }
+
+    try {
+        $stmt = $conn->prepare("
+        SELECT DATE_FORMAT(appointment_time, '%h:%i %p') as appointment_time
+        FROM bookings
+        WHERE appointment_date = :date
+        AND status != 'cancelled'
+    ");
+        $stmt->execute([':date' => $date]);
+        $bookedSlots = $stmt->fetchAll(PDO::FETCH_COLUMN);
+
+        echo json_encode(['status' => 'success', 'booked_slots' => $bookedSlots]);
+    } catch (PDOException $e) {
+        error_log('Database Error: ' . $e->getMessage());
+        http_response_code(500);
+        echo json_encode(['status' => 'error', 'message' => 'Failed to fetch booked slots.']);
+    }
+    exit();
+}
+
+$input = file_get_contents("php://input");
+$data = json_decode($input, true);
+
+if (!$data) {
+    http_response_code(400);
+    echo json_encode(['status' => 'error', 'message' => 'Invalid input data.']);
     exit();
 }
 

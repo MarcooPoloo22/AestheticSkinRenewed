@@ -6,19 +6,22 @@ import "bootstrap/dist/css/bootstrap.min.css";
 
 const BookingPageRegistered = ({ user }) => {
   const [formData, setFormData] = useState({
-    type: "",
+    service_type: "",
     service: "",
-    branch: "",
-    staff: "",
-    bookingDate: "",
-    bookingTime: "",
+    branch_id: "",
+    staff_id: "",
+    appointment_date: "",
+    appointment_time: "",
   });
 
   const [services, setServices] = useState([]);
   const [branches, setBranches] = useState([]);
   const [staffList, setStaffList] = useState([]);
+  const [bookedSlots, setBookedSlots] = useState([]);
+  const [isLoading, setIsLoading] = useState(false); // Loading state for booked slots
   const navigate = useNavigate();
 
+  // Redirect if user is not logged in
   useEffect(() => {
     if (!user) {
       Swal.fire({
@@ -31,18 +34,20 @@ const BookingPageRegistered = ({ user }) => {
     }
   }, [user, navigate]);
 
+  // Fetch services based on service type
   useEffect(() => {
-    if (formData.type) {
-      fetch(`http://localhost/admin_dashboard_backend/bookingpage_services.php?type=${formData.type}`)
+    if (formData.service_type) {
+      fetch(`http://localhost/admin_dashboard_backend/bookingpage_services.php?type=${formData.service_type}`)
         .then((response) => response.json())
         .then((data) => setServices(data))
         .catch((error) => console.error("Error fetching services:", error));
     } else {
       setServices([]);
-      setFormData((prev) => ({ ...prev, service: "", branch: "", staff: "" }));
+      setFormData((prev) => ({ ...prev, service: "", branch_id: "", staff_id: "" }));
     }
-  }, [formData.type]);
+  }, [formData.service_type]);
 
+  // Fetch branches based on selected service
   useEffect(() => {
     if (formData.service) {
       fetch(`http://localhost/admin_dashboard_backend/bookingpage_branches.php?serviceId=${encodeURIComponent(formData.service)}`)
@@ -68,14 +73,14 @@ const BookingPageRegistered = ({ user }) => {
         });
     } else {
       setBranches([]);
-      setFormData((prev) => ({ ...prev, branch: "", staff: "" }));
+      setFormData((prev) => ({ ...prev, branch_id: "", staff_id: "" }));
     }
   }, [formData.service]);
 
+  // Fetch staff based on selected branch
   useEffect(() => {
-    if (formData.branch) {
-      console.log("Fetching staff for branchId:", formData.branch); // Debug
-      fetch(`http://localhost/admin_dashboard_backend/bookingpage_staff.php?branchId=${encodeURIComponent(formData.branch)}`, {
+    if (formData.branch_id) {
+      fetch(`http://localhost/admin_dashboard_backend/bookingpage_staff.php?branchId=${encodeURIComponent(formData.branch_id)}`, {
         method: 'GET',
         headers: {
           'Content-Type': 'application/json',
@@ -91,7 +96,6 @@ const BookingPageRegistered = ({ user }) => {
           if (data.error) {
             throw new Error(data.error);
           }
-          console.log("Fetched staff:", data); // Debug
           setStaffList(data);
         })
         .catch((error) => {
@@ -104,9 +108,43 @@ const BookingPageRegistered = ({ user }) => {
         });
     } else {
       setStaffList([]);
-      setFormData((prev) => ({ ...prev, staff: "" }));
+      setFormData((prev) => ({ ...prev, staff_id: "" }));
     }
-  }, [formData.branch]);
+  }, [formData.branch_id]);
+
+  // Fetch booked slots for the selected date
+  useEffect(() => {
+    if (formData.appointment_date) {
+      setIsLoading(true); // Set loading state
+      fetch(`http://localhost/booking.php?date=${formData.appointment_date}`)
+        .then((response) => {
+          if (!response.ok) {
+            throw new Error('Network response was not ok');
+          }
+          return response.json();
+        })
+        .then((data) => {
+          if (data.status === 'success') {
+            setBookedSlots(data.booked_slots || []); // Set booked slots
+          } else {
+            throw new Error(data.message || 'Failed to fetch booked slots.');
+          }
+        })
+        .catch((error) => {
+          console.error("Error fetching booked slots:", error);
+          Swal.fire({
+            icon: 'error',
+            title: 'Error',
+            text: 'Failed to fetch booked slots. Please try again.',
+          });
+        })
+        .finally(() => {
+          setIsLoading(false); // Reset loading state
+        });
+    } else {
+      setBookedSlots([]); // Clear booked slots if no date is selected
+    }
+  }, [formData.appointment_date]);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -115,6 +153,8 @@ const BookingPageRegistered = ({ user }) => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    console.log("Form Data:", formData);
+
     if (!user) {
       Swal.fire({
         icon: "error",
@@ -136,15 +176,16 @@ const BookingPageRegistered = ({ user }) => {
           last_name: user.last_name,
           email: user.email,
           contact_no: user.contact_no,
-          service_id: formData.service,
-          branch_id: formData.branch,
-          staff_id: formData.staff,
-          appointment_date: formData.bookingDate,
-          appointment_time: formData.bookingTime,
+          service_type: formData.service_type,
+          branch_id: formData.branch_id,
+          staff_id: formData.staff_id,
+          appointment_date: formData.appointment_date,
+          appointment_time: formData.appointment_time,
         }),
       });
 
       const result = await response.json();
+      console.log("Response:", result);
 
       if (result.status === "success") {
         Swal.fire({
@@ -171,6 +212,16 @@ const BookingPageRegistered = ({ user }) => {
     }
   };
 
+  const timeSlots = [
+    "09:00 AM",
+    "10:00 AM",
+    "11:00 AM",
+    "01:00 PM",
+    "02:00 PM",
+    "03:00 PM",
+    "04:00 PM",
+  ];
+
   return (
     <>
       <div className="booking-container">
@@ -191,8 +242,8 @@ const BookingPageRegistered = ({ user }) => {
               <p className="branch-label">Choose Type</p>
               <select
                 className="form-select form-select-lg mb-3"
-                name="type"
-                value={formData.type}
+                name="service_type"
+                value={formData.service_type}
                 onChange={handleChange}
                 required
               >
@@ -211,7 +262,7 @@ const BookingPageRegistered = ({ user }) => {
                 value={formData.service}
                 onChange={handleChange}
                 required
-                disabled={!formData.type}
+                disabled={!formData.service_type}
               >
                 <option value="">Select service</option>
                 {services.map((service) => (
@@ -229,8 +280,8 @@ const BookingPageRegistered = ({ user }) => {
               <p className="branch-label">Branch</p>
               <select
                 className="form-select form-select-lg mb-3"
-                name="branch"
-                value={formData.branch}
+                name="branch_id"
+                value={formData.branch_id}
                 onChange={handleChange}
                 required
                 disabled={!formData.service}
@@ -248,11 +299,11 @@ const BookingPageRegistered = ({ user }) => {
               <p className="service-label">Staff</p>
               <select
                 className="form-select form-select-lg mb-3"
-                name="staff"
-                value={formData.staff}
+                name="staff_id"
+                value={formData.staff_id}
                 onChange={handleChange}
                 required
-                disabled={!formData.branch}
+                disabled={!formData.branch_id}
               >
                 <option value="">Select Staff</option>
                 {staffList.map((staff) => (
@@ -271,8 +322,8 @@ const BookingPageRegistered = ({ user }) => {
               <input
                 type="date"
                 className="form-control"
-                name="bookingDate"
-                value={formData.bookingDate}
+                name="appointment_date"
+                value={formData.appointment_date}
                 onChange={handleChange}
                 required
               />
@@ -282,22 +333,39 @@ const BookingPageRegistered = ({ user }) => {
               <p className="booktime-label">Booking Time</p>
               <select
                 className="form-select form-select-lg"
-                name="bookingTime"
-                value={formData.bookingTime}
+                name="appointment_time"
+                value={formData.appointment_time}
                 onChange={handleChange}
                 required
+                disabled={isLoading}
               >
                 <option value="">Select Time</option>
-                <option value="09:00 AM">09:00 AM</option>
-                <option value="10:00 AM">10:00 AM</option>
-                <option value="11:00 AM">11:00 AM</option>
-                <option value="01:00 PM">01:00 PM</option>
-                <option value="02:00 PM">02:00 PM</option>
-                <option value="03:00 PM">03:00 PM</option>
-                <option value="04:00 PM">04:00 PM</option>
+                {isLoading ? (
+                  <option disabled>Loading...</option>
+                ) : (
+                  timeSlots.map((slot) => (
+                    <option
+                      key={slot}
+                      value={slot}
+                      disabled={bookedSlots.includes(slot)}
+                      style={{
+                        backgroundColor: bookedSlots.includes(slot) ? "#f0f0f0" : "inherit", // Gray background for blocked slots
+                        color: bookedSlots.includes(slot) ? "#a0a0a0" : "inherit", // Light gray text for blocked slots
+                      }}
+                    >
+                      {slot}
+                    </option>
+                  ))
+                )}
               </select>
             </div>
           </div>
+
+          {bookedSlots.length === timeSlots.length && (
+            <div className="alert alert-warning mt-3">
+              All time slots are booked for the selected date. Please choose another date.
+            </div>
+          )}
 
           <div className="d-grid gap-2 col-6 mx-auto">
             <button
@@ -316,35 +384,38 @@ const BookingPageRegistered = ({ user }) => {
 
 const BookingPageGuest = () => {
   const [formData, setFormData] = useState({
-    firstName: "",
-    lastName: "",
+    first_name: "",
+    last_name: "",
     email: "",
-    contactNo: "",
-    type: "",
-    service: "",
-    branch: "",
-    staff: "",
-    bookingDate: "",
-    bookingTime: "",
+    contact_no: "",
+    service_type: "",
+    branch_id: "",
+    staff_id: "",
+    appointment_date: "",
+    appointment_time: "",
   });
 
   const [services, setServices] = useState([]);
   const [branches, setBranches] = useState([]);
   const [staffList, setStaffList] = useState([]);
+  const [bookedSlots, setBookedSlots] = useState([]);
+  const [isLoading, setIsLoading] = useState(false); // Loading state for booked slots
   const navigate = useNavigate();
 
+  // Fetch services based on service type
   useEffect(() => {
-    if (formData.type) {
-      fetch(`http://localhost/admin_dashboard_backend/bookingpage_services.php?type=${formData.type}`)
+    if (formData.service_type) {
+      fetch(`http://localhost/admin_dashboard_backend/bookingpage_services.php?type=${formData.service_type}`)
         .then((response) => response.json())
         .then((data) => setServices(data))
         .catch((error) => console.error("Error fetching services:", error));
     } else {
       setServices([]);
-      setFormData((prev) => ({ ...prev, service: "", branch: "", staff: "" }));
+      setFormData((prev) => ({ ...prev, service: "", branch_id: "", staff_id: "" }));
     }
-  }, [formData.type]);
+  }, [formData.service_type]);
 
+  // Fetch branches based on selected service
   useEffect(() => {
     if (formData.service) {
       fetch(`http://localhost/admin_dashboard_backend/bookingpage_branches.php?serviceId=${encodeURIComponent(formData.service)}`)
@@ -370,14 +441,14 @@ const BookingPageGuest = () => {
         });
     } else {
       setBranches([]);
-      setFormData((prev) => ({ ...prev, branch: "", staff: "" }));
+      setFormData((prev) => ({ ...prev, branch_id: "", staff_id: "" }));
     }
   }, [formData.service]);
 
+  // Fetch staff based on selected branch
   useEffect(() => {
-    if (formData.branch) {
-      console.log("Fetching staff for branchId:", formData.branch); // Debug
-      fetch(`http://localhost/admin_dashboard_backend/bookingpage_staff.php?branchId=${encodeURIComponent(formData.branch)}`, {
+    if (formData.branch_id) {
+      fetch(`http://localhost/admin_dashboard_backend/bookingpage_staff.php?branchId=${encodeURIComponent(formData.branch_id)}`, {
         method: 'GET',
         headers: {
           'Content-Type': 'application/json',
@@ -393,7 +464,6 @@ const BookingPageGuest = () => {
           if (data.error) {
             throw new Error(data.error);
           }
-          console.log("Fetched staff:", data); // Debug
           setStaffList(data);
         })
         .catch((error) => {
@@ -406,9 +476,43 @@ const BookingPageGuest = () => {
         });
     } else {
       setStaffList([]);
-      setFormData((prev) => ({ ...prev, staff: "" }));
+      setFormData((prev) => ({ ...prev, staff_id: "" }));
     }
-  }, [formData.branch]);
+  }, [formData.branch_id]);
+
+  // Fetch booked slots for the selected date
+  useEffect(() => {
+    if (formData.appointment_date) {
+      setIsLoading(true); // Set loading state
+      fetch(`http://localhost/booking.php?date=${formData.appointment_date}`)
+        .then((response) => {
+          if (!response.ok) {
+            throw new Error('Network response was not ok');
+          }
+          return response.json();
+        })
+        .then((data) => {
+          if (data.status === 'success') {
+            setBookedSlots(data.booked_slots || []); // Set booked slots
+          } else {
+            throw new Error(data.message || 'Failed to fetch booked slots.');
+          }
+        })
+        .catch((error) => {
+          console.error("Error fetching booked slots:", error);
+          Swal.fire({
+            icon: 'error',
+            title: 'Error',
+            text: 'Failed to fetch booked slots. Please try again.',
+          });
+        })
+        .finally(() => {
+          setIsLoading(false); // Reset loading state
+        });
+    } else {
+      setBookedSlots([]); // Clear booked slots if no date is selected
+    }
+  }, [formData.appointment_date]);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -417,6 +521,8 @@ const BookingPageGuest = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    console.log("Form Data:", formData);
+
     try {
       const response = await fetch("http://localhost/booking.php", {
         method: "POST",
@@ -425,19 +531,20 @@ const BookingPageGuest = () => {
         },
         body: JSON.stringify({
           user_id: null,
-          first_name: formData.firstName,
-          last_name: formData.lastName,
+          first_name: formData.first_name,
+          last_name: formData.last_name,
           email: formData.email,
-          contact_no: formData.contactNo,
-          service_id: formData.service,
-          branch_id: formData.branch,
-          staff_id: formData.staff,
-          appointment_date: formData.bookingDate,
-          appointment_time: formData.bookingTime,
+          contact_no: formData.contact_no,
+          service_type: formData.service_type,
+          branch_id: formData.branch_id,
+          staff_id: formData.staff_id,
+          appointment_date: formData.appointment_date,
+          appointment_time: formData.appointment_time,
         }),
       });
 
       const result = await response.json();
+      console.log("Response:", result);
 
       if (result.status === "success") {
         Swal.fire({
@@ -468,6 +575,16 @@ const BookingPageGuest = () => {
     }
   };
 
+  const timeSlots = [
+    "09:00 AM",
+    "10:00 AM",
+    "11:00 AM",
+    "01:00 PM",
+    "02:00 PM",
+    "03:00 PM",
+    "04:00 PM",
+  ];
+
   return (
     <>
       <div className="booking-container">
@@ -489,8 +606,8 @@ const BookingPageGuest = () => {
                 type="text"
                 className="form-control"
                 placeholder="First name"
-                name="firstName"
-                value={formData.firstName}
+                name="first_name"
+                value={formData.first_name}
                 onChange={handleChange}
                 required
               />
@@ -501,8 +618,8 @@ const BookingPageGuest = () => {
                 type="text"
                 className="form-control"
                 placeholder="Last name"
-                name="lastName"
-                value={formData.lastName}
+                name="last_name"
+                value={formData.last_name}
                 onChange={handleChange}
                 required
               />
@@ -528,8 +645,8 @@ const BookingPageGuest = () => {
               type="text"
               className="form-control"
               placeholder="0912314567"
-              name="contactNo"
-              value={formData.contactNo}
+              name="contact_no"
+              value={formData.contact_no}
               onChange={handleChange}
               required
             />
@@ -541,8 +658,8 @@ const BookingPageGuest = () => {
               <p className="branch-label">Choose Type</p>
               <select
                 className="form-select form-select-lg mb-3"
-                name="type"
-                value={formData.type}
+                name="service_type"
+                value={formData.service_type}
                 onChange={handleChange}
                 required
               >
@@ -561,7 +678,7 @@ const BookingPageGuest = () => {
                 value={formData.service}
                 onChange={handleChange}
                 required
-                disabled={!formData.type}
+                disabled={!formData.service_type}
               >
                 <option value="">Select service</option>
                 {services.map((service) => (
@@ -579,8 +696,8 @@ const BookingPageGuest = () => {
               <p className="branch-label">Branch</p>
               <select
                 className="form-select form-select-lg mb-3"
-                name="branch"
-                value={formData.branch}
+                name="branch_id"
+                value={formData.branch_id}
                 onChange={handleChange}
                 required
                 disabled={!formData.service}
@@ -598,11 +715,11 @@ const BookingPageGuest = () => {
               <p className="service-label">Staff</p>
               <select
                 className="form-select form-select-lg mb-3"
-                name="staff"
-                value={formData.staff}
+                name="staff_id"
+                value={formData.staff_id}
                 onChange={handleChange}
                 required
-                disabled={!formData.branch}
+                disabled={!formData.branch_id}
               >
                 <option value="">Select Staff</option>
                 {staffList.map((staff) => (
@@ -621,8 +738,8 @@ const BookingPageGuest = () => {
               <input
                 type="date"
                 className="form-control"
-                name="bookingDate"
-                value={formData.bookingDate}
+                name="appointment_date"
+                value={formData.appointment_date}
                 onChange={handleChange}
                 required
               />
@@ -632,22 +749,39 @@ const BookingPageGuest = () => {
               <p className="booktime-label">Booking Time</p>
               <select
                 className="form-select form-select-lg"
-                name="bookingTime"
-                value={formData.bookingTime}
+                name="appointment_time"
+                value={formData.appointment_time}
                 onChange={handleChange}
                 required
+                disabled={isLoading}
               >
                 <option value="">Select Time</option>
-                <option value="09:00 AM">09:00 AM</option>
-                <option value="10:00 AM">10:00 AM</option>
-                <option value="11:00 AM">11:00 AM</option>
-                <option value="01:00 PM">01:00 PM</option>
-                <option value="02:00 PM">02:00 PM</option>
-                <option value="03:00 PM">03:00 PM</option>
-                <option value="04:00 PM">04:00 PM</option>
+                {isLoading ? (
+                  <option disabled>Loading...</option>
+                ) : (
+                  timeSlots.map((slot) => (
+                    <option
+                      key={slot}
+                      value={slot}
+                      disabled={bookedSlots.includes(slot)}
+                      style={{
+                        backgroundColor: bookedSlots.includes(slot) ? "#f0f0f0" : "inherit", // Gray background for blocked slots
+                        color: bookedSlots.includes(slot) ? "#a0a0a0" : "inherit", // Light gray text for blocked slots
+                      }}
+                    >
+                      {slot}
+                    </option>
+                  ))
+                )}
               </select>
             </div>
           </div>
+
+          {bookedSlots.length === timeSlots.length && (
+            <div className="alert alert-warning mt-3">
+              All time slots are booked for the selected date. Please choose another date.
+            </div>
+          )}
 
           <div className="d-grid gap-2 col-6 mx-auto">
             <button

@@ -14,6 +14,11 @@
 /*!40101 SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='NO_AUTO_VALUE_ON_ZERO' */;
 /*!40111 SET @OLD_SQL_NOTES=@@SQL_NOTES, SQL_NOTES=0 */;
 
+
+-- Dumping database structure for admin_dashboard
+CREATE DATABASE IF NOT EXISTS `admin_dashboard` /*!40100 DEFAULT CHARACTER SET latin1 COLLATE latin1_swedish_ci */;
+USE `admin_dashboard`;
+
 -- Dumping structure for table admin_dashboard.branches
 CREATE TABLE IF NOT EXISTS `branches` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
