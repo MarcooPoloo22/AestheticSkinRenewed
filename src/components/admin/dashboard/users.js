@@ -1,10 +1,11 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import DataTable from 'react-data-table-component';
+import Swal from 'sweetalert2'; // Import SweetAlert2
 
 import "../../../styles/admin/dashboard/faqs.css";
 
 // Icons
-import { FaRegTrashAlt, FaRegEdit } from "react-icons/fa";
+import { FaRegTrashAlt } from "react-icons/fa";
 import { IoArrowBackOutline } from "react-icons/io5";
 import { CiSearch } from "react-icons/ci";
 
@@ -16,7 +17,7 @@ const customStyles = {
   },
 };
 
-const FAQTable = ({ setActivePage, activePage, data }) => {
+const FAQTable = ({ setActivePage, activePage, data, handleDelete }) => {
   // Define columns
   const columns = [
     {
@@ -38,7 +39,7 @@ const FAQTable = ({ setActivePage, activePage, data }) => {
       name: 'Action',
       cell: row => (
         <div>
-          <button className="delete-button">
+          <button className="delete-button" onClick={() => handleDelete(row.id)}>
             <FaRegTrashAlt />
           </button>
         </div>
@@ -116,30 +117,93 @@ const ManageFAQAdd = ({ setActivePage, activePage }) => {
 const FAQs = () => {
   const [activePage, setActivePage] = useState("FAQs");
   const [searchText, setSearchText] = useState("");
+  const [data, setData] = useState([]);
 
-  // Sample data
-  const initialData = [
-    {
-      id: 1,
-      name: 'John Doe',
-      email: 'john.doe@example.com',
-      contactNumber: '09111111111',
-    },
-    {
-      id: 2,
-      name: 'Jane Smith',
-      email: 'jane.smith@example.com',
-      contactNumber: '09222222222',
-    },
-    // Add more data items here
-  ];
+  // Fetch users with role 'customer' from the PHP backend
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const response = await fetch('http://localhost/admin_dashboard_backend/fetch_users.php?role=customer');
+        if (!response.ok) {
+          throw new Error('Network response was not ok');
+        }
+        const result = await response.json();
+        setData(result); // Update state with fetched data
+      } catch (error) {
+        console.error('Error fetching data:', error);
+      }
+    };
+
+    fetchData();
+  }, []);
+
+  // Handle user deletion
+  const handleDelete = async (id) => {
+    // Show confirmation dialog
+    const confirmResult = await Swal.fire({
+      title: 'Are you sure?',
+      text: 'You are about to delete this user. This action cannot be undone!',
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonColor: '#3085d6',
+      cancelButtonColor: '#d33',
+      confirmButtonText: 'Yes, delete it!',
+      cancelButtonText: 'Cancel',
+    });
+
+    // If the user confirms, proceed with deletion
+    if (confirmResult.isConfirmed) {
+      try {
+        const response = await fetch('http://localhost/admin_dashboard_backend/delete_user.php', {
+          method: 'DELETE',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({ id }),
+        });
+
+        if (!response.ok) {
+          throw new Error('Failed to delete user');
+        }
+
+        const result = await response.json();
+
+        // Show success message
+        await Swal.fire({
+          title: 'Deleted!',
+          text: result.message || 'User deleted successfully.',
+          icon: 'success',
+          confirmButtonText: 'OK',
+        });
+
+        // Remove the deleted user from the UI
+        setData(data.filter(user => user.id !== id));
+      } catch (error) {
+        console.error('Error deleting user:', error);
+
+        // Show error message
+        await Swal.fire({
+          title: 'Error!',
+          text: error.message || 'An error occurred while deleting the user.',
+          icon: 'error',
+          confirmButtonText: 'OK',
+        });
+      }
+    }
+  };
 
   // Filter data based on search text
-  const filteredData = initialData.filter(item =>
-    item.name.toLowerCase().includes(searchText.toLowerCase()) ||
-    item.email.toLowerCase().includes(searchText.toLowerCase()) ||
-    item.contactNumber.includes(searchText)
-  );
+  const filteredData = data.filter(item => {
+    const name = item.name?.toLowerCase() || '';
+    const email = item.email?.toLowerCase() || '';
+    const contactNumber = item.contactNumber || '';
+
+    return (
+      name.includes(searchText.toLowerCase()) ||
+      email.includes(searchText.toLowerCase()) ||
+      contactNumber.includes(searchText)
+    );
+  });
 
   return (
     <>
@@ -160,7 +224,7 @@ const FAQs = () => {
               </div>
             </div>
           </div>
-          <FAQTable setActivePage={setActivePage} activePage={activePage} data={filteredData} />
+          <FAQTable setActivePage={setActivePage} activePage={activePage} data={filteredData} handleDelete={handleDelete} />
         </div>
       ) : activePage === "ManageFAQEdit" ? (
         <ManageFAQEdit setActivePage={setActivePage} activePage={activePage} />

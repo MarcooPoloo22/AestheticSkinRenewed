@@ -82,7 +82,7 @@ const FAQTable = ({ setActivePage, activePage, data, setServices, setServiceToEd
   return <DataTable columns={columns} data={data} pagination highlightOnHover responsive customStyles={customStyles} />;
 };
 
-const MultiSelectDropdown = ({ options, selectedValues, onToggle, placeholder, disabled }) => {
+const MultiSelectDropdown = ({ options = [], selectedValues, onToggle, placeholder, disabled }) => {
   const [isOpen, setIsOpen] = useState(false);
 
   return (
@@ -140,27 +140,48 @@ const ServiceForm = ({ setActivePage, initialData, isEditing, setServices }) => 
     try {
       const response = await fetch("http://localhost/admin_dashboard_backend/branch_fetch_branches.php");
       const data = await response.json();
+  
+      // Ensure data is an array
+      if (!Array.isArray(data)) {
+        throw new Error("Invalid data format: expected an array");
+      }
+  
       setBranches(data);
     } catch (error) {
       console.error("Error fetching branches:", error);
+      setBranches([]); // Fallback to empty array
     }
   };
 
   const fetchStaff = async () => {
     try {
-        setLoadingStaff(true);
-        const response = await fetch(
-            `http://localhost/admin_dashboard_backend/branch_fetch_staff.php?branch_ids=${formData.selectedBranches.join(",")}`
-        );
-        const data = await response.json();
-        setStaff(data);
+      setLoadingStaff(true);
+      const response = await fetch(
+        `http://localhost/admin_dashboard_backend/branch_fetch_staff.php?branch_ids=${formData.selectedBranches.join(",")}`
+      );
+  
+      // Check if the response is OK
+      if (!response.ok) {
+        throw new Error(`HTTP error! Status: ${response.status}`);
+      }
+  
+      // Parse the response as JSON
+      const data = await response.json();
+  
+      // Ensure data is an array
+      if (!Array.isArray(data)) {
+        throw new Error("Invalid data format: expected an array");
+      }
+  
+      setStaff(data);
     } catch (error) {
-        console.error("Error fetching staff:", error);
+      console.error("Error fetching staff:", error);
+      setStaff([]); // Fallback to empty array
+      Swal.fire('Error!', 'Failed to fetch staff. Please check the console for details.', 'error');
     } finally {
-        setLoadingStaff(false);
+      setLoadingStaff(false);
     }
   };
-
 
   const handleBranchToggle = (branchId) => {
     setFormData(prev => ({
@@ -293,14 +314,14 @@ const ServiceForm = ({ setActivePage, initialData, isEditing, setServices }) => 
           <div className="form-group">
             <label className="questionLabel">Select Staff:</label>
             <MultiSelectDropdown
-              options={staff}
-              selectedValues={formData.selectedStaff}
-              onToggle={handleStaffToggle}
-              placeholder={formData.selectedBranches.length
-                ? (loadingStaff ? "Loading staff..." : "Select staff...")
-                : "Select branches first"}
-              disabled={!formData.selectedBranches.length || loadingStaff}
-            />
+            options={staff}
+  selectedValues={formData.selectedStaff}
+  onToggle={handleStaffToggle}
+  placeholder={formData.selectedBranches.length
+    ? (loadingStaff ? "Loading staff..." : "Select staff...")
+    : "Select branches first"}
+  disabled={!formData.selectedBranches.length || loadingStaff}
+/>
           </div>
 
           {/* Duration Selection */}

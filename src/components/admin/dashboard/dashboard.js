@@ -104,66 +104,50 @@ const DashboardCalendar = () => {
   return (
     <div>
       <div className="dashboard-header">
-        {/* Total Services Card */}
-        <div className="dashboad-header-container ">
-          <div className="dashboad-header-container-content">
-            <div className="dashboad-header-container-image">
-              <div style={{ backgroundColor: "#068B92" }} className="dashboad-header-container-services">
-                <IoBriefcase style={{ fontSize: "28px" }} />
-              </div>
-            </div>
-            <div className="dashboad-header-container-text">
-              <div className="dashboad-header-text">Total Services</div>
-              <div className="dashboad-header-count">{totalServices}</div>
-            </div>
-          </div>
+      {/* Total Services Card */}
+      <div className="dashboard-card">
+        <div className="dashboard-card-icon" style={{ backgroundColor: "#068B92" }}>
+          <IoBriefcase size={28} />
         </div>
-
-        {/* Total Products Card */}
-        <div className="dashboad-header-container ">
-          <div className="dashboad-header-container-content">
-            <div className="dashboad-header-container-image">
-              <div style={{ backgroundColor: "#F16A1B" }} className="dashboad-header-container-services">
-                <FaCartShopping style={{ fontSize: "28px" }} />
-              </div>
-            </div>
-            <div className="dashboad-header-container-text">
-              <div className="dashboad-header-text">Total Products</div>
-              <div className="dashboad-header-count">{totalProducts}</div>
-            </div>
-          </div>
-        </div>
-
-        {/* Weekly Appointments Card */}
-        <div className="dashboad-header-container ">
-          <div className="dashboad-header-container-content">
-            <div className="dashboad-header-container-image">
-              <div style={{ backgroundColor: "#17904B" }} className="dashboad-header-container-services">
-                <FaCalendar style={{ fontSize: "28px" }} />
-              </div>
-            </div>
-            <div className="dashboad-header-container-text">
-              <div className="dashboad-header-text">Weekly Appointments</div>
-              <div className="dashboad-header-count">23</div>
-            </div>
-          </div>
-        </div>
-
-        {/* Registered Users Card */}
-        <div className="dashboad-header-container ">
-          <div className="dashboad-header-container-content">
-            <div className="dashboad-header-container-image">
-              <div style={{ backgroundColor: "#C03221" }} className="dashboad-header-container-services">
-                <FaUsers style={{ fontSize: "28px" }} />
-              </div>
-            </div>
-            <div className="dashboad-header-container-text">
-              <div className="dashboad-header-text">Registered Users</div>
-              <div className="dashboad-header-count">39</div>
-            </div>
-          </div>
+        <div className="dashboard-card-info">
+          <span className="dashboard-card-text">Total Services</span>
+          <span className="dashboard-card-count">{totalServices}</span>
         </div>
       </div>
+
+      {/* Total Products Card */}
+      <div className="dashboard-card">
+        <div className="dashboard-card-icon" style={{ backgroundColor: "#F16A1B" }}>
+          <FaCartShopping size={28} />
+        </div>
+        <div className="dashboard-card-info">
+          <span className="dashboard-card-text">Total Products</span>
+          <span className="dashboard-card-count">{totalProducts}</span>
+        </div>
+      </div>
+
+      {/* Weekly Appointments Card */}
+      <div className="dashboard-card">
+        <div className="dashboard-card-icon" style={{ backgroundColor: "#17904B" }}>
+          <FaCalendar size={28} />
+        </div>
+        <div className="dashboard-card-info">
+          <span className="dashboard-card-text">Weekly Appointments</span>
+          <span className="dashboard-card-count">23</span>
+        </div>
+      </div>
+
+      {/* Registered Users Card */}
+      <div className="dashboard-card">
+        <div className="dashboard-card-icon" style={{ backgroundColor: "#C03221" }}>
+          <FaUsers size={28} />
+        </div>
+        <div className="dashboard-card-info">
+          <span className="dashboard-card-text">Registered Users</span>
+          <span className="dashboard-card-count">39</span>
+        </div>
+      </div>
+    </div>
 
       {/* Calendar and Side Container */}
       <div className="calendar-main-container">

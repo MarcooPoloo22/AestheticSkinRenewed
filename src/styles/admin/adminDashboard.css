@@ -45,14 +45,48 @@
   .admin {
     display: flex;
     flex-direction: column;
-    align-items: flex-start;
+    align-items: flex-end;
+    justify-content: space-around;
     flex-wrap: nowrap;
     flex-shrink: 0;
     position: relative;
     width: 83px;
     z-index: 2;
-    margin-right: 25px;
+    right: 20px;
   }
+
+  .admin-header{
+    display: flex;
+    justify-content: space-around;
+    margin-right: 27px;
+    flex-wrap: wrap; 
+  }
+
+  .admin-logout {
+    background-color: transparent;
+    border: 1px solid #424242;
+    border-radius: 8px;
+    color: #424242;
+    padding: 10px 20px;
+    text-align: center;
+    text-decoration: none;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 100%;
+    width: auto; /* Ensures the width fits the content */
+    transition: background-color 0.3s, color 0.3s;
+    cursor: pointer;
+    box-sizing: border-box; /* Ensures padding doesn't overflow */
+}
+
+.admin-logout:hover {
+    background-color: #bc2222;
+    color: white;
+}
+
+
+
   .admin-name {
     flex-shrink: 0;
     flex-basis: auto;
@@ -128,6 +162,8 @@
     margin-left: 240px;
     flex: 1;
     background-color: #f3f4f6;
+    min-height: 100vh;
+    overflow: auto;
   }
   
   .page-content {
