@@ -125,7 +125,7 @@ const BookingPageRegistered = ({ user }) => {
     }
 
     try {
-      const response = await fetch("http://localhost/admin_dashboard_backend/booking.php", {
+      const response = await fetch("http://localhost/booking.php", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -418,7 +418,7 @@ const BookingPageGuest = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const response = await fetch("http://localhost/admin_dashboard_backend/booking.php", {
+      const response = await fetch("http://localhost/booking.php", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
