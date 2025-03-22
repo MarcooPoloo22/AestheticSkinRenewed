@@ -64,7 +64,10 @@ try {
     }
 
     // Store user data in session
-    $_SESSION['user'] = $user; // Store the full user object in the session
+    $_SESSION['user_id'] = $user['id'];
+    $_SESSION['role'] = $user['role'];
+    $_SESSION['ip'] = $_SERVER['REMOTE_ADDR'];
+    $_SESSION['user_agent'] = $_SERVER['HTTP_USER_AGENT'];
 
     echo json_encode([
         'status' => 'success',

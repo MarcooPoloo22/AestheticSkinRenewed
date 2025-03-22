@@ -1,10 +1,11 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import logo from "../../assets/admin/ASR Logo.png";
 import frame1 from "../../assets/admin/DashboardDesign.png";
 import welcome from "../../assets/admin/Welcome.png";
 import "../../styles/admin/adminDashboard.css";
+import { useNavigate } from "react-router-dom";
 
-//icons for dashboard
+// Icons for dashboard
 import { BsPeople } from "react-icons/bs";
 import { RxDashboard } from "react-icons/rx";
 import { IoSettingsOutline } from "react-icons/io5";
@@ -17,8 +18,9 @@ import { AiOutlineShopping } from "react-icons/ai";
 import { VscSettings } from "react-icons/vsc";
 import { IoCallOutline } from "react-icons/io5";
 import { MdOutlineMedicalServices } from "react-icons/md";
+import { TbLogout2 } from "react-icons/tb";
 
-//imports for buttons
+// Imports for buttons
 import Admin from "../../components/admin/dashboard/admin.js";
 import Appointments from "../../components/admin/dashboard/appointments.js";
 import Branch from "../../components/admin/dashboard/branch.js";
@@ -39,12 +41,18 @@ const Button = ({ children, onClick, isActive }) => (
   </button>
 );
 
-const Header = () => {
+const Header = ({ onLogout }) => {
   return (
     <nav className="header">
-      <div className="admin">
-        <span className="admin-name">Name</span>
-        <span className="role">Administrator</span>
+      <div className="admin-header">
+        <div className="admin">
+          <span className="admin-name">Name</span>
+          <span className="role">Administrator</span>
+        </div>
+        <button className="admin-logout" onClick={onLogout}>
+          <TbLogout2 style={{ marginRight: "4px" }} />
+          Log Out
+        </button>
       </div>
     </nav>
   );
@@ -52,6 +60,47 @@ const Header = () => {
 
 const Dashboard = (faqs) => {
   const [activePage, setActivePage] = useState("Home");
+  const navigate = useNavigate();
+
+  // Authentication check on component mount
+  useEffect(() => {
+    const checkAuth = async () => {
+        try {
+            const response = await fetch("http://localhost/admin_dashboard_backend/check_session.php", {
+                credentials: "include"
+            });
+            
+            if (!response.ok) throw new Error('Network response was not ok');
+            
+            const data = await response.json();
+            
+            if (!data.authenticated) {
+                navigate("/login");
+            }
+        } catch (error) {
+            console.error("Authentication check failed:", error);
+            navigate("/login");
+        }
+    };
+    
+    checkAuth();
+}, [navigate]);
+
+  // Logout handler
+  const handleLogout = async () => {
+    try {
+      const response = await fetch("http://localhost/admin_dashboard_backend/logout.php", {
+        method: "POST",
+        credentials: "include",
+      });
+
+      if (response.ok) {
+        navigate("/login");
+      }
+    } catch (error) {
+      console.error("Logout failed:", error);
+    }
+  };
 
   const pages = {
     Home: <DashboardCalendar />,
@@ -61,11 +110,8 @@ const Dashboard = (faqs) => {
     ManagePromos: <Promos />,
     ManageProducts: <Products />,
     ManageFAQ: <Faqs />,
-
     ManageSurgeries: <Surgeries />,
-
     ManageContact: <Contact />,
-
     ManageAppointments: <Appointments />,
     ManageUsers: <Users />,
     ManageAdmin: <Admin />,
@@ -205,7 +251,7 @@ const Dashboard = (faqs) => {
 
       {/* Content */}
       <div className="content-area">
-        <Header />
+        <Header onLogout={handleLogout} />
         <img src={welcome} alt="Welcome" className="welcome" />
         {pages[activePage]}
       </div>
