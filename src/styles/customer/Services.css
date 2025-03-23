@@ -1,0 +1,28 @@
+.service-header {
+    background-size: cover;
+    background-position: center;
+    height: 200px;
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  
+  .overlay {
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.4);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  
+  .service-title {
+    color: #fff;
+    font-size: 3rem; /* large, but you can adjust */
+    font-weight: 300;  /* thin, not bold */
+    font-family: "Georgia", "Garamond", "Palatino Linotype", "Book Antiqua", serif;
+    text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.6);
+    letter-spacing: 0.5px;
+  }
+  
