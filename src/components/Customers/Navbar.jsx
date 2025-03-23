@@ -1,29 +1,15 @@
+// src/components/Customers/Navbar.js
 import React, { useEffect } from "react";
 import { NavLink, Link, useNavigate } from "react-router-dom";
 import logo from "../../assets/customer/ASR_Logo.png";
 
-
-const Navbar = ({ isLoggedIn, setIsLoggedIn }) => { // Accept isLoggedIn and setIsLoggedIn as props
+const Navbar = ({ isLoggedIn, setIsLoggedIn, user }) => {
   const navigate = useNavigate();
- 
-  // Check if the user is logged in on component mount
+
+  // Debug: log the user object
   useEffect(() => {
-    const checkLoginStatus = async () => {
-      try {
-        const response = await fetch("http://localhost/checklogin.php", {
-          method: "GET",
-          credentials: "include",
-        });
-
-        const result = await response.json();
-        setIsLoggedIn(result.status === "success");
-      } catch (error) {
-        console.error("Error checking login status:", error);
-      }
-    };
-
-    checkLoginStatus();
-  }, [setIsLoggedIn]); // Add setIsLoggedIn to dependency array
+    console.log("Navbar user:", user);
+  }, [user]);
 
   const handleLogout = async () => {
     try {
@@ -31,10 +17,9 @@ const Navbar = ({ isLoggedIn, setIsLoggedIn }) => { // Accept isLoggedIn and set
         method: "POST",
         credentials: "include",
       });
-
       const result = await response.json();
       if (result.status === "success") {
-        setIsLoggedIn(false); // Update the login state
+        setIsLoggedIn(false);
         navigate("/login");
       }
     } catch (error) {
@@ -43,140 +28,137 @@ const Navbar = ({ isLoggedIn, setIsLoggedIn }) => { // Accept isLoggedIn and set
   };
 
   return (
-    <nav className="navbar navbar-expand-lg bg-white shadow-sm p-1">
-      <div className="container-fluid">
-        <a className="navbar-brand" href="/">
-          <img
-            src={logo}
-            alt="Logo"
-            width="260"
-            height="50"
-            className="d-inline-block align-text-top"
-          />
-        </a>
+    <>
+      {/* Inline style to remove dropdown arrow */}
+      <style>{`
+        .no-caret::after {
+          display: none !important;
+        }
+      `}</style>
 
-        <button
-          className="navbar-toggler"
-          type="button"
-          data-bs-toggle="offcanvas"
-          data-bs-target="#offcanvasNavbar"
-          aria-controls="offcanvasNavbar"
-          aria-label="Toggle navigation"
-        >
-          <span className="navbar-toggler-icon"></span>
-        </button>
+      <nav className="navbar navbar-expand-lg bg-white shadow-sm p-1">
+        <div className="container-fluid">
+          <Link className="navbar-brand" to="/">
+            <img
+              src={logo}
+              alt="Logo"
+              width="260"
+              height="50"
+              className="d-inline-block align-text-top"
+            />
+          </Link>
 
-        <div
-          className="offcanvas offcanvas-end"
-          tabIndex="-1"
-          id="offcanvasNavbar"
-          aria-labelledby="offcanvasNavbarLabel"
-        >
-          <div className="offcanvas-header">
-            <h5 className="offcanvas-title" id="offcanvasNavbarLabel">
-              Menu
-            </h5>
-            <button
-              type="button"
-              className="btn-close"
-              data-bs-dismiss="offcanvas"
-              aria-label="Close"
-            ></button>
-          </div>
+          <button
+            className="navbar-toggler"
+            type="button"
+            data-bs-toggle="offcanvas"
+            data-bs-target="#offcanvasNavbar"
+            aria-controls="offcanvasNavbar"
+            aria-label="Toggle navigation"
+          >
+            <span className="navbar-toggler-icon"></span>
+          </button>
 
-          <div className="offcanvas-body">
-            <ul className="navbar-nav nav-underline me-auto mb-2 mb-lg-0 mx-auto">
-              <li className="nav-item">
-                <NavLink className="nav-link" to="/" activeClassName="active">
-                  Home
-                </NavLink>
-              </li>
-              <li className="nav-item">
-                <NavLink
-                  className="nav-link"
-                  to="/services"
-                  activeClassName="active"
-                >
-                  Services
-                </NavLink>
-              </li>
-              <li className="nav-item">
-                <NavLink
-                  className="nav-link"
-                  to="/products"
-                  activeClassName="active"
-                >
-                  Products
-                </NavLink>
-              </li>
-              <li className="nav-item">
-                <NavLink
-                  className="nav-link"
-                  to="/surgery"
-                  activeClassName="active"
-                >
-                  Surgery
-                </NavLink>
-              </li>
-              <li className="nav-item">
-                <NavLink
-                  className="nav-link"
-                  to="/faq"
-                  activeClassName="active"
-                >
-                  FaQ
-                </NavLink>
-              </li>
-              <li className="nav-item">
-                <NavLink
-                  className="nav-link"
-                  to="/contact"
-                  activeClassName="active"
-                >
-                  Contact Us
-                </NavLink>
-              </li>
-            </ul>
-
-            {/* Conditionally render Login or Logout button */}
-            {isLoggedIn ? (
+          <div
+            className="offcanvas offcanvas-end"
+            tabIndex="-1"
+            id="offcanvasNavbar"
+            aria-labelledby="offcanvasNavbarLabel"
+          >
+            <div className="offcanvas-header">
+              <h5 className="offcanvas-title" id="offcanvasNavbarLabel">
+                Menu
+              </h5>
               <button
-                className="btn btn-outline-danger mx-5 mb-1 d-none d-lg-inline"
-                onClick={handleLogout}
-              >
-                Log Out
-              </button>
-            ) : (
-              <Link
-                className="btn btn-outline-success mx-5 mb-1 d-none d-lg-inline"
-                to="/login"
-                role="button"
-              >
-                Login
-              </Link>
-            )}
+                type="button"
+                className="btn-close"
+                data-bs-dismiss="offcanvas"
+                aria-label="Close"
+              ></button>
+            </div>
 
-            {/* Conditionally render Login or Logout button for small screens */}
-            {isLoggedIn ? (
-              <button
-                className="btn btn-outline-danger mb-1 d-lg-none"
-                onClick={handleLogout}
-              >
-                Log Out
-              </button>
-            ) : (
-              <Link
-                className="btn btn-outline-success mb-1 d-lg-none"
-                to="/login"
-                role="button"
-              >
-                Login
-              </Link>
-            )}
+            <div className="offcanvas-body">
+              <ul className="navbar-nav nav-underline me-auto mb-2 mb-lg-0 mx-auto">
+                <li className="nav-item">
+                  <NavLink className="nav-link" to="/" end>
+                    Home
+                  </NavLink>
+                </li>
+                <li className="nav-item">
+                  <NavLink className="nav-link" to="/services">
+                    Services
+                  </NavLink>
+                </li>
+                <li className="nav-item">
+                  <NavLink className="nav-link" to="/products">
+                    Products
+                  </NavLink>
+                </li>
+                <li className="nav-item">
+                  <NavLink className="nav-link" to="/surgery">
+                    Surgery
+                  </NavLink>
+                </li>
+                <li className="nav-item">
+                  <NavLink className="nav-link" to="/faq">
+                    FaQ
+                  </NavLink>
+                </li>
+                <li className="nav-item">
+                  <NavLink className="nav-link" to="/contact">
+                    Contact Us
+                  </NavLink>
+                </li>
+              </ul>
+
+              {/* For larger screens: plain text dropdown without arrow */}
+              <div className="d-none d-lg-flex align-items-center mx-5">
+                {isLoggedIn && user ? (
+                  <div className="dropdown">
+                    <span
+                      className="dropdown-toggle no-caret"
+                      role="button"
+                      id="userDropdown"
+                      data-bs-toggle="dropdown"
+                      aria-expanded="false"
+                      style={{ cursor: "pointer", fontWeight: "bold" }}
+                    >
+                      Welcome, {user.first_name} {user.last_name}
+                    </span>
+                    <ul
+                      className="dropdown-menu"
+                      aria-labelledby="userDropdown"
+                    >
+                      <li>
+                        <Link className="dropdown-item" to="/profile">
+                          Profile
+                        </Link>
+                      </li>
+                      <li>
+                        <button
+                          className="dropdown-item"
+                          onClick={handleLogout}
+                        >
+                          Logout
+                        </button>
+                      </li>
+                    </ul>
+                  </div>
+                ) : (
+                  <Link
+                    className="btn btn-outline-success"
+                    to="/login"
+                    role="button"
+                  >
+                    Login
+                  </Link>
+                )}
+              </div>
+            </div>
           </div>
         </div>
-      </div>
-    </nav>
+      </nav>
+    </>
   );
 };
 

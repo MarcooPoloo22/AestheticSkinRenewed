@@ -1,15 +1,23 @@
-import React, { useState } from "react";
+// src/pages/customer/Login.js
+import React, { useState, useEffect } from "react";
 import "../../styles/customer/Login.css";
 import { Link, useNavigate } from "react-router-dom";
 import Swal from "sweetalert2";
 
-const Login = ({ setIsLoggedIn, setUser }) => { 
+const Login = ({ isLoggedIn, setIsLoggedIn, setUser }) => {
   const [formData, setFormData] = useState({
     email: "",
     password: "",
   });
 
   const navigate = useNavigate();
+
+  // If user is already logged in, redirect to home
+  useEffect(() => {
+    if (isLoggedIn) {
+      navigate("/");
+    }
+  }, [isLoggedIn, navigate]);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -26,28 +34,29 @@ const Login = ({ setIsLoggedIn, setUser }) => {
           "Content-Type": "application/json",
         },
         body: JSON.stringify(formData),
-        credentials: "include", 
+        credentials: "include",
       });
 
       const result = await response.json();
 
       if (result.status === "success") {
-        setIsLoggedIn(true); 
-        setUser(result.user); 
+        setIsLoggedIn(true);
+        setUser(result.user);
         Swal.fire({
           icon: "success",
           title: "Success!",
           text: result.message,
         }).then(() => {
-          
           if (result.user.role === "admin" || result.user.role === "employee") {
-            navigate("/admindashboard"); 
+            navigate("/admindashboard");
           } else {
-            navigate("/"); 
+            navigate("/");
           }
         });
-      } else if (result.message === "Your account is not verified. Please check your email to verify your account.") {
-        
+      } else if (
+        result.message ===
+        "Your account is not verified. Please check your email to verify your account."
+      ) {
         Swal.fire({
           icon: "warning",
           title: "Account Not Verified",
@@ -89,7 +98,6 @@ const Login = ({ setIsLoggedIn, setUser }) => {
               onChange={handleChange}
               required
             />
-
             <label htmlFor="password">Password</label>
             <input
               type="password"
@@ -100,7 +108,6 @@ const Login = ({ setIsLoggedIn, setUser }) => {
               onChange={handleChange}
               required
             />
-
             <Link to="/forgot-password">Forgot password?</Link>
             <br />
             <button type="submit" className="btn">
