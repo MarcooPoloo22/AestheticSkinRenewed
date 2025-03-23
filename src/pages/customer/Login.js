@@ -40,7 +40,7 @@ const Login = ({ setIsLoggedIn, setUser }) => {
           text: result.message,
         }).then(() => {
           
-          if (result.user.role === "admin") {
+          if (result.user.role === "admin" || result.user.role === "employee") {
             navigate("/admindashboard"); 
           } else {
             navigate("/"); 

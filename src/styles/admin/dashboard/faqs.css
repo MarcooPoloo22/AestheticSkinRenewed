@@ -128,6 +128,7 @@
 
 
   .answerInput, .questionInput {
+    width: 100%;
     padding: 2px 0 2px 12px;
     height: 30px;
     color: #04040b;
@@ -273,45 +274,36 @@
   background-color: #f0f8ff;
 }
 
+
 .dashboard-header {
   display: flex;
   justify-content: space-between;
-  margin: -50px 40px 20px 50px;
-}
-
-.dashboad-header-container {
-  border-radius: 9px;
-  background-color: #ffffff;
-  width: 250px;
-  height: 90px;
-  box-shadow: 0px 2px 8px rgba(0, 0, 0, 0.2);
-}
-
-.dashboad-header-container-content {
-  display: flex;
-  height: 90px;
-  justify-content: space-between;
-}
-
-.dashboad-header-container-image {
-  width: 80px;
-  display: flex;
-  justify-content: start;
   align-items: center;
-  margin-left: 20px;
+  flex-wrap: nowrap; /* Prevents stacking */
+  gap: 20px;
+  margin: 20px 20px; /* Adjusted margins for better spacing */
+  padding: 20px;
+  overflow-x: auto; /* Enables horizontal scroll on very small screens */
+  margin-top: -60px;
 }
 
-.dashboad-header-container-text {
-  width: 170px;
-  flex: 1; /* Take up the other half of the available space */
+.dashboard-card {
   display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: end; /* Center the text horizontally */
-  margin-right: 20px;
+  align-items: center;
+  background-color: #ffffff;
+  border-radius: 9px;
+  padding: 15px;
+  box-shadow: 0px 2px 8px rgba(0, 0, 0, 0.2);
+  transition: transform 0.2s ease-in-out;
+  width: 250px; /* Keeps a fixed size */
+  flex-shrink: 0; /* Prevents shrinking */
 }
 
-.dashboad-header-container-services {
+.dashboard-card:hover {
+  transform: scale(1.05);
+}
+
+.dashboard-card-icon {
   width: 50px;
   height: 50px;
   border-radius: 13px;
@@ -319,21 +311,44 @@
   display: flex;
   align-items: center;
   justify-content: center;
+  margin-right: 15px;
 }
 
-.dashboad-header-text{
+.dashboard-card-info {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+}
+
+.dashboard-card-text {
   color: #8a92a6;
-  font-family: Inter, var(--default-font-family);
+  font-family: "Inter", sans-serif;
   font-size: 12px;
   font-weight: 400;
 }
 
-.dashboad-header-count{
+.dashboard-card-count {
   color: #232d42;
-  font-family: Inter, var(--default-font-family);
+  font-family: "Inter", sans-serif;
   font-size: 29px;
   font-weight: 500;
 }
+
+/* Responsive Breakpoints */
+@media (max-width: 1024px) {
+  .dashboard-header {
+    justify-content: flex-start;
+    overflow-x: auto; /* Allows horizontal scrolling if needed */
+  }
+}
+
+@media (max-width: 768px) {
+  .dashboard-card {
+    width: 200px; /* Slightly smaller on smaller screens */
+  }
+}
+
 
 .calendar-main-container{
   display: flex;

@@ -5,9 +5,20 @@ import "../../styles/customer/ForgotPassword.css";
 
 const ForgotPassword = () => {
     const [email, setEmail] = useState('');
+    const [emailError, setEmailError] = useState('');
+
+    const validateEmail = (email) => {
+        const regex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        return regex.test(email);
+    };
 
     const handleSubmit = async (e) => {
         e.preventDefault();
+
+        if (!validateEmail(email)) {
+            setEmailError('Please enter a valid email address.');
+            return;
+        }
 
         try {
             const response = await fetch('http://localhost/forgotPassword.php', {
@@ -50,19 +61,24 @@ const ForgotPassword = () => {
     };
 
     return (
-        <div className="forgot-password-container d-flex justify-content-center align-items-center">
-            <div className="form-box p-4">
-                <h2 className="text-center mb-4">Forgot Password</h2>
-                <form onSubmit={handleSubmit}> 
+        <div className="forgot-password-container">
+            <div className="forgot-password-card">
+                <h2 className="text-center mb-4"><strong>Forgot Password</strong></h2>
+                <p className="text-center mb-4">Enter your email address to receive a reset link.</p>
+                <form onSubmit={handleSubmit}>
                     <div className="mb-3">
                         <input
                             type="email"
                             className="form-control"
                             placeholder="Enter your email"
                             value={email}
-                            onChange={(e) => setEmail(e.target.value)}
+                            onChange={(e) => {
+                                setEmail(e.target.value);
+                                setEmailError('');
+                            }}
                             required
                         />
+                        {emailError && <p className="text-danger">{emailError}</p>}
                     </div>
                     <div className="mb-4 d-flex justify-content-center">
                         <button className="submit-btn" type="submit">Send Reset Link</button>
