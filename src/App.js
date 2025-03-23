@@ -15,7 +15,7 @@ import Products from "./pages/customer/Products";
 import Login from "./pages/customer/Login";
 import CreateAccount from "./pages/customer/CreateAccount";
 import ForgotPassword from "./pages/customer/ForgotPassword";
-import Footer from "./components/Customers/Footer4";
+import Footer4 from "./components/Customers/Footer4";
 import FAQ from "./pages/customer/FAQ";
 import Contact from "./pages/customer/Contact";
 import {
@@ -96,7 +96,7 @@ const MainContent = ({ user, setUser, isLoggedIn, setIsLoggedIn }) => {
         </Routes>
       </div>
 
-      {!hideAdminUI && <Footer />}
+      {!hideAdminUI && <Footer4 />}
     </div>
   );
 };

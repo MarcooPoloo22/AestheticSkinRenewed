@@ -136,15 +136,16 @@ const ManageFAQEdit = ({ setActivePage, activePage, productToEdit, setProducts }
 
   const handleSubmit = (e) => {
     e.preventDefault();
-
+  
     const formData = new FormData();
+    formData.append("id", productToEdit.id); // Ensure the ID is included
     formData.append("name", name);
     formData.append("description", description);
     formData.append("price", price);
     if (file) {
       formData.append("file", file);
     }
-
+  
     fetch('http://localhost/admin_dashboard_backend/update_product.php', {
       method: 'POST',
       body: formData,

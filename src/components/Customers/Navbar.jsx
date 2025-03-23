@@ -2,9 +2,10 @@ import React, { useEffect } from "react";
 import { NavLink, Link, useNavigate } from "react-router-dom";
 import logo from "../../assets/customer/ASR_Logo.png";
 
+
 const Navbar = ({ isLoggedIn, setIsLoggedIn }) => { // Accept isLoggedIn and setIsLoggedIn as props
   const navigate = useNavigate();
-
+ 
   // Check if the user is logged in on component mount
   useEffect(() => {
     const checkLoginStatus = async () => {

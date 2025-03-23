@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import Card from "../../components/Customers/ServiceCard";
-import ServiceHead from "../../components/Customers/HeroHeaderSmall3";
+import "../../styles/customer/Services.css";
 
 function ServicePage() {
   const [services, setServices] = useState([]);
@@ -18,8 +18,14 @@ function ServicePage() {
 
   return (
     <>
-      <ServiceHead />
-
+  <div
+      className="service-header"
+      style={{ backgroundImage: "url('./assets/spa_services.jpg')" }}
+    >
+      <div className="overlay">
+        <h1 className="service-title">Our Services</h1>
+      </div>
+  </div>
       <div className="container my-5">
         <div className="row mt-3">
           {services.map((service) => (

@@ -16,19 +16,32 @@
 
 .ezy__footer4 {
   width: 100%;
-  background-color: #000000; 
-  color: #ffffff;          
-  padding: 1rem;
-  text-align: center;
-  position: relative;
-  bottom: 0;
-}
-
-.ezy__footer4-nav .nav-link {
+  background: linear-gradient(to bottom, #a2bf5a, #6CB33F);
   color: #ffffff;
+  padding: 2rem 1rem;
+  font-family: 'Segoe UI', sans-serif;
 }
 
-.ezy__footer4-nav .nav-link:hover {
+.footer-logo-img {
+  max-width: 160px;
+  height: auto;
+}
+
+.footer-link {
+  margin: 0 10px;
+  color: #fff;
+  text-decoration: none;
+  font-weight: 500;
+  display: inline-block;
+}
+
+.footer-link:hover {
   text-decoration: underline;
-  color: #b3b3b3; 
+  color: #dfe6d9;
+}
+
+.footer-copy {
+  margin-top: 10px;
+  font-size: 0.9rem;
+  color: #e2e2e2;
 }

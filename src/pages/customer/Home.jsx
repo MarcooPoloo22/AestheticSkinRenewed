@@ -1,38 +1,81 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
-import banner from "../../assets/customer/spa_massage.jpg";
 import PromosSection from "../../components/Customers/PromoSection";
 import EPCat from "../../components/Customers/EPCategory2";
 import Con1 from "../../components/Customers/ComingSoon1";
 import Con2 from "../../components/Customers/ComingSoon3";
 import Con3 from "../../components/Customers/ComingSoon5";
+import "../../styles/customer/Home.css";
+
 
 function Home() {
+  const images = [
+    "/assets/spa_massage.jpg",
+    "/assets/spa_helpdesk.jpg",
+    "/assets/spa_services.jpg"
+  ];
+  const [current, setCurrent] = useState(0);
+
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setCurrent((prev) => (prev + 1) % images.length);
+    }, 5000); // Change every 5 seconds
+    return () => clearInterval(interval);
+  }, [images.length]);
+
   return (
     <>
-      {/* Banner Section */}
-      <div
-        className="position-relative overflow-hidden"
-        style={{
-          width: "100%",
-          maxHeight: "70vh",
-          aspectRatio: "16/9",
-        }}
-      >
-        <img
-          src={banner}
-          alt="Banner"
-          className="w-100 h-100"
-          style={{
-            objectFit: "cover",
-          }}
-        />
-        <div className="position-absolute top-50 start-50 translate-middle text-center">
-          <Link className="btn btn-success btn-lg" to="/booking" role="button">
-            Book Now!
-          </Link>
-        </div>
-      </div>
+<div className="banner-wrapper position-relative overflow-hidden">
+  <div className="banner-images">
+    {images.map((image, index) => (
+      <img
+        key={index}
+        src={image}
+        alt={`Slide ${index}`}
+        className={`banner-img ${index === current ? "active" : ""}`}
+      />
+    ))}
+  </div>
+
+
+  <div className="banner-button position-absolute top-50 start-50 translate-middle text-center">
+  <img
+      src="/assets/asr_logoround.png"
+      alt="Aesthetics Skin Renewed Logo"
+      className="banner-logo mb-3"
+    />
+    <Link
+      to="/booking"
+      role="button"
+      style={{
+        background: 'linear-gradient(to right, #a2bf5a, #6CB33F)',
+        color: '#ffffff',
+        padding: '12px 24px',
+        fontSize: '1.2rem',
+        border: 'none',
+        borderRadius: '6px',
+        textDecoration: 'none',
+        display: 'inline-flex',
+        alignItems: 'center',
+        gap: '8px',
+        boxShadow: '0 4px 8px rgba(0, 0, 0, 0.15)',
+        fontWeight: '500',
+        transition: 'all 0.3s ease',
+        zIndex: 2, // Ensure button stays on top
+        position: 'relative',
+        marginleft: '12px', 
+      }}
+      onMouseEnter={(e) => {
+        e.currentTarget.style.filter = 'brightness(1.05)';
+      }}
+      onMouseLeave={(e) => {
+        e.currentTarget.style.filter = 'brightness(1)';
+      }}
+    >
+      Book Now <span style={{ fontSize: '1.4rem' }}>→</span>
+    </Link>
+  </div>
+</div>
       <EPCat />
       <Con3 />
       <PromosSection />

@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import Card from "../../components/Customers/ServiceCard";
-import ProductHead from "../../components/Customers/productshead";
+
+
 
 function ProductsPage() {
   const [products, setProducts] = useState([]);
@@ -18,7 +19,14 @@ function ProductsPage() {
 
   return (
     <>
-      <ProductHead />
+      <div
+      className="service-header"
+      style={{ backgroundImage: "url('./assets/spa_products.jpg')" }}
+    >
+      <div className="overlay">
+        <h1 className="service-title">Our Products</h1>
+      </div>
+      </div>
       <div className="container my-4">
         <div className="row"></div>
 

@@ -18,8 +18,17 @@ const FAQ = () => {
 
   return (
     <>
-      <div className="faq-container">
-        <h1>Frequently Asked Questions</h1>
+    <div className="faq-container">
+      <div className="full-width-header">
+        <div
+          className="service-header"
+          style={{ backgroundImage: "url('/assets/spa_helpdesk.jpg')" }}
+        >
+          <div className="overlay">
+            <h1 className="service-title">What can we do for you?</h1>
+          </div>
+        </div>
+      </div>
         <Accordion defaultActiveKey="0" flush>
           {faqs.map((faq, index) => (
             <Accordion.Item key={faq.id} eventKey={index.toString()}>

@@ -1,37 +1,32 @@
 import React from "react";
-import { Col, Container, Nav, Row } from "react-bootstrap";
-import PropTypes from "prop-types";
-
+import { Container, Row, Col } from "react-bootstrap";
 import "./Footer4.css";
-
-const navigations = [
-  { value: "Privacy Policy", href: "#!" },
-  { value: "Security", href: "#!" },
-  { value: "Terms & Condition", href: "#!" },
-];
-
-const NavigationItem = ({ item }) => (
-  <Nav.Item>
-    <Nav.Link href={item.href}>{item.value}</Nav.Link>
-  </Nav.Item>
-);
-
-NavigationItem.propTypes = {
-  item: PropTypes.object.isRequired,
-};
 
 const Footer4 = () => {
   return (
     <footer className="ezy__footer4">
       <Container>
-        <Row className="d-flex justify-content-center text-center">
-          <Col xs={12}>
-            <h2 className="fw-bold footer-logo">ASR</h2>
-            <Nav className="ezy__footer4-nav justify-content-center my-4 my-lg-5">
-              {navigations.map((item, i) => (
-                <NavigationItem item={item} key={i} />
-              ))}
-            </Nav>
+        <Row className="align-items-center">
+          <Col md={6} className="text-md-start text-center mb-3 mb-md-0">
+            <img
+              src="/assets/asr_logoround.png"
+              alt="ASR Logo"
+              className="footer-logo-img"
+            />
+          </Col>
+          <Col md={6} className="text-md-end text-center">
+            <a href="#!" className="footer-link">
+              Privacy Policy
+            </a>
+            <a href="#!" className="footer-link">
+              Security
+            </a>
+            <a href="#!" className="footer-link">
+              Terms & Condition
+            </a>
+            <p className="footer-copy">
+              © 2025 Aesthetics Skin Renewed. All rights reserved.
+            </p>
           </Col>
         </Row>
       </Container>

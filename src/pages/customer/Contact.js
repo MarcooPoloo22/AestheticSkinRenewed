@@ -30,7 +30,16 @@ const Contact = () => {
 
   return (
     <div className="contact-container">
-      <h1>Contact Us</h1>
+      <div className="full-width-header">
+        <div
+          className="service-header"
+          style={{ backgroundImage: "url('./assets/spa_helpdesk.jpg')" }}
+        >
+          <div className="overlay">
+            <h1 className="service-title">Feel Free to Contact Us</h1>
+          </div>
+        </div>
+      </div>
       <div className="contact-sections">
         <div className="contact-box">
           <i className="phone-icon">📞</i>
