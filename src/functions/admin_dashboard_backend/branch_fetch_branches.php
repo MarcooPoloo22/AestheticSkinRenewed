@@ -1,6 +1,7 @@
 <?php
 header('Content-Type: application/json');
-header("Access-Control-Allow-Origin: *"); // Allow requests from any origin (for development)
+header("Access-Control-Allow-Origin: http://localhost:3000"); // Explicitly allow requests from the frontend
+header("Access-Control-Allow-Credentials: true"); // Allow credentials (cookies)
 header("Access-Control-Allow-Methods: GET, POST, OPTIONS"); // Allow specific HTTP methods
 header("Access-Control-Allow-Headers: Content-Type, Authorization");
 
@@ -11,7 +12,7 @@ if ($_SERVER['REQUEST_METHOD'] == "OPTIONS") {
 }
 
 // Database connection
-$conn = new mysqli("localhost", "root", "", "admin_dashboard");
+$conn = new mysqli("localhost", "root", "", "asr");
 
 // Check connection
 if ($conn->connect_error) {
@@ -28,4 +29,6 @@ if ($result) {
     }
 }
 echo json_encode($branches);
+
+$conn->close();
 ?>
