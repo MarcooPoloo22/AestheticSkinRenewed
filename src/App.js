@@ -1,5 +1,4 @@
-import React, { useState } from "react";
-import { useEffect } from "react";
+import React, { useState, useEffect } from "react";
 import { generateToken, messaging } from "./notifications/firebase";
 import { onMessage } from "firebase/messaging";
 import {
@@ -26,7 +25,7 @@ import CustomerPay from "./pages/customer/CustomerPayment";
 import SurgAppoint from "./pages/customer/SurgeryAppointment";
 import ProfilePage from "./pages/customer/ProfilePage";
 import AdminDashboard from "./pages/admin/AdminDashboard";
-import { TbPlaylistOff } from "react-icons/tb";
+import LiveChatWidget from "./components/Customers/LiveChatWidget"; // Import the widget
 
 const App = () => {
   useEffect(() => {
@@ -39,6 +38,7 @@ const App = () => {
       // Optionally, display a notification or update UI here.
     });
   }, []);
+
   const [user, setUser] = useState(null);
   const [isLoggedIn, setIsLoggedIn] = useState(false);
 
@@ -97,6 +97,9 @@ const MainContent = ({ user, setUser, isLoggedIn, setIsLoggedIn }) => {
       </div>
 
       {!hideAdminUI && <Footer4 />}
+
+      {/* Render LiveChat widget only on customer pages */}
+      {!hideAdminUI && <LiveChatWidget />}
     </div>
   );
 };
