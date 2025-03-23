@@ -1,4 +1,7 @@
 import React, { useState } from "react";
+import { useEffect } from "react";
+import { generateToken, messaging } from "./notifications/firebase";
+import { onMessage } from "firebase/messaging";
 import {
   BrowserRouter as Router,
   Routes,
@@ -23,8 +26,19 @@ import CustomerPay from "./pages/customer/CustomerPayment";
 import SurgAppoint from "./pages/customer/SurgeryAppointment";
 import ProfilePage from "./pages/customer/ProfilePage";
 import AdminDashboard from "./pages/admin/AdminDashboard";
+import { TbPlaylistOff } from "react-icons/tb";
 
 const App = () => {
+  useEffect(() => {
+    // Request permission and get token
+    generateToken();
+
+    // Set up foreground message handler
+    onMessage(messaging, (payload) => {
+      console.log("Message received in foreground: ", payload);
+      // Optionally, display a notification or update UI here.
+    });
+  }, []);
   const [user, setUser] = useState(null);
   const [isLoggedIn, setIsLoggedIn] = useState(false);
 
@@ -48,7 +62,9 @@ const MainContent = ({ user, setUser, isLoggedIn, setIsLoggedIn }) => {
 
   return (
     <div className="main-content">
-      {!hideAdminUI && <Navbar isLoggedIn={isLoggedIn} setIsLoggedIn={setIsLoggedIn} />}
+      {!hideAdminUI && (
+        <Navbar isLoggedIn={isLoggedIn} setIsLoggedIn={setIsLoggedIn} />
+      )}
 
       <div className="content">
         <Routes>
@@ -57,11 +73,23 @@ const MainContent = ({ user, setUser, isLoggedIn, setIsLoggedIn }) => {
           <Route path="/products" element={<Products />} />
           <Route path="/faq" element={<FAQ />} />
           <Route path="/contact" element={<Contact />} />
-          <Route path="/login" element={<Login setIsLoggedIn={setIsLoggedIn} setUser={setUser} />} />
+          <Route
+            path="/login"
+            element={<Login setIsLoggedIn={setIsLoggedIn} setUser={setUser} />}
+          />
           <Route path="/create-account" element={<CreateAccount />} />
           <Route path="/forgot-password" element={<ForgotPassword />} />
           <Route path="/admindashboard" element={<AdminDashboard />} />
-          <Route path="/booking" element={isLoggedIn ? <BookingPageRegistered user={user} /> : <BookingPageGuest />} />
+          <Route
+            path="/booking"
+            element={
+              isLoggedIn ? (
+                <BookingPageRegistered user={user} />
+              ) : (
+                <BookingPageGuest />
+              )
+            }
+          />
           <Route path="/payment" element={<CustomerPay />} />
           <Route path="/surgery" element={<SurgAppoint />} />
           <Route path="/profile" element={<ProfilePage user={user} />} />
