@@ -29,26 +29,21 @@ import AdminDashboard from "./pages/admin/AdminDashboard";
 import LiveChatWidget from "./components/Customers/LiveChatWidget"; // Import the widget
 
 const App = () => {
-  useEffect(() => {
-    // Request permission and get token
-    generateToken();
+  const [user, setUser] = useState(null);
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [loading, setLoading] = useState(true); // ✅ NEW
 
-    // Set up foreground message handler
+  useEffect(() => {
+    generateToken();
     onMessage(messaging, (payload) => {
       console.log("Message received in foreground: ", payload);
     });
   }, []);
 
-  // Global state for user and login status
-  const [user, setUser] = useState(null);
-  const [isLoggedIn, setIsLoggedIn] = useState(false);
-  console.log("Logged in user:", user);
-
-  // On mount, check if there is an existing session (persist login)
   useEffect(() => {
     fetch("http://localhost/getProfile.php", {
       method: "GET",
-      credentials: "include", // Include session cookies
+      credentials: "include",
     })
       .then((response) => response.json())
       .then((data) => {
@@ -56,9 +51,11 @@ const App = () => {
           setUser(data.user);
           setIsLoggedIn(true);
         }
+        setLoading(false); // ✅ Done loading
       })
       .catch((err) => {
         console.error("Error checking session:", err);
+        setLoading(false); // ✅ Still finish loading even on error
       });
   }, []);
 
@@ -70,15 +67,22 @@ const App = () => {
           setUser={setUser}
           isLoggedIn={isLoggedIn}
           setIsLoggedIn={setIsLoggedIn}
+          loading={loading} // ✅ Pass it to MainContent
         />
       </div>
     </Router>
   );
 };
 
-const MainContent = ({ user, setUser, isLoggedIn, setIsLoggedIn }) => {
+const MainContent = ({ user, setUser, isLoggedIn, setIsLoggedIn, loading }) => {
   const location = useLocation();
-  const hideAdminUI = location.pathname === "/admindashboard";
+  const currentPath = location.pathname;
+
+  if (loading) return null; // ✅ Wait until user is known
+
+  const isAdmin = user?.role === "admin" || user?.role === "employee";
+  const isAdminPage = currentPath.startsWith("/admindashboard");
+  const hideAdminUI = isAdmin && isAdminPage;
 
   return (
     <div className="main-content">
@@ -86,7 +90,7 @@ const MainContent = ({ user, setUser, isLoggedIn, setIsLoggedIn }) => {
         <Navbar
           isLoggedIn={isLoggedIn}
           setIsLoggedIn={setIsLoggedIn}
-          user={user} // pass user object here
+          user={user}
         />
       )}
 
@@ -101,7 +105,7 @@ const MainContent = ({ user, setUser, isLoggedIn, setIsLoggedIn }) => {
             path="/login"
             element={
               <Login
-                isLoggedIn={isLoggedIn} // Pass isLoggedIn so Login can redirect if needed
+                isLoggedIn={isLoggedIn}
                 setIsLoggedIn={setIsLoggedIn}
                 setUser={setUser}
               />
@@ -109,7 +113,18 @@ const MainContent = ({ user, setUser, isLoggedIn, setIsLoggedIn }) => {
           />
           <Route path="/create-account" element={<CreateAccount />} />
           <Route path="/forgot-password" element={<ForgotPassword />} />
-          <Route path="/admindashboard" element={<AdminDashboard />} />
+          <Route
+            path="/admindashboard"
+            element={
+              <AdminDashboard
+                isLoggedIn={isLoggedIn}
+                user={user}
+                setUser={setUser}
+                setIsLoggedIn={setIsLoggedIn}
+              />
+            }
+          />
+
           <Route
             path="/booking"
             element={
@@ -136,8 +151,6 @@ const MainContent = ({ user, setUser, isLoggedIn, setIsLoggedIn }) => {
       </div>
 
       {!hideAdminUI && <Footer4 />}
-
-      {/* Render LiveChat widget only on customer pages */}
       {!hideAdminUI && <LiveChatWidget />}
     </div>
   );

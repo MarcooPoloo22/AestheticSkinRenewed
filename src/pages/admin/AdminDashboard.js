@@ -1,26 +1,23 @@
-import { useState, useEffect } from "react";
+// src/pages/admin/AdminDashboard.js
+import React, { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 import logo from "../../assets/admin/ASR Logo.png";
 import frame1 from "../../assets/admin/DashboardDesign.png";
 import welcome from "../../assets/admin/Welcome.png";
 import "../../styles/admin/adminDashboard.css";
-import { useNavigate } from "react-router-dom";
-
-// Icons for dashboard
-import { BsPeople } from "react-icons/bs";
-import { RxDashboard } from "react-icons/rx";
-import { IoSettingsOutline } from "react-icons/io5";
-import { LuMessageSquareMore } from "react-icons/lu";
-import { RiEditBoxLine } from "react-icons/ri";
-import { MdOutlineEditCalendar } from "react-icons/md";
-import { FaRegHandPaper } from "react-icons/fa";
-import { RiDiscountPercentLine } from "react-icons/ri";
-import { AiOutlineShopping } from "react-icons/ai";
-import { VscSettings } from "react-icons/vsc";
-import { IoCallOutline } from "react-icons/io5";
-import { MdOutlineMedicalServices } from "react-icons/md";
 import { TbLogout2 } from "react-icons/tb";
-
-// Imports for buttons
+import { RxDashboard } from "react-icons/rx";
+import { VscSettings } from "react-icons/vsc";
+import { LuMessageSquareMore } from "react-icons/lu";
+import { RiDiscountPercentLine, RiEditBoxLine } from "react-icons/ri";
+import { AiOutlineShopping } from "react-icons/ai";
+import { FaRegHandPaper } from "react-icons/fa";
+import {
+  MdOutlineMedicalServices,
+  MdOutlineEditCalendar,
+} from "react-icons/md";
+import { BsPeople } from "react-icons/bs";
+import { IoCallOutline, IoSettingsOutline } from "react-icons/io5";
 import Admin from "../../components/admin/dashboard/admin.js";
 import Appointments from "../../components/admin/dashboard/appointments.js";
 import Branch from "../../components/admin/dashboard/branch.js";
@@ -41,64 +38,50 @@ const Button = ({ children, onClick, isActive }) => (
   </button>
 );
 
-const Header = ({ onLogout }) => {
-  return (
-    <nav className="header">
-      <div className="admin-header">
-        <div className="admin">
-          <span className="admin-name">Name</span>
-          <span className="role">Administrator</span>
-        </div>
-        <button className="admin-logout" onClick={onLogout}>
-          <TbLogout2 style={{ marginRight: "4px" }} />
-          Log Out
-        </button>
+const Header = ({ onLogout }) => (
+  <nav className="header">
+    <div className="admin-header">
+      <div className="admin">
+        <span className="admin-name">Administrator</span>
       </div>
-    </nav>
-  );
-};
+      <button className="admin-logout" onClick={onLogout}>
+        <TbLogout2 style={{ marginRight: 4 }} />
+        Log Out
+      </button>
+    </div>
+  </nav>
+);
 
-const Dashboard = (faqs) => {
+const Dashboard = ({ isLoggedIn, user, setUser, setIsLoggedIn }) => {
   const [activePage, setActivePage] = useState("Home");
   const navigate = useNavigate();
 
-  // Authentication check on component mount
   useEffect(() => {
-    const checkAuth = async () => {
-        try {
-            const response = await fetch("http://localhost/admin_dashboard_backend/check_session.php", {
-                credentials: "include"
-            });
-            
-            if (!response.ok) throw new Error('Network response was not ok');
-            
-            const data = await response.json();
-            
-            if (!data.authenticated) {
-                navigate("/login");
-            }
-        } catch (error) {
-            console.error("Authentication check failed:", error);
-            navigate("/login");
-        }
-    };
-    
-    checkAuth();
-}, [navigate]);
+    if (!isLoggedIn) {
+      return navigate("/login");
+    }
+    if (isLoggedIn && user) {
+      if (user.role !== "admin" && user.role !== "employee") {
+        return navigate("/");
+      }
+    }
+  }, [isLoggedIn, user, navigate]);
 
-  // Logout handler
   const handleLogout = async () => {
     try {
-      const response = await fetch("http://localhost/admin_dashboard_backend/logout.php", {
+      await fetch("http://localhost/admin_dashboard_backend/logout.php", {
         method: "POST",
         credentials: "include",
       });
 
-      if (response.ok) {
-        navigate("/login");
-      }
-    } catch (error) {
-      console.error("Logout failed:", error);
+      // ✅ Clear frontend session
+      setUser(null);
+      setIsLoggedIn(false);
+
+      // ✅ Redirect to login
+      navigate("/login");
+    } catch (err) {
+      console.error("Logout failed:", err);
     }
   };
 
@@ -121,138 +104,93 @@ const Dashboard = (faqs) => {
   return (
     <div className="dashboard-container">
       <div className="sidebar">
-        <img src={logo} alt="Logo" className="logo" />
-        <div className="division">Home</div>
-        <div className="button-page">
-          <Button
-            onClick={() => setActivePage("Home")}
-            isActive={activePage === "Home"}
-          >
-            <RxDashboard className="icon" />
-            Dashboard
-          </Button>
-        </div>
-        <div className="button-page">
-          <Button
-            onClick={() => setActivePage("Profile")}
-            isActive={activePage === "Profile"}
-          >
-            <VscSettings className="icon" />
-            Branch
-          </Button>
-        </div>
+        <img src={logo} className="logo" alt="Logo" />
+        <Button
+          onClick={() => setActivePage("Home")}
+          isActive={activePage === "Home"}
+        >
+          <RxDashboard /> Dashboard
+        </Button>
+        <Button
+          onClick={() => setActivePage("Profile")}
+          isActive={activePage === "Profile"}
+        >
+          <VscSettings /> Branch
+        </Button>
         <div className="divider" />
-        <div className="division">Website</div>
-        <div className="button-page">
-          <Button
-            onClick={() => setActivePage("Messages")}
-            isActive={activePage === "Messages"}
-          >
-            <LuMessageSquareMore className="icon" />
-            Messages
-          </Button>
-        </div>
-        <div className="button-page">
-          <Button
-            onClick={() => setActivePage("ManageServices")}
-            isActive={activePage === "ManageServices"}
-          >
-            <FaRegHandPaper className="icon" />
-            Manage Services
-          </Button>
-        </div>
-        <div className="button-page">
-          <Button
-            onClick={() => setActivePage("ManagePromos")}
-            isActive={activePage === "ManagePromos"}
-          >
-            <RiDiscountPercentLine className="icon" />
-            Manage Promos
-          </Button>
-        </div>
-        <div className="button-page">
-          <Button
-            onClick={() => setActivePage("ManageProducts")}
-            isActive={activePage === "ManageProducts"}
-          >
-            <AiOutlineShopping className="icon" />
-            Manage Products
-          </Button>
-        </div>
-        <div className="button-page">
-          <Button
-            onClick={() => setActivePage("ManageSurgeries")}
-            isActive={activePage === "ManageSurgeries"}
-          >
-            <MdOutlineMedicalServices className="icon" />
-            Manage Surgeries
-          </Button>
-        </div>
-        <div className="button-page">
-          <Button
-            onClick={() => setActivePage("ManageFAQ")}
-            isActive={activePage === "ManageFAQ"}
-          >
-            <RiEditBoxLine className="icon" />
-            Manage FAQ
-          </Button>
-        </div>
-        <div className="button-page">
-          <Button
-            onClick={() => setActivePage("ManageContact")}
-            isActive={activePage === "ManageContact"}
-          >
-            <IoCallOutline className="icon" />
-            Manage Contact
-          </Button>
-        </div>
+        <Button
+          onClick={() => setActivePage("Messages")}
+          isActive={activePage === "Messages"}
+        >
+          <LuMessageSquareMore /> Messages
+        </Button>
+        <Button
+          onClick={() => setActivePage("ManageServices")}
+          isActive={activePage === "ManageServices"}
+        >
+          <FaRegHandPaper /> Manage Services
+        </Button>
+        <Button
+          onClick={() => setActivePage("ManagePromos")}
+          isActive={activePage === "ManagePromos"}
+        >
+          <RiDiscountPercentLine /> Manage Promos
+        </Button>
+        <Button
+          onClick={() => setActivePage("ManageProducts")}
+          isActive={activePage === "ManageProducts"}
+        >
+          <AiOutlineShopping /> Manage Products
+        </Button>
+        <Button
+          onClick={() => setActivePage("ManageSurgeries")}
+          isActive={activePage === "ManageSurgeries"}
+        >
+          <MdOutlineMedicalServices /> Manage Surgeries
+        </Button>
+        <Button
+          onClick={() => setActivePage("ManageFAQ")}
+          isActive={activePage === "ManageFAQ"}
+        >
+          <RiEditBoxLine /> Manage FAQ
+        </Button>
+        <Button
+          onClick={() => setActivePage("ManageContact")}
+          isActive={activePage === "ManageContact"}
+        >
+          <IoCallOutline /> Manage Contact
+        </Button>
         <div className="divider" />
-        <div className="division">Users and Appointment</div>
-        <div className="button-page">
-          <Button
-            onClick={() => setActivePage("ManageAppointments")}
-            isActive={activePage === "ManageAppointments"}
-          >
-            <MdOutlineEditCalendar className="icon" />
-            Manage Appointments
-          </Button>
-        </div>
-        <div className="button-page">
-          <Button
-            onClick={() => setActivePage("ManageUsers")}
-            isActive={activePage === "ManageUsers"}
-          >
-            <BsPeople className="icon" />
-            Manage Users
-          </Button>
-        </div>
-        <div className="button-page">
-          <Button
-            onClick={() => setActivePage("ManageAdmin")}
-            isActive={activePage === "ManageAdmin"}
-          >
-            <BsPeople className="icon" />
-            Manage Admin
-          </Button>
-        </div>
-        <div className="button-page">
-          <Button
-            onClick={() => setActivePage("Logs")}
-            isActive={activePage === "Logs"}
-          >
-            <IoSettingsOutline className="icon" />
-            Audit Trail
-          </Button>
-        </div>
-        <div className="design-pic">
-          <img src={frame1} alt="Dashboard Design" />
-        </div>
+        <Button
+          onClick={() => setActivePage("ManageAppointments")}
+          isActive={activePage === "ManageAppointments"}
+        >
+          <MdOutlineEditCalendar /> Manage Appointments
+        </Button>
+        <Button
+          onClick={() => setActivePage("ManageUsers")}
+          isActive={activePage === "ManageUsers"}
+        >
+          <BsPeople /> Manage Users
+        </Button>
+        <Button
+          onClick={() => setActivePage("ManageAdmin")}
+          isActive={activePage === "ManageAdmin"}
+        >
+          <BsPeople /> Manage Admin
+        </Button>
+        <Button
+          onClick={() => setActivePage("Logs")}
+          isActive={activePage === "Logs"}
+        >
+          <IoSettingsOutline /> Audit Trail
+        </Button>
+        <img src={frame1} className="design-pic" alt="Dashboard Design" />
       </div>
 
-      {/* Content */}
       <div className="content-area">
         <Header onLogout={handleLogout} />
-        <img src={welcome} alt="Welcome" className="welcome" />
+        <img src={welcome} className="welcome" alt="Welcome" />
         {pages[activePage]}
       </div>
     </div>
