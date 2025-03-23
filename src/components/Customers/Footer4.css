@@ -18,17 +18,21 @@
   width: 100%;
   background: linear-gradient(to bottom, #a2bf5a, #6CB33F);
   color: #ffffff;
-  padding: 2rem 1rem;
+  padding: 1rem;
   font-family: 'Segoe UI', sans-serif;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 .footer-logo-img {
-  max-width: 160px;
+  max-width: 100px; 
   height: auto;
+  margin-right: 10px; 
 }
 
 .footer-link {
-  margin: 0 10px;
+  margin: 0 5px;
   color: #fff;
   text-decoration: none;
   font-weight: 500;
@@ -41,7 +45,7 @@
 }
 
 .footer-copy {
-  margin-top: 10px;
+  margin-top: 5px;
   font-size: 0.9rem;
   color: #e2e2e2;
 }

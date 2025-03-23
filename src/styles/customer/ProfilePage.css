@@ -22,7 +22,7 @@
   padding: 10px;
   margin-bottom: 10px;
   border: none;
-  background: #007bff;
+  background: #a2bf5a;
   color: white;
   font-size: 16px;
   cursor: pointer;
@@ -31,7 +31,7 @@
 
 .profile-sidebar button.active,
 .profile-sidebar button:hover {
-  background: #0056b3;
+  background: #6CB33F;
 }
 
 .profile-content {
