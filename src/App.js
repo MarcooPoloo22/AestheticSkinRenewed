@@ -1,3 +1,4 @@
+// src/App.js
 import React, { useState, useEffect } from "react";
 import { generateToken, messaging } from "./notifications/firebase";
 import { onMessage } from "firebase/messaging";
@@ -35,12 +36,31 @@ const App = () => {
     // Set up foreground message handler
     onMessage(messaging, (payload) => {
       console.log("Message received in foreground: ", payload);
-      // Optionally, display a notification or update UI here.
     });
   }, []);
 
+  // Global state for user and login status
   const [user, setUser] = useState(null);
   const [isLoggedIn, setIsLoggedIn] = useState(false);
+  console.log("Logged in user:", user);
+
+  // On mount, check if there is an existing session (persist login)
+  useEffect(() => {
+    fetch("http://localhost/getProfile.php", {
+      method: "GET",
+      credentials: "include", // Include session cookies
+    })
+      .then((response) => response.json())
+      .then((data) => {
+        if (data.status === "success") {
+          setUser(data.user);
+          setIsLoggedIn(true);
+        }
+      })
+      .catch((err) => {
+        console.error("Error checking session:", err);
+      });
+  }, []);
 
   return (
     <Router>
@@ -63,7 +83,11 @@ const MainContent = ({ user, setUser, isLoggedIn, setIsLoggedIn }) => {
   return (
     <div className="main-content">
       {!hideAdminUI && (
-        <Navbar isLoggedIn={isLoggedIn} setIsLoggedIn={setIsLoggedIn} />
+        <Navbar
+          isLoggedIn={isLoggedIn}
+          setIsLoggedIn={setIsLoggedIn}
+          user={user} // pass user object here
+        />
       )}
 
       <div className="content">
@@ -75,7 +99,13 @@ const MainContent = ({ user, setUser, isLoggedIn, setIsLoggedIn }) => {
           <Route path="/contact" element={<Contact />} />
           <Route
             path="/login"
-            element={<Login setIsLoggedIn={setIsLoggedIn} setUser={setUser} />}
+            element={
+              <Login
+                isLoggedIn={isLoggedIn} // Pass isLoggedIn so Login can redirect if needed
+                setIsLoggedIn={setIsLoggedIn}
+                setUser={setUser}
+              />
+            }
           />
           <Route path="/create-account" element={<CreateAccount />} />
           <Route path="/forgot-password" element={<ForgotPassword />} />
@@ -92,7 +122,16 @@ const MainContent = ({ user, setUser, isLoggedIn, setIsLoggedIn }) => {
           />
           <Route path="/payment" element={<CustomerPay />} />
           <Route path="/surgery" element={<SurgAppoint />} />
-          <Route path="/profile" element={<ProfilePage user={user} />} />
+          <Route
+            path="/profile"
+            element={
+              <ProfilePage
+                user={user}
+                setUser={setUser}
+                isLoggedIn={isLoggedIn}
+              />
+            }
+          />
         </Routes>
       </div>
 
