@@ -196,10 +196,27 @@ const ManageSurgeryEdit = ({ setActivePage, activePage, fetchSurgeries }) => {
       const response = await fetch(
         `http://localhost/admin_dashboard_backend/branch_fetch_staff.php?branch_ids=${formData.selectedBranches.join(",")}`
       );
-      const data = await response.json();
-      setStaff(data);
+  
+      if (!response.ok) {
+        throw new Error(`HTTP error! Status: ${response.status}`);
+      }
+  
+      const result = await response.json();
+      console.log("Staff API Response:", result); // Debugging line
+  
+      if (!result.success) {
+        throw new Error(result.message);
+      }
+  
+      if (!Array.isArray(result.data)) {
+        throw new Error("Invalid data format: expected an array");
+      }
+  
+      setStaff(result.data);
     } catch (error) {
       console.error("Error fetching staff:", error);
+      setStaff([]); // Fallback to empty array
+      Swal.fire('Error!', 'Failed to fetch staff. Please check the console for details.', 'error');
     } finally {
       setLoadingStaff(false);
     }
@@ -458,34 +475,36 @@ const ManageSurgeryAdd = ({ setActivePage, activePage, fetchSurgeries }) => {
   };
 
   const fetchStaff = async () => {
-      try {
-        setLoadingStaff(true);
-        const response = await fetch(
-          `http://localhost/admin_dashboard_backend/branch_fetch_staff.php?branch_ids=${formData.selectedBranches.join(",")}`
-        );
-    
-        // Check if the response is OK
-        if (!response.ok) {
-          throw new Error(`HTTP error! Status: ${response.status}`);
-        }
-    
-        // Parse the response as JSON
-        const data = await response.json();
-    
-        // Ensure data is an array
-        if (!Array.isArray(data)) {
-          throw new Error("Invalid data format: expected an array");
-        }
-    
-        setStaff(data);
-      } catch (error) {
-        console.error("Error fetching staff:", error);
-        setStaff([]); // Fallback to empty array
-        Swal.fire('Error!', 'Failed to fetch staff. Please check the console for details.', 'error');
-      } finally {
-        setLoadingStaff(false);
+    try {
+      setLoadingStaff(true);
+      const response = await fetch(
+        `http://localhost/admin_dashboard_backend/branch_fetch_staff.php?branch_ids=${formData.selectedBranches.join(",")}`
+      );
+  
+      if (!response.ok) {
+        throw new Error(`HTTP error! Status: ${response.status}`);
       }
-    };
+  
+      const result = await response.json();
+      console.log("Staff API Response:", result); // Debugging line
+  
+      if (!result.success) {
+        throw new Error(result.message);
+      }
+  
+      if (!Array.isArray(result.data)) {
+        throw new Error("Invalid data format: expected an array");
+      }
+  
+      setStaff(result.data);
+    } catch (error) {
+      console.error("Error fetching staff:", error);
+      setStaff([]); // Fallback to empty array
+      Swal.fire('Error!', 'Failed to fetch staff. Please check the console for details.', 'error');
+    } finally {
+      setLoadingStaff(false);
+    }
+  };
 
   const handleBranchToggle = (branchId) => {
     setFormData(prev => ({
