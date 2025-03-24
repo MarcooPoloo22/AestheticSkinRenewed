@@ -39,14 +39,14 @@ const ProfilePage = ({ user, setUser, isLoggedIn }) => {
   useEffect(() => {
     fetch("http://localhost/getProfile.php", {
       method: "GET",
-      credentials: "include",
+      credentials: "include", // Include session cookies
     })
       .then((response) => response.json())
       .then((data) => {
         if (data.status === "success") {
-          setUserData(data.user);
+          setUserData(data.user); // Store user data
           setNewData(data.user);
-          setUser(data.user); 
+          setUser(data.user); // Update global user state
         } else {
           setError("Failed to load profile data.");
         }
@@ -114,6 +114,7 @@ const ProfilePage = ({ user, setUser, isLoggedIn }) => {
     }
   };
 
+  // Cancel editing
   const handleCancel = () => {
     setNewData({ ...userData });
     setEditing(false);
@@ -171,6 +172,7 @@ const ProfilePage = ({ user, setUser, isLoggedIn }) => {
     }
   };
 
+  // Render logic
   if (loading) return <div>Loading profile...</div>;
   if (error) return <div>{error}</div>;
   if (!userData) return <div>No user data available.</div>;
@@ -221,7 +223,7 @@ const ProfilePage = ({ user, setUser, isLoggedIn }) => {
                           name={key}
                           value={newData[key] || ""}
                           onChange={handleInputChange}
-                          disabled={key === "role"} 
+                          disabled={key === "role"} // Disable role field
                         />
                       </div>
                     ))}
