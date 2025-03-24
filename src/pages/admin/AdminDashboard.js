@@ -1,4 +1,3 @@
-// src/pages/admin/AdminDashboard.js
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import logo from "../../assets/admin/ASR Logo.png";
@@ -15,6 +14,7 @@ import { FaRegHandPaper } from "react-icons/fa";
 import {
   MdOutlineMedicalServices,
   MdOutlineEditCalendar,
+  MdPayment
 } from "react-icons/md";
 import { BsPeople } from "react-icons/bs";
 import { IoCallOutline, IoSettingsOutline } from "react-icons/io5";
@@ -31,6 +31,7 @@ import Promos from "../../components/admin/dashboard/promos.js";
 import Services from "../../components/admin/dashboard/services.js";
 import Surgeries from "../../components/admin/dashboard/surgeries.js";
 import Users from "../../components/admin/dashboard/users.js";
+import Payment from "../../components/admin/dashboard/payment.js"; // Import the new Payment component
 
 const Button = ({ children, onClick, isActive }) => (
   <button className={`button ${isActive ? "active" : ""}`} onClick={onClick}>
@@ -96,6 +97,7 @@ const Dashboard = ({ isLoggedIn, user, setUser, setIsLoggedIn }) => {
     ManageFAQ: <Faqs />,
     ManageSurgeries: <Surgeries />,
     ManageContact: <Contact />,
+    ManagePayment: <Payment />, // Added new payment page
     ManageAppointments: <Appointments />,
     ManageUsers: <Users />,
     ManageAdmin: <Admin />,
@@ -160,6 +162,12 @@ const Dashboard = ({ isLoggedIn, user, setUser, setIsLoggedIn }) => {
           isActive={activePage === "ManageContact"}
         >
           <IoCallOutline /> Manage Contact
+        </Button>
+        <Button
+          onClick={() => setActivePage("ManagePayment")}
+          isActive={activePage === "ManagePayment"}
+        >
+          <MdPayment /> Manage Payment
         </Button>
         <div className="divider" />
         <Button

@@ -54,7 +54,6 @@ function Home() {
         </div>
       </div>
 
-      <EPCat />
       <Con3 />
       <PromosSection />
       <Con1 />
