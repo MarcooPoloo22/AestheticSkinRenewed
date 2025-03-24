@@ -17,19 +17,17 @@ const ServiceCard = ({ title, description, image, updated, link }) => {
       onClick={handleClick}
     >
       <div className="row g-0">
-      <div className="col-md-4">
-        <div className="service-img-wrapper">
-           <img
-            src={image}
-            alt={title}
-<<<<<<< HEAD
-            className="service-img"
-           />
-=======
-            style={{ height: "200px", objectFit: "cover" }}
-          />
+        <div className="col-md-4">
+          <div className="service-img-wrapper">
+            <img
+              src={image}
+              alt={title}
+              className="service-img"
+              style={{ height: "200px", objectFit: "cover" }}
+            />
+          </div>
         </div>
-        <div className="col-md-8 shadow-sm" style={{ minHeight: "200px" }}>
+        <div className="col-md-8 d-flex align-items-center" style={{ minHeight: "200px" }}>
           <div className="card-body">
             <h5 className="card-title">{title}</h5>
             <p className="card-text">{description}</p>
@@ -39,19 +37,7 @@ const ServiceCard = ({ title, description, image, updated, link }) => {
               </small>
             </p>
           </div>
->>>>>>> bb0e63f8de9669f82529b23fbfd7eeedfa702c30
         </div>
-      </div>
-
-      <div className="col-md-8 d-flex align-items-center" style={{ minHeight: "150px" }}>
-        <div className="card-body">
-        <h5 className="card-title">{title}</h5>
-        <p className="card-text">{description}</p>
-        <p className="card-text">
-        <small className="text-body-secondary">{updated}</small>
-      </p>
-    </div>
-  </div>
       </div>
     </div>
   );
