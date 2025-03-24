@@ -29,7 +29,7 @@ const FAQ = () => {
           </div>
         </div>
       </div>
-        <Accordion defaultActiveKey="0" flush>
+        <Accordion style={{marginTop: '50px'}} defaultActiveKey="0" flush>
           {faqs.map((faq, index) => (
             <Accordion.Item key={faq.id} eventKey={index.toString()}>
               <Accordion.Header>{faq.question}</Accordion.Header>
