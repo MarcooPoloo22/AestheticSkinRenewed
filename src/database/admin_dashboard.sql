@@ -87,6 +87,30 @@ REPLACE INTO `audit_logs` (`audit_id`, `user_id`, `user_name`, `user_role`, `act
 	(73, 57, 'Rovin', 'employee', 'CREATE', 'promos', '{"id":9,"name":"Promo 67","description":"67 desc","price":"67.00","file_url":null,"start_date":"2025-03-25 20:15:00","end_date":"2025-03-26 20:16:00","duration":8,"created_at":"2025-03-23 20:16:12","updated_at":"2025-03-23 20:16:12","branch_ids":"[\\"6\\"]","staff_ids":"[\\"1\\",\\"4\\"]"}', '2025-03-23 12:16:12', NULL, 'null'),
 	(74, 57, 'Rovin', 'employee', 'UPDATE', 'promos', '{"id":8,"name":"Promo 3","description":"Promo 3 desc","price":"199.00","file_url":null,"start_date":"2025-03-25 21:38:00","end_date":"2025-03-29 22:38:00","duration":12,"created_at":"2025-03-23 17:33:57","updated_at":"2025-03-23 20:16:36","branch_ids":"[\\"7\\",\\"6\\"]","staff_ids":"[\\"3\\",\\"1\\",\\"4\\"]"}', '2025-03-23 12:16:36', NULL, '{"id":8,"name":"Promo 3","description":"Promo 3 desc","price":"199.00","file_url":null,"start_date":"2025-03-25 21:38:00","end_date":"2025-03-29 22:38:00","duration":12,"created_at":"2025-03-23 17:33:57","updated_at":"2025-03-23 19:23:28","branch_ids":"[\\"6\\",\\"7\\"]","staff_ids":"[\\"1\\",\\"3\\",\\"4\\",\\"8\\"]"}');
 
+-- Dumping structure for table asr.bookings
+CREATE TABLE IF NOT EXISTS `bookings` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `user_id` int(11) DEFAULT NULL,
+  `first_name` varchar(255) NOT NULL,
+  `last_name` varchar(255) NOT NULL,
+  `email` varchar(255) NOT NULL,
+  `contact_no` varchar(20) NOT NULL,
+  `service_type` varchar(255) NOT NULL,
+  `appointment_date` date NOT NULL,
+  `appointment_time` time NOT NULL,
+  `status` enum('pending','confirmed','cancelled') DEFAULT 'pending',
+  `created_at` timestamp NOT NULL DEFAULT current_timestamp(),
+  PRIMARY KEY (`id`),
+  KEY `user_id` (`user_id`),
+  CONSTRAINT `bookings_ibfk_1` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`) ON DELETE SET NULL
+) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+-- Dumping data for table asr.bookings: ~3 rows (approximately)
+REPLACE INTO `bookings` (`id`, `user_id`, `first_name`, `last_name`, `email`, `contact_no`, `service_type`, `appointment_date`, `appointment_time`, `status`, `created_at`) VALUES
+	(1, NULL, 'Randolph', 'Alvarado', 'xere.sa.12@gmail.com', '09232228423', 'Haircut', '2025-03-06', '10:00:00', 'pending', '2025-03-07 04:28:49'),
+	(2, NULL, 'Gabriello', 'Gerald Herrera', 'rsori013@ucr.edu', '09052752202', 'Service', '2025-03-22', '11:00:00', 'pending', '2025-03-22 10:24:17'),
+	(3, NULL, 'Gabriello', 'Gerald Herrera', 'rsori013@ucr.edu', '09052752202', 'Service', '2025-03-22', '01:00:00', 'pending', '2025-03-22 10:24:29');
+
 -- Dumping structure for table asr.branches
 CREATE TABLE IF NOT EXISTS `branches` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
