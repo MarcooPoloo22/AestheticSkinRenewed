@@ -1,6 +1,6 @@
 .profile-container {
   display: flex;
-  height: 100vh;
+  min-height: calc(100vh - 100px);
   background-color: #f8f9fa;
   font-family: Arial, sans-serif;
 }
@@ -41,6 +41,8 @@
   border-radius: 10px;
   box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
   margin: 30px;
+  position: relative;
+  padding-bottom: 60px;
 }
 
 .account-details,
@@ -117,4 +119,10 @@
 .error-message {
   color: red;
   font-size: 14px;
+}
+
+.booking-history-container {
+  max-height: 500px;
+  overflow-y: auto;
+  padding-right: 10px;
 }

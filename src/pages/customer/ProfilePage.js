@@ -1,4 +1,3 @@
-// src/pages/customer/ProfilePage.js
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import "../../styles/customer/ProfilePage.css";
@@ -6,8 +5,8 @@ import Swal from "sweetalert2";
 
 const capitalizeLabel = (str) => {
   return str
-    .replace(/_/g, " ") // Replace underscores with spaces first
-    .replace(/([A-Z])/g, " $1") // Handle camelCase
+    .replace(/_/g, " ")
+    .replace(/([A-Z])/g, " $1")
     .split(" ")
     .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
     .join(" ");
@@ -20,42 +19,34 @@ const ProfilePage = ({ user, setUser, isLoggedIn }) => {
   const [newData, setNewData] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
-
-  // For editing profile
   const [editing, setEditing] = useState(false);
-
-  // For password update
   const [passwords, setPasswords] = useState({
     currentPassword: "",
     newPassword: "",
     confirmPassword: "",
   });
   const [passwordError, setPasswordError] = useState("");
-
-  // Booking history states
   const [bookingHistory, setBookingHistory] = useState([]);
   const [loadingBookings, setLoadingBookings] = useState(false);
   const [bookingError, setBookingError] = useState(null);
 
-  // Redirect to login if not logged in
   useEffect(() => {
     if (!isLoggedIn) {
       navigate("/login");
     }
   }, [isLoggedIn, navigate]);
 
-  // 1. Fetch profile data on mount
   useEffect(() => {
     fetch("http://localhost/getProfile.php", {
       method: "GET",
-      credentials: "include", // Include session cookies
+      credentials: "include",
     })
       .then((response) => response.json())
       .then((data) => {
         if (data.status === "success") {
           setUserData(data.user);
           setNewData(data.user);
-          setUser(data.user); // Update global user so Navbar can reflect changes
+          setUser(data.user);
         } else {
           setError("Failed to load profile data.");
         }
@@ -68,7 +59,6 @@ const ProfilePage = ({ user, setUser, isLoggedIn }) => {
       });
   }, [setUser]);
 
-  // 2. Fetch booking history when the user switches to the "bookingHistory" tab
   useEffect(() => {
     if (activeTab === "bookingHistory") {
       setLoadingBookings(true);
@@ -93,13 +83,11 @@ const ProfilePage = ({ user, setUser, isLoggedIn }) => {
     }
   }, [activeTab]);
 
-  // 3. Handle editing form inputs
   const handleInputChange = (e) => {
     const { name, value } = e.target;
     setNewData({ ...newData, [name]: value });
   };
 
-  // 4. Save updated profile
   const handleSave = async () => {
     try {
       const response = await fetch("http://localhost/updateProfile.php", {
@@ -113,12 +101,10 @@ const ProfilePage = ({ user, setUser, isLoggedIn }) => {
       if (data.status === "success") {
         setUserData(newData);
         setEditing(false);
-
         setUser((prev) => ({
           ...prev,
           ...newData,
         }));
-
         Swal.fire({
           icon: "success",
           title: "Profile Updated",
@@ -141,19 +127,16 @@ const ProfilePage = ({ user, setUser, isLoggedIn }) => {
     }
   };
 
-  // 5. Cancel editing
   const handleCancel = () => {
     setNewData({ ...userData });
     setEditing(false);
   };
 
-  // 6. Handle password input changes
   const handlePasswordChange = (e) => {
     const { name, value } = e.target;
     setPasswords({ ...passwords, [name]: value });
   };
 
-  // 7. Update password
   const updatePassword = async () => {
     if (passwords.newPassword !== passwords.confirmPassword) {
       setPasswordError("New passwords do not match!");
@@ -176,7 +159,6 @@ const ProfilePage = ({ user, setUser, isLoggedIn }) => {
           newPassword: "",
           confirmPassword: "",
         });
-
         Swal.fire({
           icon: "success",
           title: "Password Updated",
@@ -199,12 +181,10 @@ const ProfilePage = ({ user, setUser, isLoggedIn }) => {
     }
   };
 
-  // 8. Render logic
   if (loading) return <div>Loading profile...</div>;
   if (error) return <div>{error}</div>;
   if (!userData) return <div>No user data available.</div>;
 
-  // Define the fields you want to display
   const fieldsToDisplay = ["first_name", "middle_initial", "last_name", "email", "contact_no"];
 
   return (
@@ -234,12 +214,9 @@ const ProfilePage = ({ user, setUser, isLoggedIn }) => {
       </div>
 
       <div className="profile-content">
-        {/* ACCOUNT TAB */}
         {activeTab === "account" && (
           <div className="account-details">
-            <h2>
-              <strong>Account Information</strong>
-            </h2>
+            <h2><strong>Account Information</strong></h2>
             {editing ? (
               <>
                 <div className="account-info-grid">
@@ -272,10 +249,7 @@ const ProfilePage = ({ user, setUser, isLoggedIn }) => {
                     </p>
                   ))}
                 </div>
-                <button
-                  className="edit-button"
-                  onClick={() => setEditing(true)}
-                >
+                <button className="edit-button" onClick={() => setEditing(true)}>
                   Edit Profile
                 </button>
               </>
@@ -283,12 +257,9 @@ const ProfilePage = ({ user, setUser, isLoggedIn }) => {
           </div>
         )}
 
-        {/* CHANGE PASSWORD TAB */}
         {activeTab === "changePassword" && (
           <div className="password-change">
-            <h2>
-              <strong>Change Password</strong>
-            </h2>
+            <h2><strong>Change Password</strong></h2>
             <div>
               <label>Current Password</label>
               <input
@@ -326,34 +297,25 @@ const ProfilePage = ({ user, setUser, isLoggedIn }) => {
           </div>
         )}
 
-        {/* BOOKING HISTORY TAB */}
         {activeTab === "bookingHistory" && (
           <div className="booking-history">
-            <h2>
-              <strong>Booking History</strong>
-            </h2>
+            <h2><strong>Booking History</strong></h2>
             {loadingBookings ? (
               <p>Loading booking history...</p>
             ) : bookingError ? (
               <p style={{ color: "red" }}>{bookingError}</p>
             ) : bookingHistory.length > 0 ? (
-              bookingHistory.map((booking) => (
-                <div key={booking.id} className="booking-item">
-                  <p>
-                    <strong>Service:</strong> {booking.service_type}
-                  </p>
-                  <p>
-                    <strong>Date:</strong> {booking.appointment_date}
-                  </p>
-                  <p>
-                    <strong>Time:</strong> {booking.appointment_time}
-                  </p>
-                  <p>
-                    <strong>Status:</strong> {booking.status}
-                  </p>
-                  <hr />
-                </div>
-              ))
+              <div className="booking-history-container">
+                {bookingHistory.map((booking) => (
+                  <div key={booking.id} className="booking-item">
+                    <p><strong>Service:</strong> {booking.service_type}</p>
+                    <p><strong>Date:</strong> {booking.appointment_date}</p>
+                    <p><strong>Time:</strong> {booking.appointment_time}</p>
+                    <p><strong>Status:</strong> {booking.status}</p>
+                    <hr />
+                  </div>
+                ))}
+              </div>
             ) : (
               <p>You have no bookings.</p>
             )}
