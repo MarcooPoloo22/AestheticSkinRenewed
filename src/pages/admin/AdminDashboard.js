@@ -51,8 +51,9 @@ const Header = ({ onLogout }) => {
           Log Out
         </button>
       </div>
-  </nav>
-);}
+    </nav>
+  );
+};
 
 const Dashboard = ({ isLoggedIn, user, setUser, setIsLoggedIn }) => {
   const [activePage, setActivePage] = useState("Home");
@@ -76,11 +77,9 @@ const Dashboard = ({ isLoggedIn, user, setUser, setIsLoggedIn }) => {
         credentials: "include",
       });
 
-      // ✅ Clear frontend session
       setUser(null);
       setIsLoggedIn(false);
 
-      // ✅ Redirect to login
       navigate("/login");
     } catch (err) {
       console.error("Logout failed:", err);
