@@ -2,6 +2,7 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import "../../styles/customer/ProfilePage.css";
+import Swal from "sweetalert2";
 
 const capitalizeLabel = (str) => {
   return str
@@ -111,19 +112,31 @@ const ProfilePage = ({ user, setUser, isLoggedIn }) => {
       if (data.status === "success") {
         setUserData(newData);
         setEditing(false);
-        alert("Profile updated successfully!");
 
-        // Update global user so Navbar shows new name
         setUser((prev) => ({
           ...prev,
           ...newData,
         }));
+
+        Swal.fire({
+          icon: "success",
+          title: "Profile Updated",
+          text: "Your profile was updated successfully.",
+        });
       } else {
-        alert(data.message || "Failed to update profile.");
+        Swal.fire({
+          icon: "error",
+          title: "Update Failed",
+          text: data.message || "Failed to update profile.",
+        });
       }
     } catch (error) {
       console.error("Error updating profile:", error);
-      alert("An error occurred while updating profile.");
+      Swal.fire({
+        icon: "error",
+        title: "Error",
+        text: "An error occurred while updating profile.",
+      });
     }
   };
 
@@ -155,20 +168,33 @@ const ProfilePage = ({ user, setUser, isLoggedIn }) => {
         body: JSON.stringify(passwords),
       });
       const result = await response.json();
+
       if (result.status === "success") {
-        alert("Password successfully updated!");
-        // Clear password fields
         setPasswords({
           currentPassword: "",
           newPassword: "",
           confirmPassword: "",
         });
+
+        Swal.fire({
+          icon: "success",
+          title: "Password Updated",
+          text: "Your password has been successfully changed.",
+        });
       } else {
-        setPasswordError(result.message || "Failed to update password.");
+        Swal.fire({
+          icon: "error",
+          title: "Password Update Failed",
+          text: result.message || "Failed to update password.",
+        });
       }
     } catch (error) {
       console.error("Error updating password:", error);
-      setPasswordError("An error occurred while updating password.");
+      Swal.fire({
+        icon: "error",
+        title: "Error",
+        text: "An error occurred while updating password.",
+      });
     }
   };
 

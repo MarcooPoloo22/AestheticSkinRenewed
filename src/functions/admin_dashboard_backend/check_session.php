@@ -19,11 +19,11 @@ if ( $_SERVER[ 'REQUEST_METHOD' ] === 'OPTIONS' ) {
 }
 session_set_cookie_params( [
     'lifetime' => 0,
-    'path' => '/',
-    'domain' => 'localhost',  // Adjust if needed
-    'secure' => false,        // Use true if HTTPS
+    'path'     => '/',
+    'domain'   => 'localhost',
+    'secure'   => false,    // true if you use HTTPS
     'httponly' => true,
-    'samesite' => 'Lax'       // Consider 'None' ( with secure: true ) if needed
+    'samesite' => 'None'    // <<< Allow cross‑origin cookies
 ] );
 
 session_start();

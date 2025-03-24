@@ -212,8 +212,8 @@ const ServiceForm = ({ setActivePage, initialData, isEditing, setServices }) => 
     formPayload.append('name', formData.name);
     formPayload.append('description', formData.description);
     formPayload.append('price', formData.price);
-    formPayload.append('branch_ids', JSON.stringify(formData.selectedBranches));
-    formPayload.append('staff_ids', JSON.stringify(formData.selectedStaff));
+    formPayload.append('selectedBranches', JSON.stringify(formData.selectedBranches));
+    formPayload.append('selectedStaff', JSON.stringify(formData.selectedStaff));
     formPayload.append('duration', formData.duration);
     if (formData.file) {
       formPayload.append('file', formData.file);
