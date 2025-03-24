@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
-import PromosSection from "../../components/Customers/PromoSection";
+import PromosSection from "../../components/Customers/PromoSection.js";
 import EPCat from "../../components/Customers/EPCategory2";
 import Con1 from "../../components/Customers/ComingSoon1";
 import Con2 from "../../components/Customers/ComingSoon3";

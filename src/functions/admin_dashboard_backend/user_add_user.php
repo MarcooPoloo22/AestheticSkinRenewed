@@ -23,18 +23,22 @@ foreach ($required as $field) {
 // Hash password
 $hashed_password = password_hash($data['password'], PASSWORD_DEFAULT);
 
-$stmt = $conn->prepare("INSERT INTO users 
-    (first_name, middle_initial, last_name, email, password, contact_no, role) 
-    VALUES (?, ?, ?, ?, ?, ?, ?)");
+// Set verified to 1
+$verified = 1;
 
-$stmt->bind_param("sssssss", 
+$stmt = $conn->prepare("INSERT INTO users 
+    (first_name, middle_initial, last_name, email, password, contact_no, role, verified) 
+    VALUES (?, ?, ?, ?, ?, ?, ?, ?)");
+
+$stmt->bind_param("sssssssi", 
     $data['first_name'],
     $data['middle_initial'],
     $data['last_name'],
     $data['email'],
     $hashed_password,
     $data['contact_no'],
-    $data['role']
+    $data['role'],
+    $verified
 );
 
 if ($stmt->execute()) {

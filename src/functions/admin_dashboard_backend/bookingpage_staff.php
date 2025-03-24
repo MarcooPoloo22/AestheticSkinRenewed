@@ -12,7 +12,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
 $servername = "localhost";
 $username = "root";
 $password = "";
-$dbname = "admin_dashboard";
+$dbname = "asr";
 
 $branchId = isset($_GET['branchId']) ? $_GET['branchId'] : die(json_encode(array("error" => "Branch ID parameter is required")));
 

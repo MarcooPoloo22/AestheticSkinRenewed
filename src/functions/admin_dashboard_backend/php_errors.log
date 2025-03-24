@@ -18,3 +18,39 @@ Stack trace:
 #0 C:\xampp\htdocs\admin_dashboard_backend\add_service.php(114): mysqli_stmt->execute()
 #1 {main}
   thrown in C:\xampp\htdocs\admin_dashboard_backend\add_service.php on line 114
+[23-Mar-2025 10:09:20 Europe/Berlin] Session Data at Start: Array
+(
+)
+
+[23-Mar-2025 10:09:20 Europe/Berlin] PHP Warning:  require_once(C:\xampp\htdocs\admin_dashboard_backend/../config/db.php): Failed to open stream: No such file or directory in C:\xampp\htdocs\admin_dashboard_backend\update_surgery_image.php on line 36
+[23-Mar-2025 10:09:20 Europe/Berlin] PHP Fatal error:  Uncaught Error: Failed opening required 'C:\xampp\htdocs\admin_dashboard_backend/../config/db.php' (include_path='C:\xampp\php\PEAR') in C:\xampp\htdocs\admin_dashboard_backend\update_surgery_image.php:36
+Stack trace:
+#0 {main}
+  thrown in C:\xampp\htdocs\admin_dashboard_backend\update_surgery_image.php on line 36
+[23-Mar-2025 10:11:22 Europe/Berlin] Session Data at Start: Array
+(
+)
+
+[23-Mar-2025 10:11:22 Europe/Berlin] PHP Warning:  require_once(C:\xampp\htdocs\admin_dashboard_backend/../config/db.php): Failed to open stream: No such file or directory in C:\xampp\htdocs\admin_dashboard_backend\update_surgery_image.php on line 36
+[23-Mar-2025 10:11:22 Europe/Berlin] PHP Fatal error:  Uncaught Error: Failed opening required 'C:\xampp\htdocs\admin_dashboard_backend/../config/db.php' (include_path='C:\xampp\php\PEAR') in C:\xampp\htdocs\admin_dashboard_backend\update_surgery_image.php:36
+Stack trace:
+#0 {main}
+  thrown in C:\xampp\htdocs\admin_dashboard_backend\update_surgery_image.php on line 36
+[23-Mar-2025 10:13:59 Europe/Berlin] Session Data at Start: Array
+(
+)
+
+[23-Mar-2025 10:13:59 Europe/Berlin] PHP Warning:  require_once(C:\xampp\htdocs\admin_dashboard_backend/../config/db.php): Failed to open stream: No such file or directory in C:\xampp\htdocs\admin_dashboard_backend\update_surgery_image.php on line 36
+[23-Mar-2025 10:13:59 Europe/Berlin] PHP Fatal error:  Uncaught Error: Failed opening required 'C:\xampp\htdocs\admin_dashboard_backend/../config/db.php' (include_path='C:\xampp\php\PEAR') in C:\xampp\htdocs\admin_dashboard_backend\update_surgery_image.php:36
+Stack trace:
+#0 {main}
+  thrown in C:\xampp\htdocs\admin_dashboard_backend\update_surgery_image.php on line 36
+[23-Mar-2025 10:18:04 Europe/Berlin] Session Data at Start: Array
+(
+)
+
+[23-Mar-2025 10:18:04 Europe/Berlin] PHP Warning:  require_once(C:\xampp\htdocs\admin_dashboard_backend/../config/db.php): Failed to open stream: No such file or directory in C:\xampp\htdocs\admin_dashboard_backend\update_surgery_image.php on line 36
+[23-Mar-2025 10:18:04 Europe/Berlin] PHP Fatal error:  Uncaught Error: Failed opening required 'C:\xampp\htdocs\admin_dashboard_backend/../config/db.php' (include_path='C:\xampp\php\PEAR') in C:\xampp\htdocs\admin_dashboard_backend\update_surgery_image.php:36
+Stack trace:
+#0 {main}
+  thrown in C:\xampp\htdocs\admin_dashboard_backend\update_surgery_image.php on line 36

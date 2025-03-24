@@ -41,14 +41,13 @@ const Login = ({ isLoggedIn, setIsLoggedIn, setUser }) => {
 
       if (result.status === "success") {
         setIsLoggedIn(true);
-        setUser(result.user); // ✅ Immediately set user
+        setUser(result.user);
 
         Swal.fire({
           icon: "success",
           title: "Success!",
           text: result.message,
         }).then(() => {
-          // ✅ Use window.location.replace for hard redirect
           if (result.user.role === "admin" || result.user.role === "employee") {
             window.location.replace("/admindashboard");
           } else {

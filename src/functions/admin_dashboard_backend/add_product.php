@@ -1,54 +1,58 @@
 <?php
-header("Access-Control-Allow-Origin: http://localhost:3000"); // Allow requests from your frontend
-header("Access-Control-Allow-Methods: POST, OPTIONS"); // Allow POST requests
-header("Access-Control-Allow-Headers: Content-Type"); // Allow specific headers
+header("Access-Control-Allow-Origin: http://localhost:3000");
+header("Access-Control-Allow-Credentials: true");
 header("Content-Type: application/json; charset=UTF-8");
+header("Access-Control-Allow-Methods: POST, OPTIONS");
+header("Access-Control-Allow-Headers: Content-Type");
 
-// Handle preflight requests (OPTIONS)
 if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
-    exit(0); // Exit early for preflight requests
+    exit(0);
 }
 
 $servername = "localhost";
 $username = "root";
 $password = "";
-$dbname = "admin_dashboard";
+$dbname = "asr";
 
-// Create connection
 $conn = new mysqli($servername, $username, $password, $dbname);
 
-// Check connection
 if ($conn->connect_error) {
-    die("Connection failed: " . $conn->connect_error);
+    http_response_code(500);
+    echo json_encode(["error" => "Connection failed: " . $conn->connect_error]);
+    exit;
 }
 
-// Handle file upload
-if ($_FILES['file']['error'] === UPLOAD_ERR_OK) {
-    $uploadDir = 'uploads/'; // Directory to store uploaded files
-    $uploadFile = $uploadDir . basename($_FILES['file']['name']);
-
-    // Move the uploaded file to the uploads directory
-    if (move_uploaded_file($_FILES['file']['tmp_name'], $uploadFile)) {
-        // File uploaded successfully, now insert data into the database
-        $name = $_POST['name'];
-        $description = $_POST['description'];
-        $price = $_POST['price'];
-        $fileUrl = 'http://localhost/admin_dashboard_backend/' . $uploadFile;
-
-        // Insert into database
-        $sql = "INSERT INTO products (name, description, price, file_url) VALUES ('$name', '$description', $price, '$fileUrl')";
-
-        if ($conn->query($sql)) {
-            echo json_encode(["message" => "Product added successfully"]);
-        } else {
-            echo json_encode(["error" => "Error adding product: " . $conn->error]);
-        }
-    } else {
-        echo json_encode(["error" => "Error uploading file"]);
+try {
+    if (!isset($_FILES['file']) || $_FILES['file']['error'] !== UPLOAD_ERR_OK) {
+        throw new Exception("File upload error");
     }
-} else {
-    echo json_encode(["error" => "File upload error: " . $_FILES['file']['error']]);
-}
 
-$conn->close();
+    $uploadDir = 'uploads/';
+    if (!is_dir($uploadDir)) mkdir($uploadDir, 0777, true);
+    $uploadFile = $uploadDir . basename($_FILES['file']['name']);
+    
+    if (!move_uploaded_file($_FILES['file']['tmp_name'], $uploadFile)) {
+        throw new Exception("Failed to move uploaded file");
+    }
+
+    $name = $conn->real_escape_string($_POST['name']);
+    $description = $conn->real_escape_string($_POST['description']);
+    $price = $conn->real_escape_string($_POST['price']);
+    $fileUrl = 'http://localhost/admin_dashboard_backend/' . $uploadFile;
+
+    $stmt = $conn->prepare("INSERT INTO products (name, description, price, file_url) VALUES (?, ?, ?, ?)");
+    $stmt->bind_param("ssds", $name, $description, $price, $fileUrl);
+    
+    if (!$stmt->execute()) {
+        throw new Exception($stmt->error);
+    }
+
+    echo json_encode(["message" => "Product added successfully"]);
+
+} catch (Exception $e) {
+    http_response_code(500);
+    echo json_encode(["error" => $e->getMessage()]);
+} finally {
+    $conn->close();
+}
 ?>

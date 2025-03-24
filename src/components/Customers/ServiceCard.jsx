@@ -30,7 +30,7 @@ const ServiceCard = ({ title, description, image, updated, link }) => {
             <p className="card-text">{description}</p>
             <p className="card-text">
               <small className="text-body-secondary">
-                Last updated {updated}
+                {updated}
               </small>
             </p>
           </div>

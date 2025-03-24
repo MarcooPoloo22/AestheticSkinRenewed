@@ -12,7 +12,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
 $servername = "localhost";
 $username = "root";
 $password = "";
-$dbname = "admin_dashboard";
+$dbname = "asr";
 
 // Create connection
 $conn = new mysqli($servername, $username, $password, $dbname);

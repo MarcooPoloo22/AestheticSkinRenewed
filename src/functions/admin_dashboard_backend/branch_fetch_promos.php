@@ -11,7 +11,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
 }
 
 // Database connection
-$conn = new mysqli("localhost", "root", "", "admin_dashboard");
+$conn = new mysqli("localhost", "root", "", "asr");
 
 // Check connection
 if ($conn->connect_error) {

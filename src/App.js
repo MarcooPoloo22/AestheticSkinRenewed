@@ -1,4 +1,3 @@
-// src/App.js
 import React, { useState, useEffect } from "react";
 import { generateToken, messaging } from "./notifications/firebase";
 import { onMessage } from "firebase/messaging";
@@ -27,12 +26,12 @@ import CustomerPay from "./pages/customer/CustomerPayment";
 import SurgAppoint from "./pages/customer/SurgeryAppointment";
 import ProfilePage from "./pages/customer/ProfilePage";
 import AdminDashboard from "./pages/admin/AdminDashboard";
-import LiveChatWidget from "./components/Customers/LiveChatWidget"; // Import the widget
+import LiveChatWidget from "./components/Customers/LiveChatWidget";
 
 const App = () => {
   const [user, setUser] = useState(null);
   const [isLoggedIn, setIsLoggedIn] = useState(false);
-  const [loading, setLoading] = useState(true); // ✅ NEW
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     generateToken();
@@ -52,11 +51,11 @@ const App = () => {
           setUser(data.user);
           setIsLoggedIn(true);
         }
-        setLoading(false); // ✅ Done loading
+        setLoading(false);
       })
       .catch((err) => {
         console.error("Error checking session:", err);
-        setLoading(false); // ✅ Still finish loading even on error
+        setLoading(false);
       });
   }, []);
 
@@ -68,7 +67,7 @@ const App = () => {
           setUser={setUser}
           isLoggedIn={isLoggedIn}
           setIsLoggedIn={setIsLoggedIn}
-          loading={loading} // ✅ Pass it to MainContent
+          loading={loading}
         />
       </div>
     </Router>
@@ -79,7 +78,7 @@ const MainContent = ({ user, setUser, isLoggedIn, setIsLoggedIn, loading }) => {
   const location = useLocation();
   const currentPath = location.pathname;
 
-  if (loading) return null; // ✅ Wait until user is known
+  if (loading) return null;
 
   const isAdmin = user?.role === "admin" || user?.role === "employee";
   const isAdminPage = currentPath.startsWith("/admindashboard");

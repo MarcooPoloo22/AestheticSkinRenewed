@@ -5,7 +5,7 @@ header("Content-Type: application/json; charset=UTF-8");
 $servername = "localhost";
 $username = "root";
 $password = "";
-$dbname = "admin_dashboard";
+$dbname = "asr";
 
 // Get the type parameter from the request
 $type = isset($_GET['type']) ? $_GET['type'] : die(json_encode(array("error" => "Type parameter is required")));

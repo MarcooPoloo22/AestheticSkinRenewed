@@ -12,7 +12,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
 $servername = "localhost";
 $username = "root";
 $password = "";
-$dbname = "admin_dashboard";
+$dbname = "asr";
 
 $serviceId = isset($_GET['serviceId']) ? $_GET['serviceId'] : die(json_encode(array("error" => "Service ID parameter is required")));
 

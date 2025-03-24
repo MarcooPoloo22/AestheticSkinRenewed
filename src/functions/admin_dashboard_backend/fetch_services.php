@@ -5,7 +5,7 @@ header("Content-Type: application/json; charset=UTF-8");
 $servername = "localhost";
 $username = "root";
 $password = "";
-$dbname = "admin_dashboard";
+$dbname = "asr";
 
 // Create connection
 $conn = new mysqli($servername, $username, $password, $dbname);
@@ -47,6 +47,9 @@ if ($result) {
         // Add branch and staff IDs to the service data
         $row['branch_ids'] = $branch_ids;
         $row['staff_ids'] = $staff_ids;
+
+        // Update file_url to include the correct base path
+        $row['file_url'] = 'http://localhost/admin_dashboard_backend/uploads/' . basename($row['file_url']);
 
         // Add the service to the list
         $services[] = $row;

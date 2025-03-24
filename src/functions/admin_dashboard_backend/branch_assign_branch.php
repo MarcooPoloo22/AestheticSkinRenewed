@@ -9,7 +9,7 @@ header("Access-Control-Allow-Headers: Content-Type");
 $servername = "localhost";
 $username = "root";
 $password = "";
-$dbname = "admin_dashboard";
+$dbname = "asr";
 
 $data = json_decode(file_get_contents('php://input'), true);
 $id = $data['id'] ?? '';

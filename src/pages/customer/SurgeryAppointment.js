@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from "react";
 import Card from "../../components/Customers/ServiceCard";
-import ServiceHead from "../../components/Customers/SurgeryHead";
 import "../../styles/customer/SurgeryAppointment.css";
 
 const SurgeryCard = ({ title, description, time, image, updated }) => {
@@ -12,7 +11,7 @@ const SurgeryCard = ({ title, description, time, image, updated }) => {
         <p className="card-text">{description}</p>
         <p className="card-text">{time}</p>
         <p className="card-text">
-          <small className="text-muted">Last Updated Price: {updated}</small>
+          <small className="text-muted">Price: {updated}</small>
         </p>
       </div>
     </div>
@@ -44,29 +43,37 @@ function AppointmentPage() {
     fetchData();
   }, []);
 
-  if (loading) return <div>Loading...</div>;
-  if (error) return <div>Error: {error}</div>;
-
   return (
-    <div className="container my-4">
-      <div className="row">
-        <div className="col-6"></div>
+    <>
+      <div
+        className="surgery-header"
+        style={{ backgroundImage: "url('./assets/asr_surgeryapp.jpg')" }}
+      >
+        <div className="overlay">
+          <h1 className="surgery-title">Surgery Appointments</h1>
+        </div>
       </div>
-      <ServiceHead />
-      <div className="row mt-3">
-        {surgeryAppointments.map((appointment) => (
-          <div className="col-md-12 col-lg-6" key={appointment.id}>
-            <Card
-              title={appointment.title}
-              description={appointment.description}
-              time={`${appointment.start_date} - ${appointment.end_date}`}
-              image={appointment.image_url}
-              updated={`₱${appointment.price}`} // Add peso sign to the price
-            />
+
+      <div className="container my-4">
+        {loading && <div>Loading...</div>}
+        {error && <div>Error: {error}</div>}
+        {!loading && !error && (
+          <div className="row mt-3">
+            {surgeryAppointments.map((appointment) => (
+              <div className="col-md-12 col-lg-6" key={appointment.id}>
+                <Card
+                  title={appointment.title}
+                  description={appointment.description}
+                  time={`${appointment.start_date} - ${appointment.end_date}`}
+                  image={appointment.image_url}
+                  updated={`Price: ₱${appointment.price}`}
+                />
+              </div>
+            ))}
           </div>
-        ))}
+        )}
       </div>
-    </div>
+    </>
   );
 }
 

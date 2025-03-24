@@ -19,7 +19,7 @@ if (!$input) {
 }
 
 $host = 'localhost';
-$dbname = 'admin_dashboard';
+$dbname = 'asr';
 $username = 'root';
 $password = '';
 

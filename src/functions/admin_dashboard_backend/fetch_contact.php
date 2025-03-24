@@ -11,7 +11,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
 }
 
 $host = 'localhost';
-$dbname = 'admin_dashboard';
+$dbname = 'asr';
 $username = 'root';
 $password = '';
 
