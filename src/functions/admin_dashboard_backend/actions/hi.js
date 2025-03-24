@@ -1,0 +1,667 @@
+import { useState, useEffect } from "react";
+import DataTable from 'react-data-table-component';
+import Swal from 'sweetalert2';
+import { executeCrud } from "../../../services/crudService"; // Import the CRUD service
+import "../../../styles/admin/dashboard/faqs.css";
+
+// Icons
+import { FaRegTrashAlt, FaRegEdit } from "react-icons/fa";
+import { IoArrowBackOutline } from "react-icons/io5";
+import { CiSearch } from "react-icons/ci";
+
+const customStyles = {
+  pagination: {
+    style: {
+      justifyContent: 'center',
+    },
+  },
+};
+
+// MultiSelectDropdown Component
+const MultiSelectDropdown = ({ options, selectedValues, onToggle, placeholder, disabled }) => {
+  const [isOpen, setIsOpen] = useState(false);
+
+  return (
+    <div className="multi-select-dropdown">
+      <div
+        className={`dropdown-header ${disabled ? 'disabled' : ''}`}
+        onClick={() => !disabled && setIsOpen(!isOpen)}
+      >
+        {selectedValues.length > 0
+          ? `${selectedValues.length} selected`
+          : placeholder}
+      </div>
+      {isOpen && (
+        <div className="dropdown-options">
+          {options.map(option => (
+            <label
+              key={option.id}
+              className={`dropdown-option ${selectedValues.includes(option.id) ? 'selected' : ''}`}
+            >
+              <input
+                type="checkbox"
+                checked={selectedValues.includes(option.id)}
+                onChange={() => onToggle(option.id)}
+              />
+              {option.name} - {option.branch_name}
+            </label>
+          ))}
+        </div>
+      )}
+    </div>
+  );
+};
+
+// FAQTable Component
+const FAQTable = ({ setActivePage, activePage, data, fetchPromos }) => {
+  const handleDelete = async (id) => {
+    const result = await Swal.fire({
+      title: 'Are you sure?',
+      text: 'You will not be able to recover this promo!',
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonText: 'Yes, delete it!',
+      cancelButtonText: 'No, cancel!',
+    });
+
+    if (result.isConfirmed) {
+      try {
+        // Use executeCrud for DELETE
+        const result = await executeCrud({
+          action: 'DELETE',
+          table: 'promos',
+          record_id: id,
+        });
+
+        if (result.error) throw new Error(result.error);
+
+        Swal.fire({
+          title: 'Deleted!',
+          text: 'The promo has been deleted.',
+          icon: 'success',
+          confirmButtonText: 'OK',
+        });
+
+        fetchPromos(); // Refresh the table
+      } catch (error) {
+        Swal.fire({
+          title: 'Error!',
+          text: error.message || 'Failed to delete promo.',
+          icon: 'error',
+          confirmButtonText: 'OK',
+        });
+        console.error('Error deleting promo:', error);
+      }
+    }
+  };
+
+  const columns = [
+    { name: 'Name', selector: row => row.name, sortable: true },
+    { name: 'Description', selector: row => row.description, sortable: true },
+    { name: 'Price', selector: row => row.price, sortable: true },
+    {
+      name: 'File',
+      cell: row => <a href={row.file_url} target="_blank" rel="noopener noreferrer">View File</a>,
+      ignoreRowClick: true,
+    },
+    { name: 'Start Date & Time', selector: row => new Date(row.start_date).toLocaleString(), sortable: true },
+    { name: 'End Date & Time', selector: row => new Date(row.end_date).toLocaleString(), sortable: true },
+    {
+      name: 'Action',
+      cell: row => (
+        <div>
+          <button onClick={() => setActivePage({ page: "ManageFAQEdit", promo: row })} className="edit-button">
+            <FaRegEdit />
+          </button>
+          <button onClick={() => handleDelete(row.id)} className="delete-button">
+            <FaRegTrashAlt />
+          </button>
+        </div>
+      ),
+      ignoreRowClick: true,
+    },
+  ];
+
+  return <DataTable columns={columns} data={data} pagination highlightOnHover responsive customStyles={customStyles} />;
+};
+
+// ManageFAQEdit Component
+const ManageFAQEdit = ({ setActivePage, activePage, fetchPromos }) => {
+  const promo = activePage.promo || {};
+  const startDate = promo.start_date ? promo.start_date.split('T')[0] : '';
+  const startTime = promo.start_date ? promo.start_date.split('T')[1].substring(0, 5) : '00:00';
+  const endDate = promo.end_date ? promo.end_date.split('T')[0] : '';
+  const endTime = promo.end_date ? promo.end_date.split('T')[1].substring(0, 5) : '00:00';
+
+  const [formData, setFormData] = useState({
+    ...promo,
+    selectedBranches: promo.branch_ids || [],
+    selectedStaff: promo.staff_ids || [],
+    duration: promo.duration || 1,
+    startDate: startDate,
+    startTime: startTime,
+    endDate: endDate,
+    endTime: endTime,
+  });
+
+  const [branches, setBranches] = useState([]);
+  const [staff, setStaff] = useState([]);
+  const [loadingStaff, setLoadingStaff] = useState(false);
+
+  useEffect(() => {
+    fetchBranches();
+  }, []);
+
+  useEffect(() => {
+    if (formData.selectedBranches.length > 0) {
+      fetchStaff();
+    } else {
+      setStaff([]);
+    }
+  }, [formData.selectedBranches]);
+
+  const fetchBranches = async () => {
+    try {
+      const response = await fetch("http://localhost/admin_dashboard_backend/branch_fetch_branches.php");
+      const data = await response.json();
+      setBranches(data);
+    } catch (error) {
+      console.error("Error fetching branches:", error);
+    }
+  };
+
+  const fetchStaff = async () => {
+    try {
+      setLoadingStaff(true);
+      const response = await fetch(
+        `http://localhost/admin_dashboard_backend/branch_fetch_staff.php?branch_ids=${formData.selectedBranches.join(",")}`
+      );
+      const result = await response.json();
+      setStaff(result.data);
+    } catch (error) {
+      console.error("Error fetching staff:", error);
+      setStaff([]);
+      Swal.fire('Error!', 'Failed to fetch staff.', 'error');
+    } finally {
+      setLoadingStaff(false);
+    }
+  };
+
+  const handleBranchToggle = (branchId) => {
+    setFormData(prev => ({
+      ...prev,
+      selectedBranches: prev.selectedBranches.includes(branchId)
+        ? prev.selectedBranches.filter(id => id !== branchId)
+        : [...prev.selectedBranches, branchId],
+      selectedStaff: [] // Reset staff when branches change
+    }));
+  };
+
+  const handleStaffToggle = (staffId) => {
+    setFormData(prev => ({
+      ...prev,
+      selectedStaff: prev.selectedStaff.includes(staffId)
+        ? prev.selectedStaff.filter(id => id !== staffId)
+        : [...prev.selectedStaff, staffId]
+    }));
+  };
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    const startDateTime = `${formData.startDate}T${formData.startTime}`;
+    const endDateTime = `${formData.endDate}T${formData.endTime}`;
+
+    const payload = {
+      action: 'UPDATE',
+      table: 'promos',
+      record_id: formData.id,
+      values: {
+        name: formData.name,
+        description: formData.description,
+        price: formData.price,
+        duration: formData.duration,
+        branch_ids: formData.selectedBranches,
+        staff_ids: formData.selectedStaff,
+        start_date: startDateTime,
+        end_date: endDateTime,
+      },
+    };
+
+    try {
+      const result = await executeCrud(payload);
+
+      if (result.error) throw new Error(result.error);
+
+      Swal.fire({
+        title: 'Success!',
+        text: 'Promo updated successfully.',
+        icon: 'success',
+        confirmButtonText: 'OK',
+      });
+
+      fetchPromos();
+      setActivePage({ page: "FAQs" });
+    } catch (error) {
+      Swal.fire({
+        title: 'Error!',
+        text: error.message || 'Failed to update promo.',
+        icon: 'error',
+        confirmButtonText: 'OK',
+      });
+      console.error('Error updating promo:', error);
+    }
+  };
+
+  return (
+    <div className="faq-main-container">
+      <button onClick={() => setActivePage({ page: "FAQs" })} className="faq-edit-backbutton">
+        <IoArrowBackOutline />
+      </button>
+      <div className="faq-edit">
+        <div className="align-left">
+          <p className="faq-text">Edit Promo</p>
+        </div>
+        <form className="faq-edit" onSubmit={handleSubmit}>
+          <div className="form-group">
+            <label className="questionLabel" htmlFor="nameInput">Name</label>
+            <input
+              className="questionInput"
+              id="nameInput"
+              value={formData.name}
+              onChange={e => setFormData(prev => ({ ...prev, name: e.target.value }))}
+              required
+            />
+          </div>
+          <div className="form-group">
+            <label className="answerLabel" htmlFor="descriptionInput">Description</label>
+            <input
+              className="answerInput"
+              id="descriptionInput"
+              value={formData.description}
+              onChange={e => setFormData(prev => ({ ...prev, description: e.target.value }))}
+              required
+            />
+          </div>
+          <div className="form-group">
+            <label className="answerLabel" htmlFor="priceInput">Price</label>
+            <input
+              className="answerInput"
+              id="priceInput"
+              type="number"
+              value={formData.price}
+              onChange={e => setFormData(prev => ({ ...prev, price: e.target.value }))}
+              required
+            />
+          </div>
+          <div className="form-group">
+            <label className="answerLabel" htmlFor="fileInput">File</label>
+            <input
+              className="answerInput"
+              id="fileInput"
+              type="file"
+              onChange={e => setFormData(prev => ({ ...prev, file: e.target.files[0] }))}
+            />
+          </div>
+          <div className="date-row">
+            <div className="date-input">
+              <label className="answerLabel" htmlFor="startDateInput">Start Date</label>
+              <input
+                type="date"
+                className="answerInput"
+                id="startDateInput"
+                value={formData.startDate}
+                onChange={e => setFormData(prev => ({ ...prev, startDate: e.target.value }))}
+                required
+              />
+            </div>
+            <div className="date-input">
+              <label className="answerLabel" htmlFor="startTimeInput">Start Time</label>
+              <input
+                type="time"
+                className="answerInput"
+                id="startTimeInput"
+                value={formData.startTime}
+                onChange={e => setFormData(prev => ({ ...prev, startTime: e.target.value }))}
+                required
+              />
+            </div>
+          </div>
+          <div className="date-row">
+            <div className="date-input">
+              <label className="answerLabel" htmlFor="endDateInput">End Date</label>
+              <input
+                type="date"
+                className="answerInput"
+                id="endDateInput"
+                value={formData.endDate}
+                onChange={e => setFormData(prev => ({ ...prev, endDate: e.target.value }))}
+                required
+              />
+            </div>
+            <div className="date-input">
+              <label className="answerLabel" htmlFor="endTimeInput">End Time</label>
+              <input
+                type="time"
+                className="answerInput"
+                id="endTimeInput"
+                value={formData.endTime}
+                onChange={e => setFormData(prev => ({ ...prev, endTime: e.target.value }))}
+                required
+              />
+            </div>
+          </div>
+          <div className="form-group">
+            <label className="questionLabel">Select Branches:</label>
+            <MultiSelectDropdown
+              options={branches}
+              selectedValues={formData.selectedBranches}
+              onToggle={handleBranchToggle}
+              placeholder="Select branches..."
+            />
+          </div>
+          <div className="form-group">
+            <label className="questionLabel">Select Staff:</label>
+            <MultiSelectDropdown
+              options={staff}
+              selectedValues={formData.selectedStaff}
+              onToggle={handleStaffToggle}
+              placeholder={formData.selectedBranches.length
+                ? (loadingStaff ? "Loading staff..." : "Select staff...")
+                : "Select branches first"}
+              disabled={!formData.selectedBranches.length || loadingStaff}
+            />
+          </div>
+          <div className="form-group">
+            <label className="questionLabel" htmlFor="duration">Duration (hours)</label>
+            <select
+              className="questionInput"
+              id="duration"
+              value={formData.duration}
+              onChange={e => setFormData(prev => ({ ...prev, duration: e.target.value }))}
+              disabled={!formData.selectedStaff.length}
+            >
+              {[...Array(12).keys()].map(hour => (
+                <option key={hour + 1} value={hour + 1}>
+                  {hour + 1} hour{hour + 1 > 1 ? "s" : ""}
+                </option>
+              ))}
+            </select>
+          </div>
+          <button type="submit" className="button-ManageFAQEdit">Save</button>
+        </form>
+      </div>
+    </div>
+  );
+};
+
+// ManageFAQAdd Component
+const ManageFAQAdd = ({ setActivePage, activePage, fetchPromos }) => {
+  const [formData, setFormData] = useState({
+    name: '',
+    description: '',
+    price: '',
+    file: null,
+    selectedBranches: [],
+    selectedStaff: [],
+    duration: 1,
+    startDate: '',
+    startTime: '',
+    endDate: '',
+    endTime: '',
+  });
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    const startDateTime = `${formData.startDate}T${formData.startTime}`;
+    const endDateTime = `${formData.endDate}T${formData.endTime}`;
+
+    const payload = {
+      action: 'CREATE',
+      table: 'promos',
+      values: {
+        name: formData.name,
+        description: formData.description,
+        price: formData.price,
+        duration: formData.duration,
+        branch_ids: formData.selectedBranches,
+        staff_ids: formData.selectedStaff,
+        start_date: startDateTime,
+        end_date: endDateTime,
+      },
+    };
+
+    try {
+      const result = await executeCrud(payload);
+
+      if (result.error) throw new Error(result.error);
+
+      Swal.fire({
+        title: 'Success!',
+        text: 'Promo created successfully.',
+        icon: 'success',
+        confirmButtonText: 'OK',
+      });
+
+      fetchPromos();
+      setActivePage({ page: "FAQs" });
+    } catch (error) {
+      Swal.fire({
+        title: 'Error!',
+        text: error.message || 'Failed to create promo.',
+        icon: 'error',
+        confirmButtonText: 'OK',
+      });
+      console.error('Error creating promo:', error);
+    }
+  };
+
+  return (
+    <div className="faq-main-container">
+      <button onClick={() => setActivePage({ page: "FAQs" })} className="faq-edit-backbutton">
+        <IoArrowBackOutline />
+      </button>
+      <div className="faq-edit">
+        <div className="align-left">
+          <p className="faq-text">Add Promo</p>
+        </div>
+        <form className="faq-edit" onSubmit={handleSubmit}>
+          <div className="form-group">
+            <label className="questionLabel" htmlFor="nameInput">Name</label>
+            <input
+              className="questionInput"
+              id="nameInput"
+              value={formData.name}
+              onChange={e => setFormData(prev => ({ ...prev, name: e.target.value }))}
+              required
+            />
+          </div>
+          <div className="form-group">
+            <label className="answerLabel" htmlFor="descriptionInput">Description</label>
+            <input
+              className="answerInput"
+              id="descriptionInput"
+              value={formData.description}
+              onChange={e => setFormData(prev => ({ ...prev, description: e.target.value }))}
+              required
+            />
+          </div>
+          <div className="form-group">
+            <label className="answerLabel" htmlFor="priceInput">Price</label>
+            <input
+              className="answerInput"
+              id="priceInput"
+              type="number"
+              value={formData.price}
+              onChange={e => setFormData(prev => ({ ...prev, price: e.target.value }))}
+              required
+            />
+          </div>
+          <div className="form-group">
+            <label className="answerLabel" htmlFor="fileInput">File</label>
+            <input
+              className="answerInput"
+              id="fileInput"
+              type="file"
+              onChange={e => setFormData(prev => ({ ...prev, file: e.target.files[0] }))}
+              required
+            />
+          </div>
+          <div className="date-row">
+            <div className="date-input">
+              <label className="answerLabel" htmlFor="startDateInput">Start Date</label>
+              <input
+                type="date"
+                className="answerInput"
+                id="startDateInput"
+                value={formData.startDate}
+                onChange={e => setFormData(prev => ({ ...prev, startDate: e.target.value }))}
+                required
+              />
+            </div>
+            <div className="date-input">
+              <label className="answerLabel" htmlFor="startTimeInput">Start Time</label>
+              <input
+                type="time"
+                className="answerInput"
+                id="startTimeInput"
+                value={formData.startTime}
+                onChange={e => setFormData(prev => ({ ...prev, startTime: e.target.value }))}
+                required
+              />
+            </div>
+          </div>
+          <div className="date-row">
+            <div className="date-input">
+              <label className="answerLabel" htmlFor="endDateInput">End Date</label>
+              <input
+                type="date"
+                className="answerInput"
+                id="endDateInput"
+                value={formData.endDate}
+                onChange={e => setFormData(prev => ({ ...prev, endDate: e.target.value }))}
+                required
+              />
+            </div>
+            <div className="date-input">
+              <label className="answerLabel" htmlFor="endTimeInput">End Time</label>
+              <input
+                type="time"
+                className="answerInput"
+                id="endTimeInput"
+                value={formData.endTime}
+                onChange={e => setFormData(prev => ({ ...prev, endTime: e.target.value }))}
+                required
+              />
+            </div>
+          </div>
+          <div className="form-group">
+            <label className="questionLabel">Select Branches:</label>
+            <MultiSelectDropdown
+              options={branches}
+              selectedValues={formData.selectedBranches}
+              onToggle={handleBranchToggle}
+              placeholder="Select branches..."
+            />
+          </div>
+          <div className="form-group">
+            <label className="questionLabel">Select Staff:</label>
+            <MultiSelectDropdown
+              options={staff}
+              selectedValues={formData.selectedStaff}
+              onToggle={handleStaffToggle}
+              placeholder={formData.selectedBranches.length
+                ? (loadingStaff ? "Loading staff..." : "Select staff...")
+                : "Select branches first"}
+              disabled={!formData.selectedBranches.length || loadingStaff}
+            />
+          </div>
+          <div className="form-group">
+            <label className="questionLabel" htmlFor="duration">Duration (hours)</label>
+            <select
+              className="questionInput"
+              id="duration"
+              value={formData.duration}
+              onChange={e => setFormData(prev => ({ ...prev, duration: e.target.value }))}
+              disabled={!formData.selectedStaff.length}
+            >
+              {[...Array(12).keys()].map(hour => (
+                <option key={hour + 1} value={hour + 1}>
+                  {hour + 1} hour{hour + 1 > 1 ? "s" : ""}
+                </option>
+              ))}
+            </select>
+          </div>
+          <button type="submit" className="button-ManageFAQEdit">Create Promo</button>
+        </form>
+      </div>
+    </div>
+  );
+};
+
+// FAQs Component
+const FAQs = () => {
+  const [activePage, setActivePage] = useState({ page: "FAQs" });
+  const [searchText, setSearchText] = useState("");
+  const [promos, setPromos] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+
+  const fetchPromos = async () => {
+    try {
+      const response = await fetch("http://localhost/admin_dashboard_backend/fetch_promos.php");
+      if (!response.ok) throw new Error('Failed to fetch promos');
+      const data = await response.json();
+      setPromos(data);
+    } catch (error) {
+      setError(error.message);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    fetchPromos();
+  }, []);
+
+  const filteredData = promos.filter(item =>
+    item.name.toLowerCase().includes(searchText.toLowerCase()) ||
+    item.description.toLowerCase().includes(searchText.toLowerCase())
+  );
+
+  if (loading) return <div>Loading...</div>;
+  if (error) return <div>Error: {error}</div>;
+
+  return (
+    <>
+      {activePage.page === "FAQs" ? (
+        <div className="faq-main-container">
+          <div className="faq-header">
+            <p className="faq-text">Promos</p>
+            <div className="faq-header-actions">
+              <button className="add-faq-button" onClick={() => setActivePage({ page: "ManageFAQAdd" })}>
+                + Add Promo
+              </button>
+              <div className="search-container">
+                <CiSearch className="search-icon" />
+                <input
+                  type="text"
+                  placeholder="Search..."
+                  value={searchText}
+                  onChange={(e) => setSearchText(e.target.value)}
+                  className="faq-search-bar"
+                />
+              </div>
+            </div>
+          </div>
+          <FAQTable setActivePage={setActivePage} activePage={activePage} data={filteredData} fetchPromos={fetchPromos} />
+        </div>
+      ) : activePage.page === "ManageFAQEdit" ? (
+        <ManageFAQEdit setActivePage={setActivePage} activePage={activePage} fetchPromos={fetchPromos} />
+      ) : (
+        <ManageFAQAdd setActivePage={setActivePage} activePage={activePage} fetchPromos={fetchPromos} />
+      )}
+    </>
+  );
+};
+
+export default FAQs;
