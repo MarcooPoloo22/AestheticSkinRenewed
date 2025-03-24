@@ -233,9 +233,3 @@
   transform: scale(1.2);
 }
 
-
-.booking-history-container {
-  max-height: 500px;
-  overflow-y: auto;
-  padding-right: 10px;
-}
