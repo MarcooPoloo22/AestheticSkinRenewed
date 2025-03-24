@@ -1,4 +1,3 @@
-// src/components/Customers/Navbar.js
 import React, { useEffect } from "react";
 import { NavLink, Link, useNavigate } from "react-router-dom";
 import logo from "../../assets/customer/ASR_Logo.png";
@@ -6,7 +5,6 @@ import logo from "../../assets/customer/ASR_Logo.png";
 const Navbar = ({ isLoggedIn, setIsLoggedIn, user }) => {
   const navigate = useNavigate();
 
-  // Debug: log the user object
   useEffect(() => {
     console.log("Navbar user:", user);
   }, [user]);
@@ -29,7 +27,6 @@ const Navbar = ({ isLoggedIn, setIsLoggedIn, user }) => {
 
   return (
     <>
-      {/* Inline style to remove dropdown arrow */}
       <style>{`
         .no-caret::after {
           display: none !important;
@@ -111,8 +108,8 @@ const Navbar = ({ isLoggedIn, setIsLoggedIn, user }) => {
                 </li>
               </ul>
 
-              {/* For larger screens: plain text dropdown without arrow */}
-              <div className="d-none d-lg-flex align-items-center mx-5">
+              {/* Auth Controls - visible on all screen sizes */}
+              <div className="d-flex align-items-center justify-content-center mt-3 mt-lg-0">
                 {isLoggedIn && user ? (
                   <div className="dropdown">
                     <span
@@ -121,7 +118,11 @@ const Navbar = ({ isLoggedIn, setIsLoggedIn, user }) => {
                       id="userDropdown"
                       data-bs-toggle="dropdown"
                       aria-expanded="false"
-                      style={{ cursor: "pointer", fontWeight: "bold" }}
+                      style={{
+                        cursor: "pointer",
+                        fontWeight: "bold",
+                        whiteSpace: "nowrap",
+                      }}
                     >
                       Welcome, {user.first_name} {user.last_name}
                     </span>
