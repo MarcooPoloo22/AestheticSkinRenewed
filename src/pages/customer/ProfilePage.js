@@ -203,6 +203,9 @@ const ProfilePage = ({ user, setUser, isLoggedIn }) => {
   if (error) return <div>{error}</div>;
   if (!userData) return <div>No user data available.</div>;
 
+  // Define the fields you want to display
+  const fieldsToDisplay = ["first_name", "middle_initial", "last_name", "email", "contact_no"];
+
   return (
     <div className="profile-container">
       <div className="profile-sidebar">
@@ -239,25 +242,17 @@ const ProfilePage = ({ user, setUser, isLoggedIn }) => {
             {editing ? (
               <>
                 <div className="account-info-grid">
-                  {Object.keys(newData)
-                    // Exclude "id" and "password"
-                    .filter((key) => key !== "id" && key !== "password")
-                    .map((key) => (
-                      <div key={key}>
-                        <label>{capitalizeLabel(key)}:</label>
-                        <input
-                          type="text"
-                          name={key}
-                          value={newData[key] || ""}
-                          onChange={handleInputChange}
-                          disabled={
-                            key === "verified" ||
-                            key === "verification_token" ||
-                            key === "role"
-                          }
-                        />
-                      </div>
-                    ))}
+                  {fieldsToDisplay.map((key) => (
+                    <div key={key}>
+                      <label>{capitalizeLabel(key)}:</label>
+                      <input
+                        type="text"
+                        name={key}
+                        value={newData[key] || ""}
+                        onChange={handleInputChange}
+                      />
+                    </div>
+                  ))}
                 </div>
                 <button className="save-button" onClick={handleSave}>
                   Save
@@ -269,14 +264,12 @@ const ProfilePage = ({ user, setUser, isLoggedIn }) => {
             ) : (
               <>
                 <div className="account-info-grid">
-                  {Object.keys(userData)
-                    .filter((key) => key !== "id" && key !== "password")
-                    .map((key) => (
-                      <p key={key}>
-                        <strong>{capitalizeLabel(key)}:</strong>{" "}
-                        {userData[key] === null ? "" : userData[key]}
-                      </p>
-                    ))}
+                  {fieldsToDisplay.map((key) => (
+                    <p key={key}>
+                      <strong>{capitalizeLabel(key)}:</strong>{" "}
+                      {userData[key] === null ? "" : userData[key]}
+                    </p>
+                  ))}
                 </div>
                 <button
                   className="edit-button"
