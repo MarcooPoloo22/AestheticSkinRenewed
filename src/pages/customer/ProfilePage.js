@@ -83,6 +83,66 @@ const ProfilePage = ({ user, setUser, isLoggedIn }) => {
     }
   }, [activeTab]);
 
+  // Handle rating submission
+  const handleRating = async (bookingId) => {
+    const { value: rating } = await Swal.fire({
+      title: 'Rate your experience',
+      input: 'radio',
+      inputOptions: {
+        '1': '1 - Highly unsatisfactory',
+        '2': '2 - Unsatisfactory',
+        '3': '3 - Neutral',
+        '4': '4 - Satisfactory',
+        '5': '5 - Highly satisfactory'
+      },
+      inputValidator: (value) => {
+        if (!value) {
+          return 'You need to choose a rating!';
+        }
+      },
+      showCancelButton: true
+    });
+
+    if (rating) {
+      try {
+        const response = await fetch("http://localhost/booking.php", {
+          method: "PUT",
+          credentials: "include",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            booking_id: bookingId,
+            rating: parseInt(rating)
+          })
+        });
+
+        const result = await response.json();
+
+        if (result.status === "success") {
+          // Update the booking history to reflect the new rating
+          setBookingHistory(prev => prev.map(booking => 
+            booking.id === bookingId ? { ...booking, rating: parseInt(rating) } : booking
+          ));
+
+          Swal.fire({
+            icon: 'success',
+            title: 'Thank you!',
+            text: 'Your rating has been submitted successfully.'
+          });
+        } else {
+          throw new Error(result.message || "Failed to submit rating");
+        }
+      } catch (error) {
+        console.error("Error submitting rating:", error);
+        Swal.fire({
+          icon: 'error',
+          title: 'Error',
+          text: 'Failed to submit rating. Please try again.'
+        });
+      }
+    }
+  };
+
+  // 3. Handle editing form inputs
   const handleInputChange = (e) => {
     const { name, value } = e.target;
     setNewData({ ...newData, [name]: value });
@@ -305,13 +365,36 @@ const ProfilePage = ({ user, setUser, isLoggedIn }) => {
             ) : bookingError ? (
               <p style={{ color: "red" }}>{bookingError}</p>
             ) : bookingHistory.length > 0 ? (
-              <div className="booking-history-container">
+              <div className="booking-list">
                 {bookingHistory.map((booking) => (
                   <div key={booking.id} className="booking-item">
-                    <p><strong>Service:</strong> {booking.service_type}</p>
-                    <p><strong>Date:</strong> {booking.appointment_date}</p>
-                    <p><strong>Time:</strong> {booking.appointment_time}</p>
-                    <p><strong>Status:</strong> {booking.status}</p>
+                    <div className="booking-info">
+                      <p>
+                        <strong>Type:</strong> {booking.service_type}
+                      </p>
+                      <p>
+                        <strong>Date:</strong> {booking.appointment_date}
+                      </p>
+                      <p>
+                        <strong>Time:</strong> {booking.appointment_time}
+                      </p>
+                      <p>
+                        <strong>Status:</strong> {booking.status}
+                      </p>
+                      {booking.rating && (
+                        <p>
+                          <strong>Your Rating:</strong> {booking.rating}/5
+                        </p>
+                      )}
+                    </div>
+                    {booking.status === "completed" && !booking.rating && (
+                      <button
+                        className="rate-button"
+                        onClick={() => handleRating(booking.id)}
+                      >
+                        Rate This Appointment
+                      </button>
+                    )}
                     <hr />
                   </div>
                 ))}

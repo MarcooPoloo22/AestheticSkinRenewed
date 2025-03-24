@@ -1,9 +1,10 @@
 <?php
 header("Access-Control-Allow-Origin: http://localhost:3000");
 header("Content-Type: application/json; charset=UTF-8");
-header("Access-Control-Allow-Methods: POST, GET, OPTIONS");
+header("Access-Control-Allow-Methods: POST, GET, PUT, OPTIONS");
 header("Access-Control-Max-Age: 3600");
 header("Access-Control-Allow-Headers: Content-Type, Access-Control-Allow-Headers, Authorization, X-Requested-With");
+header("Access-Control-Allow-Credentials: true");
 
 error_reporting(E_ALL);
 ini_set('display_errors', 1); // Enable error display for debugging
@@ -35,48 +36,87 @@ try {
     exit();
 }
 
-if ($_SERVER['REQUEST_METHOD'] === 'GET' && isset($_GET['date']) && isset($_GET['staff_id'])) {
-    $date = filter_input(INPUT_GET, 'date', FILTER_SANITIZE_FULL_SPECIAL_CHARS);
-    $staff_id = filter_input(INPUT_GET, 'staff_id', FILTER_SANITIZE_NUMBER_INT);
+// Handle GET requests
+if ($_SERVER['REQUEST_METHOD'] === 'GET') {
+    // Get booked slots for a specific date and staff
+    if (isset($_GET['date']) && isset($_GET['staff_id'])) {
+        $date = filter_input(INPUT_GET, 'date', FILTER_SANITIZE_FULL_SPECIAL_CHARS);
+        $staff_id = filter_input(INPUT_GET, 'staff_id', FILTER_SANITIZE_NUMBER_INT);
 
-    if (!preg_match('/^\d{4}-\d{2}-\d{2}$/', $date)) {
-        http_response_code(400);
-        echo json_encode(['status' => 'error', 'message' => 'Invalid date format.']);
+        if (!preg_match('/^\d{4}-\d{2}-\d{2}$/', $date)) {
+            http_response_code(400);
+            echo json_encode(['status' => 'error', 'message' => 'Invalid date format.']);
+            exit();
+        }
+
+        try {
+            $stmt = $conn->prepare("
+                SELECT DATE_FORMAT(appointment_time, '%h:%i %p') as appointment_time
+                FROM bookings
+                WHERE appointment_date = :date
+                AND staff_id = :staff_id
+                AND status != 'cancelled'
+            ");
+            $stmt->execute([
+                ':date' => $date,
+                ':staff_id' => $staff_id,
+            ]);
+            $bookedSlots = $stmt->fetchAll(PDO::FETCH_COLUMN);
+
+            echo json_encode(['status' => 'success', 'booked_slots' => $bookedSlots]);
+        } catch (PDOException $e) {
+            error_log('Database Error: ' . $e->getMessage());
+            http_response_code(500);
+            echo json_encode(['status' => 'error', 'message' => 'Failed to fetch booked slots.']);
+        }
         exit();
     }
-
-    try {
-        $stmt = $conn->prepare("
-            SELECT DATE_FORMAT(appointment_time, '%h:%i %p') as appointment_time
-            FROM bookings
-            WHERE appointment_date = :date
-            AND staff_id = :staff_id
-            AND status != 'cancelled'
-        ");
-        $stmt->execute([
-            ':date' => $date,
-            ':staff_id' => $staff_id,
-        ]);
-        $bookedSlots = $stmt->fetchAll(PDO::FETCH_COLUMN);
-
-        echo json_encode(['status' => 'success', 'booked_slots' => $bookedSlots]);
-    } catch (PDOException $e) {
-        error_log('Database Error: ' . $e->getMessage());
-        http_response_code(500);
-        echo json_encode(['status' => 'error', 'message' => 'Failed to fetch booked slots.']);
+    
+    // Get booking details for rating (if needed)
+    if (isset($_GET['booking_id']) && isset($_GET['action']) && $_GET['action'] === 'get_for_rating') {
+        $booking_id = filter_input(INPUT_GET, 'booking_id', FILTER_SANITIZE_NUMBER_INT);
+        
+        try {
+            $stmt = $conn->prepare("
+                SELECT id, user_id, status 
+                FROM bookings 
+                WHERE id = :booking_id
+            ");
+            $stmt->execute([':booking_id' => $booking_id]);
+            $booking = $stmt->fetch(PDO::FETCH_ASSOC);
+            
+            if (!$booking) {
+                http_response_code(404);
+                echo json_encode(['status' => 'error', 'message' => 'Booking not found.']);
+                exit();
+            }
+            
+            if ($booking['status'] !== 'completed') {
+                http_response_code(400);
+                echo json_encode(['status' => 'error', 'message' => 'Rating only allowed for completed appointments.']);
+                exit();
+            }
+            
+            echo json_encode(['status' => 'success', 'booking' => $booking]);
+        } catch (PDOException $e) {
+            error_log('Database Error: ' . $e->getMessage());
+            http_response_code(500);
+            echo json_encode(['status' => 'error', 'message' => 'Failed to fetch booking details.']);
+        }
+        exit();
     }
-    exit();
 }
 
 $input = file_get_contents("php://input");
 $data = json_decode($input, true);
 
-if (!$data) {
+if (!$data && $_SERVER['REQUEST_METHOD'] !== 'GET') {
     http_response_code(400);
     echo json_encode(['status' => 'error', 'message' => 'Invalid input data.']);
     exit();
 }
 
+// Handle POST requests (new bookings)
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $user_id = isset($data['user_id']) ? $data['user_id'] : null;
     $first_name = htmlspecialchars($data['first_name']);
@@ -128,8 +168,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     // Insert the booking
     try {
         $stmt = $conn->prepare("
-            INSERT INTO bookings (user_id, first_name, last_name, email, contact_no, service_type, branch_id, staff_id, appointment_date, appointment_time, status)
-            VALUES (:user_id, :first_name, :last_name, :email, :contact_no, :service_type, :branch_id, :staff_id, :appointment_date, :appointment_time, 'pending')
+            INSERT INTO bookings (user_id, first_name, last_name, email, contact_no, service_type, branch_id, staff_id, appointment_date, appointment_time, status, rating)
+            VALUES (:user_id, :first_name, :last_name, :email, :contact_no, :service_type, :branch_id, :staff_id, :appointment_date, :appointment_time, 'pending', NULL)
         ");
         $stmt->execute([
             ':user_id' => $user_id,
@@ -150,7 +190,66 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         http_response_code(500);
         echo json_encode(['status' => 'error', 'message' => 'Failed to book appointment.']);
     }
-} else {
+} 
+// Handle PUT requests (rating submissions)
+elseif ($_SERVER['REQUEST_METHOD'] === 'PUT') {
+    if (!isset($data['booking_id']) || !isset($data['rating'])) {
+        http_response_code(400);
+        echo json_encode(['status' => 'error', 'message' => 'Booking ID and rating are required.']);
+        exit();
+    }
+
+    $booking_id = filter_var($data['booking_id'], FILTER_SANITIZE_NUMBER_INT);
+    $rating = filter_var($data['rating'], FILTER_SANITIZE_NUMBER_INT);
+
+    // Validate rating (1-5)
+    if ($rating < 1 || $rating > 5) {
+        http_response_code(400);
+        echo json_encode(['status' => 'error', 'message' => 'Rating must be between 1 and 5.']);
+        exit();
+    }
+
+    try {
+        // First check if booking exists and is completed
+        $stmt = $conn->prepare("
+            SELECT id, status 
+            FROM bookings 
+            WHERE id = :booking_id
+        ");
+        $stmt->execute([':booking_id' => $booking_id]);
+        $booking = $stmt->fetch(PDO::FETCH_ASSOC);
+
+        if (!$booking) {
+            http_response_code(404);
+            echo json_encode(['status' => 'error', 'message' => 'Booking not found.']);
+            exit();
+        }
+
+        if ($booking['status'] !== 'completed') {
+            http_response_code(400);
+            echo json_encode(['status' => 'error', 'message' => 'Rating only allowed for completed appointments.']);
+            exit();
+        }
+
+        // Update the rating
+        $stmt = $conn->prepare("
+            UPDATE bookings 
+            SET rating = :rating 
+            WHERE id = :booking_id
+        ");
+        $stmt->execute([
+            ':rating' => $rating,
+            ':booking_id' => $booking_id
+        ]);
+
+        echo json_encode(['status' => 'success', 'message' => 'Rating submitted successfully!']);
+    } catch (PDOException $e) {
+        error_log('Database Error: ' . $e->getMessage());
+        http_response_code(500);
+        echo json_encode(['status' => 'error', 'message' => 'Failed to submit rating.']);
+    }
+} 
+else {
     http_response_code(405);
     echo json_encode(['status' => 'error', 'message' => 'Invalid request method.']);
 }
