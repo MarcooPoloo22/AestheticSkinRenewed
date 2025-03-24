@@ -12,6 +12,7 @@ import Navbar from "./components/Customers/Navbar";
 import Home from "./pages/customer/Home";
 import Services from "./pages/customer/Services";
 import Products from "./pages/customer/Products";
+import Promos from "./pages/customer/Promos";
 import Login from "./pages/customer/Login";
 import CreateAccount from "./pages/customer/CreateAccount";
 import ForgotPassword from "./pages/customer/ForgotPassword";
@@ -99,6 +100,7 @@ const MainContent = ({ user, setUser, isLoggedIn, setIsLoggedIn, loading }) => {
           <Route path="/" element={<Home />} />
           <Route path="/services" element={<Services />} />
           <Route path="/products" element={<Products />} />
+          <Route path="/promos" element={<Promos />} />
           <Route path="/faq" element={<FAQ />} />
           <Route path="/contact" element={<Contact />} />
           <Route

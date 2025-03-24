@@ -91,7 +91,12 @@ const Navbar = ({ isLoggedIn, setIsLoggedIn, user }) => {
                 </li>
                 <li className="nav-item">
                   <NavLink className="nav-link" to="/products">
-                    Products
+                    Products  
+                  </NavLink>
+                </li>
+                <li className="nav-item">
+                  <NavLink className="nav-link" to="/promos">
+                    Promos 
                   </NavLink>
                 </li>
                 <li className="nav-item">
