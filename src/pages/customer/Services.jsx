@@ -29,18 +29,20 @@ function ServicePage() {
         </div>
       </div>
       <div className="container my-5">
-        <div className="row mt-3">
-          {services.map((service) => (
-            <div className="col-md-12 col-lg-6" key={service.id} onClick={() => handleCardClick(service.id)}>
-              <Card
-                title={service.name}
-                description={service.description}
-                image={service.file_url} // Use the file_url from the backend
-                updated={`Price: ₱${service.price}`} // Display the price with the Peso sign
-              />
-            </div>
-          ))}
-        </div>
+      <div className="row g-4 mt-3">
+                   {services.map((service) => (
+            <div className="col-12 col-md-6" key={service.id}>
+      <Card
+        title={service.name}
+        description={service.description}
+        image={service.file_url}
+        updated={`Price: ₱${service.price}`}
+        link={`/details/service/${service.id}`}
+      />
+    </div>
+  ))}
+</div>
+
       </div>
     </>
   );
