@@ -1,4 +1,3 @@
-// src/pages/customer/ProfilePage.js
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import "../../styles/customer/ProfilePage.css";
@@ -20,30 +19,7 @@ const ProfilePage = ({ user, setUser, isLoggedIn }) => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
-  // For editing profile
-  const [editing, setEditing] = useState(false);
-
-  // For password update
-  const [passwords, setPasswords] = useState({
-    currentPassword: "",
-    newPassword: "",
-    confirmPassword: "",
-  });
-  const [passwordError, setPasswordError] = useState("");
-
-  // Booking history states
-  const [bookingHistory, setBookingHistory] = useState([]);
-  const [loadingBookings, setLoadingBookings] = useState(false);
-  const [bookingError, setBookingError] = useState(null);
-
-  // Redirect to login if not logged in
-  useEffect(() => {
-    if (!isLoggedIn) {
-      navigate("/login");
-    }
-  }, [isLoggedIn, navigate]);
-
-  // 1. Fetch profile data on mount
+  // Fetch profile data on mount
   useEffect(() => {
     fetch("http://localhost/getProfile.php", {
       method: "GET",
@@ -52,9 +28,9 @@ const ProfilePage = ({ user, setUser, isLoggedIn }) => {
       .then((response) => response.json())
       .then((data) => {
         if (data.status === "success") {
-          setUserData(data.user);
+          setUserData(data.user); // Store user data
           setNewData(data.user);
-          setUser(data.user); // Update global user so Navbar can reflect changes
+          setUser(data.user); // Update global user state
         } else {
           setError("Failed to load profile data.");
         }
@@ -67,138 +43,14 @@ const ProfilePage = ({ user, setUser, isLoggedIn }) => {
       });
   }, [setUser]);
 
-  // 2. Fetch booking history when the user switches to the "bookingHistory" tab
+  // Redirect to login if not logged in
   useEffect(() => {
-    if (activeTab === "bookingHistory") {
-      setLoadingBookings(true);
-      fetch("http://localhost/getBookingHistory.php", {
-        method: "GET",
-        credentials: "include",
-      })
-        .then((response) => response.json())
-        .then((data) => {
-          if (data.status === "success") {
-            setBookingHistory(data.bookings);
-          } else {
-            setBookingError(data.message || "Failed to load booking history.");
-          }
-          setLoadingBookings(false);
-        })
-        .catch((err) => {
-          console.error("Error fetching booking history:", err);
-          setBookingError("An error occurred.");
-          setLoadingBookings(false);
-        });
+    if (!isLoggedIn) {
+      navigate("/login");
     }
-  }, [activeTab]);
+  }, [isLoggedIn, navigate]);
 
-  // 3. Handle editing form inputs
-  const handleInputChange = (e) => {
-    const { name, value } = e.target;
-    setNewData({ ...newData, [name]: value });
-  };
-
-  // 4. Save updated profile
-  const handleSave = async () => {
-    try {
-      const response = await fetch("http://localhost/updateProfile.php", {
-        method: "POST",
-        credentials: "include",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(newData),
-      });
-      const data = await response.json();
-
-      if (data.status === "success") {
-        setUserData(newData);
-        setEditing(false);
-
-        setUser((prev) => ({
-          ...prev,
-          ...newData,
-        }));
-
-        Swal.fire({
-          icon: "success",
-          title: "Profile Updated",
-          text: "Your profile was updated successfully.",
-        });
-      } else {
-        Swal.fire({
-          icon: "error",
-          title: "Update Failed",
-          text: data.message || "Failed to update profile.",
-        });
-      }
-    } catch (error) {
-      console.error("Error updating profile:", error);
-      Swal.fire({
-        icon: "error",
-        title: "Error",
-        text: "An error occurred while updating profile.",
-      });
-    }
-  };
-
-  // 5. Cancel editing
-  const handleCancel = () => {
-    setNewData({ ...userData });
-    setEditing(false);
-  };
-
-  // 6. Handle password input changes
-  const handlePasswordChange = (e) => {
-    const { name, value } = e.target;
-    setPasswords({ ...passwords, [name]: value });
-  };
-
-  // 7. Update password
-  const updatePassword = async () => {
-    if (passwords.newPassword !== passwords.confirmPassword) {
-      setPasswordError("New passwords do not match!");
-      return;
-    }
-    setPasswordError("");
-
-    try {
-      const response = await fetch("http://localhost/updatePassword.php", {
-        method: "POST",
-        credentials: "include",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(passwords),
-      });
-      const result = await response.json();
-
-      if (result.status === "success") {
-        setPasswords({
-          currentPassword: "",
-          newPassword: "",
-          confirmPassword: "",
-        });
-
-        Swal.fire({
-          icon: "success",
-          title: "Password Updated",
-          text: "Your password has been successfully changed.",
-        });
-      } else {
-        Swal.fire({
-          icon: "error",
-          title: "Password Update Failed",
-          text: result.message || "Failed to update password.",
-        });
-      }
-    } catch (error) {
-      console.error("Error updating password:", error);
-      Swal.fire({
-        icon: "error",
-        title: "Error",
-        text: "An error occurred while updating password.",
-      });
-    }
-  };
-
-  // 8. Render logic
+  // Render logic
   if (loading) return <div>Loading profile...</div>;
   if (error) return <div>{error}</div>;
   if (!userData) return <div>No user data available.</div>;
@@ -206,6 +58,7 @@ const ProfilePage = ({ user, setUser, isLoggedIn }) => {
   return (
     <div className="profile-container">
       <div className="profile-sidebar">
+        {/* Dynamically display the user's name */}
         <h3>
           Welcome, {userData.first_name} {userData.last_name}!
         </h3>
@@ -229,6 +82,7 @@ const ProfilePage = ({ user, setUser, isLoggedIn }) => {
         </button>
       </div>
 
+      {/* Rest of the profile content */}
       <div className="profile-content">
         {/* ACCOUNT TAB */}
         {activeTab === "account" && (
@@ -236,11 +90,11 @@ const ProfilePage = ({ user, setUser, isLoggedIn }) => {
             <h2>
               <strong>Account Information</strong>
             </h2>
+            {/* Display and edit user data */}
             {editing ? (
               <>
                 <div className="account-info-grid">
                   {Object.keys(newData)
-                    // Exclude "id" and "password"
                     .filter((key) => key !== "id" && key !== "password")
                     .map((key) => (
                       <div key={key}>
@@ -250,11 +104,7 @@ const ProfilePage = ({ user, setUser, isLoggedIn }) => {
                           name={key}
                           value={newData[key] || ""}
                           onChange={handleInputChange}
-                          disabled={
-                            key === "verified" ||
-                            key === "verification_token" ||
-                            key === "role"
-                          }
+                          disabled={key === "role"} // Disable role field
                         />
                       </div>
                     ))}
@@ -295,6 +145,7 @@ const ProfilePage = ({ user, setUser, isLoggedIn }) => {
             <h2>
               <strong>Change Password</strong>
             </h2>
+            {/* Password change form */}
             <div>
               <label>Current Password</label>
               <input
@@ -338,6 +189,7 @@ const ProfilePage = ({ user, setUser, isLoggedIn }) => {
             <h2>
               <strong>Booking History</strong>
             </h2>
+            {/* Display booking history */}
             {loadingBookings ? (
               <p>Loading booking history...</p>
             ) : bookingError ? (
