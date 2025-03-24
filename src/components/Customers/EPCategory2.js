@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { Button, Card, Col, Container, Row } from "react-bootstrap";
+import { Card, Col, Container, Row } from "react-bootstrap";
 import PropTypes from "prop-types";
 import Slider from "react-slick";
 import "slick-carousel/slick/slick.css";
@@ -7,14 +7,6 @@ import "slick-carousel/slick/slick-theme.css";
 import banner from "../../assets/customer/spa_massage.jpg";
 import "./EPCategory2.css";
 import { Link } from "react-router-dom";
-
-/*
-{
-	"react": "React",
-	"react-bootstrap": "{ Button, Card, Col, Container, Row }",
-	"prop-types": "PropTypes",
-}
-*/
 
 const ProductItem = ({ product }) => {
   return (
@@ -45,20 +37,30 @@ const Epcategory2 = () => {
     const fetchServices = async () => {
       try {
         const response = await fetch(
-          "http://localhost/SE/AestheticSkinRenewed/src/functions/admin_dashboard_backend/fetch_services.php"
+          "http://localhost/admin_dashboard_backend/home_fetch_services.php"
         );
+        
         if (!response.ok) {
-          throw new Error("Failed to fetch services");
+          throw new Error(`HTTP error! status: ${response.status}`);
         }
-        const data = await response.json();
-        setServices(data);
+        
+        const result = await response.json();
+        console.log("Fetched services:", result.data); // Debugging log
+
+        if (!result.success) {
+          throw new Error(result.error || "Failed to fetch services");
+        }
+        
+        // Ensure data is always an array
+        setServices(Array.isArray(result.data) ? result.data : []);
+        
       } catch (error) {
         setError(error.message);
       } finally {
         setLoading(false);
       }
     };
-
+  
     fetchServices();
   }, []);
 
@@ -69,7 +71,6 @@ const Epcategory2 = () => {
     speed: 500,
     slidesToShow: 4,
     slidesToScroll: 1,
-
     responsive: [
       {
         breakpoint: 1424,
@@ -122,16 +123,24 @@ const Epcategory2 = () => {
             {services.map((service, index) => (
               <div key={index} className="p-3">
                 <div className="card mx-auto" style={{ width: "18rem" }}>
-                  <img src={banner} className="card-img-top" alt="Service" />
+                  <img 
+                    src={service.file_url || banner} // Use file_url from API, fallback to banner
+                    className="card-img-top" 
+                    alt={service.name} // Use service name for alt text
+                    onError={(e) => {
+                      e.target.onerror = null;
+                      e.target.src = banner;
+                    }}
+                    style={{ 
+                      height: "200px", 
+                      objectFit: "cover" 
+                    }}
+                  />
                   <div className="card-body text-center">
                     <h5 className="card-title">{service.name}</h5>
                     <p className="card-text">{service.description}</p>
-                    <p className="card-text">Price: {service.price}</p>
-                    <Link
-                      className="btn btn-primary"
-                      to="/booking"
-                      role="button"
-                    >
+                    <p className="card-text">Price: ₱{service.price}</p>
+                    <Link className="btn btn-primary" to="/booking" role="button">
                       Book Now!
                     </Link>
                   </div>
