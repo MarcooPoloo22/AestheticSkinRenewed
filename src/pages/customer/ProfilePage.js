@@ -19,6 +19,22 @@ const ProfilePage = ({ user, setUser, isLoggedIn }) => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
+  // For editing profile
+  const [editing, setEditing] = useState(false);
+
+  // For password update
+  const [passwords, setPasswords] = useState({
+    currentPassword: "",
+    newPassword: "",
+    confirmPassword: "",
+  });
+  const [passwordError, setPasswordError] = useState("");
+
+  // Booking history states
+  const [bookingHistory, setBookingHistory] = useState([]);
+  const [loadingBookings, setLoadingBookings] = useState(false);
+  const [bookingError, setBookingError] = useState(null);
+
   // Fetch profile data on mount
   useEffect(() => {
     fetch("http://localhost/getProfile.php", {
@@ -50,6 +66,112 @@ const ProfilePage = ({ user, setUser, isLoggedIn }) => {
     }
   }, [isLoggedIn, navigate]);
 
+  // Handle editing form inputs
+  const handleInputChange = (e) => {
+    const { name, value } = e.target;
+    setNewData({ ...newData, [name]: value });
+  };
+
+  // Save updated profile
+  const handleSave = async () => {
+    try {
+      const response = await fetch("http://localhost/updateProfile.php", {
+        method: "POST",
+        credentials: "include",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(newData),
+      });
+      const data = await response.json();
+
+      if (data.status === "success") {
+        setUserData(newData);
+        setEditing(false);
+
+        setUser((prev) => ({
+          ...prev,
+          ...newData,
+        }));
+
+        Swal.fire({
+          icon: "success",
+          title: "Profile Updated",
+          text: "Your profile was updated successfully.",
+        });
+      } else {
+        Swal.fire({
+          icon: "error",
+          title: "Update Failed",
+          text: data.message || "Failed to update profile.",
+        });
+      }
+    } catch (error) {
+      console.error("Error updating profile:", error);
+      Swal.fire({
+        icon: "error",
+        title: "Error",
+        text: "An error occurred while updating profile.",
+      });
+    }
+  };
+
+  // Cancel editing
+  const handleCancel = () => {
+    setNewData({ ...userData });
+    setEditing(false);
+  };
+
+  // Handle password input changes
+  const handlePasswordChange = (e) => {
+    const { name, value } = e.target;
+    setPasswords({ ...passwords, [name]: value });
+  };
+
+  // Update password
+  const updatePassword = async () => {
+    if (passwords.newPassword !== passwords.confirmPassword) {
+      setPasswordError("New passwords do not match!");
+      return;
+    }
+    setPasswordError("");
+
+    try {
+      const response = await fetch("http://localhost/updatePassword.php", {
+        method: "POST",
+        credentials: "include",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(passwords),
+      });
+      const result = await response.json();
+
+      if (result.status === "success") {
+        setPasswords({
+          currentPassword: "",
+          newPassword: "",
+          confirmPassword: "",
+        });
+
+        Swal.fire({
+          icon: "success",
+          title: "Password Updated",
+          text: "Your password has been successfully changed.",
+        });
+      } else {
+        Swal.fire({
+          icon: "error",
+          title: "Password Update Failed",
+          text: result.message || "Failed to update password.",
+        });
+      }
+    } catch (error) {
+      console.error("Error updating password:", error);
+      Swal.fire({
+        icon: "error",
+        title: "Error",
+        text: "An error occurred while updating password.",
+      });
+    }
+  };
+
   // Render logic
   if (loading) return <div>Loading profile...</div>;
   if (error) return <div>{error}</div>;
@@ -58,7 +180,6 @@ const ProfilePage = ({ user, setUser, isLoggedIn }) => {
   return (
     <div className="profile-container">
       <div className="profile-sidebar">
-        {/* Dynamically display the user's name */}
         <h3>
           Welcome, {userData.first_name} {userData.last_name}!
         </h3>
@@ -82,7 +203,6 @@ const ProfilePage = ({ user, setUser, isLoggedIn }) => {
         </button>
       </div>
 
-      {/* Rest of the profile content */}
       <div className="profile-content">
         {/* ACCOUNT TAB */}
         {activeTab === "account" && (
@@ -90,7 +210,6 @@ const ProfilePage = ({ user, setUser, isLoggedIn }) => {
             <h2>
               <strong>Account Information</strong>
             </h2>
-            {/* Display and edit user data */}
             {editing ? (
               <>
                 <div className="account-info-grid">
@@ -145,7 +264,6 @@ const ProfilePage = ({ user, setUser, isLoggedIn }) => {
             <h2>
               <strong>Change Password</strong>
             </h2>
-            {/* Password change form */}
             <div>
               <label>Current Password</label>
               <input
@@ -189,7 +307,6 @@ const ProfilePage = ({ user, setUser, isLoggedIn }) => {
             <h2>
               <strong>Booking History</strong>
             </h2>
-            {/* Display booking history */}
             {loadingBookings ? (
               <p>Loading booking history...</p>
             ) : bookingError ? (
