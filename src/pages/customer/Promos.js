@@ -32,7 +32,6 @@ function PromosPage() {
         }
         const data = await response.json();
         
-        // Map API response to match required format
         const formattedData = data.map(promo => ({
           id: promo.id,
           title: promo.name,
