@@ -16,16 +16,7 @@ function ProductsPage() {
       })
       .catch(error => console.error('Error fetching products:', error));
 
-    // Add a dummy product for testing
-    const dummyProduct = {
-      id: "dummy1", 
-      name: "Spa Product Dummy",
-      description: "This is a dummy product for testing purposes.",
-      price: "1500.00",
-      file_url: "/assets/spa_products.jpg",
-    };
-
-    setProducts((prevProducts) => [dummyProduct, ...prevProducts]);
+    setProducts((prevProducts) => [...prevProducts]);
   }, []);
 
   const handleCardClick = (product) => {

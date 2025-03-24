@@ -70,12 +70,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         exit();
     }
 
-    // Validate phone number (Philippines: +63 followed by 9 digits)
-    if (!preg_match('/^\+63\d{10}$/', $contact_no)) {
+    /* Validate phone number (Philippines: +63 followed by 9 digits)
+    if (!preg_match('/^\+09\d{10}$/', $contact_no)) {
         http_response_code(400);
-        echo json_encode(['status' => 'error', 'message' => 'Invalid Philippine phone number. It must start with +63 and be 13 digits long.']);
+        echo json_encode(['status' => 'error', 'message' => 'Invalid Phone Number.']);
         exit();
-    }
+    } */
 
     // Hash the password
     $password_hash = password_hash($password, PASSWORD_DEFAULT);

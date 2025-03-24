@@ -72,7 +72,7 @@ const Epcategory2 = () => {
             <h2 className="ezy__epcategory2-heading">Promos</h2>
           </Col>
           <Col xs={4} className="text-end">
-            <Link className="ezy__epcategory2-btn" to="/services" role="button">
+            <Link className="ezy__epcategory2-btn" to="/promos" role="button">
               See All
             </Link>
           </Col>
