@@ -20,40 +20,52 @@ const PromoCard = ({ title, description, time, image, updated }) => {
 
 function PromosPage() {
   const [promoList, setPromoList] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
 
   useEffect(() => {
-    const sampleData = [
-      {
-        id: 1,
-        title: "PROMO: Rhinoplasty (Nose Surgery)",
-        description: "A cosmetic surgery to reshape the nose for aesthetic or functional reasons.",
-        start_date: "April 5, 2025",
-        end_date: "April 6, 2025",
-        image_url: "https://via.placeholder.com/500x300?text=Rhinoplasty",
-        price: "45,000",
-      },
-      {
-        id: 2,
-        title: "PROMO: Liposuction",
-        description: "Removes stubborn fat deposits to reshape specific areas of the body.",
-        start_date: "April 10, 2025",
-        end_date: "April 11, 2025",
-        image_url: "https://via.placeholder.com/500x300?text=Liposuction",
-        price: "60,000",
-      },
-      {
-        id: 3,
-        title: "PROMO: Blepharoplasty (Eyelid Surgery)",
-        description: "Improves the appearance of the eyelids by removing excess skin and fat.",
-        start_date: "April 12, 2025",
-        end_date: "April 13, 2025",
-        image_url: "https://via.placeholder.com/500x300?text=Eyelid+Surgery",
-        price: "35,000",
-      },
-    ];
+    const fetchPromos = async () => {
+      try {
+        const response = await fetch('http://localhost/admin_dashboard_backend/nav_fetch_promos.php');
+        if (!response.ok) {
+          throw new Error('Failed to fetch promos');
+        }
+        const data = await response.json();
+        
+        // Map API response to match required format
+        const formattedData = data.map(promo => ({
+          id: promo.id,
+          title: promo.name,
+          description: promo.description,
+          start_date: new Date(promo.start_date).toLocaleDateString(),
+          end_date: new Date(promo.end_date).toLocaleDateString(),
+          image_url: promo.file_url,
+          price: promo.price.toLocaleString('en-PH', { 
+            style: 'currency', 
+            currency: 'PHP',
+            minimumFractionDigits: 2,
+            maximumFractionDigits: 2
+          })
+        }));
 
-    setPromoList(sampleData);
+        setPromoList(formattedData);
+      } catch (err) {
+        setError(err.message);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchPromos();
   }, []);
+
+  if (loading) {
+    return <div className="text-center my-5">Loading promos...</div>;
+  }
+
+  if (error) {
+    return <div className="alert alert-danger text-center my-5">{error}</div>;
+  }
 
   return (
     <>
@@ -72,7 +84,7 @@ function PromosPage() {
                 description={promo.description}
                 time={`${promo.start_date} - ${promo.end_date}`}
                 image={promo.image_url}
-                updated={`₱${promo.price}`}
+                updated={promo.price}
               />
             </div>
           ))}
