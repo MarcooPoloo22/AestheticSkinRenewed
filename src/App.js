@@ -18,6 +18,7 @@ import ForgotPassword from "./pages/customer/ForgotPassword";
 import Footer4 from "./components/Customers/Footer4";
 import FAQ from "./pages/customer/FAQ";
 import Contact from "./pages/customer/Contact";
+import ResetPasswordPage from "./pages/customer/ResetPasswordPage"
 import {
   BookingPageGuest,
   BookingPageRegistered,
@@ -112,6 +113,7 @@ const MainContent = ({ user, setUser, isLoggedIn, setIsLoggedIn, loading }) => {
               />
             }
           />
+          <Route path="/reset-password" element={<ResetPasswordPage />} />
           <Route path="/create-account" element={<CreateAccount />} />
           <Route path="/forgot-password" element={<ForgotPassword />} />
           <Route
