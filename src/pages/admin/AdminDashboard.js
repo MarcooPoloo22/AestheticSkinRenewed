@@ -112,87 +112,87 @@ const Dashboard = ({ isLoggedIn, user, setUser, setIsLoggedIn }) => {
           onClick={() => setActivePage("Home")}
           isActive={activePage === "Home"}
         >
-          <RxDashboard /> Dashboard
+          <RxDashboard className="icon" /> Dashboard
         </Button>
         <Button
           onClick={() => setActivePage("Profile")}
           isActive={activePage === "Profile"}
         >
-          <VscSettings /> Branch
+          <VscSettings className="icon"/> Branch
         </Button>
         <div className="divider" />
         <Button
           onClick={() => setActivePage("Messages")}
           isActive={activePage === "Messages"}
         >
-          <LuMessageSquareMore /> Messages
+          <LuMessageSquareMore className="icon" /> Messages
         </Button>
         <Button
           onClick={() => setActivePage("ManageServices")}
           isActive={activePage === "ManageServices"}
         >
-          <FaRegHandPaper /> Manage Services
+          <FaRegHandPaper className="icon" /> Manage Services
         </Button>
         <Button
           onClick={() => setActivePage("ManagePromos")}
           isActive={activePage === "ManagePromos"}
         >
-          <RiDiscountPercentLine /> Manage Promos
+          <RiDiscountPercentLine className="icon" /> Manage Promos
         </Button>
         <Button
           onClick={() => setActivePage("ManageProducts")}
           isActive={activePage === "ManageProducts"}
         >
-          <AiOutlineShopping /> Manage Products
+          <AiOutlineShopping className="icon" /> Manage Products
         </Button>
         <Button
           onClick={() => setActivePage("ManageSurgeries")}
           isActive={activePage === "ManageSurgeries"}
         >
-          <MdOutlineMedicalServices /> Manage Surgeries
+          <MdOutlineMedicalServices className="icon" /> Manage Surgeries
         </Button>
         <Button
           onClick={() => setActivePage("ManageFAQ")}
           isActive={activePage === "ManageFAQ"}
         >
-          <RiEditBoxLine /> Manage FAQ
+          <RiEditBoxLine className="icon" /> Manage FAQ
         </Button>
         <Button
           onClick={() => setActivePage("ManageContact")}
           isActive={activePage === "ManageContact"}
         >
-          <IoCallOutline /> Manage Contact
+          <IoCallOutline className="icon" /> Manage Contact
         </Button>
         <Button
           onClick={() => setActivePage("ManagePayment")}
           isActive={activePage === "ManagePayment"}
         >
-          <MdPayment /> Manage Payment
+          <MdPayment className="icon" /> Manage Payment
         </Button>
         <div className="divider" />
         <Button
           onClick={() => setActivePage("ManageAppointments")}
           isActive={activePage === "ManageAppointments"}
         >
-          <MdOutlineEditCalendar /> Manage Appointments
+          <MdOutlineEditCalendar className="icon" /> Manage Appointments
         </Button>
         <Button
           onClick={() => setActivePage("ManageUsers")}
           isActive={activePage === "ManageUsers"}
         >
-          <BsPeople /> Manage Users
+          <BsPeople className="icon" /> Manage Users
         </Button>
         <Button
           onClick={() => setActivePage("ManageAdmin")}
           isActive={activePage === "ManageAdmin"}
         >
-          <BsPeople /> Manage Admin
+          <BsPeople className="icon" /> Manage Admin
         </Button>
         <Button
           onClick={() => setActivePage("Logs")}
           isActive={activePage === "Logs"}
         >
-          <IoSettingsOutline /> Audit Trail
+          <IoSettingsOutline className="icon" /> Audit Trail
         </Button>
         <img src={frame1} className="design-pic" alt="Dashboard Design" />
       </div>
