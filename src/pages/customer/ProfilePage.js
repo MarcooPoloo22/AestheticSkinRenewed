@@ -6,7 +6,8 @@ import Swal from "sweetalert2";
 
 const capitalizeLabel = (str) => {
   return str
-    .replace(/([A-Z])/g, " $1")
+    .replace(/_/g, " ") // Replace underscores with spaces first
+    .replace(/([A-Z])/g, " $1") // Handle camelCase
     .split(" ")
     .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
     .join(" ");
