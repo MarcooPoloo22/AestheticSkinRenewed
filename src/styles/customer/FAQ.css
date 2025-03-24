@@ -1,4 +1,4 @@
-/* New wrapper to break the header out of the container */
+
 
 body {
   margin: 0;  
@@ -8,11 +8,11 @@ body {
 .full-width-header {
   width: 100vw;
   margin-left: calc(-50vw + 50%);
-  margin-top: 0; /* Just in case */
+  margin-top: 0; 
 }
 
 header, nav {
-  margin-bottom: 0; /* Prevent bottom spacing from nav */
+  margin-bottom: 0; 
 }
 
 
@@ -45,9 +45,10 @@ header, nav {
 
 .faq-container {
     max-width: 800px;
-    margin: 0 auto; /* Remove top spacing */
-    padding: 0 40px 40px; /* Remove top padding only */  
+    margin: 0 auto; 
+    padding: 0 40px 40px;   
     text-align: center;
+    
   }
   
   .faq-list {

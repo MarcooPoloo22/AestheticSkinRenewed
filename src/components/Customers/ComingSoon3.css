@@ -1,83 +1,47 @@
 .ezy__comingsoon3 {
-  /* Bootstrap variables */
-  --bs-body-color: #262830;
-  --bs-body-bg: #fff;
-
-  /* Easy Frontend variables */
-  --ezy-theme-color: rgb(13, 110, 253);
-  --ezy-theme-color-rgb: 13, 110, 253;
-  --ezy-svg-color: #fef2fb;
-
-  background-color: var(--bs-body-bg);
-  padding: 60px 0 60px;
-  position: relative;
-  z-index: 1;
+  padding: 4rem 0;
+  border-radius: 1rem;
+  background: linear-gradient(135deg, #faf3eb 0%, #d0eae2 100%);
+  box-shadow: 0 0 30px rgba(0, 0, 0, 0.05);
+  color: #3e3e3e;
 }
 
-@media (min-width: 768px) {
-  .ezy__comingsoon3 {
-    padding: 0 0 100px;
-  }
-}
-
-/* Gray Block Style */
-.gray .ezy__comingsoon3,
-.ezy__comingsoon3.gray {
-  /* Bootstrap variables */
-  --bs-body-bg: rgb(246, 246, 246);
-}
-
-/* Dark Gray Block Style */
-.dark-gray .ezy__comingsoon3,
-.ezy__comingsoon3.dark-gray {
-  /* Bootstrap variables */
-  --bs-body-color: #ffffff;
-  --bs-body-bg: rgb(30, 39, 53);
-
-  /* Easy Frontend variables */
-  --ezy-svg-color: rgb(11, 23, 39);
-}
-
-/* Dark Block Style */
-.dark .ezy__comingsoon3,
-.ezy__comingsoon3.dark {
-  /* Bootstrap variables */
-  --bs-body-color: #ffffff;
-  --bs-body-bg: rgb(11, 23, 39);
-
-  /* Easy Frontend variables */
-  --ezy-svg-color: rgb(30, 39, 53);
-}
-
-/* heading and sub-heading */
+/* Text styles */
 .ezy__comingsoon3-heading {
-  font-weight: 700;
-  font-size: 32px;
-  line-height: 1;
-  color: var(--bs-body-color);
+  font-family: "Georgia", serif;
+  font-weight: 600px;
+  font-size: 3rem;
+  color: #4a715d; /* muted green */
+  margin-bottom: 1rem;
 }
 
 @media (min-width: 768px) {
   .ezy__comingsoon3-heading {
-    font-size: 45px;
+    font-size: 3rem;
   }
 }
 
 .ezy__comingsoon3-sub-heading {
-  font-size: 18px;
-  line-height: 30px;
-  color: var(--bs-body-color);
-  opacity: 0.8;
+  font-size: 1.125rem;
+  font-weight: 400;
+  font-family: "Georgia", serif;
+  color: #5f5f5f;
+  max-width: 520px;
+  line-height: 1.7;
 }
 
-.ezy__comingsoon3 svg {
-  display: none;
-  z-index: -1;
-  color: var(--ezy-svg-color);
+/* Image styles */
+.ezy__comingsoon3-image-wrapper {
+  max-width: 220px;
+  margin: 0 auto;
+  overflow: hidden;
+  border-radius: 50%;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
 }
 
-@media (min-width: 567px) {
-  .ezy__comingsoon3 svg {
-    display: block;
-  }
+.ezy__comingsoon3-image-wrapper img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border-radius: 50%;
 }

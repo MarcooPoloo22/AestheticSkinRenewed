@@ -25,7 +25,7 @@ const FAQ = () => {
           style={{ backgroundImage: "url('/assets/spa_helpdesk.jpg')" }}
         >
           <div className="overlay">
-            <h1 className="service-title">What can we do for you?</h1>
+            <h1 className="service-title">Frequently Asked Questions</h1>
           </div>
         </div>
       </div>

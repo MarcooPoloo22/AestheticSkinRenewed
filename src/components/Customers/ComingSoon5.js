@@ -1,106 +1,26 @@
 import React from "react";
 import { Col, Container, Row } from "react-bootstrap";
-
 import "./ComingSoon5.css";
-
-/*
-{
-	"react": "React",
-	"react-bootstrap": "{ Col, Container, Row }"
-}
-*/
-
-const Shape1 = () => (
-  <svg
-    className="position-absolute top-0 start-0"
-    width="270"
-    height="389"
-    viewBox="0 0 270 389"
-    fill="none"
-    xmlns="http://www.w3.org/2000/svg"
-  >
-    <circle
-      cx="-55"
-      cy="81"
-      r="307"
-      stroke="#C8C6FC"
-      strokeOpacity="0.52"
-      strokeWidth="2"
-    />
-    <circle cx="248" cy="129" r="22" fill="#5243C2" />
-    <circle cx="69.5" cy="358.5" r="16.5" fill="#FFC107" />
-  </svg>
-);
-
-const Shape2 = () => (
-  <svg
-    className="position-absolute top-0 end-0"
-    width="682"
-    height="876"
-    viewBox="0 0 682 876"
-    fill="currentColor"
-    xmlns="http://www.w3.org/2000/svg"
-  >
-    <ellipse
-      cx="467.5"
-      cy="252.356"
-      rx="467.5"
-      ry="470.963"
-      fill="currentColor"
-    />
-    <circle
-      cx="560.013"
-      cy="394.545"
-      r="339.591"
-      transform="rotate(-136.702 560.013 394.545)"
-      stroke="white"
-      strokeOpacity="0.9"
-      strokeWidth="2"
-    />
-    <circle
-      cx="352.559"
-      cy="126.13"
-      r="24.3279"
-      transform="rotate(-136.702 352.559 126.13)"
-      fill="#5243C2"
-    />
-    <circle
-      cx="670.261"
-      cy="76.7956"
-      r="18.2459"
-      transform="rotate(-136.702 670.261 76.7956)"
-      fill="#FFC107"
-    />
-  </svg>
-);
 
 const ComingSoon5 = () => {
   return (
-    <section className="ezy__comingsoon5">
-      <Shape1 />
-      <Shape2 />
-
+    <section className="spa__comingsoon-section position-relative overflow-hidden py-5">
       <Container>
-        <Row className="justify-content-between">
-          <Col
-            xs={12}
-            lg={6}
-            className="d-flex flex-column justify-content-center text-center text-lg-start"
-          >
-            <h2 className="ezy__comingsoon5-heading mb-4">
-              Exclusive Offers Await!
-            </h2>
-            <p className="ezy__comingsoon5-sub-heading mb-5 mb-lg-0">
-              Book your appointment today and enjoy special discounts on our
-              signature treatments.
+        <Row className="align-items-center justify-content-between">
+          <Col xs={12} lg={6} className="text-center text-lg-start mb-4 mb-lg-0">
+            <h2 className="spa__heading mb-4">Glow Up with ASR</h2>
+            <p className="spa__subheading mb-4">
+            Indulge in relaxation with our special seasonal treatments. <br />From facials to massages, our spa treatments are designed to rejuvenate your skin and body.
             </p>
           </Col>
           <Col xs={12} lg={5} className="text-center">
-            <img
-              src="https://cdn.easyfrontend.com/pictures/comingsoon/five.png"
-              alt=""
-              className="img-fluid"
-            />
+            <div className="spa__image-wrapper">
+              <img
+                src="./assets/asr_beautytreatment.jpg"
+                alt="Relaxing Spa"
+                className="img-fluid rounded shadow"
+              />
+            </div>
           </Col>
         </Row>
       </Container>

@@ -1,68 +1,34 @@
 import React from "react";
 import { Col, Container, Row } from "react-bootstrap";
-
 import "./ComingSoon3.css";
-
-/*
-{
-	"react": "React",
-	"react-bootstrap": "{ Col, Container, Row }"
-}
-*/
-
-const Shape1 = () => (
-  <svg
-    className="position-absolute start-0 top-0"
-    width="370"
-    height="534"
-    viewBox="0 0 370 534"
-    fill="currentColor"
-    xmlns="http://www.w3.org/2000/svg"
-  >
-    <circle cx="0.5" cy="164.5" r="369.5" fill="currentColor" />
-  </svg>
-);
-
-const Shape2 = () => (
-  <svg
-    className="position-absolute end-0 bottom-0"
-    width="344"
-    height="470"
-    viewBox="0 0 344 470"
-    fill="currentColor"
-    xmlns="http://www.w3.org/2000/svg"
-  >
-    <circle cx="369.5" cy="369.5" r="369.5" fill="currentColor" />
-  </svg>
-);
 
 const ComingSoon3 = () => {
   return (
     <section className="ezy__comingsoon3">
-      <Shape1 />
-      <Shape2 />
-
       <Container>
-        <Row className="justify-content-between">
+        <Row className="justify-content-between align-items-center">
           <Col
             xs={12}
-            lg={5}
+            lg={6}
             className="d-flex flex-column justify-content-center text-center text-lg-start"
           >
-            <h2 className="ezy__comingsoon3-heading mb-4 mt-0 mt-md-5">
+            <h2 className="ezy__comingsoon3-heading">
               Expert Care for Radiant Skin
             </h2>
             <p className="ezy__comingsoon3-sub-heading mb-5 mb-lg-0">
               From facials to advanced skin treatments, our specialists ensure
-              you leave feeling refreshed and confident.
+              you leave feeling refreshed and confident. Rejuvenate in a
+              tranquil, spa-inspired atmosphere.
             </p>
           </Col>
-          <Col xs={12} lg={5} className="text-center">
-            <img
-              src="https://cdn.easyfrontend.com/pictures/comingsoon/three.png"
-              alt=""
-              className="img-fluid"
-            />
+          <Col xs={12} lg={6} className="text-center">
+            <div className="ezy__comingsoon3-image-wrapper">
+              <img
+                src="/assets/asr_home1.jpg"
+                alt="Spa"
+                className="img-fluid"
+              />
+            </div>
           </Col>
         </Row>
       </Container>

@@ -46,18 +46,22 @@
 }
 
 .banner-title {
-  font-size: 3rem;
-  font-weight: bold;
-  margin-bottom: 10px;
-  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
-}
+    font-size: 2.8rem; /* slightly smaller for elegance */
+    font-weight: 500; /* medium weight instead of bold */
+    font-family: "Georgia", "Garamond", "Palatino Linotype", "Book Antiqua", serif;
+    margin-bottom: 10px;
+    text-shadow: 1.5px 1.5px 3px rgba(0, 0, 0, 0.4); /* slightly softer shadow */
+  }
+  
+  .banner-subtitle {
+    font-size: 1.3rem; /* slightly smaller */
+    font-weight: 400; /* regular weight */
+    font-family: "Georgia", "Garamond", "Palatino Linotype", "Book Antiqua", serif;
+    margin-bottom: 20px;
+    text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.3);
+  }
 
-.banner-subtitle {
-  font-size: 1.5rem;
-  margin-bottom: 20px;
-  text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.5);
-}
-
+  
 .banner-button {
   background: linear-gradient(to right, #a2bf5a, #6CB33F);
   color: #ffffff;

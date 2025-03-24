@@ -221,17 +221,19 @@ const BookingPageRegistered = ({ user }) => {
     "03:00 PM",
     "04:00 PM",
   ];
-
+{/*Booking Inputs */}
   return (
     <>
-      <div className="booking-container">
-        <img
-          src="./assets/bookinghead.jpg"
-          alt="Booking Background"
-          className="booking-bg"
-        />
-        <h1 className="booking-title">Booking Appointment</h1>
-      </div>
+    <div className="booking-container">
+      <img
+        src="./assets/asr_bookinghead.jpg"
+        alt="Booking Background"
+        className="booking-bg"
+    />
+    <div className="booking-title-wrapper">
+   <h1 className="booking-title">Booking Appointments</h1>
+  </div>
+</div>
 
       <br />
       <div className="white-box my-5">

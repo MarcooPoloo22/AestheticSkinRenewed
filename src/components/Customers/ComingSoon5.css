@@ -1,86 +1,41 @@
-.ezy__comingsoon5 {
-  /* Bootstrap variables */
-  --bs-body-color: #262830;
-  --bs-body-bg: #fff;
-
-  /* Easy Frontend variables */
-  --ezy-theme-color: rgb(13, 110, 253);
-  --ezy-theme-color-rgb: 13, 110, 253;
-  --ezy-svg-color: #5bccc7;
-
-  background-color: var(--bs-body-bg);
-  display: flex;
-  align-items: flex-end;
-  padding: 60px 0 0;
-  position: relative;
-  z-index: 1;
+.spa__comingsoon-section {
+  background: linear-gradient(135deg, #faf3eb 0%, #d0eae2 100%);
+  color: #3e3e3e;
+  
+  border-radius: 1rem;
+  padding: 4rem 0;
+  box-shadow: 0 0 30px rgba(0, 0, 0, 0.05);
 }
 
-@media (min-width: 768px) {
-  .ezy__comingsoon5 {
-    padding: 100px 0 0;
-  }
+
+.spa__heading {
+  font-family: "Georgia", serif;
+  font-weight: 600px;
+  font-size: 3rem;
+  color: #4a715d; /* muted green */
+  margin-bottom: 1rem;
 }
 
-/* Gray Block Style */
-.gray .ezy__comingsoon5,
-.ezy__comingsoon5.gray {
-  /* Bootstrap variables */
-  --bs-body-bg: rgb(246, 246, 246);
+.spa__subheading {
+  font-size: 1.115rem; /* Slightly smaller for elegance */
+  font-weight: 400; /* Normal weight */
+  font-family: "Georgia", serif;
+  line-height: 1.7;
+  color: #5f5f5f;
+  max-width: 520px;
 }
 
-/* Dark Gray Block Style */
-.dark-gray .ezy__comingsoon5,
-.ezy__comingsoon5.dark-gray {
-  /* Bootstrap variables */
-  --bs-body-color: #ffffff;
-  --bs-body-bg: rgb(30, 39, 53);
-
-  /* Easy Frontend variables */
-  --ezy-svg-color: rgb(11, 23, 39);
+.spa__image-wrapper {
+  max-width: 220px; /* Control size */
+  margin: 0 auto;
+  overflow: hidden;
+  border-radius: 50%; /* Makes the wrapper a perfect circle */
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1); /* Optional soft shadow */
 }
 
-/* Dark Block Style */
-.dark .ezy__comingsoon5,
-.ezy__comingsoon5.dark {
-  /* Bootstrap variables */
-  --bs-body-color: #ffffff;
-  --bs-body-bg: rgb(11, 23, 39);
-
-  /* Easy Frontend variables */
-  --ezy-svg-color: rgb(30, 39, 53);
-}
-
-/* heading and sub-heading */
-.ezy__comingsoon5-heading {
-  font-weight: 700;
-  font-size: 32px;
-  line-height: 1;
-  color: var(--bs-body-color);
-}
-
-@media (min-width: 768px) {
-  .ezy__comingsoon5-heading {
-    font-size: 45px;
-  }
-}
-
-.ezy__comingsoon5-sub-heading {
-  font-size: 18px;
-  line-height: 30px;
-  color: var(--bs-body-color);
-  opacity: 0.8;
-}
-
-.ezy__comingsoon5 svg {
-  display: none;
-  z-index: -1;
-  color: var(--ezy-svg-color);
-}
-
-@media (min-width: 567px) {
-  .ezy__comingsoon5 svg {
-    display: block;
-    z-index: -1;
-  }
+.spa__image-wrapper img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border-radius: 50%; /* Makes the image inside match the circle */
 }
