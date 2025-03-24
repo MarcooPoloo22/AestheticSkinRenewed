@@ -170,6 +170,27 @@ CREATE TABLE IF NOT EXISTS `password_resets` (
 
 -- Dumping data for table asr.password_resets: ~0 rows (approximately)
 
+-- Dumping structure for table asr.payment_details
+CREATE TABLE IF NOT EXISTS `payment_details` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `gcash_number` varchar(20) NOT NULL,
+  `gcash_name` varchar(100) NOT NULL,
+  `gcash_amount` decimal(10,2) NOT NULL,
+  `paymaya_number` varchar(20) NOT NULL,
+  `paymaya_name` varchar(100) NOT NULL,
+  `paymaya_amount` decimal(10,2) NOT NULL,
+  `bank_name` varchar(100) NOT NULL,
+  `bank_account_number` varchar(50) NOT NULL,
+  `bank_account_name` varchar(100) NOT NULL,
+  `bank_amount` decimal(10,2) NOT NULL,
+  `last_updated` timestamp NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp(),
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+-- Dumping data for table asr.payment_details: ~1 rows (approximately)
+INSERT INTO `payment_details` (`id`, `gcash_number`, `gcash_name`, `gcash_amount`, `paymaya_number`, `paymaya_name`, `paymaya_amount`, `bank_name`, `bank_account_number`, `bank_account_name`, `bank_amount`, `last_updated`) VALUES
+	(1, '09123456789', 'Juan Dela Cruz', 500.00, '09123456789', 'Juan Dela Cruz', 500.00, 'BDO', '123456789', 'Juan Dela Cruz', 500.00, '2025-03-24 11:06:20');
+
 -- Dumping structure for table asr.products
 CREATE TABLE IF NOT EXISTS `products` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
