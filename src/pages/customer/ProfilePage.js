@@ -1,3 +1,4 @@
+// src/pages/customer/ProfilePage.js
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import "../../styles/customer/ProfilePage.css";
@@ -35,7 +36,14 @@ const ProfilePage = ({ user, setUser, isLoggedIn }) => {
   const [loadingBookings, setLoadingBookings] = useState(false);
   const [bookingError, setBookingError] = useState(null);
 
-  // Fetch profile data on mount
+  // Redirect to login if not logged in
+  useEffect(() => {
+    if (!isLoggedIn) {
+      navigate("/login");
+    }
+  }, [isLoggedIn, navigate]);
+
+  // 1. Fetch profile data on mount
   useEffect(() => {
     fetch("http://localhost/getProfile.php", {
       method: "GET",
@@ -44,9 +52,9 @@ const ProfilePage = ({ user, setUser, isLoggedIn }) => {
       .then((response) => response.json())
       .then((data) => {
         if (data.status === "success") {
-          setUserData(data.user); // Store user data
+          setUserData(data.user);
           setNewData(data.user);
-          setUser(data.user); // Update global user state
+          setUser(data.user); // Update global user so Navbar can reflect changes
         } else {
           setError("Failed to load profile data.");
         }
@@ -59,20 +67,38 @@ const ProfilePage = ({ user, setUser, isLoggedIn }) => {
       });
   }, [setUser]);
 
-  // Redirect to login if not logged in
+  // 2. Fetch booking history when the user switches to the "bookingHistory" tab
   useEffect(() => {
-    if (!isLoggedIn) {
-      navigate("/login");
+    if (activeTab === "bookingHistory") {
+      setLoadingBookings(true);
+      fetch("http://localhost/getBookingHistory.php", {
+        method: "GET",
+        credentials: "include",
+      })
+        .then((response) => response.json())
+        .then((data) => {
+          if (data.status === "success") {
+            setBookingHistory(data.bookings);
+          } else {
+            setBookingError(data.message || "Failed to load booking history.");
+          }
+          setLoadingBookings(false);
+        })
+        .catch((err) => {
+          console.error("Error fetching booking history:", err);
+          setBookingError("An error occurred.");
+          setLoadingBookings(false);
+        });
     }
-  }, [isLoggedIn, navigate]);
+  }, [activeTab]);
 
-  // Handle editing form inputs
+  // 3. Handle editing form inputs
   const handleInputChange = (e) => {
     const { name, value } = e.target;
     setNewData({ ...newData, [name]: value });
   };
 
-  // Save updated profile
+  // 4. Save updated profile
   const handleSave = async () => {
     try {
       const response = await fetch("http://localhost/updateProfile.php", {
@@ -114,19 +140,19 @@ const ProfilePage = ({ user, setUser, isLoggedIn }) => {
     }
   };
 
-  // Cancel editing
+  // 5. Cancel editing
   const handleCancel = () => {
     setNewData({ ...userData });
     setEditing(false);
   };
 
-  // Handle password input changes
+  // 6. Handle password input changes
   const handlePasswordChange = (e) => {
     const { name, value } = e.target;
     setPasswords({ ...passwords, [name]: value });
   };
 
-  // Update password
+  // 7. Update password
   const updatePassword = async () => {
     if (passwords.newPassword !== passwords.confirmPassword) {
       setPasswordError("New passwords do not match!");
@@ -172,7 +198,7 @@ const ProfilePage = ({ user, setUser, isLoggedIn }) => {
     }
   };
 
-  // Render logic
+  // 8. Render logic
   if (loading) return <div>Loading profile...</div>;
   if (error) return <div>{error}</div>;
   if (!userData) return <div>No user data available.</div>;
@@ -214,6 +240,7 @@ const ProfilePage = ({ user, setUser, isLoggedIn }) => {
               <>
                 <div className="account-info-grid">
                   {Object.keys(newData)
+                    // Exclude "id" and "password"
                     .filter((key) => key !== "id" && key !== "password")
                     .map((key) => (
                       <div key={key}>
@@ -223,7 +250,11 @@ const ProfilePage = ({ user, setUser, isLoggedIn }) => {
                           name={key}
                           value={newData[key] || ""}
                           onChange={handleInputChange}
-                          disabled={key === "role"} // Disable role field
+                          disabled={
+                            key === "verified" ||
+                            key === "verification_token" ||
+                            key === "role"
+                          }
                         />
                       </div>
                     ))}
