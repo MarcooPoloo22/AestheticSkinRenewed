@@ -12,7 +12,7 @@ const ServiceCard = ({ title, description, image, updated, link }) => {
 
   return (
     <div
-      className="card mb-3 mx-auto cursor-pointer"
+      className="card mb-3 mx-auto"
       style={{ maxWidth: "540px", cursor: "pointer" }}
       onClick={handleClick}
     >
@@ -22,8 +22,24 @@ const ServiceCard = ({ title, description, image, updated, link }) => {
            <img
             src={image}
             alt={title}
+<<<<<<< HEAD
             className="service-img"
            />
+=======
+            style={{ height: "200px", objectFit: "cover" }}
+          />
+        </div>
+        <div className="col-md-8 shadow-sm" style={{ minHeight: "200px" }}>
+          <div className="card-body">
+            <h5 className="card-title">{title}</h5>
+            <p className="card-text">{description}</p>
+            <p className="card-text">
+              <small className="text-body-secondary">
+                {updated}
+              </small>
+            </p>
+          </div>
+>>>>>>> bb0e63f8de9669f82529b23fbfd7eeedfa702c30
         </div>
       </div>
 

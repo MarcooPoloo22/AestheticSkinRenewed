@@ -9,7 +9,6 @@ import "./EPCategory2.css";
 const Epcategory2 = () => {
   const [promos, setPromos] = useState([]);
 
-  // Fetch promos from the PHP API
   useEffect(() => {
     const fetchPromos = async () => {
       try {
@@ -28,7 +27,6 @@ const Epcategory2 = () => {
     fetchPromos();
   }, []);
 
-  // Slider settings
   const settings = {
     dots: false,
     infinite: true,
@@ -80,30 +78,32 @@ const Epcategory2 = () => {
           </Col>
         </Row>
 
-        <Row className="text-center justify-content-start justify-content-xl-center mt-4 mt-md-5">
+        <Row className="mt-4 mt-md-5">
           {promos.length > 0 ? (
             <Slider {...settings}>
               {promos.map((promo) => (
-                <div key={promo.id} className="p-3">
-                  <div className="card mx-auto" style={{ width: "18rem" }}>
-                    <img
-                      src={promo.image}
-                      className="card-img-top"
-                      alt={promo.title}
-                    />
-                    <div className="card-body text-center">
-                      <h5 className="card-title">{promo.title}</h5>
-                      <p className="card-text">{promo.description}</p>
-                      <p className="card-text">Price: ₱{promo.price}</p>
-                      <Link
-                        className="btn btn-primary"
-                        to={`/booking/${promo.id}`}
-                        role="button"
-                      >
-                        Book Now!
-                      </Link>
+                <div key={promo.id} className="px-2 h-100">
+                  <Card className="ezy__epcategory2-card h-100">
+                    <div className="ezy__epcategory2-card-img">
+                      <img src={promo.image} alt={promo.title} className="img-fluid w-100" />
                     </div>
-                  </div>
+                    <Card.Body className="d-flex flex-column">
+                      <Card.Title className="ezy__epcategory2-title text-center">{promo.title}</Card.Title>
+                      <Card.Text className="ezy__epcategory2-description flex-grow-1">
+                        {promo.description}
+                      </Card.Text>
+                      <div className="mt-auto">
+                        <Card.Text className="ezy__epcategory2-price text-center">Price: ₱{promo.price}</Card.Text>
+                        <Link 
+                          className="btn btn-primary w-100 mt-2" 
+                          to={`/booking/${promo.id}`} 
+                          role="button"
+                        >
+                          Book Now!
+                        </Link>
+                      </div>
+                    </Card.Body>
+                  </Card>
                 </div>
               ))}
             </Slider>

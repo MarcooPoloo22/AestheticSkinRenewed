@@ -6,7 +6,7 @@ header("Access-Control-Max-Age: 3600");
 header("Access-Control-Allow-Headers: Content-Type, Access-Control-Allow-Headers, Authorization, X-Requested-With");
 
 error_reporting(E_ALL);
-ini_set('display_errors', 0);
+ini_set('display_errors', 1); // Enable error display for debugging
 ini_set('log_errors', 1);
 ini_set('error_log', 'C:\xampp\htdocs\error.log');
 
@@ -35,8 +35,10 @@ try {
     exit();
 }
 
-if ($_SERVER['REQUEST_METHOD'] === 'GET' && isset($_GET['date'])) {
-    $date = filter_input(INPUT_GET, 'date', FILTER_SANITIZE_STRING);
+if ($_SERVER['REQUEST_METHOD'] === 'GET' && isset($_GET['date']) && isset($_GET['staff_id'])) {
+    $date = filter_input(INPUT_GET, 'date', FILTER_SANITIZE_FULL_SPECIAL_CHARS);
+    $staff_id = filter_input(INPUT_GET, 'staff_id', FILTER_SANITIZE_NUMBER_INT);
+
     if (!preg_match('/^\d{4}-\d{2}-\d{2}$/', $date)) {
         http_response_code(400);
         echo json_encode(['status' => 'error', 'message' => 'Invalid date format.']);
@@ -45,12 +47,16 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET' && isset($_GET['date'])) {
 
     try {
         $stmt = $conn->prepare("
-        SELECT DATE_FORMAT(appointment_time, '%h:%i %p') as appointment_time
-        FROM bookings
-        WHERE appointment_date = :date
-        AND status != 'cancelled'
-    ");
-        $stmt->execute([':date' => $date]);
+            SELECT DATE_FORMAT(appointment_time, '%h:%i %p') as appointment_time
+            FROM bookings
+            WHERE appointment_date = :date
+            AND staff_id = :staff_id
+            AND status != 'cancelled'
+        ");
+        $stmt->execute([
+            ':date' => $date,
+            ':staff_id' => $staff_id,
+        ]);
         $bookedSlots = $stmt->fetchAll(PDO::FETCH_COLUMN);
 
         echo json_encode(['status' => 'success', 'booked_slots' => $bookedSlots]);
@@ -72,17 +78,19 @@ if (!$data) {
 }
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    $user_id = isset($data['user_id']) ? $data['user_id'] : null; // NULL for guest customers
+    $user_id = isset($data['user_id']) ? $data['user_id'] : null;
     $first_name = htmlspecialchars($data['first_name']);
     $last_name = htmlspecialchars($data['last_name']);
     $email = filter_var($data['email'], FILTER_SANITIZE_EMAIL);
     $contact_no = htmlspecialchars($data['contact_no']);
     $service_type = htmlspecialchars($data['service_type']);
+    $branch_id = htmlspecialchars($data['branch_id']);
+    $staff_id = htmlspecialchars($data['staff_id']);
     $appointment_date = $data['appointment_date'];
     $appointment_time = $data['appointment_time'];
 
     // Validate input
-    if (!$first_name || !$last_name || !$email || !$contact_no || !$service_type || !$appointment_date || !$appointment_time) {
+    if (!$first_name || !$last_name || !$email || !$contact_no || !$service_type || !$branch_id || !$staff_id || !$appointment_date || !$appointment_time) {
         http_response_code(400);
         echo json_encode(['status' => 'error', 'message' => 'All fields are required.']);
         exit();
@@ -95,15 +103,17 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             FROM bookings
             WHERE appointment_date = :appointment_date
             AND appointment_time = :appointment_time
+            AND staff_id = :staff_id
             AND status != 'cancelled'
         ");
         $stmt->execute([
             ':appointment_date' => $appointment_date,
             ':appointment_time' => $appointment_time,
+            ':staff_id' => $staff_id,
         ]);
         $result = $stmt->fetch(PDO::FETCH_ASSOC);
 
-        if ($result['total_bookings'] >= 2) { // Adjust based on staff capacity
+        if ($result['total_bookings'] >= 1) { // Adjust based on staff capacity
             http_response_code(400);
             echo json_encode(['status' => 'error', 'message' => 'The selected time slot is fully booked.']);
             exit();
@@ -118,8 +128,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     // Insert the booking
     try {
         $stmt = $conn->prepare("
-            INSERT INTO bookings (user_id, first_name, last_name, email, contact_no, service_type, appointment_date, appointment_time, status)
-            VALUES (:user_id, :first_name, :last_name, :email, :contact_no, :service_type, :appointment_date, :appointment_time, 'pending')
+            INSERT INTO bookings (user_id, first_name, last_name, email, contact_no, service_type, branch_id, staff_id, appointment_date, appointment_time, status)
+            VALUES (:user_id, :first_name, :last_name, :email, :contact_no, :service_type, :branch_id, :staff_id, :appointment_date, :appointment_time, 'pending')
         ");
         $stmt->execute([
             ':user_id' => $user_id,
@@ -128,6 +138,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             ':email' => $email,
             ':contact_no' => $contact_no,
             ':service_type' => $service_type,
+            ':branch_id' => $branch_id,
+            ':staff_id' => $staff_id,
             ':appointment_date' => $appointment_date,
             ':appointment_time' => $appointment_time,
         ]);

@@ -18,7 +18,7 @@ const BookingPageRegistered = ({ user }) => {
   const [branches, setBranches] = useState([]);
   const [staffList, setStaffList] = useState([]);
   const [bookedSlots, setBookedSlots] = useState([]);
-  const [isLoading, setIsLoading] = useState(false); // Loading state for booked slots
+  const [isLoading, setIsLoading] = useState(false);
   const navigate = useNavigate();
 
   // Redirect if user is not logged in
@@ -112,11 +112,11 @@ const BookingPageRegistered = ({ user }) => {
     }
   }, [formData.branch_id]);
 
-  // Fetch booked slots for the selected date
+  // Fetch booked slots for the selected date and staff
   useEffect(() => {
-    if (formData.appointment_date) {
-      setIsLoading(true); // Set loading state
-      fetch(`http://localhost/booking.php?date=${formData.appointment_date}`)
+    if (formData.appointment_date && formData.staff_id) {
+      setIsLoading(true);
+      fetch(`http://localhost/booking.php?date=${formData.appointment_date}&staff_id=${formData.staff_id}`)
         .then((response) => {
           if (!response.ok) {
             throw new Error('Network response was not ok');
@@ -125,7 +125,7 @@ const BookingPageRegistered = ({ user }) => {
         })
         .then((data) => {
           if (data.status === 'success') {
-            setBookedSlots(data.booked_slots || []); // Set booked slots
+            setBookedSlots(data.booked_slots || []);
           } else {
             throw new Error(data.message || 'Failed to fetch booked slots.');
           }
@@ -139,12 +139,12 @@ const BookingPageRegistered = ({ user }) => {
           });
         })
         .finally(() => {
-          setIsLoading(false); // Reset loading state
+          setIsLoading(false);
         });
     } else {
-      setBookedSlots([]); // Clear booked slots if no date is selected
+      setBookedSlots([]);
     }
-  }, [formData.appointment_date]);
+  }, [formData.appointment_date, formData.staff_id]);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -351,8 +351,8 @@ const BookingPageRegistered = ({ user }) => {
                       value={slot}
                       disabled={bookedSlots.includes(slot)}
                       style={{
-                        backgroundColor: bookedSlots.includes(slot) ? "#f0f0f0" : "inherit", // Gray background for blocked slots
-                        color: bookedSlots.includes(slot) ? "#a0a0a0" : "inherit", // Light gray text for blocked slots
+                        backgroundColor: bookedSlots.includes(slot) ? "#f0f0f0" : "inherit",
+                        color: bookedSlots.includes(slot) ? "#a0a0a0" : "inherit",
                       }}
                     >
                       {slot}
@@ -401,7 +401,7 @@ const BookingPageGuest = () => {
   const [branches, setBranches] = useState([]);
   const [staffList, setStaffList] = useState([]);
   const [bookedSlots, setBookedSlots] = useState([]);
-  const [isLoading, setIsLoading] = useState(false); // Loading state for booked slots
+  const [isLoading, setIsLoading] = useState(false);
   const navigate = useNavigate();
 
   // Fetch services based on service type
@@ -482,11 +482,11 @@ const BookingPageGuest = () => {
     }
   }, [formData.branch_id]);
 
-  // Fetch booked slots for the selected date
+  // Fetch booked slots for the selected date and staff
   useEffect(() => {
-    if (formData.appointment_date) {
-      setIsLoading(true); // Set loading state
-      fetch(`http://localhost/booking.php?date=${formData.appointment_date}`)
+    if (formData.appointment_date && formData.staff_id) {
+      setIsLoading(true);
+      fetch(`http://localhost/booking.php?date=${formData.appointment_date}&staff_id=${formData.staff_id}`)
         .then((response) => {
           if (!response.ok) {
             throw new Error('Network response was not ok');
@@ -495,7 +495,7 @@ const BookingPageGuest = () => {
         })
         .then((data) => {
           if (data.status === 'success') {
-            setBookedSlots(data.booked_slots || []); // Set booked slots
+            setBookedSlots(data.booked_slots || []);
           } else {
             throw new Error(data.message || 'Failed to fetch booked slots.');
           }
@@ -509,12 +509,12 @@ const BookingPageGuest = () => {
           });
         })
         .finally(() => {
-          setIsLoading(false); // Reset loading state
+          setIsLoading(false);
         });
     } else {
-      setBookedSlots([]); // Clear booked slots if no date is selected
+      setBookedSlots([]);
     }
-  }, [formData.appointment_date]);
+  }, [formData.appointment_date, formData.staff_id]);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -767,8 +767,8 @@ const BookingPageGuest = () => {
                       value={slot}
                       disabled={bookedSlots.includes(slot)}
                       style={{
-                        backgroundColor: bookedSlots.includes(slot) ? "#f0f0f0" : "inherit", // Gray background for blocked slots
-                        color: bookedSlots.includes(slot) ? "#a0a0a0" : "inherit", // Light gray text for blocked slots
+                        backgroundColor: bookedSlots.includes(slot) ? "#f0f0f0" : "inherit",
+                        color: bookedSlots.includes(slot) ? "#a0a0a0" : "inherit",
                       }}
                     >
                       {slot}

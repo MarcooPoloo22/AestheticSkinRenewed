@@ -1,10 +1,11 @@
 import React, { useState } from "react";
 import { useNavigate, useSearchParams } from "react-router-dom";
 import Swal from "sweetalert2";
+import "../../styles/customer/ResetPasswordPage.css";
 
 const ResetPasswordPage = () => {
   const [searchParams] = useSearchParams();
-  const token = searchParams.get("token"); // Extract token from URL
+  const token = searchParams.get("token"); 
   const [newPassword, setNewPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
   const [error, setError] = useState("");
@@ -13,6 +14,7 @@ const ResetPasswordPage = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
+    // Validate passwords
     if (newPassword !== confirmPassword) {
       setError("Passwords do not match.");
       return;
@@ -29,11 +31,13 @@ const ResetPasswordPage = () => {
           newPassword,
           confirmPassword,
         }),
+        credentials: "include", 
       });
 
       const result = await response.json();
 
       if (result.status === "success") {
+        // Show success message and redirect to login page
         Swal.fire({
           icon: "success",
           title: "Password Reset Successful",
@@ -42,6 +46,7 @@ const ResetPasswordPage = () => {
           navigate("/login"); // Redirect to login page
         });
       } else {
+        // Show error message from the backend
         setError(result.message || "Failed to reset password.");
       }
     } catch (err) {
@@ -60,6 +65,7 @@ const ResetPasswordPage = () => {
             type="password"
             value={newPassword}
             onChange={(e) => setNewPassword(e.target.value)}
+            placeholder="Enter new password"
             required
           />
         </div>
@@ -69,6 +75,7 @@ const ResetPasswordPage = () => {
             type="password"
             value={confirmPassword}
             onChange={(e) => setConfirmPassword(e.target.value)}
+            placeholder="Confirm new password"
             required
           />
         </div>
@@ -79,4 +86,4 @@ const ResetPasswordPage = () => {
   );
 };
 
-export default ResetPassword;
+export default ResetPasswordPage;
