@@ -30,7 +30,7 @@ CREATE TABLE IF NOT EXISTS `audit_logs` (
 ) ENGINE=InnoDB AUTO_INCREMENT=75 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- Dumping data for table asr.audit_logs: ~55 rows (approximately)
-INSERT INTO `audit_logs` (`audit_id`, `user_id`, `user_name`, `user_role`, `action_type`, `table_name`, `new_value`, `timestamp`, `description`, `old_value`) VALUES
+REPLACE INTO `audit_logs` (`audit_id`, `user_id`, `user_name`, `user_role`, `action_type`, `table_name`, `new_value`, `timestamp`, `description`, `old_value`) VALUES
 	(20, 44, 'Gabriello', 'admin', 'UPDATE', 'promos', '{"id":7,"name":"Promo 45877","description":"Desc 5","price":"123.00","file_url":null,"start_date":"2025-03-24 17:23:00","end_date":"2025-03-31 13:21:00","duration":5,"created_at":"2025-03-23 13:17:21","updated_at":"2025-03-23 13:33:06","branch_ids":"[]","staff_ids":"[]"}', '2025-03-23 06:26:14', NULL, '{"id":7,"name":"Promo 45877","description":"Desc 5","price":"123.00","file_url":null,"start_date":"2025-03-24 17:23:00","end_date":"2025-03-31 13:21:00","duration":5,"created_at":"2025-03-23 13:17:21","updated_at":"2025-03-23 13:33:06","branch_ids":"[]","staff_ids":"[]"}'),
 	(21, 44, 'Gabriello', 'admin', 'UPDATE', 'promos', '{"id":7,"name":"Promo 45877","description":"Desc 5","price":"123.00","file_url":null,"start_date":"2025-03-24 17:23:00","end_date":"2025-03-31 13:21:00","duration":6,"created_at":"2025-03-23 13:17:21","updated_at":"2025-03-23 14:35:08","branch_ids":"[\\"7\\",\\"6\\"]","staff_ids":"[\\"1\\",\\"3\\"]"}', '2025-03-23 06:35:08', NULL, '{"id":7,"name":"Promo 45877","description":"Desc 5","price":"123.00","file_url":null,"start_date":"2025-03-24 17:23:00","end_date":"2025-03-31 13:21:00","duration":5,"created_at":"2025-03-23 13:17:21","updated_at":"2025-03-23 13:33:06","branch_ids":"[]","staff_ids":"[]"}'),
 	(22, 44, 'Gabriello', 'admin', 'UPDATE', 'promos', '{"id":7,"name":"Promo 45877","description":"Desc 5","price":"123.00","file_url":null,"start_date":"2025-03-24 17:23:00","end_date":"2025-03-31 13:21:00","duration":6,"created_at":"2025-03-23 13:17:21","updated_at":"2025-03-23 14:40:33","branch_ids":"[\\"6\\",\\"7\\"]","staff_ids":"[\\"1\\",\\"3\\"]"}', '2025-03-23 06:40:33', NULL, '{"id":7,"name":"Promo 45877","description":"Desc 5","price":"123.00","file_url":null,"start_date":"2025-03-24 17:23:00","end_date":"2025-03-31 13:21:00","duration":6,"created_at":"2025-03-23 13:17:21","updated_at":"2025-03-23 14:35:08","branch_ids":"[\\"7\\",\\"6\\"]","staff_ids":"[\\"1\\",\\"3\\"]"}'),
@@ -87,30 +87,6 @@ INSERT INTO `audit_logs` (`audit_id`, `user_id`, `user_name`, `user_role`, `acti
 	(73, 57, 'Rovin', 'employee', 'CREATE', 'promos', '{"id":9,"name":"Promo 67","description":"67 desc","price":"67.00","file_url":null,"start_date":"2025-03-25 20:15:00","end_date":"2025-03-26 20:16:00","duration":8,"created_at":"2025-03-23 20:16:12","updated_at":"2025-03-23 20:16:12","branch_ids":"[\\"6\\"]","staff_ids":"[\\"1\\",\\"4\\"]"}', '2025-03-23 12:16:12', NULL, 'null'),
 	(74, 57, 'Rovin', 'employee', 'UPDATE', 'promos', '{"id":8,"name":"Promo 3","description":"Promo 3 desc","price":"199.00","file_url":null,"start_date":"2025-03-25 21:38:00","end_date":"2025-03-29 22:38:00","duration":12,"created_at":"2025-03-23 17:33:57","updated_at":"2025-03-23 20:16:36","branch_ids":"[\\"7\\",\\"6\\"]","staff_ids":"[\\"3\\",\\"1\\",\\"4\\"]"}', '2025-03-23 12:16:36', NULL, '{"id":8,"name":"Promo 3","description":"Promo 3 desc","price":"199.00","file_url":null,"start_date":"2025-03-25 21:38:00","end_date":"2025-03-29 22:38:00","duration":12,"created_at":"2025-03-23 17:33:57","updated_at":"2025-03-23 19:23:28","branch_ids":"[\\"6\\",\\"7\\"]","staff_ids":"[\\"1\\",\\"3\\",\\"4\\",\\"8\\"]"}');
 
--- Dumping structure for table asr.bookings
-CREATE TABLE IF NOT EXISTS `bookings` (
-  `id` int(11) NOT NULL AUTO_INCREMENT,
-  `user_id` int(11) DEFAULT NULL,
-  `first_name` varchar(255) NOT NULL,
-  `last_name` varchar(255) NOT NULL,
-  `email` varchar(255) NOT NULL,
-  `contact_no` varchar(20) NOT NULL,
-  `service_type` varchar(255) NOT NULL,
-  `appointment_date` date NOT NULL,
-  `appointment_time` time NOT NULL,
-  `status` enum('pending','confirmed','cancelled') DEFAULT 'pending',
-  `created_at` timestamp NOT NULL DEFAULT current_timestamp(),
-  PRIMARY KEY (`id`),
-  KEY `user_id` (`user_id`),
-  CONSTRAINT `bookings_ibfk_1` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`) ON DELETE SET NULL
-) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
-
--- Dumping data for table asr.bookings: ~3 rows (approximately)
-INSERT INTO `bookings` (`id`, `user_id`, `first_name`, `last_name`, `email`, `contact_no`, `service_type`, `appointment_date`, `appointment_time`, `status`, `created_at`) VALUES
-	(1, NULL, 'Randolph', 'Alvarado', 'xere.sa.12@gmail.com', '09232228423', 'Haircut', '2025-03-06', '10:00:00', 'pending', '2025-03-07 04:28:49'),
-	(2, NULL, 'Gabriello', 'Gerald Herrera', 'rsori013@ucr.edu', '09052752202', 'Service', '2025-03-22', '11:00:00', 'pending', '2025-03-22 10:24:17'),
-	(3, NULL, 'Gabriello', 'Gerald Herrera', 'rsori013@ucr.edu', '09052752202', 'Service', '2025-03-22', '01:00:00', 'pending', '2025-03-22 10:24:29');
-
 -- Dumping structure for table asr.branches
 CREATE TABLE IF NOT EXISTS `branches` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
@@ -119,7 +95,7 @@ CREATE TABLE IF NOT EXISTS `branches` (
 ) ENGINE=InnoDB AUTO_INCREMENT=9 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- Dumping data for table asr.branches: ~2 rows (approximately)
-INSERT INTO `branches` (`id`, `name`) VALUES
+REPLACE INTO `branches` (`id`, `name`) VALUES
 	(6, 'Katipunan'),
 	(7, 'Zabarte');
 
@@ -134,7 +110,7 @@ CREATE TABLE IF NOT EXISTS `contact_info` (
 ) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- Dumping data for table asr.contact_info: ~1 rows (approximately)
-INSERT INTO `contact_info` (`id`, `phone`, `facebook`, `instagram`, `twitter`) VALUES
+REPLACE INTO `contact_info` (`id`, `phone`, `facebook`, `instagram`, `twitter`) VALUES
 	(1, '+63 9123456789', 'https://www.facebook.com/ASRSpaPH', 'https://www.facebook.com/ASRSpaPH', 'https://www.facebook.com/ASRSpaPH');
 
 -- Dumping structure for table asr.faqs
@@ -145,8 +121,8 @@ CREATE TABLE IF NOT EXISTS `faqs` (
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=1017 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
--- Dumping data for table asr.faqs: ~4 rows (approximately)
-INSERT INTO `faqs` (`id`, `question`, `answer`) VALUES
+-- Dumping data for table asr.faqs: ~6 rows (approximately)
+REPLACE INTO `faqs` (`id`, `question`, `answer`) VALUES
 	(1011, 'Question 1', 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt...'),
 	(1012, 'Question 2', 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt...'),
 	(1013, 'Question 3', 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt...'),
@@ -175,8 +151,8 @@ CREATE TABLE IF NOT EXISTS `products` (
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=1022 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
--- Dumping data for table asr.products: ~1 rows (approximately)
-INSERT INTO `products` (`id`, `name`, `description`, `price`, `file_url`) VALUES
+-- Dumping data for table asr.products: ~4 rows (approximately)
+REPLACE INTO `products` (`id`, `name`, `description`, `price`, `file_url`) VALUES
 	(1018, 'Product 1', 'Description for Product 1', 499.00, 'http://localhost/admin_dashboard_backend/uploads/spongebob.webp'),
 	(1019, 'Product 2', 'Description for Product 2', 599.00, 'http://localhost/admin_dashboard_backend/uploads/tomjerry.jpg'),
 	(1020, 'Product 3', 'Description for Product 3', 999.00, 'http://localhost/admin_dashboard_backend/uploads/spongebob.webp'),
@@ -200,7 +176,7 @@ CREATE TABLE IF NOT EXISTS `promos` (
 ) ENGINE=InnoDB AUTO_INCREMENT=14 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- Dumping data for table asr.promos: ~4 rows (approximately)
-INSERT INTO `promos` (`id`, `name`, `description`, `price`, `file_url`, `start_date`, `end_date`, `duration`, `created_at`, `updated_at`, `branch_ids`, `staff_ids`) VALUES
+REPLACE INTO `promos` (`id`, `name`, `description`, `price`, `file_url`, `start_date`, `end_date`, `duration`, `created_at`, `updated_at`, `branch_ids`, `staff_ids`) VALUES
 	(10, 'ASR Gluta IV Push or Vit C Drip', 'For Immune System Booster W/ Whitening (5+1 Promo), +1 or 5 Treatment Points', 399.00, 'http://localhost/admin_dashboard_backend/uploads/67e01dd211554-bart.jpg', '2025-03-23 22:42:00', '2025-03-31 22:42:00', 1, '2025-03-23 14:42:26', '2025-03-23 14:42:26', NULL, NULL),
 	(11, 'ASR Immunomax Drip', 'High Dose IV Vitamin C for whitening and to counteract. FREE Radicals, Tumors and Cancer Cells (5+1 Promo), +1 or 10 Treatment Points', 7495.00, 'http://localhost/admin_dashboard_backend/uploads/67e01e47491f1-67e01dd211554-bart.jpg', '2025-03-23 22:44:00', '2025-03-31 22:44:00', 3, '2025-03-23 14:44:23', '2025-03-23 14:44:23', NULL, NULL),
 	(12, 'ASR Pure Glow Drip', 'Single Dose Glutathione Drip with thioctic acid for Whitening, Multivitamins and Kojic Acid (5+1 Promo), +1 or 10 Treatment Points', 6495.00, 'http://localhost/admin_dashboard_backend/uploads/67e01eb758334-spongebob.webp', '2025-03-23 22:46:00', '2025-03-31 22:46:00', 1, '2025-03-23 14:46:15', '2025-03-23 14:46:15', NULL, NULL),
@@ -216,8 +192,8 @@ CREATE TABLE IF NOT EXISTS `promo_branches` (
   CONSTRAINT `promo_branches_ibfk_2` FOREIGN KEY (`branch_id`) REFERENCES `branches` (`id`) ON DELETE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
--- Dumping data for table asr.promo_branches: ~7 rows (approximately)
-INSERT INTO `promo_branches` (`promo_id`, `branch_id`) VALUES
+-- Dumping data for table asr.promo_branches: ~4 rows (approximately)
+REPLACE INTO `promo_branches` (`promo_id`, `branch_id`) VALUES
 	(10, 7),
 	(11, 6),
 	(12, 7),
@@ -234,7 +210,7 @@ CREATE TABLE IF NOT EXISTS `promo_staff` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- Dumping data for table asr.promo_staff: ~9 rows (approximately)
-INSERT INTO `promo_staff` (`promo_id`, `staff_id`) VALUES
+REPLACE INTO `promo_staff` (`promo_id`, `staff_id`) VALUES
 	(10, 3),
 	(10, 8),
 	(11, 1),
@@ -257,7 +233,7 @@ CREATE TABLE IF NOT EXISTS `services` (
 ) ENGINE=InnoDB AUTO_INCREMENT=19 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- Dumping data for table asr.services: ~9 rows (approximately)
-INSERT INTO `services` (`id`, `name`, `description`, `price`, `file_url`, `duration`) VALUES
+REPLACE INTO `services` (`id`, `name`, `description`, `price`, `file_url`, `duration`) VALUES
 	(10, 'Deep Cleansing Facial', 'Deep Cleansing Facial', 399.00, 'uploads/dora.jpg', 1),
 	(11, 'Acne Control Facial', 'Acne Control Facial', 499.00, 'uploads/hellokitty.png', 2),
 	(12, 'Intensive Whitening Facial', 'Intensive Whitening Facial', 499.00, 'uploads/tomjerry.jpg', 2),
@@ -278,8 +254,8 @@ CREATE TABLE IF NOT EXISTS `service_branches` (
   CONSTRAINT `service_branches_ibfk_2` FOREIGN KEY (`branch_id`) REFERENCES `branches` (`id`) ON DELETE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
--- Dumping data for table asr.service_branches: ~0 rows (approximately)
-INSERT INTO `service_branches` (`service_id`, `branch_id`) VALUES
+-- Dumping data for table asr.service_branches: ~10 rows (approximately)
+REPLACE INTO `service_branches` (`service_id`, `branch_id`) VALUES
 	(10, 6),
 	(10, 7),
 	(11, 6),
@@ -301,8 +277,8 @@ CREATE TABLE IF NOT EXISTS `service_staff` (
   CONSTRAINT `service_staff_ibfk_2` FOREIGN KEY (`staff_id`) REFERENCES `staff` (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
--- Dumping data for table asr.service_staff: ~0 rows (approximately)
-INSERT INTO `service_staff` (`service_id`, `staff_id`) VALUES
+-- Dumping data for table asr.service_staff: ~20 rows (approximately)
+REPLACE INTO `service_staff` (`service_id`, `staff_id`) VALUES
 	(10, 1),
 	(10, 4),
 	(10, 3),
@@ -335,12 +311,12 @@ CREATE TABLE IF NOT EXISTS `staff` (
 ) ENGINE=InnoDB AUTO_INCREMENT=12 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- Dumping data for table asr.staff: ~5 rows (approximately)
-INSERT INTO `staff` (`id`, `name`, `branch_id`) VALUES
-	(1, 'Armand Valdivieso', 6),
-	(3, 'Stephen', 7),
-	(4, 'Randolph Alvarado', 6),
-	(8, 'Ms Gonzales', 7),
-	(9, 'Mr. H2WO', 7);
+REPLACE INTO `staff` (`id`, `name`, `branch_id`) VALUES
+	(1, 'Ma. Agustherese Soreda', 6),
+	(3, 'Fritzie Y. Santos', 7),
+	(4, 'Ashley De Guzman', 6),
+	(8, 'Loraine Salamat', 7),
+	(9, 'Jucel Jordan', 7);
 
 -- Dumping structure for table asr.surgeries
 CREATE TABLE IF NOT EXISTS `surgeries` (
@@ -360,7 +336,7 @@ CREATE TABLE IF NOT EXISTS `surgeries` (
 ) ENGINE=InnoDB AUTO_INCREMENT=12 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- Dumping data for table asr.surgeries: ~4 rows (approximately)
-INSERT INTO `surgeries` (`id`, `title`, `description`, `start_date`, `end_date`, `price`, `image_url`, `duration`, `created_at`, `updated_at`, `branch_ids`, `staff_ids`) VALUES
+REPLACE INTO `surgeries` (`id`, `title`, `description`, `start_date`, `end_date`, `price`, `image_url`, `duration`, `created_at`, `updated_at`, `branch_ids`, `staff_ids`) VALUES
 	(2, 'Surgery 1', 'This is the description for Surgery 1', '2025-03-23 00:00:00', '2025-03-31 00:00:00', 9998.00, 'http://localhost/admin_dashboard_backend/uploads/surgeries/67e020c02c2e7-spongebob.webp', 12, '2025-03-19 20:57:12', '2025-03-23 14:54:56', '["6","7"]', '["1","3","4","8","9"]'),
 	(4, 'Surgery 2', 'This is the description for Surgery 1', '2025-03-23 00:00:00', '2025-03-31 00:00:00', 10998.00, 'http://localhost/admin_dashboard_backend/uploads/surgeries/67e020d2f31b1-tomjerry.jpg', 6, '2025-03-23 08:36:02', '2025-03-23 14:55:53', NULL, NULL),
 	(5, 'Surgery 3', 'This is the description for Surgery 3', '2025-03-23 00:00:00', '2025-03-31 00:00:00', 12999.00, 'http://localhost/admin_dashboard_backend/uploads/surgeries/67e02149c58e4-tomjerry.jpg', 11, '2025-03-23 08:56:09', '2025-03-23 14:57:13', 'Array', 'Array'),
@@ -376,8 +352,8 @@ CREATE TABLE IF NOT EXISTS `surgery_branches` (
   CONSTRAINT `surgery_branches_ibfk_2` FOREIGN KEY (`branch_id`) REFERENCES `branches` (`id`) ON DELETE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
--- Dumping data for table asr.surgery_branches: ~9 rows (approximately)
-INSERT INTO `surgery_branches` (`surgery_id`, `branch_id`) VALUES
+-- Dumping data for table asr.surgery_branches: ~8 rows (approximately)
+REPLACE INTO `surgery_branches` (`surgery_id`, `branch_id`) VALUES
 	(2, 6),
 	(2, 7),
 	(4, 6),
@@ -397,8 +373,8 @@ CREATE TABLE IF NOT EXISTS `surgery_staff` (
   CONSTRAINT `surgery_staff_ibfk_2` FOREIGN KEY (`staff_id`) REFERENCES `staff` (`id`) ON DELETE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
--- Dumping data for table asr.surgery_staff: ~15 rows (approximately)
-INSERT INTO `surgery_staff` (`surgery_id`, `staff_id`) VALUES
+-- Dumping data for table asr.surgery_staff: ~13 rows (approximately)
+REPLACE INTO `surgery_staff` (`surgery_id`, `staff_id`) VALUES
 	(2, 1),
 	(2, 3),
 	(2, 4),
@@ -430,7 +406,7 @@ CREATE TABLE IF NOT EXISTS `users` (
 ) ENGINE=InnoDB AUTO_INCREMENT=59 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- Dumping data for table asr.users: ~6 rows (approximately)
-INSERT INTO `users` (`id`, `first_name`, `middle_initial`, `last_name`, `email`, `password`, `contact_no`, `verified`, `verification_token`, `role`) VALUES
+REPLACE INTO `users` (`id`, `first_name`, `middle_initial`, `last_name`, `email`, `password`, `contact_no`, `verified`, `verification_token`, `role`) VALUES
 	(35, 'Randolph', 'M', 'Alvarado', 'alvaradorandolph@gmail.com', '$2y$10$k6Agkx6/Tzh9jzQhLQMkgOUFMmhYERgG6TxEKsjzVJTAmoYlGdHTm', '09052752202', 1, NULL, 'customer'),
 	(40, 'Randolph', 'M', 'Alvarado', 'xere.sa.12@gmail.com', '$2y$10$LAm7aelI1Gwv2rduso08S.Pctik1AjK6/BNKMBqjOXeTWMpPakta2', '09232228423', 1, NULL, 'admin'),
 	(44, 'Gabriello', 'A', 'Gerald Herrera', 'gabgerald@yahoo.com', '$2y$10$GCPNaNqPAOrPqXLxRokbJ.cFnQwhGsLfZeCBYHEtMMSBX2JJapSo6', '09428098248', 1, NULL, 'admin'),

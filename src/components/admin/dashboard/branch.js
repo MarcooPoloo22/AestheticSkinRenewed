@@ -156,10 +156,17 @@ const ManageBranchEdit = ({ setActivePage, branch, fetchBranches }) => {
   const fetchStaff = async () => {
     try {
       const response = await fetch(
-        `http://localhost/admin_dashboard_backend/branch_fetch_staff.php?branch_id=${branch.id}`
+        `http://localhost/admin_dashboard_backend/branch_fetch_staff.php?branch_ids=${branch.id}`
       );
-      const data = await response.json();
-      setStaff(data);
+      if (!response.ok) {
+        throw new Error("Failed to fetch staff");
+      }
+      const resData = await response.json();
+      if (resData.success) {
+        setStaff(resData.data);
+      } else {
+        throw new Error(resData.message);
+      }
     } catch (error) {
       console.error("Error fetching staff:", error);
     }
@@ -467,13 +474,13 @@ const Branch = () => {
   const fetchBranches = async () => {
     try {
       const response = await fetch(
-        "http://localhost/admin_dashboard_backend/branch_fetch_branches.php"
+        "http://localhost/admin_dashboard_backend/branching_fetch_branches.php"
       );
-      if (!response.ok) {
-        throw new Error("Failed to fetch branches");
+      const resData = await response.json();
+      if (!response.ok || !resData.success) {
+        throw new Error(resData.message || "Failed to fetch branches");
       }
-      const data = await response.json();
-      setBranches(data);
+      setBranches(resData.data);
     } catch (error) {
       setError(error.message);
     } finally {

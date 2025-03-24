@@ -38,19 +38,21 @@ const Button = ({ children, onClick, isActive }) => (
   </button>
 );
 
-const Header = ({ onLogout }) => (
-  <nav className="header">
-    <div className="admin-header">
-      <div className="admin">
-        <span className="admin-name">Administrator</span>
+const Header = ({ onLogout }) => {
+  return (
+    <nav className="header">
+      <div className="admin-header">
+        <div className="admin">
+          <span className="admin-name">Gwen</span>
+          <span className="role">Administrator</span>
+        </div>
+        <button className="admin-logout" onClick={onLogout}>
+          <TbLogout2 style={{ marginRight: "4px" }} />
+          Log Out
+        </button>
       </div>
-      <button className="admin-logout" onClick={onLogout}>
-        <TbLogout2 style={{ marginRight: 4 }} />
-        Log Out
-      </button>
-    </div>
   </nav>
-);
+);}
 
 const Dashboard = ({ isLoggedIn, user, setUser, setIsLoggedIn }) => {
   const [activePage, setActivePage] = useState("Home");
