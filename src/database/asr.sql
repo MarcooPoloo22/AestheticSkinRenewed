@@ -14,6 +14,11 @@
 /*!40101 SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='NO_AUTO_VALUE_ON_ZERO' */;
 /*!40111 SET @OLD_SQL_NOTES=@@SQL_NOTES, SQL_NOTES=0 */;
 
+
+-- Dumping database structure for asr
+CREATE DATABASE IF NOT EXISTS `asr` /*!40100 DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci */;
+USE `asr`;
+
 -- Dumping structure for table asr.audit_logs
 CREATE TABLE IF NOT EXISTS `audit_logs` (
   `audit_id` int(11) NOT NULL AUTO_INCREMENT,
@@ -98,23 +103,27 @@ CREATE TABLE IF NOT EXISTS `bookings` (
   `service_type` varchar(255) NOT NULL,
   `appointment_date` date NOT NULL,
   `appointment_time` time NOT NULL,
-  `status` enum('pending','confirmed','cancelled') DEFAULT 'pending',
+  `status` enum('pending','completed','cancelled') NOT NULL DEFAULT 'pending',
   `created_at` timestamp NOT NULL DEFAULT current_timestamp(),
   `staff_id` int(11) NOT NULL DEFAULT 0,
   `branch_id` int(11) NOT NULL,
+  `rating` int(11) DEFAULT NULL,
+  `file_url` varchar(255) DEFAULT NULL COMMENT 'Stores URL/path to image files',
   PRIMARY KEY (`id`),
   KEY `user_id` (`user_id`),
   KEY `fk_staff` (`staff_id`),
   CONSTRAINT `bookings_ibfk_1` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`) ON DELETE SET NULL,
   CONSTRAINT `fk_staff` FOREIGN KEY (`staff_id`) REFERENCES `staff` (`id`) ON DELETE CASCADE
-) ENGINE=InnoDB AUTO_INCREMENT=9 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=11 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
--- Dumping data for table asr.bookings: ~4 rows (approximately)
-INSERT INTO `bookings` (`id`, `user_id`, `first_name`, `last_name`, `email`, `contact_no`, `service_type`, `appointment_date`, `appointment_time`, `status`, `created_at`, `staff_id`, `branch_id`) VALUES
-	(5, 35, 'Randolph', 'Alvarado', 'alvaradorandolph@gmail.com', '09052752202', 'Service', '2025-03-23', '09:00:00', 'pending', '2025-03-24 02:02:29', 4, 6),
-	(6, 35, 'Randolph', 'Alvarado', 'alvaradorandolph@gmail.com', '09052752202', 'Service', '2025-03-23', '09:00:00', 'pending', '2025-03-24 02:44:01', 1, 6),
-	(7, NULL, 'Se', 'Sel', 'sel@gmail.com', '0912314567', 'Service', '2025-03-23', '02:00:00', 'pending', '2025-03-24 02:47:12', 1, 6),
-	(8, NULL, 'Gabriello', 'Gerald Herrera', 'rsori013@ucr.edu', '09760314957', 'Promo', '2025-03-19', '11:00:00', 'pending', '2025-03-24 08:39:07', 3, 7);
+-- Dumping data for table asr.bookings: ~6 rows (approximately)
+INSERT INTO `bookings` (`id`, `user_id`, `first_name`, `last_name`, `email`, `contact_no`, `service_type`, `appointment_date`, `appointment_time`, `status`, `created_at`, `staff_id`, `branch_id`, `rating`, `file_url`) VALUES
+	(5, 35, 'Randolph', 'Alvarado', 'alvaradorandolph@gmail.com', '09052752202', 'Service', '2025-03-23', '09:00:00', 'completed', '2025-03-24 02:02:29', 4, 6, 3, NULL),
+	(6, 35, 'Randolph', 'Alvarado', 'alvaradorandolph@gmail.com', '09052752202', 'Service', '2025-03-23', '09:00:00', 'completed', '2025-03-24 02:44:01', 1, 6, NULL, NULL),
+	(7, NULL, 'Se', 'Sel', 'sel@gmail.com', '0912314567', 'Service', '2025-03-23', '02:00:00', 'completed', '2025-03-24 02:47:12', 1, 6, NULL, NULL),
+	(8, 35, 'Randolph', 'Alvarado', 'alvaradorandolph@gmail.com', '09052752202', 'Service', '2025-03-24', '09:00:00', 'pending', '2025-03-24 12:35:44', 1, 6, NULL, NULL),
+	(9, 35, 'Randolph', 'Alvarado', 'alvaradorandolph@gmail.com', '09052752202', 'Service', '2025-03-24', '09:00:00', 'pending', '2025-03-24 12:36:02', 4, 6, NULL, NULL),
+	(10, 35, 'Randolph', 'Alvarado', 'alvaradorandolph@gmail.com', '09052752202', 'Promo', '2025-03-24', '10:00:00', 'pending', '2025-03-24 12:38:38', 1, 6, NULL, NULL);
 
 -- Dumping structure for table asr.branches
 CREATE TABLE IF NOT EXISTS `branches` (

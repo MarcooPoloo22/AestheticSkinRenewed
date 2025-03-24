@@ -1,8 +1,11 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import Swal from "sweetalert2";
+import withReactContent from "sweetalert2-react-content";
 import "../../styles/customer/BookingPage.css";
 import "bootstrap/dist/css/bootstrap.min.css";
+
+const MySwal = withReactContent(Swal);
 
 const BookingPageRegistered = ({ user }) => {
   const [formData, setFormData] = useState({
@@ -19,9 +22,10 @@ const BookingPageRegistered = ({ user }) => {
   const [staffList, setStaffList] = useState([]);
   const [bookedSlots, setBookedSlots] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
+  const [paymentDetails, setPaymentDetails] = useState(null);
+  const [isLoadingPayment, setIsLoadingPayment] = useState(false);
   const navigate = useNavigate();
 
-  // Redirect if user is not logged in
   useEffect(() => {
     if (!user) {
       Swal.fire({
@@ -34,7 +38,6 @@ const BookingPageRegistered = ({ user }) => {
     }
   }, [user, navigate]);
 
-  // Fetch services based on service type
   useEffect(() => {
     if (formData.service_type) {
       fetch(`http://localhost/admin_dashboard_backend/bookingpage_services.php?type=${formData.service_type}`)
@@ -47,7 +50,6 @@ const BookingPageRegistered = ({ user }) => {
     }
   }, [formData.service_type]);
 
-  // Fetch branches based on selected service
   useEffect(() => {
     if (formData.service) {
       fetch(`http://localhost/admin_dashboard_backend/bookingpage_branches.php?serviceId=${encodeURIComponent(formData.service)}`)
@@ -77,7 +79,6 @@ const BookingPageRegistered = ({ user }) => {
     }
   }, [formData.service]);
 
-  // Fetch staff based on selected branch
   useEffect(() => {
     if (formData.branch_id) {
       fetch(`http://localhost/admin_dashboard_backend/bookingpage_staff.php?branchId=${encodeURIComponent(formData.branch_id)}`, {
@@ -112,7 +113,6 @@ const BookingPageRegistered = ({ user }) => {
     }
   }, [formData.branch_id]);
 
-  // Fetch booked slots for the selected date and staff
   useEffect(() => {
     if (formData.appointment_date && formData.staff_id) {
       setIsLoading(true);
@@ -151,19 +151,81 @@ const BookingPageRegistered = ({ user }) => {
     setFormData({ ...formData, [name]: value });
   };
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    console.log("Form Data:", formData);
+  const showPaymentModal = (paymentData) => {
+    MySwal.fire({
+      html: (
+        <>
+          <div className="booking-container">
+            <img
+              src="./assets/asr_bookinghead.jpg"
+              alt="Booking Background"
+              className="booking-bg"
+            />
+            <h1 className="booking-title">Booking Appointment</h1>
+          </div>
+          <br />
+          <div className="white-box my-5">
+            <div className="container">
+              <p 
+                style={{
+                  fontSize: "1.5rem",
+                  fontWeight: "bold",
+                  color: "#4169E1",
+                  textAlign: "center",
+                  textTransform: "uppercase",
+                  marginBottom: "20px"
+                }}
+              >
+                Minimum 50% Down Payment Required
+              </p>
 
-    if (!user) {
-      Swal.fire({
-        icon: "error",
-        title: "Not Logged In",
-        text: "You need to log in to book an appointment.",
-      });
-      return;
-    }
+              <p className="gcash-label">GCash payment Details</p>
+              <p className="gcash-details">GCash Number: {paymentData.gcash_number}</p>
+              <p className="gcash-details">GCash Name: {paymentData.gcash_name}</p>
+              <p className="gcash-details">Amount: {paymentData.gcash_amount}</p>
+              
+              <p className="paymaya-label">PayMaya payment Details</p>
+              <p className="paymaya-details">PayMaya Number: {paymentData.paymaya_number}</p>
+              <p className="paymaya-details">PayMaya Name: {paymentData.paymaya_name}</p>
+              <p className="paymaya-details">Amount: {paymentData.paymaya_amount}</p>
+              
+              <p className="bank-label">Bank payment Details</p>
+              <p className="bank-details">Bank: {paymentData.bank_name}</p>
+              <p className="bank-details">Account Number: {paymentData.bank_account_number}</p>
+              <p className="bank-details">Account Name: {paymentData.bank_account_name}</p>
+              <p className="bank-details">Amount: {paymentData.bank_amount}</p>
+              
+              <div className="mb-3">
+                <p className="receipt-label">Upload Payment Receipt</p>
+                <input className="form-control" type="file" id="formFileMultiple" multiple />
+              </div>
+              
+              <div className="d-grid gap-2 col-6 mx-auto">
+                <br />
+                <button 
+                  className="btn btn-payment" 
+                  type="button"
+                  onClick={() => {
+                    MySwal.close();
+                    handleAppointmentSubmission();
+                  }}
+                >
+                  Submit Payment
+                </button>
+              </div>
+            </div>
+          </div>
+        </>
+      ),
+      showConfirmButton: false,
+      width: '80%',
+      customClass: {
+        popup: 'sweet-alert-popup'
+      }
+    });
+  };
 
+  const handleAppointmentSubmission = async () => {
     try {
       const response = await fetch("http://localhost/booking.php", {
         method: "POST",
@@ -185,7 +247,6 @@ const BookingPageRegistered = ({ user }) => {
       });
 
       const result = await response.json();
-      console.log("Response:", result);
 
       if (result.status === "success") {
         Swal.fire({
@@ -210,6 +271,49 @@ const BookingPageRegistered = ({ user }) => {
         text: "An error occurred while booking the appointment.",
       });
     }
+  };
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    console.log("Form Data:", formData);
+
+    if (!user) {
+      Swal.fire({
+        icon: "error",
+        title: "Not Logged In",
+        text: "You need to log in to book an appointment.",
+      });
+      return;
+    }
+
+    if (formData.service_type === "Surgery") {
+      setIsLoadingPayment(true);
+      try {
+        const response = await fetch("http://localhost/admin_dashboard_backend/fetch_payment_details.php");
+        if (!response.ok) throw new Error("Failed to fetch payment details");
+        const result = await response.json();
+        
+        if (!result.data || !result.data.gcash_number) {
+          throw new Error("Invalid payment details format");
+        }
+        
+        setPaymentDetails(result);
+        showPaymentModal(result.data);
+      } catch (error) {
+        console.error("Error fetching payment details:", error);
+        MySwal.fire({
+          title: "Error!",
+          text: error.message,
+          icon: "error",
+          confirmButtonText: "OK",
+        });
+      } finally {
+        setIsLoadingPayment(false);
+      }
+      return;
+    }
+
+    handleAppointmentSubmission();
   };
 
   const timeSlots = [
@@ -374,8 +478,10 @@ const BookingPageRegistered = ({ user }) => {
               className="btn btn-primary"
               type="button"
               onClick={handleSubmit}
+              disabled={isLoadingPayment}
             >
-              Book Appointment
+              {isLoadingPayment ? "Loading..." : 
+               formData.service_type === "Surgery" ? "Continue to Payment" : "Book Appointment"}
             </button>
           </div>
         </div>
@@ -391,6 +497,7 @@ const BookingPageGuest = () => {
     email: "",
     contact_no: "",
     service_type: "",
+    service: "",
     branch_id: "",
     staff_id: "",
     appointment_date: "",
@@ -402,9 +509,10 @@ const BookingPageGuest = () => {
   const [staffList, setStaffList] = useState([]);
   const [bookedSlots, setBookedSlots] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
+  const [paymentDetails, setPaymentDetails] = useState(null);
+  const [isLoadingPayment, setIsLoadingPayment] = useState(false);
   const navigate = useNavigate();
 
-  // Fetch services based on service type
   useEffect(() => {
     if (formData.service_type) {
       fetch(`http://localhost/admin_dashboard_backend/bookingpage_services.php?type=${formData.service_type}`)
@@ -417,7 +525,6 @@ const BookingPageGuest = () => {
     }
   }, [formData.service_type]);
 
-  // Fetch branches based on selected service
   useEffect(() => {
     if (formData.service) {
       fetch(`http://localhost/admin_dashboard_backend/bookingpage_branches.php?serviceId=${encodeURIComponent(formData.service)}`)
@@ -447,7 +554,6 @@ const BookingPageGuest = () => {
     }
   }, [formData.service]);
 
-  // Fetch staff based on selected branch
   useEffect(() => {
     if (formData.branch_id) {
       fetch(`http://localhost/admin_dashboard_backend/bookingpage_staff.php?branchId=${encodeURIComponent(formData.branch_id)}`, {
@@ -482,7 +588,6 @@ const BookingPageGuest = () => {
     }
   }, [formData.branch_id]);
 
-  // Fetch booked slots for the selected date and staff
   useEffect(() => {
     if (formData.appointment_date && formData.staff_id) {
       setIsLoading(true);
@@ -521,10 +626,81 @@ const BookingPageGuest = () => {
     setFormData({ ...formData, [name]: value });
   };
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    console.log("Form Data:", formData);
+  const showPaymentModal = (paymentData) => {
+    MySwal.fire({
+      html: (
+        <>
+          <div className="booking-container">
+            <img
+              src="./assets/bookinghead.jpg"
+              alt="Booking Background"
+              className="booking-bg"
+            />
+            <h1 className="booking-title">Upload Payment</h1>
+          </div>
+          <br />
+          <div className="white-box my-5">
+            <div className="container">
+              <p 
+                style={{
+                  fontSize: "1.5rem",
+                  fontWeight: "bold",
+                  color: "#4169E1",
+                  textAlign: "center",
+                  textTransform: "uppercase",
+                  marginBottom: "20px"
+                }}
+              >
+                Minimum 50% Down Payment Required
+              </p>
 
+              <p className="gcash-label">GCash payment Details</p>
+              <p className="gcash-details">GCash Number: {paymentData.gcash_number}</p>
+              <p className="gcash-details">GCash Name: {paymentData.gcash_name}</p>
+              <p className="gcash-details">Amount: {paymentData.gcash_amount}</p>
+              
+              <p className="paymaya-label">PayMaya payment Details</p>
+              <p className="paymaya-details">PayMaya Number: {paymentData.paymaya_number}</p>
+              <p className="paymaya-details">PayMaya Name: {paymentData.paymaya_name}</p>
+              <p className="paymaya-details">Amount: {paymentData.paymaya_amount}</p>
+              
+              <p className="bank-label">Bank payment Details</p>
+              <p className="bank-details">Bank: {paymentData.bank_name}</p>
+              <p className="bank-details">Account Number: {paymentData.bank_account_number}</p>
+              <p className="bank-details">Account Name: {paymentData.bank_account_name}</p>
+              <p className="bank-details">Amount: {paymentData.bank_amount}</p>
+              
+              <div className="mb-3">
+                <p className="receipt-label">Upload Payment Receipt</p>
+                <input className="form-control" type="file" id="formFileMultiple" multiple />
+              </div>
+              
+              <div className="d-grid gap-2 col-6 mx-auto">
+                <br />
+                <button 
+                  className="btn btn-payment" 
+                  type="button"
+                  onClick={() => {
+                    MySwal.close();
+                    handleAppointmentSubmission();
+                  }}
+                >
+                  Submit Payment
+                </button>
+              </div>
+            </div>
+          </div>
+        </>
+      ),
+      showConfirmButton: false,
+      width: '80%',
+      customClass: {
+        popup: 'sweet-alert-popup'
+      }
+    });
+  };
+
+  const handleAppointmentSubmission = async () => {
     try {
       const response = await fetch("http://localhost/booking.php", {
         method: "POST",
@@ -546,7 +722,6 @@ const BookingPageGuest = () => {
       });
 
       const result = await response.json();
-      console.log("Response:", result);
 
       if (result.status === "success") {
         Swal.fire({
@@ -575,6 +750,40 @@ const BookingPageGuest = () => {
         text: "An error occurred while booking the appointment.",
       });
     }
+  };
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    console.log("Form Data:", formData);
+
+    if (formData.service_type === "Surgery") {
+      setIsLoadingPayment(true);
+      try {
+        const response = await fetch("http://localhost/admin_dashboard_backend/fetch_payment_details.php");
+        if (!response.ok) throw new Error("Failed to fetch payment details");
+        const result = await response.json();
+        
+        if (!result.data || !result.data.gcash_number) {
+          throw new Error("Invalid payment details format");
+        }
+        
+        setPaymentDetails(result);
+        showPaymentModal(result.data);
+      } catch (error) {
+        console.error("Error fetching payment details:", error);
+        MySwal.fire({
+          title: "Error!",
+          text: error.message,
+          icon: "error",
+          confirmButtonText: "OK",
+        });
+      } finally {
+        setIsLoadingPayment(false);
+      }
+      return;
+    }
+
+    handleAppointmentSubmission();
   };
 
   const timeSlots = [
@@ -790,8 +999,10 @@ const BookingPageGuest = () => {
               className="btn btn-primary"
               type="button"
               onClick={handleSubmit}
+              disabled={isLoadingPayment}
             >
-              Book Appointment
+              {isLoadingPayment ? "Loading..." : 
+               formData.service_type === "Surgery" ? "Continue to Payment" : "Book Appointment"}
             </button>
           </div>
         </div>
