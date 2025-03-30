@@ -95,11 +95,11 @@ const Epcategory2 = () => {
                       <div className="mt-auto">
                         <Card.Text className="ezy__epcategory2-price text-center">Price: ₱{promo.price}</Card.Text>
                         <Link 
-                          className="btn btn-primary w-100 mt-2" 
-                          to={`/booking/${promo.id}`} 
+                          className="btn btn-primary w-100 mt-2 d-flex justify-content-center align-items-center" 
+                           to={`/booking/${promo.id}`} 
                           role="button"
                         >
-                          Book Now!
+                         Book Now!
                         </Link>
                       </div>
                     </Card.Body>
