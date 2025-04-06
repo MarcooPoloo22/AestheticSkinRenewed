@@ -52,7 +52,7 @@ const BookingPageRegistered = ({ user }) => {
 
   useEffect(() => {
     if (formData.service) {
-      fetch(`http://localhost/admin_dashboard_backend/bookingpage_branches.php?serviceId=${encodeURIComponent(formData.service)}`)
+      fetch(`http://localhost/admin_dashboard_backend/bookingpage_branches.php?serviceId=${encodeURIComponent(formData.service)}&type=${formData.service_type}`)
         .then((response) => {
           if (!response.ok) {
             throw new Error('Network response was not ok');
@@ -527,7 +527,7 @@ const BookingPageGuest = () => {
 
   useEffect(() => {
     if (formData.service) {
-      fetch(`http://localhost/admin_dashboard_backend/bookingpage_branches.php?serviceId=${encodeURIComponent(formData.service)}`)
+      fetch(`http://localhost/admin_dashboard_backend/bookingpage_branches.php?serviceId=${encodeURIComponent(formData.service)}&type=${formData.service_type}`)
         .then((response) => {
           if (!response.ok) {
             throw new Error('Network response was not ok');

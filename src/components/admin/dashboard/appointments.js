@@ -4,7 +4,8 @@ import Swal from "sweetalert2";
 import { FaRegTrashAlt, FaRegEdit } from "react-icons/fa";
 import { IoArrowBackOutline } from "react-icons/io5";
 import { CiSearch } from "react-icons/ci";
-/*import "../../../styles/admin/dashboard/appointment.css";*/
+import "../../../styles/admin/dashboard/faqs.css";
+
 
 const customStyles = {
   pagination: {
@@ -222,7 +223,7 @@ const ManageAppointmentEdit = ({
       ? appointment.appointment_time.substring(0, 5)
       : "",
     status: appointment.status || "pending",
-    user_id: appointment.user_id || "", // ✅ Make sure it's retained
+    user_id: appointment.user_id || "",
   });
 
   useEffect(() => {
@@ -230,9 +231,6 @@ const ManageAppointmentEdit = ({
       .then(setServices)
       .catch(() => {});
     fetchBranches();
-
-    // ✅ Log for debug
-    console.log("Editing appointment:", appointment);
   }, []);
 
   useEffect(() => {
@@ -301,7 +299,6 @@ const ManageAppointmentEdit = ({
     formPayload.append("appointment_time", formData.appointment_time);
     formPayload.append("status", formData.status);
 
-    // ✅ Ensure user_id is submitted only if present
     if (formData.user_id !== "") {
       formPayload.append("user_id", formData.user_id);
     }
@@ -340,21 +337,22 @@ const ManageAppointmentEdit = ({
   };
 
   return (
-    <div className="appointment-main-container">
+    <div className="faq-main-container">
       <button
         onClick={() => setActivePage({ page: "AppointmentAppointments" })}
-        className="appointment-edit-backbutton"
+        className="faq-edit-backbutton"
       >
         <IoArrowBackOutline />
       </button>
-      <div className="appointment-edit">
+      <div className="faq-edit">
         <div className="align-left">
-          <p className="appointment-text">Edit Appointment</p>
+          <p className="faq-text">Edit Appointment</p>
         </div>
-        <form onSubmit={handleSubmit} className="appointment-edit-form">
+        <form onSubmit={handleSubmit} className="faq-edit">
           <div className="form-group">
-            <label htmlFor="firstNameInput">First Name</label>
+            <label className="questionLabel" htmlFor="firstNameInput">First Name</label>
             <input
+              className="questionInput"
               id="firstNameInput"
               name="first_name"
               value={formData.first_name}
@@ -364,8 +362,9 @@ const ManageAppointmentEdit = ({
             />
           </div>
           <div className="form-group">
-            <label htmlFor="lastNameInput">Last Name</label>
+            <label className="questionLabel" htmlFor="lastNameInput">Last Name</label>
             <input
+              className="questionInput"
               id="lastNameInput"
               name="last_name"
               value={formData.last_name}
@@ -375,8 +374,9 @@ const ManageAppointmentEdit = ({
             />
           </div>
           <div className="form-group">
-            <label htmlFor="emailInput">Email</label>
+            <label className="questionLabel" htmlFor="emailInput">Email</label>
             <input
+              className="questionInput"
               id="emailInput"
               type="email"
               name="email"
@@ -387,8 +387,9 @@ const ManageAppointmentEdit = ({
             />
           </div>
           <div className="form-group">
-            <label htmlFor="contactInput">Contact Number</label>
+            <label className="questionLabel" htmlFor="contactInput">Contact Number</label>
             <input
+              className="questionInput"
               id="contactInput"
               name="contact_no"
               value={formData.contact_no}
@@ -398,8 +399,9 @@ const ManageAppointmentEdit = ({
             />
           </div>
           <div className="form-group">
-            <label htmlFor="serviceSelect">Select Service:</label>
+            <label className="questionLabel" htmlFor="serviceSelect">Select Service:</label>
             <select
+              className="questionInput"
               id="serviceSelect"
               name="service_type"
               value={formData.service_type}
@@ -416,8 +418,9 @@ const ManageAppointmentEdit = ({
             </select>
           </div>
           <div className="form-group">
-            <label htmlFor="branchSelect">Select Branch:</label>
+            <label className="questionLabel" htmlFor="branchSelect">Select Branch:</label>
             <select
+              className="questionInput"
               id="branchSelect"
               name="branch_id"
               value={formData.branch_id}
@@ -433,8 +436,9 @@ const ManageAppointmentEdit = ({
             </select>
           </div>
           <div className="form-group">
-            <label htmlFor="staffSelect">Select Staff:</label>
+            <label className="questionLabel" htmlFor="staffSelect">Select Staff:</label>
             <select
+              className="questionInput"
               id="staffSelect"
               name="staff_id"
               value={formData.staff_id}
@@ -451,8 +455,9 @@ const ManageAppointmentEdit = ({
             </select>
           </div>
           <div className="form-group">
-            <label htmlFor="statusSelect">Status:</label>
+            <label className="questionLabel" htmlFor="statusSelect">Status:</label>
             <select
+              className="questionInput"
               id="statusSelect"
               name="status"
               value={formData.status}
@@ -465,9 +470,10 @@ const ManageAppointmentEdit = ({
             </select>
           </div>
           <div className="form-group">
-            <label htmlFor="dateInput">Date</label>
+            <label className="questionLabel" htmlFor="dateInput">Date</label>
             <input
               type="date"
+              className="questionInput"
               id="dateInput"
               name="appointment_date"
               value={formData.appointment_date}
@@ -476,9 +482,10 @@ const ManageAppointmentEdit = ({
             />
           </div>
           <div className="form-group">
-            <label htmlFor="timeInput">Time</label>
+            <label className="questionLabel" htmlFor="timeInput">Time</label>
             <input
               type="time"
+              className="questionInput"
               id="timeInput"
               name="appointment_time"
               value={formData.appointment_time}
@@ -496,7 +503,7 @@ const ManageAppointmentEdit = ({
 };
 
 // ---------------------
-// Manage Appointment Add Component (with Registered User selection)
+// Manage Appointment Add Component
 // ---------------------
 const ManageAppointmentAdd = ({ setActivePage, fetchAppointments }) => {
   const [services, setServices] = useState([]);
@@ -506,7 +513,7 @@ const ManageAppointmentAdd = ({ setActivePage, fetchAppointments }) => {
   const [loadingStaff, setLoadingStaff] = useState(false);
 
   const [formData, setFormData] = useState({
-    user_id: "", // If empty, appointment is for guest.
+    user_id: "",
     first_name: "",
     last_name: "",
     email: "",
@@ -571,21 +578,6 @@ const ManageAppointmentAdd = ({ setActivePage, fetchAppointments }) => {
     }
   };
 
-  const fetchRegisteredUsers = async () => {
-    try {
-      const response = await fetch(
-        "http://localhost/admin_dashboard_backend/fetch_users.php?role=customer"
-      );
-      if (!response.ok) throw new Error("Failed to fetch registered users");
-      const data = await response.json();
-      return data;
-    } catch (error) {
-      console.error("Error fetching registered users:", error);
-      return [];
-    }
-  };
-
-  // When a registered user is selected, auto-fill their info and disable editing.
   const handleUserSelect = (e) => {
     const selectedUserId = e.target.value;
     setFormData((prev) => ({ ...prev, user_id: selectedUserId }));
@@ -594,7 +586,6 @@ const ManageAppointmentAdd = ({ setActivePage, fetchAppointments }) => {
         (user) => String(user.id) === selectedUserId
       );
       if (selectedUser) {
-        // Split full name into first and last name.
         const nameParts = selectedUser.name.split(" ");
         const firstName = nameParts.shift();
         const lastName = nameParts.join(" ");
@@ -607,7 +598,6 @@ const ManageAppointmentAdd = ({ setActivePage, fetchAppointments }) => {
         }));
       }
     } else {
-      // Clear fields if "Guest" is chosen.
       setFormData((prev) => ({
         ...prev,
         first_name: "",
@@ -671,24 +661,24 @@ const ManageAppointmentAdd = ({ setActivePage, fetchAppointments }) => {
   };
 
   return (
-    <div className="appointment-main-container">
+    <div className="faq-main-container">
       <button
         onClick={() => setActivePage({ page: "AppointmentAppointments" })}
-        className="appointment-edit-backbutton"
+        className="faq-edit-backbutton"
       >
         <IoArrowBackOutline />
       </button>
-      <div className="appointment-edit">
+      <div className="faq-edit">
         <div className="align-left">
-          <p className="appointment-text">Add Appointment</p>
+          <p className="faq-text">Add Appointment</p>
         </div>
-        <form onSubmit={handleSubmit} className="appointment-edit-form">
-          {/* Registered User Selection */}
+        <form onSubmit={handleSubmit} className="faq-edit">
           <div className="form-group">
-            <label htmlFor="userSelect">
+            <label className="questionLabel" htmlFor="userSelect">
               Select Registered User (or choose Guest):
             </label>
             <select
+              className="questionInput"
               id="userSelect"
               name="user_id"
               value={formData.user_id}
@@ -703,8 +693,9 @@ const ManageAppointmentAdd = ({ setActivePage, fetchAppointments }) => {
             </select>
           </div>
           <div className="form-group">
-            <label htmlFor="firstNameInput">First Name</label>
+            <label className="questionLabel" htmlFor="firstNameInput">First Name</label>
             <input
+              className="questionInput"
               id="firstNameInput"
               name="first_name"
               value={formData.first_name}
@@ -714,8 +705,9 @@ const ManageAppointmentAdd = ({ setActivePage, fetchAppointments }) => {
             />
           </div>
           <div className="form-group">
-            <label htmlFor="lastNameInput">Last Name</label>
+            <label className="questionLabel" htmlFor="lastNameInput">Last Name</label>
             <input
+              className="questionInput"
               id="lastNameInput"
               name="last_name"
               value={formData.last_name}
@@ -725,8 +717,9 @@ const ManageAppointmentAdd = ({ setActivePage, fetchAppointments }) => {
             />
           </div>
           <div className="form-group">
-            <label htmlFor="emailInput">Email</label>
+            <label className="questionLabel" htmlFor="emailInput">Email</label>
             <input
+              className="questionInput"
               id="emailInput"
               type="email"
               name="email"
@@ -737,8 +730,9 @@ const ManageAppointmentAdd = ({ setActivePage, fetchAppointments }) => {
             />
           </div>
           <div className="form-group">
-            <label htmlFor="contactInput">Contact Number</label>
+            <label className="questionLabel" htmlFor="contactInput">Contact Number</label>
             <input
+              className="questionInput"
               id="contactInput"
               name="contact_no"
               value={formData.contact_no}
@@ -747,12 +741,10 @@ const ManageAppointmentAdd = ({ setActivePage, fetchAppointments }) => {
               disabled={!!formData.user_id}
             />
           </div>
-          {/* Service Selection as Dropdown */}
           <div className="form-group">
-            <label htmlFor="serviceSelect" className="questionLabel">
-              Select Service:
-            </label>
+            <label className="questionLabel" htmlFor="serviceSelect">Select Service:</label>
             <select
+              className="questionInput"
               id="serviceSelect"
               name="service_type"
               value={formData.service_type}
@@ -768,10 +760,10 @@ const ManageAppointmentAdd = ({ setActivePage, fetchAppointments }) => {
               ))}
             </select>
           </div>
-          {/* Branch Selection */}
           <div className="form-group">
-            <label htmlFor="branchSelect">Select Branch:</label>
+            <label className="questionLabel" htmlFor="branchSelect">Select Branch:</label>
             <select
+              className="questionInput"
               id="branchSelect"
               name="branch_id"
               value={formData.branch_id}
@@ -786,10 +778,10 @@ const ManageAppointmentAdd = ({ setActivePage, fetchAppointments }) => {
               ))}
             </select>
           </div>
-          {/* Staff Selection */}
           <div className="form-group">
-            <label htmlFor="staffSelect">Select Staff:</label>
+            <label className="questionLabel" htmlFor="staffSelect">Select Staff:</label>
             <select
+              className="questionInput"
               id="staffSelect"
               name="staff_id"
               value={formData.staff_id}
@@ -805,11 +797,11 @@ const ManageAppointmentAdd = ({ setActivePage, fetchAppointments }) => {
               ))}
             </select>
           </div>
-          {/* Appointment Date & Time */}
           <div className="form-group">
-            <label htmlFor="dateInput">Date</label>
+            <label className="questionLabel" htmlFor="dateInput">Date</label>
             <input
               type="date"
+              className="questionInput"
               id="dateInput"
               name="appointment_date"
               value={formData.appointment_date}
@@ -818,9 +810,10 @@ const ManageAppointmentAdd = ({ setActivePage, fetchAppointments }) => {
             />
           </div>
           <div className="form-group">
-            <label htmlFor="timeInput">Time</label>
+            <label className="questionLabel" htmlFor="timeInput">Time</label>
             <input
               type="time"
+              className="questionInput"
               id="timeInput"
               name="appointment_time"
               value={formData.appointment_time}
@@ -895,12 +888,12 @@ const AppointmentAppointments = () => {
   return (
     <>
       {activePage.page === "AppointmentAppointments" ? (
-        <div className="appointment-main-container">
-          <div className="appointment-header">
-            <p className="appointment-text">Appointments</p>
-            <div className="appointment-header-actions">
+        <div className="faq-main-container">
+          <div className="faq-header">
+            <p className="faq-text">Appointments</p>
+            <div className="faq-header-actions">
               <button
-                className="add-appointment-button"
+                className="add-faq-button"
                 style={{ width: "163px" }}
                 onClick={() => setActivePage({ page: "ManageAppointmentAdd" })}
               >
@@ -913,7 +906,7 @@ const AppointmentAppointments = () => {
                   placeholder="Search..."
                   value={searchText}
                   onChange={(e) => setSearchText(e.target.value)}
-                  className="appointment-search-bar"
+                  className="faq-search-bar"
                 />
               </div>
             </div>

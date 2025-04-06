@@ -7,7 +7,6 @@ $username = "root";
 $password = "";
 $dbname = "asr";
 
-// Get the type parameter from the request
 $type = isset($_GET['type']) ? $_GET['type'] : die(json_encode(array("error" => "Type parameter is required")));
 
 $conn = new mysqli($servername, $username, $password, $dbname);
@@ -15,25 +14,21 @@ if ($conn->connect_error) {
     die(json_encode(array("error" => "Connection failed: " . $conn->connect_error)));
 }
 
-// Determine the table name based on the type
 switch ($type) {
     case 'Promo':
-        $table = 'promos';
+        $query = "SELECT id, name FROM promos"; // Changed to use 'name' column
         break;
     case 'Service':
-        $table = 'services';
+        $query = "SELECT id, name FROM services";
         break;
     case 'Surgery':
-        $table = 'surgeries';
+        $query = "SELECT id, title AS name FROM surgeries";
         break;
     default:
         die(json_encode(array("error" => "Invalid type specified")));
 }
 
-// Query to fetch data from the appropriate table
-$query = "SELECT * FROM $table";
 $stmt = $conn->prepare($query);
-
 if (!$stmt) {
     die(json_encode(array("error" => "Prepare failed: " . $conn->error)));
 }
