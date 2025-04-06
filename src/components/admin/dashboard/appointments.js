@@ -4,7 +4,7 @@ import Swal from "sweetalert2";
 import { FaRegTrashAlt, FaRegEdit } from "react-icons/fa";
 import { IoArrowBackOutline } from "react-icons/io5";
 import { CiSearch } from "react-icons/ci";
-import "../../../styles/admin/dashboard/appointment.css";
+/*import "../../../styles/admin/dashboard/appointment.css";*/
 
 const customStyles = {
   pagination: {

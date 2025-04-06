@@ -99,7 +99,7 @@ const Epcategory2 = () => {
                            to={`/booking/${promo.id}`} 
                           role="button"
                         >
-                         Book Now!
+                         Book Noww!
                         </Link>
                       </div>
                     </Card.Body>
