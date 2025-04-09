@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import logo from "../../assets/admin/ASR Logo.png";
 import frame1 from "../../assets/admin/DashboardDesign.png";
-import welcome from "../../assets/admin/Welcome.png";
+import welcome from "../../assets/admin/Graphic Side.png";
 import "../../styles/admin/adminDashboard.css";
 import { TbLogout2 } from "react-icons/tb";
 import { RxDashboard } from "react-icons/rx";
@@ -11,6 +11,7 @@ import { LuMessageSquareMore } from "react-icons/lu";
 import { RiDiscountPercentLine, RiEditBoxLine } from "react-icons/ri";
 import { AiOutlineShopping } from "react-icons/ai";
 import { FaRegHandPaper } from "react-icons/fa";
+import { RiLockPasswordLine } from "react-icons/ri";
 import {
   MdOutlineMedicalServices,
   MdOutlineEditCalendar,
@@ -31,7 +32,8 @@ import Promos from "../../components/admin/dashboard/promos.js";
 import Services from "../../components/admin/dashboard/services.js";
 import Surgeries from "../../components/admin/dashboard/surgeries.js";
 import Users from "../../components/admin/dashboard/users.js";
-import Payment from "../../components/admin/dashboard/payment.js"; // Import the new Payment component
+import Password from "../../components/admin/dashboard/password.js";
+import Payment from "../../components/admin/dashboard/payment.js";
 
 const Button = ({ children, onClick, isActive }) => (
   <button className={`button ${isActive ? "active" : ""}`} onClick={onClick}>
@@ -39,13 +41,15 @@ const Button = ({ children, onClick, isActive }) => (
   </button>
 );
 
-const Header = ({ onLogout }) => {
+const Header = ({ onLogout, user }) => {
   return (
     <nav className="header">
       <div className="admin-header">
         <div className="admin">
-          <span className="admin-name">Gwen</span>
-          <span className="role">Administrator</span>
+          <span className="admin-name">{user?.first_name || 'User'}</span>
+          <span className="role">
+            {user?.role === 'admin' ? 'Administrator' : 'Employee'}
+          </span>
         </div>
         <button className="admin-logout" onClick={onLogout}>
           <TbLogout2 style={{ marginRight: "4px" }} />
@@ -80,7 +84,6 @@ const Dashboard = ({ isLoggedIn, user, setUser, setIsLoggedIn }) => {
 
       setUser(null);
       setIsLoggedIn(false);
-
       navigate("/login");
     } catch (err) {
       console.error("Logout failed:", err);
@@ -97,109 +100,168 @@ const Dashboard = ({ isLoggedIn, user, setUser, setIsLoggedIn }) => {
     ManageFAQ: <Faqs />,
     ManageSurgeries: <Surgeries />,
     ManageContact: <Contact />,
-    ManagePayment: <Payment />, // Added new payment page
+    ManagePayment: <Payment />,
     ManageAppointments: <Appointments />,
     ManageUsers: <Users />,
     ManageAdmin: <Admin />,
     Logs: <Logs />,
+    Password: <Password />,
+  };
+
+  // Admin gets all buttons, employee gets limited set
+  const getSidebarButtons = () => {
+    if (user?.role === "admin") {
+      return (
+        <>
+          <Button
+            onClick={() => setActivePage("Home")}
+            isActive={activePage === "Home"}
+          >
+            <RxDashboard className="icon" /> Dashboard
+          </Button>
+          <Button
+            onClick={() => setActivePage("Profile")}
+            isActive={activePage === "Profile"}
+          >
+            <VscSettings className="icon"/> Branch
+          </Button>
+          <div className="divider" />
+          <Button
+            onClick={() => setActivePage("Messages")}
+            isActive={activePage === "Messages"}
+          >
+            <LuMessageSquareMore className="icon" /> Messages
+          </Button>
+          <Button
+            onClick={() => setActivePage("ManageServices")}
+            isActive={activePage === "ManageServices"}
+          >
+            <FaRegHandPaper className="icon" /> Manage Services
+          </Button>
+          <Button
+            onClick={() => setActivePage("ManagePromos")}
+            isActive={activePage === "ManagePromos"}
+          >
+            <RiDiscountPercentLine className="icon" /> Manage Promos
+          </Button>
+          <Button
+            onClick={() => setActivePage("ManageProducts")}
+            isActive={activePage === "ManageProducts"}
+          >
+            <AiOutlineShopping className="icon" /> Manage Products
+          </Button>
+          <Button
+            onClick={() => setActivePage("ManageSurgeries")}
+            isActive={activePage === "ManageSurgeries"}
+          >
+            <MdOutlineMedicalServices className="icon" /> Manage Surgeries
+          </Button>
+          <Button
+            onClick={() => setActivePage("ManageFAQ")}
+            isActive={activePage === "ManageFAQ"}
+          >
+            <RiEditBoxLine className="icon" /> Manage FAQ
+          </Button>
+          <Button
+            onClick={() => setActivePage("ManageContact")}
+            isActive={activePage === "ManageContact"}
+          >
+            <IoCallOutline className="icon" /> Manage Contact
+          </Button>
+          <Button
+            onClick={() => setActivePage("ManagePayment")}
+            isActive={activePage === "ManagePayment"}
+          >
+            <MdPayment className="icon" /> Manage Payment
+          </Button>
+          <div className="divider" />
+          <Button
+            onClick={() => setActivePage("ManageAppointments")}
+            isActive={activePage === "ManageAppointments"}
+          >
+            <MdOutlineEditCalendar className="icon" /> Manage Appointments
+          </Button>
+          <Button
+            onClick={() => setActivePage("ManageUsers")}
+            isActive={activePage === "ManageUsers"}
+          >
+            <BsPeople className="icon" /> Manage Users
+          </Button>
+          <Button
+            onClick={() => setActivePage("ManageAdmin")}
+            isActive={activePage === "ManageAdmin"}
+          >
+            <BsPeople className="icon" /> Manage Admin
+          </Button>
+          <Button
+            onClick={() => setActivePage("Logs")}
+            isActive={activePage === "Logs"}
+          >
+            <IoSettingsOutline className="icon" /> Audit Trail
+          </Button>
+          <div className="divider" />
+          <Button
+            onClick={() => setActivePage("Password")}
+            isActive={activePage === "Password"}
+          >
+            <RiLockPasswordLine className="icon" /> Change Password
+          </Button>
+        </>
+      );
+    } else if (user?.role === "employee") {
+      return (
+        <>
+          <Button
+            onClick={() => setActivePage("Home")}
+            isActive={activePage === "Home"}
+          >
+            <RxDashboard className="icon" /> Dashboard
+          </Button>
+          <Button
+            onClick={() => setActivePage("ManageAppointments")}
+            isActive={activePage === "ManageAppointments"}
+          >
+            <MdOutlineEditCalendar className="icon" /> Manage Appointments
+          </Button>
+          <Button
+            onClick={() => setActivePage("Password")}
+            isActive={activePage === "Password"}
+          >
+            <RiLockPasswordLine className="icon" /> Change Password
+          </Button>
+        </>
+      );
+    }
+    return null;
   };
 
   return (
     <div className="dashboard-container">
       <div className="sidebar">
         <img src={logo} className="logo" alt="Logo" />
-        <Button
-          onClick={() => setActivePage("Home")}
-          isActive={activePage === "Home"}
-        >
-          <RxDashboard className="icon" /> Dashboard
-        </Button>
-        <Button
-          onClick={() => setActivePage("Profile")}
-          isActive={activePage === "Profile"}
-        >
-          <VscSettings className="icon"/> Branch
-        </Button>
-        <div className="divider" />
-        <Button
-          onClick={() => setActivePage("Messages")}
-          isActive={activePage === "Messages"}
-        >
-          <LuMessageSquareMore className="icon" /> Messages
-        </Button>
-        <Button
-          onClick={() => setActivePage("ManageServices")}
-          isActive={activePage === "ManageServices"}
-        >
-          <FaRegHandPaper className="icon" /> Manage Services
-        </Button>
-        <Button
-          onClick={() => setActivePage("ManagePromos")}
-          isActive={activePage === "ManagePromos"}
-        >
-          <RiDiscountPercentLine className="icon" /> Manage Promos
-        </Button>
-        <Button
-          onClick={() => setActivePage("ManageProducts")}
-          isActive={activePage === "ManageProducts"}
-        >
-          <AiOutlineShopping className="icon" /> Manage Products
-        </Button>
-        <Button
-          onClick={() => setActivePage("ManageSurgeries")}
-          isActive={activePage === "ManageSurgeries"}
-        >
-          <MdOutlineMedicalServices className="icon" /> Manage Surgeries
-        </Button>
-        <Button
-          onClick={() => setActivePage("ManageFAQ")}
-          isActive={activePage === "ManageFAQ"}
-        >
-          <RiEditBoxLine className="icon" /> Manage FAQ
-        </Button>
-        <Button
-          onClick={() => setActivePage("ManageContact")}
-          isActive={activePage === "ManageContact"}
-        >
-          <IoCallOutline className="icon" /> Manage Contact
-        </Button>
-        <Button
-          onClick={() => setActivePage("ManagePayment")}
-          isActive={activePage === "ManagePayment"}
-        >
-          <MdPayment className="icon" /> Manage Payment
-        </Button>
-        <div className="divider" />
-        <Button
-          onClick={() => setActivePage("ManageAppointments")}
-          isActive={activePage === "ManageAppointments"}
-        >
-          <MdOutlineEditCalendar className="icon" /> Manage Appointments
-        </Button>
-        <Button
-          onClick={() => setActivePage("ManageUsers")}
-          isActive={activePage === "ManageUsers"}
-        >
-          <BsPeople className="icon" /> Manage Users
-        </Button>
-        <Button
-          onClick={() => setActivePage("ManageAdmin")}
-          isActive={activePage === "ManageAdmin"}
-        >
-          <BsPeople className="icon" /> Manage Admin
-        </Button>
-        <Button
-          onClick={() => setActivePage("Logs")}
-          isActive={activePage === "Logs"}
-        >
-          <IoSettingsOutline className="icon" /> Audit Trail
-        </Button>
+        <div className="sidebar-buttons">
+          {getSidebarButtons()}
+        </div>
         <img src={frame1} className="design-pic" alt="Dashboard Design" />
       </div>
-
+  
       <div className="content-area">
-        <Header onLogout={handleLogout} />
-        <img src={welcome} className="welcome" alt="Welcome" />
+        <Header onLogout={handleLogout} user={user} />
+        
+        <div className="welcome-container">
+          <img src={welcome} className="welcome" alt="Welcome" />
+          <div className="welcome-overlay">
+            <div className="welcome-role">
+              Welcome, {user?.role === 'admin' ? 'admin!' : 'employee!'}
+            </div>
+            <div className="welcome-message">
+              {user?.role === 'admin' 
+              ? "Welcome to the Admin Dashboard – Manage all system features, user accounts, and operations."
+              : "Welcome to the Employee Portal – View and manage appointments, and check staff availability."}
+            </div>
+          </div>
+        </div>
+  
         {pages[activePage]}
       </div>
     </div>
