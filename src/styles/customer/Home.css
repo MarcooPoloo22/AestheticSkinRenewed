@@ -1,17 +1,20 @@
 .banner-wrapper {
   width: 100%;
-  max-height: 70vh;
-  aspect-ratio: 16 / 9;
   position: relative;
   overflow: hidden;
+  min-height: 100vh; 
 }
 
+
 .banner-images {
+  position: absolute;
+  top: 0;
+  left: 0;
   width: 100%;
   height: 100%;
-  position: relative;
   z-index: 0;
 }
+
 
 .banner-img {
   position: absolute;
@@ -30,7 +33,6 @@
 
 .banner-content {
   z-index: 2;
-  pointer-events: auto;
   position: absolute;
   top: 50%;
   left: 5%;
@@ -50,7 +52,7 @@
     font-weight: 500; /* medium weight instead of bold */
     font-family: "Georgia", "Garamond", "Palatino Linotype", "Book Antiqua", serif;
     margin-bottom: 10px;
-    text-shadow: 1.5px 1.5px 3px rgba(0, 0, 0, 0.4); /* slightly softer shadow */
+    text-shadow: 1.5px 1.5px 3px rgba(0, 0, 0, 0.4); 
   }
   
   .banner-subtitle {
