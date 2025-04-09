@@ -39,8 +39,7 @@ const Navbar = ({ isLoggedIn, setIsLoggedIn, user }) => {
             <img
               src={logo}
               alt="Logo"
-              width="260"
-              height="50"
+              width="240"
               className="d-inline-block align-text-top"
             />
           </Link>
