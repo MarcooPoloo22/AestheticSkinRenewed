@@ -4,6 +4,7 @@ import moment from "moment";
 import "react-big-calendar/lib/css/react-big-calendar.css";
 import "../../../styles/admin/dashboard/faqs.css";
 import Swal from 'sweetalert2';
+import withReactContent from 'sweetalert2-react-content';
 
 // Icons
 import { FaCartShopping } from "react-icons/fa6";
@@ -13,6 +14,9 @@ import { FaBriefcaseMedical } from "react-icons/fa";
 
 // Initialize the localizer with moment
 const localizer = momentLocalizer(moment);
+
+// Initialize React-specific SweetAlert
+const MySwal = withReactContent(Swal);
 
 const DashboardCalendar = () => {
   // State for dashboard metrics
@@ -31,6 +35,41 @@ const DashboardCalendar = () => {
   const [selectedStaff, setSelectedStaff] = useState("");
   const [events, setEvents] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
+
+  // Custom alert styling
+  const alertStyle = {
+    error: {
+      background: '#FFF3F3',
+      titleColor: '#C03221',
+      confirmButton: '#C03221',
+      iconColor: '#C03221'
+    },
+    info: {
+      background: '#F5F9FF',
+      titleColor: '#068B92',
+      confirmButton: '#068B92',
+      iconColor: '#068B92'
+    }
+  };
+
+  // Show error alert
+  const showErrorAlert = (message) => {
+    MySwal.fire({
+      title: '<strong>Error</strong>',
+      html: `<div style="color: #555;">${message}</div>`,
+      icon: 'error',
+      background: alertStyle.error.background,
+      iconColor: alertStyle.error.iconColor,
+      showConfirmButton: true,
+      confirmButtonColor: alertStyle.error.confirmButton,
+      confirmButtonText: 'OK',
+      customClass: {
+        title: 'swal-title',
+        htmlContainer: 'swal-html',
+        confirmButton: 'swal-confirm-button'
+      }
+    });
+  };
 
   // Fetch initial data on component mount
   useEffect(() => {
@@ -65,12 +104,7 @@ const DashboardCalendar = () => {
         setEvents(formatAppointments(appointmentsData));
       } catch (error) {
         console.error("Error fetching initial data:", error);
-        Swal.fire({
-          icon: 'error',
-          title: 'Error',
-          text: 'Failed to fetch initial data. Please try again later.',
-          confirmButtonColor: '#3085d6',
-        });
+        showErrorAlert('Failed to fetch initial data. Please try again later.');
       } finally {
         setIsLoading(false);
       }
@@ -91,12 +125,7 @@ const DashboardCalendar = () => {
         })
         .catch(error => {
           console.error("Error fetching staff:", error);
-          Swal.fire({
-            icon: 'error',
-            title: 'Error',
-            text: 'Failed to fetch staff data. Please try again later.',
-            confirmButtonColor: '#3085d6',
-          });
+          showErrorAlert('Failed to fetch staff data. Please try again later.');
           setIsLoading(false);
         });
     } else {
@@ -119,12 +148,7 @@ const DashboardCalendar = () => {
         setEvents(formatAppointments(data));
       } catch (error) {
         console.error("Error fetching appointments:", error);
-        Swal.fire({
-          icon: 'error',
-          title: 'Error',
-          text: 'Failed to fetch appointments. Please try again later.',
-          confirmButtonColor: '#3085d6',
-        });
+        showErrorAlert('Failed to fetch appointments. Please try again later.');
       } finally {
         setIsLoading(false);
       }
@@ -218,25 +242,43 @@ const DashboardCalendar = () => {
     );
   };
 
-  // Handle event click with SweetAlert
+  // Handle event click with enhanced SweetAlert
   const handleEventClick = (event) => {
-    Swal.fire({
-      title: 'Appointment Details',
+    MySwal.fire({
+      title: `<strong style="color: ${alertStyle.info.titleColor}">Appointment Details</strong>`,
       html: `
-        <div style="text-align: left;">
-          <p><strong>Service:</strong> ${event.title}</p>
-          <p><strong>Client:</strong> ${event.name}</p>
-          <p><strong>Date:</strong> ${moment(event.start).format("MMMM Do YYYY")}</p>
-          <p><strong>Time:</strong> ${moment(event.start).format("h:mm a")} - ${moment(event.end).format("h:mm a")}</p>
-          <p><strong>Staff:</strong> ${event.staff || "Not assigned"}</p>
-          <p><strong>Branch:</strong> ${event.branch || "Not specified"}</p>
-          <p><strong>Status:</strong> ${event.status || "Unknown"}</p>
+        <div style="text-align: left; color: #444; line-height: 1.6;">
+          <p style="margin-bottom: 8px;"><strong style="color: #555;">Service:</strong> <span style="color: #333;">${event.title}</span></p>
+          <p style="margin-bottom: 8px;"><strong style="color: #555;">Client:</strong> <span style="color: #333;">${event.name}</span></p>
+          <p style="margin-bottom: 8px;"><strong style="color: #555;">Date:</strong> <span style="color: #333;">${moment(event.start).format("MMMM Do YYYY")}</span></p>
+          <p style="margin-bottom: 8px;"><strong style="color: #555;">Time:</strong> <span style="color: #333;">${moment(event.start).format("h:mm a")} - ${moment(event.end).format("h:mm a")}</span></p>
+          <p style="margin-bottom: 8px;"><strong style="color: #555;">Staff:</strong> <span style="color: #333;">${event.staff || "Not assigned"}</span></p>
+          <p style="margin-bottom: 8px;"><strong style="color: #555;">Branch:</strong> <span style="color: #333;">${event.branch || "Not specified"}</span></p>
+          <p style="margin-bottom: 0;"><strong style="color: #555;">Status:</strong> <span class="status-badge" style="
+            display: inline-block;
+            padding: 2px 8px;
+            border-radius: 12px;
+            font-size: 12px;
+            font-weight: 500;
+            background: ${event.status === 'confirmed' ? '#E3F5EC' : event.status === 'cancelled' ? '#FFE8E8' : '#F0F0F0'};
+            color: ${event.status === 'confirmed' ? '#17904B' : event.status === 'cancelled' ? '#C03221' : '#555'};
+          ">${event.status || "Unknown"}</span></p>
         </div>
       `,
+      background: alertStyle.info.background,
+      showConfirmButton: true,
+      confirmButtonColor: alertStyle.info.confirmButton,
       confirmButtonText: 'Close',
-      confirmButtonColor: '#3085d6',
       showCloseButton: true,
-      width: '600px'
+      width: '600px',
+      padding: '2rem',
+      customClass: {
+        popup: 'custom-swal-popup',
+        title: 'custom-swal-title',
+        htmlContainer: 'custom-swal-html',
+        confirmButton: 'custom-swal-confirm-button',
+        closeButton: 'custom-swal-close-button'
+      }
     });
   };
 
@@ -349,6 +391,43 @@ const DashboardCalendar = () => {
           </div>
         </div>
       </div>
+
+      {/* Add custom styles for SweetAlert */}
+      <style>
+        {`
+          .custom-swal-popup {
+            border-radius: 12px;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+            border: 1px solid #e0e0e0;
+          }
+          .custom-swal-title {
+            font-size: 1.5rem;
+            font-weight: 600;
+            margin-bottom: 1.5rem;
+          }
+          .custom-swal-html {
+            font-size: 1rem;
+            line-height: 1.5;
+          }
+          .custom-swal-confirm-button {
+            padding: 8px 24px;
+            border-radius: 6px;
+            font-weight: 500;
+            transition: all 0.2s;
+          }
+          .custom-swal-confirm-button:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+          }
+          .custom-swal-close-button {
+            color: #999;
+            transition: color 0.2s;
+          }
+          .custom-swal-close-button:hover {
+            color: #666;
+          }
+        `}
+      </style>
     </div>
   );
 };
