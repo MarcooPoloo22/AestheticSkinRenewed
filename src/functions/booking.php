@@ -7,7 +7,7 @@ header("Access-Control-Allow-Headers: Content-Type, Access-Control-Allow-Headers
 header("Access-Control-Allow-Credentials: true");
 
 error_reporting(E_ALL);
-ini_set('display_errors', 1); // Enable error display for debugging
+ini_set('display_errors', 1);
 ini_set('log_errors', 1);
 ini_set('error_log', 'C:\xampp\htdocs\error.log');
 
@@ -72,7 +72,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET') {
         exit();
     }
     
-    // Get booking details for rating (if needed)
+    // Get booking details for rating
     if (isset($_GET['booking_id']) && isset($_GET['action']) && $_GET['action'] === 'get_for_rating') {
         $booking_id = filter_input(INPUT_GET, 'booking_id', FILTER_SANITIZE_NUMBER_INT);
         
@@ -102,6 +102,71 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET') {
             error_log('Database Error: ' . $e->getMessage());
             http_response_code(500);
             echo json_encode(['status' => 'error', 'message' => 'Failed to fetch booking details.']);
+        }
+        exit();
+    }
+    
+    // Manual archive trigger (protected with secret key)
+    if (isset($_GET['action']) && $_GET['action'] === 'archive_now') {
+        $secretKey = $_ENV['ARCHIVE_SECRET_KEY'] ?? '';
+        if (!isset($_GET['key']) || $_GET['key'] !== $secretKey) {
+            http_response_code(403);
+            echo json_encode(['status' => 'error', 'message' => 'Unauthorized']);
+            exit();
+        }
+        
+        try {
+            $threeYearsAgo = date('Y-m-d H:i:s', strtotime('-3 years'));
+            
+            // Begin transaction
+            $conn->beginTransaction();
+            
+            // Archive old records
+            $stmt = $conn->prepare("
+                INSERT INTO bookings_archive 
+                SELECT *, NULL as archived_at FROM bookings 
+                WHERE created_at < :threeYearsAgo
+            ");
+            $stmt->bindParam(':threeYearsAgo', $threeYearsAgo);
+            $stmt->execute();
+            $archivedCount = $stmt->rowCount();
+            
+            // Delete archived records
+            $stmt = $conn->prepare("
+                DELETE FROM bookings 
+                WHERE created_at < :threeYearsAgo
+            ");
+            $stmt->bindParam(':threeYearsAgo', $threeYearsAgo);
+            $stmt->execute();
+            $deletedCount = $stmt->rowCount();
+            
+            // Update archive timestamps
+            $stmt = $conn->prepare("
+                UPDATE bookings_archive 
+                SET archived_at = NOW() 
+                WHERE archived_at IS NULL
+            ");
+            $stmt->execute();
+            
+            $conn->commit();
+            
+            echo json_encode([
+                'status' => 'success',
+                'message' => "Archiving completed successfully.",
+                'archived_records' => $archivedCount,
+                'deleted_records' => $deletedCount
+            ]);
+            
+        } catch (PDOException $e) {
+            if ($conn->inTransaction()) {
+                $conn->rollBack();
+            }
+            error_log('Archive Error: ' . $e->getMessage());
+            http_response_code(500);
+            echo json_encode([
+                'status' => 'error',
+                'message' => 'Archive failed: ' . $e->getMessage()
+            ]);
         }
         exit();
     }
@@ -153,7 +218,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         ]);
         $result = $stmt->fetch(PDO::FETCH_ASSOC);
 
-        if ($result['total_bookings'] >= 1) { // Adjust based on staff capacity
+        if ($result['total_bookings'] >= 1) {
             http_response_code(400);
             echo json_encode(['status' => 'error', 'message' => 'The selected time slot is fully booked.']);
             exit();
@@ -168,8 +233,17 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     // Insert the booking
     try {
         $stmt = $conn->prepare("
-            INSERT INTO bookings (user_id, first_name, last_name, email, contact_no, service_type, branch_id, staff_id, appointment_date, appointment_time, status, rating)
-            VALUES (:user_id, :first_name, :last_name, :email, :contact_no, :service_type, :branch_id, :staff_id, :appointment_date, :appointment_time, 'pending', NULL)
+            INSERT INTO bookings (
+                user_id, first_name, last_name, email, contact_no, 
+                service_type, branch_id, staff_id, 
+                appointment_date, appointment_time, status, rating,
+                created_at
+            ) VALUES (
+                :user_id, :first_name, :last_name, :email, :contact_no, 
+                :service_type, :branch_id, :staff_id, 
+                :appointment_date, :appointment_time, 'pending', NULL,
+                NOW()
+            )
         ");
         $stmt->execute([
             ':user_id' => $user_id,

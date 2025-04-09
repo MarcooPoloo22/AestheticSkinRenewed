@@ -7,6 +7,13 @@ import "bootstrap/dist/css/bootstrap.min.css";
 
 const MySwal = withReactContent(Swal);
 
+const validateDate = (dateString) => {
+  const today = new Date();
+  today.setHours(0, 0, 0, 0);
+  const selectedDate = new Date(dateString);
+  return selectedDate >= today;
+};
+
 const BookingPageRegistered = ({ user }) => {
   const [formData, setFormData] = useState({
     service_type: "",
@@ -430,7 +437,19 @@ const BookingPageRegistered = ({ user }) => {
                 className="form-control"
                 name="appointment_date"
                 value={formData.appointment_date}
-                onChange={handleChange}
+                onChange={(e) => {
+                  if (validateDate(e.target.value)) {
+                    handleChange(e);
+                  } else {
+                    Swal.fire({
+                      icon: 'error',
+                      title: 'Invalid Date',
+                      text: 'You cannot book appointments for past dates.',
+                    });
+                    setFormData({...formData, appointment_date: ""});
+                  }
+                }}
+                min={new Date().toISOString().split('T')[0]}
                 required
               />
             </div>
@@ -951,7 +970,19 @@ const BookingPageGuest = () => {
                 className="form-control"
                 name="appointment_date"
                 value={formData.appointment_date}
-                onChange={handleChange}
+                onChange={(e) => {
+                  if (validateDate(e.target.value)) {
+                    handleChange(e);
+                  } else {
+                    Swal.fire({
+                      icon: 'error',
+                      title: 'Invalid Date',
+                      text: 'You cannot book appointments for past dates.',
+                    });
+                    setFormData({...formData, appointment_date: ""});
+                  }
+                }}
+                min={new Date().toISOString().split('T')[0]}
                 required
               />
             </div>
