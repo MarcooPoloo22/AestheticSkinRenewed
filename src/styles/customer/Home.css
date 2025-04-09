@@ -5,7 +5,6 @@
   min-height: 100vh; 
 }
 
-
 .banner-images {
   position: absolute;
   top: 0;
@@ -14,7 +13,6 @@
   height: 100%;
   z-index: 0;
 }
-
 
 .banner-img {
   position: absolute;
@@ -48,22 +46,21 @@
 }
 
 .banner-title {
-    font-size: 2.8rem; /* slightly smaller for elegance */
-    font-weight: 500; /* medium weight instead of bold */
-    font-family: "Georgia", "Garamond", "Palatino Linotype", "Book Antiqua", serif;
-    margin-bottom: 10px;
-    text-shadow: 1.5px 1.5px 3px rgba(0, 0, 0, 0.4); 
-  }
-  
-  .banner-subtitle {
-    font-size: 1.3rem; /* slightly smaller */
-    font-weight: 400; /* regular weight */
-    font-family: "Georgia", "Garamond", "Palatino Linotype", "Book Antiqua", serif;
-    margin-bottom: 20px;
-    text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.3);
-  }
+  font-size: 2.8rem;
+  font-weight: 500;
+  font-family: "Georgia", "Garamond", "Palatino Linotype", "Book Antiqua", serif;
+  margin-bottom: 10px;
+  text-shadow: 1.5px 1.5px 3px rgba(0, 0, 0, 0.4);
+}
 
-  
+.banner-subtitle {
+  font-size: 1.3rem;
+  font-weight: 400;
+  font-family: "Georgia", "Garamond", "Palatino Linotype", "Book Antiqua", serif;
+  margin-bottom: 20px;
+  text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.3);
+}
+
 .banner-button {
   background: linear-gradient(to right, #a2bf5a, #6CB33F);
   color: #ffffff;
@@ -86,4 +83,24 @@
   filter: brightness(1.05);
   transform: translateY(-2px);
   box-shadow: 0 6px 12px rgba(0, 0, 0, 0.2);
+}
+
+
+@media (max-width: 768px) {
+  .banner-content {
+    left: 50%;
+    transform: translate(-50%, -50%);
+    text-align: center;
+    align-items: center;
+    display: flex;
+    flex-direction: column;
+  }
+
+  .banner-logo {
+    margin: 0 auto 20px auto;
+  }
+
+  .banner-button {
+    justify-content: center;
+  }
 }

@@ -43,7 +43,7 @@ function Home() {
             className="banner-logo mb-3"
           />
           <h1 className="banner-title">Glow Up with ASR</h1>
-          <p className="banner-subtitle">Experience premium silicrate, massages, and beauty treatments.</p>
+          <p className="banner-subtitle">Experience premium silicrate, massages, and beauty treatments</p>
           <Link
             to="/booking"
             role="button"
