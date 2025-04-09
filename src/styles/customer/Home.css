@@ -51,6 +51,7 @@
   font-family: "Georgia", "Garamond", "Palatino Linotype", "Book Antiqua", serif;
   margin-bottom: 10px;
   text-shadow: 1.5px 1.5px 3px rgba(0, 0, 0, 0.4);
+  caret-color: transparent;
 }
 
 .banner-subtitle {
@@ -59,6 +60,7 @@
   font-family: "Georgia", "Garamond", "Palatino Linotype", "Book Antiqua", serif;
   margin-bottom: 20px;
   text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.3);
+  caret-color: transparent;
 }
 
 .banner-button {
@@ -77,6 +79,7 @@
   transition: all 0.3s ease;
   z-index: 2;
   position: relative;
+  caret-color: transparent;
 }
 
 .banner-button:hover {

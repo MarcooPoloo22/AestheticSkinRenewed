@@ -24,6 +24,7 @@
     font-family: "Georgia", "Garamond", "Palatino Linotype", "Book Antiqua", serif;
     text-shadow: 2px 2px 6px rgba(0, 0, 0, 0.6);
     letter-spacing: 1px;
+    caret-color: transparent;
   }
   
   /* Wrapper to constrain the image area */
