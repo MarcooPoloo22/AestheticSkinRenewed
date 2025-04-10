@@ -82,99 +82,98 @@ const CreateAccount = () => {
 
     return (
         <div className="create-account-container d-flex justify-content-center align-items-center">
-            <div className="form-box p-4">
-                <h2 className="text-center mb-4">Create your account</h2>
-                <br />
-                <form onSubmit={handleSubmit}>
-                    <div className="row mb-3">
-                        <div className="col-md-4">
-                            <input
-                                type="text"
-                                className="form-control"
-                                placeholder="First Name"
-                                name="first_name"
-                                value={formData.first_name}
-                                onChange={handleChange}
-                                required
-                            />
-                        </div>
-                        <div className="col-md-4">
-                            <input
-                                type="text"
-                                className="form-control"
-                                placeholder="Middle Initial"
-                                name="middle_initial"
-                                value={formData.middle_initial}
-                                onChange={handleChange}
-                            />
-                        </div>
-                        <div className="col-md-4">
-                            <input
-                                type="text"
-                                className="form-control"
-                                placeholder="Last Name"
-                                name="last_name"
-                                value={formData.last_name}
-                                onChange={handleChange}
-                                required
-                            />
-                        </div>
-                    </div>
-
-                    <div className="mb-3">
-                        <input
-                            type="email"
-                            className="form-control"
-                            placeholder="Email Address"
-                            name="email"
-                            value={formData.email}
-                            onChange={handleChange}
-                            required
-                        />
-                    </div>
-
-                    <div className="mb-3">
-                        <input
-                            type="password"
-                            className="form-control"
-                            placeholder="Password"
-                            name="password"
-                            value={formData.password}
-                            onChange={handleChange}
-                            required
-                        />
-                    </div>
-
-                    <div className="mb-3">
-                        <input
-                            type="password"
-                            className="form-control"
-                            placeholder="Confirm Password"
-                            name="confirm_password"
-                            value={formData.confirm_password}
-                            onChange={handleChange}
-                            required
-                        />
-                    </div>
-
-                    <div className="mb-3">
-                        <input
-                            type="tel"
-                            className="form-control"
-                            placeholder="Contact No."
-                            name="contact_no"
-                            value={formData.contact_no}
-                            onChange={handleChange}
-                            required
-                        />
-                    </div>
-
-                    <div className="mb-4 d-flex justify-content-center">
-                        <button className="regsubmit" type="submit">Register</button>
-                    </div>
-                </form>
-            </div>
+                 <div className="form-box p-4">
+                 <h2 className="text-center mb-4">Create your account</h2>
+                 <form onSubmit={handleSubmit}>
+                 <div className="row mb-3">
+                 <div className="col-12 col-md-4 mb-3 mb-md-0">
+           <input
+                 type="text"
+                 className="form-control"
+                 placeholder="First Name"
+                 name="first_name"
+                 value={formData.first_name}
+                 onChange={handleChange}
+                 required
+           />
         </div>
+          <div className="col-12 col-md-4 mb-3 mb-md-0">
+            <input
+               type="text"
+               className="form-control"
+               placeholder="Middle Initial"
+               name="middle_initial"
+               value={formData.middle_initial}
+               onChange={handleChange}
+          />
+        </div>
+           <div className="col-12 col-md-4">
+            <input
+              type="text"
+              className="form-control"
+              placeholder="Last Name"
+              name="last_name"
+              value={formData.last_name}
+              onChange={handleChange}
+              required
+          />
+        </div>
+      </div>
+
+      <div className="mb-3">
+        <input
+          type="email"
+          className="form-control"
+          placeholder="Email Address"
+          name="email"
+          value={formData.email}
+          onChange={handleChange}
+          required
+        />
+      </div>
+
+      <div className="mb-3">
+        <input
+          type="password"
+          className="form-control"
+          placeholder="Password"
+          name="password"
+          value={formData.password}
+          onChange={handleChange}
+          required
+        />
+      </div>
+
+      <div className="mb-3">
+        <input
+          type="password"
+          className="form-control"
+          placeholder="Confirm Password"
+          name="confirm_password"
+          value={formData.confirm_password}
+          onChange={handleChange}
+          required
+        />
+      </div>
+
+      <div className="mb-4">
+        <input
+          type="tel"
+          className="form-control"
+          placeholder="Contact No."
+          name="contact_no"
+          value={formData.contact_no}
+          onChange={handleChange}
+          required
+        />
+      </div>
+        <br />
+      <div className="mb-4 d-flex justify-content-center">
+        <button className="regsubmit" type="submit">Register</button>
+      </div>
+    </form>
+  </div>
+</div>
     );
 };
 

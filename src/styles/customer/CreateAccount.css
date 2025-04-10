@@ -48,3 +48,16 @@ body {
 .regsubmit:hover {
     background-color: #333;
 }
+
+@media (max-width: 768px) {
+    .form-box {
+      padding: 20px;
+      width: 100%;
+      height: auto;
+    }
+  
+    .regsubmit {
+      width: 100%;
+    }
+  }
+  
