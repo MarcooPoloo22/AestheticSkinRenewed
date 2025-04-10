@@ -40,6 +40,8 @@ function ProductsPage() {
                 description={product.description}
                 image={product.file_url} // Use the file_url from the backend
                 updated={`Price: ₱${parseFloat(product.price).toLocaleString()}`} // Display the price with the Peso sign and formatting
+                link={`/details/product/${product.id}`}
+                id={product.id}
               />
             </div>
           ))}

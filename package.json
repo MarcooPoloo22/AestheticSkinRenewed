@@ -14,7 +14,7 @@
     "cra-template": "1.2.0",
     "datatables.net-dt": "^2.2.2",
     "express": "^4.21.2",
-    "firebase": "^11.5.0",
+    "firebase": "^11.6.0",
     "react": "^19.0.0",
     "react-big-calendar": "^1.18.0",
     "react-bootstrap": "^2.10.9",

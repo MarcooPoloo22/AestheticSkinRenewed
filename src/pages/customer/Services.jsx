@@ -38,6 +38,7 @@ function ServicePage() {
         image={service.file_url}
         updated={`Price: ₱${service.price}`}
         link={`/details/service/${service.id}`}
+        id={service.id}
       />
     </div>
   ))}

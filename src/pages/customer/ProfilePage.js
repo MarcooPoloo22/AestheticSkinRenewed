@@ -83,7 +83,6 @@ const ProfilePage = ({ user, setUser, isLoggedIn }) => {
     }
   }, [activeTab]);
 
-  // Handle rating submission
   const handleRating = async (bookingId) => {
     const { value: rating } = await Swal.fire({
       title: 'Rate your experience',
@@ -118,7 +117,6 @@ const ProfilePage = ({ user, setUser, isLoggedIn }) => {
         const result = await response.json();
 
         if (result.status === "success") {
-          // Update the booking history to reflect the new rating
           setBookingHistory(prev => prev.map(booking => 
             booking.id === bookingId ? { ...booking, rating: parseInt(rating) } : booking
           ));
@@ -142,7 +140,6 @@ const ProfilePage = ({ user, setUser, isLoggedIn }) => {
     }
   };
 
-  // 3. Handle editing form inputs
   const handleInputChange = (e) => {
     const { name, value } = e.target;
     setNewData({ ...newData, [name]: value });
@@ -365,39 +362,39 @@ const ProfilePage = ({ user, setUser, isLoggedIn }) => {
             ) : bookingError ? (
               <p style={{ color: "red" }}>{bookingError}</p>
             ) : bookingHistory.length > 0 ? (
-              <div className="booking-list">
-                {bookingHistory.map((booking) => (
-                  <div key={booking.id} className="booking-item">
-                    <div className="booking-info">
-                      <p>
-                        <strong>Type:</strong> {booking.service_type}
-                      </p>
-                      <p>
-                        <strong>Date:</strong> {booking.appointment_date}
-                      </p>
-                      <p>
-                        <strong>Time:</strong> {booking.appointment_time}
-                      </p>
-                      <p>
-                        <strong>Status:</strong> {booking.status}
-                      </p>
-                      {booking.rating && (
-                        <p>
-                          <strong>Your Rating:</strong> {booking.rating}/5
-                        </p>
-                      )}
+              <div className="booking-list-container">
+                <div className="booking-list-header">
+                  <div>Type</div>
+                  <div>Date</div>
+                  <div>Time</div>
+                  <div>Status</div>
+                  <div>Action</div>
+                </div>
+                <div className="booking-list">
+                  {bookingHistory.map((booking) => (
+                    <div key={booking.id} className="booking-item">
+                      <div>{booking.service_type}</div>
+                      <div>{booking.appointment_date}</div>
+                      <div>{booking.appointment_time}</div>
+                      <div>{booking.status}</div>
+                      <div>
+                        {booking.status === "completed" && !booking.rating && (
+                          <button
+                            className="rate-button"
+                            onClick={() => handleRating(booking.id)}
+                          >
+                            Rate
+                          </button>
+                        )}
+                        {booking.rating && (
+                          <span className="rating-display">
+                            {booking.rating}/5
+                          </span>
+                        )}
+                      </div>
                     </div>
-                    {booking.status === "completed" && !booking.rating && (
-                      <button
-                        className="rate-button"
-                        onClick={() => handleRating(booking.id)}
-                      >
-                        Rate This Appointment
-                      </button>
-                    )}
-                    <hr />
-                  </div>
-                ))}
+                  ))}
+                </div>
               </div>
             ) : (
               <p>You have no bookings.</p>
