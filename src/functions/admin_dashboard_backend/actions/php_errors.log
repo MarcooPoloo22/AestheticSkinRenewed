@@ -1,0 +1,1411 @@
+[23-Mar-2025 04:14:24 Europe/Berlin] PHP Fatal error:  Uncaught PDOException: There is no active transaction in C:\xampp\htdocs\admin_dashboard_backend\actions\generic_crud.php:92
+Stack trace:
+#0 C:\xampp\htdocs\admin_dashboard_backend\actions\generic_crud.php(92): PDO->rollBack()
+#1 {main}
+  thrown in C:\xampp\htdocs\admin_dashboard_backend\actions\generic_crud.php on line 92
+[23-Mar-2025 04:21:25 Europe/Berlin] PHP Warning:  Array to string conversion in C:\xampp\htdocs\admin_dashboard_backend\actions\generic_crud.php on line 61
+[23-Mar-2025 04:21:25 Europe/Berlin] PHP Warning:  Array to string conversion in C:\xampp\htdocs\admin_dashboard_backend\actions\generic_crud.php on line 61
+[23-Mar-2025 05:17:19 Europe/Berlin] Raw input: 
+[23-Mar-2025 05:17:28 Europe/Berlin] Raw input: 
+[23-Mar-2025 05:17:50 Europe/Berlin] Raw input: 
+[23-Mar-2025 05:19:09 Europe/Berlin] Raw input: {"action":"DELETE","table":"promos","record_id":"6"}
+[23-Mar-2025 05:31:59 Europe/Berlin] Raw input: {"action":"UPDATE","table":"promos","record_id":"2","values":{"name":"Armand 1000000000","description":"Seeerrcvviceee","price":"100.00","duration":"7","branch_ids":["6","7"],"staff_ids":["1","3"],"start_date":"2025-03-09T03:14","end_date":"2025-03-25T07:19"}}
+[23-Mar-2025 05:31:59 Europe/Berlin] PHP Notice:  Only variables should be passed by reference in C:\xampp\htdocs\admin_dashboard_backend\utils\Logger.php on line 43
+[23-Mar-2025 05:31:59 Europe/Berlin] PHP Notice:  Only variables should be passed by reference in C:\xampp\htdocs\admin_dashboard_backend\utils\Logger.php on line 44
+[23-Mar-2025 05:32:07 Europe/Berlin] Raw input: {"action":"UPDATE","table":"promos","record_id":"2","values":{"name":"Armand 1000000000","description":"Seeerrcvviceee","price":"100.00","duration":"7","branch_ids":["6","7"],"staff_ids":["1","3"],"start_date":"2025-03-09T03:14","end_date":"2025-03-25T07:19"}}
+[23-Mar-2025 05:32:07 Europe/Berlin] PHP Notice:  Only variables should be passed by reference in C:\xampp\htdocs\admin_dashboard_backend\utils\Logger.php on line 43
+[23-Mar-2025 05:32:07 Europe/Berlin] PHP Notice:  Only variables should be passed by reference in C:\xampp\htdocs\admin_dashboard_backend\utils\Logger.php on line 44
+[23-Mar-2025 05:32:16 Europe/Berlin] Raw input: {"action":"UPDATE","table":"promos","record_id":"2","values":{"name":"Armand 1000000000","description":"Seeerrcvviceee","price":"100.00","duration":"7","branch_ids":["6","7"],"staff_ids":["1","3"],"start_date":"2025-03-09T03:14","end_date":"2025-03-25T07:19"}}
+[23-Mar-2025 05:32:16 Europe/Berlin] PHP Notice:  Only variables should be passed by reference in C:\xampp\htdocs\admin_dashboard_backend\utils\Logger.php on line 43
+[23-Mar-2025 05:32:16 Europe/Berlin] PHP Notice:  Only variables should be passed by reference in C:\xampp\htdocs\admin_dashboard_backend\utils\Logger.php on line 44
+[23-Mar-2025 05:32:17 Europe/Berlin] Raw input: {"action":"UPDATE","table":"promos","record_id":"2","values":{"name":"Armand 1000000000","description":"Seeerrcvviceee","price":"100.00","duration":"7","branch_ids":["6","7"],"staff_ids":["1","3"],"start_date":"2025-03-09T03:14","end_date":"2025-03-25T07:19"}}
+[23-Mar-2025 05:32:17 Europe/Berlin] PHP Notice:  Only variables should be passed by reference in C:\xampp\htdocs\admin_dashboard_backend\utils\Logger.php on line 43
+[23-Mar-2025 05:32:17 Europe/Berlin] PHP Notice:  Only variables should be passed by reference in C:\xampp\htdocs\admin_dashboard_backend\utils\Logger.php on line 44
+[23-Mar-2025 05:33:18 Europe/Berlin] Raw input: {"action":"UPDATE","table":"promos","record_id":"2","values":{"name":"Armand 1000000000","description":"Seeerrcvviceee","price":"100.00","duration":"7","branch_ids":["6","7"],"staff_ids":["1","3"],"start_date":"2025-03-09T03:14","end_date":"2025-03-25T07:19"}}
+[23-Mar-2025 05:33:38 Europe/Berlin] Raw input: {"action":"UPDATE","table":"promos","record_id":"2","values":{"name":"Armand 100000000","description":"Seeerrcvviceee","price":"100.00","duration":"7","branch_ids":["6","7"],"staff_ids":["1","3"],"start_date":"2025-03-09T03:14","end_date":"2025-03-25T07:19"}}
+[23-Mar-2025 05:34:21 Europe/Berlin] Raw input: 
+[23-Mar-2025 05:37:08 Europe/Berlin] Raw input: {"action":"UPDATE","table":"promos","record_id":"2","values":{"name":"Armand 100000","description":"Seeerrcvviceee","price":"100.00","duration":"7","branch_ids":["6","7"],"staff_ids":["1","3"],"start_date":"2025-03-09T03:14","end_date":"2025-03-25T07:19"}}
+[23-Mar-2025 05:38:43 Europe/Berlin] Raw input: 
+[23-Mar-2025 05:45:09 Europe/Berlin] Raw input: {"action":"DELETE","table":"promos","record_id":"5"}
+[23-Mar-2025 06:17:21 Europe/Berlin] Raw input: {"action":"CREATE","table":"promos","values":{"name":"Promo 5","description":"Desc 5","price":"123","duration":"5","branch_ids":["6","7"],"staff_ids":["1","3","4"],"start_date":"2025-03-24T17:23","end_date":"2025-03-31T13:21"}}
+[23-Mar-2025 06:20:30 Europe/Berlin] Raw input: {"action":"UPDATE","table":"promos","record_id":"7","values":{"name":"Promo 45","description":"Desc 5","price":"123.00","duration":"5","branch_ids":[],"staff_ids":[],"start_date":"2025-03-24T17:23","end_date":"2025-03-31T13:21"}}
+[23-Mar-2025 06:22:53 Europe/Berlin] Raw input: {"action":"UPDATE","table":"promos","record_id":"7","values":{"name":"Promo 45877","description":"Desc 5","price":"123.00","duration":"5","branch_ids":[],"staff_ids":[],"start_date":"2025-03-24T17:23","end_date":"2025-03-31T13:21"}}
+[23-Mar-2025 06:22:53 Europe/Berlin] Failed to log action: SQLSTATE[23000]: Integrity constraint violation: 1048 Column 'user_id' cannot be null
+[23-Mar-2025 06:23:08 Europe/Berlin] Raw input: {"action":"UPDATE","table":"promos","record_id":"7","values":{"name":"Promo 45877","description":"Desc 5","price":"123.00","duration":"5","branch_ids":[],"staff_ids":[],"start_date":"2025-03-24T17:23","end_date":"2025-03-31T13:21"}}
+[23-Mar-2025 06:23:08 Europe/Berlin] Failed to log action: SQLSTATE[23000]: Integrity constraint violation: 1048 Column 'user_id' cannot be null
+[23-Mar-2025 06:24:33 Europe/Berlin] Raw input: {"action":"UPDATE","table":"promos","record_id":"7","values":{"name":"Promo 45877","description":"Desc 5","price":"123.00","duration":"5","branch_ids":[],"staff_ids":[],"start_date":"2025-03-24T17:23","end_date":"2025-03-31T13:21"}}
+[23-Mar-2025 06:24:33 Europe/Berlin] Failed to log action in audit_logs: SQLSTATE[23000]: Integrity constraint violation: 1048 Column 'user_id' cannot be null
+[23-Mar-2025 06:24:40 Europe/Berlin] Raw input: {"action":"UPDATE","table":"promos","record_id":"7","values":{"name":"Promo 45877","description":"Desc 5","price":"123.00","duration":"5","branch_ids":[],"staff_ids":[],"start_date":"2025-03-24T17:23","end_date":"2025-03-31T13:21"}}
+[23-Mar-2025 06:24:40 Europe/Berlin] Failed to log action in audit_logs: SQLSTATE[23000]: Integrity constraint violation: 1048 Column 'user_id' cannot be null
+[23-Mar-2025 06:26:19 Europe/Berlin] Raw input: {"action":"UPDATE","table":"promos","record_id":"7","values":{"name":"Promo 45877","description":"Desc 5","price":"123.00","duration":"5","branch_ids":[],"staff_ids":[],"start_date":"2025-03-24T17:23","end_date":"2025-03-31T13:21"}}
+[23-Mar-2025 06:26:19 Europe/Berlin] Session Data: Array
+(
+)
+
+[23-Mar-2025 06:26:19 Europe/Berlin] ⚠️ Warning: User ID is missing, logging as system action.
+[23-Mar-2025 06:28:43 Europe/Berlin] Raw input: {"action":"UPDATE","table":"promos","record_id":"7","values":{"name":"Promo 45877","description":"Desc 5","price":"123.00","duration":"5","branch_ids":[],"staff_ids":[],"start_date":"2025-03-24T17:23","end_date":"2025-03-31T13:21"}}
+[23-Mar-2025 06:28:43 Europe/Berlin] Session Data: Array
+(
+)
+
+[23-Mar-2025 06:28:43 Europe/Berlin] ⚠️ No user session detected, logging as System.
+[23-Mar-2025 06:29:23 Europe/Berlin] Raw input: {"action":"UPDATE","table":"promos","record_id":"7","values":{"name":"Promo 45877","description":"Desc 5","price":"123.00","duration":"5","branch_ids":[],"staff_ids":[],"start_date":"2025-03-24T17:23","end_date":"2025-03-31T13:21"}}
+[23-Mar-2025 06:29:23 Europe/Berlin] PHP Warning:  Undefined variable $userId in C:\xampp\htdocs\admin_dashboard_backend\actions\generic_crud.php on line 112
+[23-Mar-2025 06:29:23 Europe/Berlin] PHP Warning:  Undefined variable $userName in C:\xampp\htdocs\admin_dashboard_backend\actions\generic_crud.php on line 112
+[23-Mar-2025 06:29:23 Europe/Berlin] PHP Warning:  Undefined variable $userRole in C:\xampp\htdocs\admin_dashboard_backend\actions\generic_crud.php on line 112
+[23-Mar-2025 06:29:23 Europe/Berlin] Session Data: Array
+(
+)
+
+[23-Mar-2025 06:29:23 Europe/Berlin] ⚠️ No user session detected, logging as System.
+[23-Mar-2025 06:29:30 Europe/Berlin] Raw input: {"action":"UPDATE","table":"promos","record_id":"7","values":{"name":"Promo 45877","description":"Desc 5","price":"123.00","duration":"5","branch_ids":[],"staff_ids":[],"start_date":"2025-03-24T17:23","end_date":"2025-03-31T13:21"}}
+[23-Mar-2025 06:29:30 Europe/Berlin] PHP Warning:  Undefined variable $userId in C:\xampp\htdocs\admin_dashboard_backend\actions\generic_crud.php on line 112
+[23-Mar-2025 06:29:30 Europe/Berlin] PHP Warning:  Undefined variable $userName in C:\xampp\htdocs\admin_dashboard_backend\actions\generic_crud.php on line 112
+[23-Mar-2025 06:29:30 Europe/Berlin] PHP Warning:  Undefined variable $userRole in C:\xampp\htdocs\admin_dashboard_backend\actions\generic_crud.php on line 112
+[23-Mar-2025 06:29:30 Europe/Berlin] Session Data: Array
+(
+)
+
+[23-Mar-2025 06:29:30 Europe/Berlin] ⚠️ No user session detected, logging as System.
+[23-Mar-2025 06:29:35 Europe/Berlin] Raw input: {"action":"UPDATE","table":"promos","record_id":"7","values":{"name":"Promo 45877","description":"Desc 5","price":"123.00","duration":"5","branch_ids":["6","7"],"staff_ids":["1","3"],"start_date":"2025-03-24T17:23","end_date":"2025-03-31T13:21"}}
+[23-Mar-2025 06:29:35 Europe/Berlin] PHP Warning:  Undefined variable $userId in C:\xampp\htdocs\admin_dashboard_backend\actions\generic_crud.php on line 112
+[23-Mar-2025 06:29:35 Europe/Berlin] PHP Warning:  Undefined variable $userName in C:\xampp\htdocs\admin_dashboard_backend\actions\generic_crud.php on line 112
+[23-Mar-2025 06:29:35 Europe/Berlin] PHP Warning:  Undefined variable $userRole in C:\xampp\htdocs\admin_dashboard_backend\actions\generic_crud.php on line 112
+[23-Mar-2025 06:29:35 Europe/Berlin] Session Data: Array
+(
+)
+
+[23-Mar-2025 06:29:35 Europe/Berlin] ⚠️ No user session detected, logging as System.
+[23-Mar-2025 06:29:42 Europe/Berlin] Raw input: {"action":"UPDATE","table":"promos","record_id":"7","values":{"name":"Promo 45877","description":"Desc 5","price":"123.00","duration":"5","branch_ids":["6","7"],"staff_ids":["1","3"],"start_date":"2025-03-24T17:23","end_date":"2025-03-31T13:21"}}
+[23-Mar-2025 06:29:42 Europe/Berlin] Session Data: Array
+(
+)
+
+[23-Mar-2025 06:29:42 Europe/Berlin] ⚠️ No user session detected, logging as System.
+[23-Mar-2025 06:31:22 Europe/Berlin] Raw input: {"action":"UPDATE","table":"promos","record_id":"2","values":{"name":"Armand 100000","description":"Seeerrcvviceee","price":"100.00","duration":"7","branch_ids":["6","7"],"staff_ids":["1","3"],"start_date":"2025-03-09T03:14","end_date":"2025-03-25T07:19"}}
+[23-Mar-2025 06:31:22 Europe/Berlin] Logger Session Data: Array
+(
+)
+
+[23-Mar-2025 06:31:22 Europe/Berlin] Session missing required user data: first_name: NULL, role: NULL
+[23-Mar-2025 06:33:06 Europe/Berlin] Raw input: {"action":"UPDATE","table":"promos","record_id":"7","values":{"name":"Promo 45877","description":"Desc 5","price":"123.00","duration":"5","branch_ids":[],"staff_ids":[],"start_date":"2025-03-24T17:23","end_date":"2025-03-31T13:21"}}
+[23-Mar-2025 06:33:06 Europe/Berlin] Logger Session Data: Array
+(
+)
+
+[23-Mar-2025 06:33:06 Europe/Berlin] Session missing required user data: first_name: NULL, role: NULL
+[23-Mar-2025 06:46:17 Europe/Berlin] Session Data: Array
+(
+)
+
+[23-Mar-2025 06:46:17 Europe/Berlin] Session Data: Array
+(
+)
+
+[23-Mar-2025 06:46:17 Europe/Berlin] Session validation failed: Missing required session variables
+[23-Mar-2025 06:46:24 Europe/Berlin] Session Data: Array
+(
+)
+
+[23-Mar-2025 06:46:24 Europe/Berlin] Session Data: Array
+(
+)
+
+[23-Mar-2025 06:46:24 Europe/Berlin] Session validation failed: Missing required session variables
+[23-Mar-2025 06:48:14 Europe/Berlin] Session Data: Array
+(
+)
+
+[23-Mar-2025 06:48:14 Europe/Berlin] Session Data: Array
+(
+)
+
+[23-Mar-2025 06:48:14 Europe/Berlin] Session validation failed: Missing required session variables
+[23-Mar-2025 06:48:35 Europe/Berlin] Session Data: Array
+(
+)
+
+[23-Mar-2025 06:48:35 Europe/Berlin] Session Data: Array
+(
+)
+
+[23-Mar-2025 06:48:35 Europe/Berlin] Session validation failed: Missing required session variables
+[23-Mar-2025 06:51:19 Europe/Berlin] Session Data at Start: Array
+(
+)
+
+[23-Mar-2025 06:51:19 Europe/Berlin] Session Data at Start: Array
+(
+)
+
+[23-Mar-2025 06:51:19 Europe/Berlin] Missing session key: user_id
+[23-Mar-2025 06:53:06 Europe/Berlin] Session Data at Start: Array
+(
+)
+
+[23-Mar-2025 06:53:06 Europe/Berlin] Session Data at Start: Array
+(
+)
+
+[23-Mar-2025 06:53:06 Europe/Berlin] Missing session key: user_id
+[23-Mar-2025 07:00:24 Europe/Berlin] Session Data at Start: Array
+(
+)
+
+[23-Mar-2025 07:00:24 Europe/Berlin] Session Data at Start: Array
+(
+)
+
+[23-Mar-2025 07:00:24 Europe/Berlin] Missing session key: user_id
+[23-Mar-2025 07:05:19 Europe/Berlin] Session Data at Start: Array
+(
+)
+
+[23-Mar-2025 07:05:19 Europe/Berlin] Session Data at Start: Array
+(
+    [user_id] => 57
+    [first_name] => Rovin
+    [role] => employee
+    [ip] => ::1
+    [user_agent] => Mozilla/5.0 (Linux; Android 6.0; Nexus 5 Build/MRA58N) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/134.0.0.0 Mobile Safari/537.36
+)
+
+[23-Mar-2025 07:05:19 Europe/Berlin] Authenticated User: ID=57, Name=Rovin, Role=employee
+[23-Mar-2025 07:05:19 Europe/Berlin] Raw input: {"action":"UPDATE","table":"promos","record_id":"2","values":{"name":"Armand 100000","description":"Seeerrcvviceee","price":"100.00","duration":"7","branch_ids":["6","7"],"staff_ids":["1","3"],"start_date":"2025-03-09T03:14","end_date":"2025-03-25T07:19"}}
+[23-Mar-2025 07:05:19 Europe/Berlin] Audit Log Values:
+[23-Mar-2025 07:05:19 Europe/Berlin] User ID: 57
+[23-Mar-2025 07:05:19 Europe/Berlin] User Name: Rovin
+[23-Mar-2025 07:05:19 Europe/Berlin] User Role: employee
+[23-Mar-2025 07:05:19 Europe/Berlin] ✅ Audit log created successfully
+[23-Mar-2025 07:26:14 Europe/Berlin] Session Data at Start: Array
+(
+)
+
+[23-Mar-2025 07:26:14 Europe/Berlin] Session Data at Start: Array
+(
+    [user_id] => 44
+    [first_name] => Gabriello
+    [role] => admin
+    [ip] => ::1
+    [user_agent] => Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/134.0.0.0 Safari/537.36
+)
+
+[23-Mar-2025 07:26:14 Europe/Berlin] Authenticated User: ID=44, Name=Gabriello, Role=admin
+[23-Mar-2025 07:26:14 Europe/Berlin] Raw input: {"action":"UPDATE","table":"promos","record_id":"7","values":{"name":"Promo 45877","description":"Desc 5","price":"123.00","duration":"5","branch_ids":[],"staff_ids":[],"start_date":"2025-03-24T17:23","end_date":"2025-03-31T13:21"}}
+[23-Mar-2025 07:26:14 Europe/Berlin] Audit Log Values:
+[23-Mar-2025 07:26:14 Europe/Berlin] User ID: 44
+[23-Mar-2025 07:26:14 Europe/Berlin] User Name: Gabriello
+[23-Mar-2025 07:26:14 Europe/Berlin] User Role: admin
+[23-Mar-2025 07:26:14 Europe/Berlin] ✅ Audit log created successfully
+[23-Mar-2025 07:35:08 Europe/Berlin] Session Data at Start: Array
+(
+)
+
+[23-Mar-2025 07:35:08 Europe/Berlin] Session Data at Start: Array
+(
+    [user_id] => 44
+    [first_name] => Gabriello
+    [role] => admin
+    [ip] => ::1
+    [user_agent] => Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/134.0.0.0 Safari/537.36
+)
+
+[23-Mar-2025 07:35:08 Europe/Berlin] Authenticated User: ID=44, Name=Gabriello, Role=admin
+[23-Mar-2025 07:35:08 Europe/Berlin] Raw input: {"action":"UPDATE","table":"promos","record_id":"7","values":{"name":"Promo 45877","description":"Desc 5","price":"123.00","duration":"6","branch_ids":["7","6"],"staff_ids":["1","3"],"start_date":"2025-03-24T17:23","end_date":"2025-03-31T13:21"}}
+[23-Mar-2025 07:35:08 Europe/Berlin] Audit Log Values:
+[23-Mar-2025 07:35:08 Europe/Berlin] User ID: 44
+[23-Mar-2025 07:35:08 Europe/Berlin] User Name: Gabriello
+[23-Mar-2025 07:35:08 Europe/Berlin] User Role: admin
+[23-Mar-2025 07:35:08 Europe/Berlin] ✅ Audit log created successfully
+[23-Mar-2025 07:40:33 Europe/Berlin] Session Data at Start: Array
+(
+)
+
+[23-Mar-2025 07:40:33 Europe/Berlin] Session Data at Start: Array
+(
+    [user_id] => 44
+    [first_name] => Gabriello
+    [role] => admin
+    [ip] => ::1
+    [user_agent] => Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/134.0.0.0 Safari/537.36
+)
+
+[23-Mar-2025 07:40:33 Europe/Berlin] Authenticated User: ID=44, Name=Gabriello, Role=admin
+[23-Mar-2025 07:40:33 Europe/Berlin] Raw input: {"action":"UPDATE","table":"promos","record_id":"7","values":{"name":"Promo 45877","description":"Desc 5","price":"123.00","duration":"6","branch_ids":["6","7"],"staff_ids":["1","3"],"start_date":"2025-03-24T17:23","end_date":"2025-03-31T13:21"}}
+[23-Mar-2025 07:40:33 Europe/Berlin] Audit Log Values:
+[23-Mar-2025 07:40:33 Europe/Berlin] User ID: 44
+[23-Mar-2025 07:40:33 Europe/Berlin] User Name: Gabriello
+[23-Mar-2025 07:40:33 Europe/Berlin] User Role: admin
+[23-Mar-2025 07:40:33 Europe/Berlin] ✅ Audit log created successfully
+[23-Mar-2025 07:40:52 Europe/Berlin] Session Data at Start: Array
+(
+)
+
+[23-Mar-2025 07:40:52 Europe/Berlin] Session Data at Start: Array
+(
+    [user_id] => 44
+    [first_name] => Gabriello
+    [role] => admin
+    [ip] => ::1
+    [user_agent] => Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/134.0.0.0 Safari/537.36
+)
+
+[23-Mar-2025 07:40:52 Europe/Berlin] Authenticated User: ID=44, Name=Gabriello, Role=admin
+[23-Mar-2025 07:40:52 Europe/Berlin] Raw input: {"action":"UPDATE","table":"promos","record_id":"7","values":{"name":"Promo 45877","description":"Desc 5","price":"123.00","duration":"6","branch_ids":[],"staff_ids":[],"start_date":"2025-03-24T17:23","end_date":"2025-03-31T13:21"}}
+[23-Mar-2025 07:40:52 Europe/Berlin] Audit Log Values:
+[23-Mar-2025 07:40:52 Europe/Berlin] User ID: 44
+[23-Mar-2025 07:40:52 Europe/Berlin] User Name: Gabriello
+[23-Mar-2025 07:40:52 Europe/Berlin] User Role: admin
+[23-Mar-2025 07:40:52 Europe/Berlin] ✅ Audit log created successfully
+[23-Mar-2025 07:41:09 Europe/Berlin] Session Data at Start: Array
+(
+)
+
+[23-Mar-2025 07:41:09 Europe/Berlin] Session Data at Start: Array
+(
+    [user_id] => 44
+    [first_name] => Gabriello
+    [role] => admin
+    [ip] => ::1
+    [user_agent] => Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/134.0.0.0 Safari/537.36
+)
+
+[23-Mar-2025 07:41:09 Europe/Berlin] Authenticated User: ID=44, Name=Gabriello, Role=admin
+[23-Mar-2025 07:41:09 Europe/Berlin] Raw input: {"action":"UPDATE","table":"promos","record_id":"7","values":{"name":"Promo 45877","description":"Desc 5","price":"123.00","duration":"6","branch_ids":["6","7"],"staff_ids":["1","3"],"start_date":"2025-03-24T17:23","end_date":"2025-03-31T13:21"}}
+[23-Mar-2025 07:41:09 Europe/Berlin] Audit Log Values:
+[23-Mar-2025 07:41:09 Europe/Berlin] User ID: 44
+[23-Mar-2025 07:41:09 Europe/Berlin] User Name: Gabriello
+[23-Mar-2025 07:41:09 Europe/Berlin] User Role: admin
+[23-Mar-2025 07:41:09 Europe/Berlin] ✅ Audit log created successfully
+[23-Mar-2025 07:42:32 Europe/Berlin] Session Data at Start: Array
+(
+)
+
+[23-Mar-2025 07:42:32 Europe/Berlin] Session Data at Start: Array
+(
+    [user_id] => 44
+    [first_name] => Gabriello
+    [role] => admin
+    [ip] => ::1
+    [user_agent] => Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/134.0.0.0 Safari/537.36
+)
+
+[23-Mar-2025 07:42:32 Europe/Berlin] Authenticated User: ID=44, Name=Gabriello, Role=admin
+[23-Mar-2025 07:42:32 Europe/Berlin] Raw input: {"action":"UPDATE","table":"promos","record_id":"3","values":{"name":"Armand 2","description":"Seeerrcvvicee","price":"11.00","duration":"7","branch_ids":["7","6"],"staff_ids":["1","3"],"start_date":"2025-03-09T03:14","end_date":"2025-03-25T07:19"}}
+[23-Mar-2025 07:42:32 Europe/Berlin] Audit Log Values:
+[23-Mar-2025 07:42:32 Europe/Berlin] User ID: 44
+[23-Mar-2025 07:42:32 Europe/Berlin] User Name: Gabriello
+[23-Mar-2025 07:42:32 Europe/Berlin] User Role: admin
+[23-Mar-2025 07:42:32 Europe/Berlin] ✅ Audit log created successfully
+[23-Mar-2025 07:43:08 Europe/Berlin] Session Data at Start: Array
+(
+)
+
+[23-Mar-2025 07:43:08 Europe/Berlin] Session Data at Start: Array
+(
+    [user_id] => 44
+    [first_name] => Gabriello
+    [role] => admin
+    [ip] => ::1
+    [user_agent] => Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/134.0.0.0 Safari/537.36
+)
+
+[23-Mar-2025 07:43:08 Europe/Berlin] Authenticated User: ID=44, Name=Gabriello, Role=admin
+[23-Mar-2025 07:43:08 Europe/Berlin] Raw input: {"action":"DELETE","table":"promos","record_id":"7"}
+[23-Mar-2025 07:43:08 Europe/Berlin] Audit Log Values:
+[23-Mar-2025 07:43:08 Europe/Berlin] User ID: 44
+[23-Mar-2025 07:43:08 Europe/Berlin] User Name: Gabriello
+[23-Mar-2025 07:43:08 Europe/Berlin] User Role: admin
+[23-Mar-2025 07:43:08 Europe/Berlin] ✅ Audit log created successfully
+[23-Mar-2025 08:15:56 Europe/Berlin] Session Data at Start: Array
+(
+)
+
+[23-Mar-2025 08:15:56 Europe/Berlin] Session Data at Start: Array
+(
+    [user_id] => 44
+    [first_name] => Gabriello
+    [role] => admin
+    [ip] => ::1
+    [user_agent] => Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/134.0.0.0 Safari/537.36
+)
+
+[23-Mar-2025 08:15:56 Europe/Berlin] Authenticated User: ID=44, Name=Gabriello, Role=admin
+[23-Mar-2025 08:15:56 Europe/Berlin] Raw input: {"action":"UPDATE","table":"products","record_id":"2","values":{"name":"Massage Therapy","description":"Relax your body and mind with therapeutic massages.","price":"1500"}}
+[23-Mar-2025 08:15:56 Europe/Berlin] Audit Log Values:
+[23-Mar-2025 08:15:56 Europe/Berlin] User ID: 44
+[23-Mar-2025 08:15:56 Europe/Berlin] User Name: Gabriello
+[23-Mar-2025 08:15:56 Europe/Berlin] User Role: admin
+[23-Mar-2025 08:15:56 Europe/Berlin] ✅ Audit log created successfully
+[23-Mar-2025 08:26:20 Europe/Berlin] Session Data at Start: Array
+(
+)
+
+[23-Mar-2025 08:26:20 Europe/Berlin] Session Data at Start: Array
+(
+    [user_id] => 57
+    [first_name] => Rovin
+    [role] => employee
+    [ip] => ::1
+    [user_agent] => Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/134.0.0.0 Safari/537.36
+)
+
+[23-Mar-2025 08:26:20 Europe/Berlin] Authenticated User: ID=57, Name=Rovin, Role=employee
+[23-Mar-2025 08:26:20 Europe/Berlin] Raw input: {"action":"DELETE","table":"products","record_id":"1014"}
+[23-Mar-2025 08:26:20 Europe/Berlin] Audit Log Values:
+[23-Mar-2025 08:26:20 Europe/Berlin] User ID: 57
+[23-Mar-2025 08:26:20 Europe/Berlin] User Name: Rovin
+[23-Mar-2025 08:26:20 Europe/Berlin] User Role: employee
+[23-Mar-2025 08:26:20 Europe/Berlin] ✅ Audit log created successfully
+[23-Mar-2025 09:04:34 Europe/Berlin] Session Data at Start: Array
+(
+)
+
+[23-Mar-2025 09:04:34 Europe/Berlin] Session Data at Start: Array
+(
+)
+
+[23-Mar-2025 09:04:34 Europe/Berlin] Session Data at Start: Array
+(
+    [user_id] => 57
+    [first_name] => Rovin
+    [role] => employee
+    [ip] => ::1
+    [user_agent] => Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/134.0.0.0 Safari/537.36
+)
+
+[23-Mar-2025 09:04:34 Europe/Berlin] Authenticated User: ID=57, Name=Rovin, Role=employee
+[23-Mar-2025 09:04:34 Europe/Berlin] Raw input: {"action":"READ","table":"surgeries"}
+[23-Mar-2025 09:04:34 Europe/Berlin] Session Data at Start: Array
+(
+    [user_id] => 57
+    [first_name] => Rovin
+    [role] => employee
+    [ip] => ::1
+    [user_agent] => Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/134.0.0.0 Safari/537.36
+)
+
+[23-Mar-2025 09:04:34 Europe/Berlin] Authenticated User: ID=57, Name=Rovin, Role=employee
+[23-Mar-2025 09:04:34 Europe/Berlin] Raw input: {"action":"READ","table":"surgeries"}
+[23-Mar-2025 09:04:43 Europe/Berlin] Session Data at Start: Array
+(
+    [user_id] => 57
+    [first_name] => Rovin
+    [role] => employee
+    [ip] => ::1
+    [user_agent] => Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/134.0.0.0 Safari/537.36
+)
+
+[23-Mar-2025 09:04:43 Europe/Berlin] Authenticated User: ID=57, Name=Rovin, Role=employee
+[23-Mar-2025 09:04:43 Europe/Berlin] Raw input: 
+[23-Mar-2025 09:13:24 Europe/Berlin] Session Data at Start: Array
+(
+    [user_id] => 57
+    [first_name] => Rovin
+    [role] => employee
+    [ip] => ::1
+    [user_agent] => Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/134.0.0.0 Safari/537.36
+)
+
+[23-Mar-2025 09:13:24 Europe/Berlin] Authenticated User: ID=57, Name=Rovin, Role=employee
+[23-Mar-2025 09:13:24 Europe/Berlin] Raw input: 
+[23-Mar-2025 09:14:19 Europe/Berlin] Session Data at Start: Array
+(
+)
+
+[23-Mar-2025 09:14:19 Europe/Berlin] Session Data at Start: Array
+(
+)
+
+[23-Mar-2025 09:14:19 Europe/Berlin] Session Data at Start: Array
+(
+    [user_id] => 57
+    [first_name] => Rovin
+    [role] => employee
+    [ip] => ::1
+    [user_agent] => Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/134.0.0.0 Safari/537.36
+)
+
+[23-Mar-2025 09:14:19 Europe/Berlin] Authenticated User: ID=57, Name=Rovin, Role=employee
+[23-Mar-2025 09:14:19 Europe/Berlin] Raw input: {"action":"READ","table":"surgeries"}
+[23-Mar-2025 09:14:19 Europe/Berlin] Session Data at Start: Array
+(
+    [user_id] => 57
+    [first_name] => Rovin
+    [role] => employee
+    [ip] => ::1
+    [user_agent] => Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/134.0.0.0 Safari/537.36
+)
+
+[23-Mar-2025 09:14:19 Europe/Berlin] Authenticated User: ID=57, Name=Rovin, Role=employee
+[23-Mar-2025 09:14:19 Europe/Berlin] Raw input: {"action":"READ","table":"surgeries"}
+[23-Mar-2025 09:15:43 Europe/Berlin] Session Data at Start: Array
+(
+)
+
+[23-Mar-2025 09:15:43 Europe/Berlin] Session Data at Start: Array
+(
+)
+
+[23-Mar-2025 09:15:43 Europe/Berlin] Session Data at Start: Array
+(
+    [user_id] => 57
+    [first_name] => Rovin
+    [role] => employee
+    [ip] => ::1
+    [user_agent] => Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/134.0.0.0 Safari/537.36
+)
+
+[23-Mar-2025 09:15:43 Europe/Berlin] Authenticated User: ID=57, Name=Rovin, Role=employee
+[23-Mar-2025 09:15:43 Europe/Berlin] Raw input: {"action":"READ","table":"surgeries"}
+[23-Mar-2025 09:15:43 Europe/Berlin] Session Data at Start: Array
+(
+    [user_id] => 57
+    [first_name] => Rovin
+    [role] => employee
+    [ip] => ::1
+    [user_agent] => Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/134.0.0.0 Safari/537.36
+)
+
+[23-Mar-2025 09:15:43 Europe/Berlin] Authenticated User: ID=57, Name=Rovin, Role=employee
+[23-Mar-2025 09:15:43 Europe/Berlin] Raw input: {"action":"READ","table":"surgeries"}
+[23-Mar-2025 09:50:44 Europe/Berlin] Session Data at Start: Array
+(
+)
+
+[23-Mar-2025 09:50:44 Europe/Berlin] Session Data at Start: Array
+(
+    [user_id] => 58
+    [first_name] => Gwen
+    [role] => admin
+    [ip] => ::1
+    [user_agent] => Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/134.0.0.0 Safari/537.36
+)
+
+[23-Mar-2025 09:50:44 Europe/Berlin] Authenticated User: ID=58, Name=Gwen, Role=admin
+[23-Mar-2025 09:50:44 Europe/Berlin] Raw input: {"action":"UPDATE","table":"surgeries","record_id":"2","values":{"title":"Surgery 1","description":"This is the description for Surgery 1","price":"3456.00","duration":"12","branch_ids":["6","7"],"staff_ids":["1","3","4","8","9"],"start_date":"2025-03-18T00:00","end_date":"2025-03-27T00:00"}}
+[23-Mar-2025 09:51:00 Europe/Berlin] Session Data at Start: Array
+(
+)
+
+[23-Mar-2025 09:51:00 Europe/Berlin] Session Data at Start: Array
+(
+    [user_id] => 58
+    [first_name] => Gwen
+    [role] => admin
+    [ip] => ::1
+    [user_agent] => Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/134.0.0.0 Safari/537.36
+)
+
+[23-Mar-2025 09:51:00 Europe/Berlin] Authenticated User: ID=58, Name=Gwen, Role=admin
+[23-Mar-2025 09:51:00 Europe/Berlin] Raw input: {"action":"UPDATE","table":"surgeries","record_id":"2","values":{"title":"Surgery 1","description":"This is the description for Surgery 1","price":"3456.00","duration":"12","branch_ids":["6","7"],"staff_ids":["1","3","4","8","9"],"start_date":"2025-03-18T00:00","end_date":"2025-03-27T00:00"}}
+[23-Mar-2025 09:51:03 Europe/Berlin] Session Data at Start: Array
+(
+    [user_id] => 58
+    [first_name] => Gwen
+    [role] => admin
+    [ip] => ::1
+    [user_agent] => Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/134.0.0.0 Safari/537.36
+)
+
+[23-Mar-2025 09:51:03 Europe/Berlin] Authenticated User: ID=58, Name=Gwen, Role=admin
+[23-Mar-2025 09:51:03 Europe/Berlin] Raw input: 
+[23-Mar-2025 09:53:35 Europe/Berlin] Session Data at Start: Array
+(
+)
+
+[23-Mar-2025 09:53:35 Europe/Berlin] Session Data at Start: Array
+(
+    [user_id] => 58
+    [first_name] => Gwen
+    [role] => admin
+    [ip] => ::1
+    [user_agent] => Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/134.0.0.0 Safari/537.36
+)
+
+[23-Mar-2025 09:53:35 Europe/Berlin] Authenticated User: ID=58, Name=Gwen, Role=admin
+[23-Mar-2025 09:53:35 Europe/Berlin] Raw input: {"action":"UPDATE","table":"surgeries","record_id":"2","values":{"title":"Surgery 1","description":"This is the description for Surgery 1","price":"3456.00","duration":"12","branch_ids":["6","7"],"staff_ids":["1","3","4","8","9"],"start_date":"2025-03-18T00:00","end_date":"2025-03-27T00:00"}}
+[23-Mar-2025 09:53:35 Europe/Berlin] Audit Log Values:
+[23-Mar-2025 09:53:35 Europe/Berlin] User ID: 58
+[23-Mar-2025 09:53:35 Europe/Berlin] User Name: Gwen
+[23-Mar-2025 09:53:35 Europe/Berlin] User Role: admin
+[23-Mar-2025 09:53:35 Europe/Berlin] ✅ Audit log created successfully
+[23-Mar-2025 09:56:09 Europe/Berlin] Session Data at Start: Array
+(
+)
+
+[23-Mar-2025 09:56:09 Europe/Berlin] Session Data at Start: Array
+(
+    [user_id] => 58
+    [first_name] => Gwen
+    [role] => admin
+    [ip] => ::1
+    [user_agent] => Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/134.0.0.0 Safari/537.36
+)
+
+[23-Mar-2025 09:56:09 Europe/Berlin] Authenticated User: ID=58, Name=Gwen, Role=admin
+[23-Mar-2025 09:56:09 Europe/Berlin] Raw input: {"action":"CREATE","table":"surgeries","values":{"title":"Surgery 3","description":"Surgery Desc 3","price":"3456","duration":"11","branch_ids":["6","7"],"staff_ids":["3","1","4"],"start_date":"2025-03-26T16:58","end_date":"2025-03-28T20:59"}}
+[23-Mar-2025 09:56:09 Europe/Berlin] Audit Log Values:
+[23-Mar-2025 09:56:09 Europe/Berlin] User ID: 58
+[23-Mar-2025 09:56:09 Europe/Berlin] User Name: Gwen
+[23-Mar-2025 09:56:09 Europe/Berlin] User Role: admin
+[23-Mar-2025 09:56:09 Europe/Berlin] ✅ Audit log created successfully
+[23-Mar-2025 09:56:54 Europe/Berlin] Session Data at Start: Array
+(
+)
+
+[23-Mar-2025 09:56:54 Europe/Berlin] Session Data at Start: Array
+(
+    [user_id] => 58
+    [first_name] => Gwen
+    [role] => admin
+    [ip] => ::1
+    [user_agent] => Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/134.0.0.0 Safari/537.36
+)
+
+[23-Mar-2025 09:56:54 Europe/Berlin] Authenticated User: ID=58, Name=Gwen, Role=admin
+[23-Mar-2025 09:56:54 Europe/Berlin] Raw input: {"action":"CREATE","table":"surgeries","values":{"title":"Surgery 3","description":"Surgery Desc 3","price":"3456","duration":"11","branch_ids":["6","7"],"staff_ids":["3","1","4"],"start_date":"2025-03-26T16:58","end_date":"2025-03-28T20:59"}}
+[23-Mar-2025 09:56:54 Europe/Berlin] Audit Log Values:
+[23-Mar-2025 09:56:54 Europe/Berlin] User ID: 58
+[23-Mar-2025 09:56:54 Europe/Berlin] User Name: Gwen
+[23-Mar-2025 09:56:54 Europe/Berlin] User Role: admin
+[23-Mar-2025 09:56:54 Europe/Berlin] ✅ Audit log created successfully
+[23-Mar-2025 09:57:03 Europe/Berlin] Session Data at Start: Array
+(
+)
+
+[23-Mar-2025 09:57:03 Europe/Berlin] Session Data at Start: Array
+(
+    [user_id] => 58
+    [first_name] => Gwen
+    [role] => admin
+    [ip] => ::1
+    [user_agent] => Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/134.0.0.0 Safari/537.36
+)
+
+[23-Mar-2025 09:57:03 Europe/Berlin] Authenticated User: ID=58, Name=Gwen, Role=admin
+[23-Mar-2025 09:57:03 Europe/Berlin] Raw input: {"action":"CREATE","table":"surgeries","values":{"title":"Surgery 3","description":"Surgery Desc 3","price":"3456","duration":"11","branch_ids":["6","7"],"staff_ids":["3","1","4"],"start_date":"2025-03-26T16:58","end_date":"2025-03-28T20:59"}}
+[23-Mar-2025 09:57:03 Europe/Berlin] Audit Log Values:
+[23-Mar-2025 09:57:03 Europe/Berlin] User ID: 58
+[23-Mar-2025 09:57:03 Europe/Berlin] User Name: Gwen
+[23-Mar-2025 09:57:03 Europe/Berlin] User Role: admin
+[23-Mar-2025 09:57:03 Europe/Berlin] ✅ Audit log created successfully
+[23-Mar-2025 09:57:09 Europe/Berlin] Session Data at Start: Array
+(
+)
+
+[23-Mar-2025 09:57:09 Europe/Berlin] Session Data at Start: Array
+(
+    [user_id] => 58
+    [first_name] => Gwen
+    [role] => admin
+    [ip] => ::1
+    [user_agent] => Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/134.0.0.0 Safari/537.36
+)
+
+[23-Mar-2025 09:57:09 Europe/Berlin] Authenticated User: ID=58, Name=Gwen, Role=admin
+[23-Mar-2025 09:57:09 Europe/Berlin] Raw input: {"action":"CREATE","table":"surgeries","values":{"title":"Surgery 3","description":"Surgery Desc 3","price":"3456","duration":"11","branch_ids":["6","7"],"staff_ids":["3","1","4"],"start_date":"2025-03-26T16:58","end_date":"2025-03-28T20:59"}}
+[23-Mar-2025 09:57:09 Europe/Berlin] Audit Log Values:
+[23-Mar-2025 09:57:09 Europe/Berlin] User ID: 58
+[23-Mar-2025 09:57:09 Europe/Berlin] User Name: Gwen
+[23-Mar-2025 09:57:09 Europe/Berlin] User Role: admin
+[23-Mar-2025 09:57:09 Europe/Berlin] ✅ Audit log created successfully
+[23-Mar-2025 09:57:56 Europe/Berlin] Session Data at Start: Array
+(
+)
+
+[23-Mar-2025 09:57:56 Europe/Berlin] Session Data at Start: Array
+(
+    [user_id] => 58
+    [first_name] => Gwen
+    [role] => admin
+    [ip] => ::1
+    [user_agent] => Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/134.0.0.0 Safari/537.36
+)
+
+[23-Mar-2025 09:57:56 Europe/Berlin] Authenticated User: ID=58, Name=Gwen, Role=admin
+[23-Mar-2025 09:57:56 Europe/Berlin] Raw input: {"action":"CREATE","table":"surgeries","values":{"title":"Surgery 3","description":"Surgery Desc 3","price":"3456","duration":"11","branch_ids":["6","7"],"staff_ids":["3","1","4"],"start_date":"2025-03-26T16:58","end_date":"2025-03-28T20:59"}}
+[23-Mar-2025 09:57:56 Europe/Berlin] Audit Log Values:
+[23-Mar-2025 09:57:56 Europe/Berlin] User ID: 58
+[23-Mar-2025 09:57:56 Europe/Berlin] User Name: Gwen
+[23-Mar-2025 09:57:56 Europe/Berlin] User Role: admin
+[23-Mar-2025 09:57:56 Europe/Berlin] ✅ Audit log created successfully
+[23-Mar-2025 09:58:02 Europe/Berlin] Session Data at Start: Array
+(
+)
+
+[23-Mar-2025 09:58:02 Europe/Berlin] Session Data at Start: Array
+(
+    [user_id] => 58
+    [first_name] => Gwen
+    [role] => admin
+    [ip] => ::1
+    [user_agent] => Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/134.0.0.0 Safari/537.36
+)
+
+[23-Mar-2025 09:58:02 Europe/Berlin] Authenticated User: ID=58, Name=Gwen, Role=admin
+[23-Mar-2025 09:58:02 Europe/Berlin] Raw input: {"action":"CREATE","table":"surgeries","values":{"title":"Surgery 3","description":"Surgery Desc 3","price":"3456","duration":"11","branch_ids":["6","7"],"staff_ids":["3","1","4"],"start_date":"2025-03-26T16:58","end_date":"2025-03-28T20:59"}}
+[23-Mar-2025 09:58:02 Europe/Berlin] Audit Log Values:
+[23-Mar-2025 09:58:02 Europe/Berlin] User ID: 58
+[23-Mar-2025 09:58:02 Europe/Berlin] User Name: Gwen
+[23-Mar-2025 09:58:02 Europe/Berlin] User Role: admin
+[23-Mar-2025 09:58:02 Europe/Berlin] ✅ Audit log created successfully
+[23-Mar-2025 10:09:20 Europe/Berlin] Session Data at Start: Array
+(
+)
+
+[23-Mar-2025 10:09:20 Europe/Berlin] Session Data at Start: Array
+(
+    [user_id] => 58
+    [first_name] => Gwen
+    [role] => admin
+    [ip] => ::1
+    [user_agent] => Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/134.0.0.0 Safari/537.36
+)
+
+[23-Mar-2025 10:09:20 Europe/Berlin] Authenticated User: ID=58, Name=Gwen, Role=admin
+[23-Mar-2025 10:09:20 Europe/Berlin] Raw input: {"action":"UPDATE","table":"surgeries","record_id":"5","values":{"title":"Surgery 3","description":"Surgery Desc 3","price":"3456.00","duration":"11","branch_ids":["6","7"],"staff_ids":["1","3","4"],"start_date":"2025-03-23T00:00","end_date":"2025-03-26T00:00"}}
+[23-Mar-2025 10:09:20 Europe/Berlin] Audit Log Values:
+[23-Mar-2025 10:09:20 Europe/Berlin] User ID: 58
+[23-Mar-2025 10:09:20 Europe/Berlin] User Name: Gwen
+[23-Mar-2025 10:09:20 Europe/Berlin] User Role: admin
+[23-Mar-2025 10:09:20 Europe/Berlin] ✅ Audit log created successfully
+[23-Mar-2025 10:09:42 Europe/Berlin] Session Data at Start: Array
+(
+)
+
+[23-Mar-2025 10:09:42 Europe/Berlin] Session Data at Start: Array
+(
+    [user_id] => 58
+    [first_name] => Gwen
+    [role] => admin
+    [ip] => ::1
+    [user_agent] => Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/134.0.0.0 Safari/537.36
+)
+
+[23-Mar-2025 10:09:42 Europe/Berlin] Authenticated User: ID=58, Name=Gwen, Role=admin
+[23-Mar-2025 10:09:42 Europe/Berlin] Raw input: {"action":"DELETE","table":"surgeries","record_id":"10"}
+[23-Mar-2025 10:09:42 Europe/Berlin] Audit Log Values:
+[23-Mar-2025 10:09:42 Europe/Berlin] User ID: 58
+[23-Mar-2025 10:09:42 Europe/Berlin] User Name: Gwen
+[23-Mar-2025 10:09:42 Europe/Berlin] User Role: admin
+[23-Mar-2025 10:09:42 Europe/Berlin] ✅ Audit log created successfully
+[23-Mar-2025 10:09:45 Europe/Berlin] Session Data at Start: Array
+(
+    [user_id] => 58
+    [first_name] => Gwen
+    [role] => admin
+    [ip] => ::1
+    [user_agent] => Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/134.0.0.0 Safari/537.36
+)
+
+[23-Mar-2025 10:09:45 Europe/Berlin] Authenticated User: ID=58, Name=Gwen, Role=admin
+[23-Mar-2025 10:09:45 Europe/Berlin] Raw input: {"action":"DELETE","table":"surgeries","record_id":"9"}
+[23-Mar-2025 10:09:45 Europe/Berlin] Audit Log Values:
+[23-Mar-2025 10:09:45 Europe/Berlin] User ID: 58
+[23-Mar-2025 10:09:45 Europe/Berlin] User Name: Gwen
+[23-Mar-2025 10:09:45 Europe/Berlin] User Role: admin
+[23-Mar-2025 10:09:45 Europe/Berlin] ✅ Audit log created successfully
+[23-Mar-2025 10:09:48 Europe/Berlin] Session Data at Start: Array
+(
+)
+
+[23-Mar-2025 10:09:48 Europe/Berlin] Session Data at Start: Array
+(
+    [user_id] => 58
+    [first_name] => Gwen
+    [role] => admin
+    [ip] => ::1
+    [user_agent] => Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/134.0.0.0 Safari/537.36
+)
+
+[23-Mar-2025 10:09:48 Europe/Berlin] Authenticated User: ID=58, Name=Gwen, Role=admin
+[23-Mar-2025 10:09:48 Europe/Berlin] Raw input: {"action":"DELETE","table":"surgeries","record_id":"8"}
+[23-Mar-2025 10:09:48 Europe/Berlin] Audit Log Values:
+[23-Mar-2025 10:09:48 Europe/Berlin] User ID: 58
+[23-Mar-2025 10:09:48 Europe/Berlin] User Name: Gwen
+[23-Mar-2025 10:09:48 Europe/Berlin] User Role: admin
+[23-Mar-2025 10:09:48 Europe/Berlin] ✅ Audit log created successfully
+[23-Mar-2025 10:09:50 Europe/Berlin] Session Data at Start: Array
+(
+    [user_id] => 58
+    [first_name] => Gwen
+    [role] => admin
+    [ip] => ::1
+    [user_agent] => Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/134.0.0.0 Safari/537.36
+)
+
+[23-Mar-2025 10:09:50 Europe/Berlin] Authenticated User: ID=58, Name=Gwen, Role=admin
+[23-Mar-2025 10:09:50 Europe/Berlin] Raw input: {"action":"DELETE","table":"surgeries","record_id":"7"}
+[23-Mar-2025 10:09:50 Europe/Berlin] Audit Log Values:
+[23-Mar-2025 10:09:50 Europe/Berlin] User ID: 58
+[23-Mar-2025 10:09:50 Europe/Berlin] User Name: Gwen
+[23-Mar-2025 10:09:50 Europe/Berlin] User Role: admin
+[23-Mar-2025 10:09:50 Europe/Berlin] ✅ Audit log created successfully
+[23-Mar-2025 10:11:22 Europe/Berlin] Session Data at Start: Array
+(
+)
+
+[23-Mar-2025 10:11:22 Europe/Berlin] Session Data at Start: Array
+(
+    [user_id] => 58
+    [first_name] => Gwen
+    [role] => admin
+    [ip] => ::1
+    [user_agent] => Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/134.0.0.0 Safari/537.36
+)
+
+[23-Mar-2025 10:11:22 Europe/Berlin] Authenticated User: ID=58, Name=Gwen, Role=admin
+[23-Mar-2025 10:11:22 Europe/Berlin] Raw input: {"action":"UPDATE","table":"surgeries","record_id":"5","values":{"title":"Surgery 3","description":"Surgery Desc 3","price":"3456.00","duration":"11","branch_ids":["6","7"],"staff_ids":["1","3","4"],"start_date":"2025-03-25T00:00","end_date":"2025-03-26T00:00"}}
+[23-Mar-2025 10:11:22 Europe/Berlin] Audit Log Values:
+[23-Mar-2025 10:11:22 Europe/Berlin] User ID: 58
+[23-Mar-2025 10:11:22 Europe/Berlin] User Name: Gwen
+[23-Mar-2025 10:11:22 Europe/Berlin] User Role: admin
+[23-Mar-2025 10:11:22 Europe/Berlin] ✅ Audit log created successfully
+[23-Mar-2025 10:13:59 Europe/Berlin] Session Data at Start: Array
+(
+)
+
+[23-Mar-2025 10:13:59 Europe/Berlin] Session Data at Start: Array
+(
+    [user_id] => 58
+    [first_name] => Gwen
+    [role] => admin
+    [ip] => ::1
+    [user_agent] => Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/134.0.0.0 Safari/537.36
+)
+
+[23-Mar-2025 10:13:59 Europe/Berlin] Authenticated User: ID=58, Name=Gwen, Role=admin
+[23-Mar-2025 10:13:59 Europe/Berlin] Raw input: {"action":"UPDATE","table":"surgeries","record_id":"5","values":{"title":"Surgery 3","description":"Surgery Desc 3","price":"3456.00","duration":"11","branch_ids":["7","6"],"staff_ids":["1","3"],"start_date":"2025-03-25T00:00","end_date":"2025-03-27T00:00"}}
+[23-Mar-2025 10:13:59 Europe/Berlin] Audit Log Values:
+[23-Mar-2025 10:13:59 Europe/Berlin] User ID: 58
+[23-Mar-2025 10:13:59 Europe/Berlin] User Name: Gwen
+[23-Mar-2025 10:13:59 Europe/Berlin] User Role: admin
+[23-Mar-2025 10:13:59 Europe/Berlin] ✅ Audit log created successfully
+[23-Mar-2025 10:18:04 Europe/Berlin] Session Data at Start: Array
+(
+)
+
+[23-Mar-2025 10:18:04 Europe/Berlin] Session Data at Start: Array
+(
+    [user_id] => 58
+    [first_name] => Gwen
+    [role] => admin
+    [ip] => ::1
+    [user_agent] => Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/134.0.0.0 Safari/537.36
+)
+
+[23-Mar-2025 10:18:04 Europe/Berlin] Authenticated User: ID=58, Name=Gwen, Role=admin
+[23-Mar-2025 10:18:04 Europe/Berlin] Raw input: {"action":"CREATE","table":"surgeries","values":{"title":"Surgeryy","description":"Surg Appt","price":"455","duration":"7","branch_ids":["6","7"],"staff_ids":["3","1"],"start_date":"2025-03-31T20:20","end_date":"2025-04-01T21:21"}}
+[23-Mar-2025 10:18:04 Europe/Berlin] Audit Log Values:
+[23-Mar-2025 10:18:04 Europe/Berlin] User ID: 58
+[23-Mar-2025 10:18:04 Europe/Berlin] User Name: Gwen
+[23-Mar-2025 10:18:04 Europe/Berlin] User Role: admin
+[23-Mar-2025 10:18:04 Europe/Berlin] ✅ Audit log created successfully
+[23-Mar-2025 10:23:59 Europe/Berlin] Session Data at Start: Array
+(
+)
+
+[23-Mar-2025 10:23:59 Europe/Berlin] Session Data at Start: Array
+(
+    [user_id] => 58
+    [first_name] => Gwen
+    [role] => admin
+    [ip] => ::1
+    [user_agent] => Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/134.0.0.0 Safari/537.36
+)
+
+[23-Mar-2025 10:23:59 Europe/Berlin] Authenticated User: ID=58, Name=Gwen, Role=admin
+[23-Mar-2025 10:23:59 Europe/Berlin] Raw input: {"action":"UPDATE","table":"surgeries","record_id":"5","values":{"title":"Surgery 3","description":"Surgery Desc 3","price":"3456.00","duration":"11","branch_ids":["6"],"staff_ids":["1","4"],"start_date":"2025-03-17T00:00","end_date":"2025-03-24T00:00"}}
+[23-Mar-2025 10:23:59 Europe/Berlin] Audit Log Values:
+[23-Mar-2025 10:23:59 Europe/Berlin] User ID: 58
+[23-Mar-2025 10:23:59 Europe/Berlin] User Name: Gwen
+[23-Mar-2025 10:23:59 Europe/Berlin] User Role: admin
+[23-Mar-2025 10:23:59 Europe/Berlin] ✅ Audit log created successfully
+[23-Mar-2025 10:24:40 Europe/Berlin] Session Data at Start: Array
+(
+)
+
+[23-Mar-2025 10:24:40 Europe/Berlin] Session Data at Start: Array
+(
+    [user_id] => 58
+    [first_name] => Gwen
+    [role] => admin
+    [ip] => ::1
+    [user_agent] => Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/134.0.0.0 Safari/537.36
+)
+
+[23-Mar-2025 10:24:40 Europe/Berlin] Authenticated User: ID=58, Name=Gwen, Role=admin
+[23-Mar-2025 10:24:40 Europe/Berlin] Raw input: {"action":"UPDATE","table":"surgeries","record_id":"5","values":{"title":"Surgery 3","description":"Surgery Desc 3","price":"3456.00","duration":"11","branch_ids":["6"],"staff_ids":["1","4"],"start_date":"2025-03-24T00:00","end_date":"2025-03-25T00:00"}}
+[23-Mar-2025 10:24:40 Europe/Berlin] Audit Log Values:
+[23-Mar-2025 10:24:40 Europe/Berlin] User ID: 58
+[23-Mar-2025 10:24:40 Europe/Berlin] User Name: Gwen
+[23-Mar-2025 10:24:40 Europe/Berlin] User Role: admin
+[23-Mar-2025 10:24:40 Europe/Berlin] ✅ Audit log created successfully
+[23-Mar-2025 10:26:35 Europe/Berlin] Session Data at Start: Array
+(
+)
+
+[23-Mar-2025 10:26:36 Europe/Berlin] Session Data at Start: Array
+(
+    [user_id] => 58
+    [first_name] => Gwen
+    [role] => admin
+    [ip] => ::1
+    [user_agent] => Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/134.0.0.0 Safari/537.36
+)
+
+[23-Mar-2025 10:26:36 Europe/Berlin] Authenticated User: ID=58, Name=Gwen, Role=admin
+[23-Mar-2025 10:26:36 Europe/Berlin] Raw input: {"action":"UPDATE","table":"surgeries","record_id":"5","values":{"title":"Surgery 3","description":"Surgery Desc 3","price":"3456.00","duration":"11","branch_ids":["6","7"],"staff_ids":["1","3"],"start_date":"2025-03-23T00:00","end_date":"2025-03-26T00:00"}}
+[23-Mar-2025 10:26:36 Europe/Berlin] Audit Log Values:
+[23-Mar-2025 10:26:36 Europe/Berlin] User ID: 58
+[23-Mar-2025 10:26:36 Europe/Berlin] User Name: Gwen
+[23-Mar-2025 10:26:36 Europe/Berlin] User Role: admin
+[23-Mar-2025 10:26:36 Europe/Berlin] ✅ Audit log created successfully
+[23-Mar-2025 10:26:51 Europe/Berlin] Session Data at Start: Array
+(
+)
+
+[23-Mar-2025 10:26:51 Europe/Berlin] Session Data at Start: Array
+(
+    [user_id] => 58
+    [first_name] => Gwen
+    [role] => admin
+    [ip] => ::1
+    [user_agent] => Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/134.0.0.0 Safari/537.36
+)
+
+[23-Mar-2025 10:26:51 Europe/Berlin] Authenticated User: ID=58, Name=Gwen, Role=admin
+[23-Mar-2025 10:26:51 Europe/Berlin] Raw input: {"action":"UPDATE","table":"surgeries","record_id":"6","values":{"title":"Surgery 3","description":"Surgery Desc 3","price":"3456.00","duration":"11","branch_ids":["7","6"],"staff_ids":["3","1","4"],"start_date":"2025-03-25T00:00","end_date":"2025-03-28T00:00"}}
+[23-Mar-2025 10:26:51 Europe/Berlin] Audit Log Values:
+[23-Mar-2025 10:26:51 Europe/Berlin] User ID: 58
+[23-Mar-2025 10:26:51 Europe/Berlin] User Name: Gwen
+[23-Mar-2025 10:26:51 Europe/Berlin] User Role: admin
+[23-Mar-2025 10:26:51 Europe/Berlin] ✅ Audit log created successfully
+[23-Mar-2025 10:32:32 Europe/Berlin] Session Data at Start: Array
+(
+)
+
+[23-Mar-2025 10:32:32 Europe/Berlin] Session Data at Start: Array
+(
+    [user_id] => 58
+    [first_name] => Gwen
+    [role] => admin
+    [ip] => ::1
+    [user_agent] => Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/134.0.0.0 Safari/537.36
+)
+
+[23-Mar-2025 10:32:32 Europe/Berlin] Authenticated User: ID=58, Name=Gwen, Role=admin
+[23-Mar-2025 10:32:32 Europe/Berlin] Raw input: {"action":"UPDATE","table":"surgeries","record_id":"5","values":{"title":"Surgery 3","description":"Surgery Desc 3","price":"3456.00","duration":"11","branch_ids":["6","7"],"staff_ids":["3","1","4"],"start_date":"2025-03-26T00:00","end_date":"2025-03-28T00:00"}}
+[23-Mar-2025 10:32:32 Europe/Berlin] Audit Log Values:
+[23-Mar-2025 10:32:32 Europe/Berlin] User ID: 58
+[23-Mar-2025 10:32:32 Europe/Berlin] User Name: Gwen
+[23-Mar-2025 10:32:32 Europe/Berlin] User Role: admin
+[23-Mar-2025 10:32:32 Europe/Berlin] ✅ Audit log created successfully
+[23-Mar-2025 10:33:57 Europe/Berlin] Session Data at Start: Array
+(
+)
+
+[23-Mar-2025 10:33:57 Europe/Berlin] Session Data at Start: Array
+(
+    [user_id] => 58
+    [first_name] => Gwen
+    [role] => admin
+    [ip] => ::1
+    [user_agent] => Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/134.0.0.0 Safari/537.36
+)
+
+[23-Mar-2025 10:33:57 Europe/Berlin] Authenticated User: ID=58, Name=Gwen, Role=admin
+[23-Mar-2025 10:33:57 Europe/Berlin] Raw input: {"action":"CREATE","table":"promos","values":{"name":"Promo 3","description":"Promo 3 desc","price":"199","duration":"12","branch_ids":["6","7"],"staff_ids":["1","3"],"start_date":"2025-03-25T21:38","end_date":"2025-03-29T22:38"}}
+[23-Mar-2025 10:33:57 Europe/Berlin] Audit Log Values:
+[23-Mar-2025 10:33:57 Europe/Berlin] User ID: 58
+[23-Mar-2025 10:33:57 Europe/Berlin] User Name: Gwen
+[23-Mar-2025 10:33:57 Europe/Berlin] User Role: admin
+[23-Mar-2025 10:33:57 Europe/Berlin] ✅ Audit log created successfully
+[23-Mar-2025 10:53:23 Europe/Berlin] Session Data at Start: Array
+(
+)
+
+[23-Mar-2025 10:53:23 Europe/Berlin] Session Data at Start: Array
+(
+    [user_id] => 58
+    [first_name] => Gwen
+    [role] => admin
+    [ip] => ::1
+    [user_agent] => Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/134.0.0.0 Safari/537.36
+)
+
+[23-Mar-2025 10:53:23 Europe/Berlin] Authenticated User: ID=58, Name=Gwen, Role=admin
+[23-Mar-2025 10:53:23 Europe/Berlin] Raw input: {"action":"UPDATE","table":"surgeries","record_id":"5","values":{"title":"Surgery 3","description":"Surgery Desc 3","price":"3456.00","duration":"11","branch_ids":["6","7"],"staff_ids":["3","4","1"],"start_date":"2025-03-25T00:00","end_date":"2025-03-27T00:00"},"relationships":{"branches":[],"staff":[]}}
+[23-Mar-2025 10:53:23 Europe/Berlin] PHP Warning:  Array to string conversion in C:\xampp\htdocs\admin_dashboard_backend\actions\generic_crud.php on line 111
+[23-Mar-2025 10:53:23 Europe/Berlin] PHP Warning:  Array to string conversion in C:\xampp\htdocs\admin_dashboard_backend\actions\generic_crud.php on line 111
+[23-Mar-2025 10:53:23 Europe/Berlin] Junction table not found: surgeries_branches
+[23-Mar-2025 10:53:23 Europe/Berlin] Junction table not found: surgeries_staff
+[23-Mar-2025 10:53:23 Europe/Berlin] Audit Log Values:
+[23-Mar-2025 10:53:23 Europe/Berlin] User ID: 58
+[23-Mar-2025 10:53:23 Europe/Berlin] User Name: Gwen
+[23-Mar-2025 10:53:23 Europe/Berlin] User Role: admin
+[23-Mar-2025 10:53:23 Europe/Berlin] ✅ Audit log created successfully
+[23-Mar-2025 10:53:32 Europe/Berlin] Session Data at Start: Array
+(
+)
+
+[23-Mar-2025 10:53:32 Europe/Berlin] Session Data at Start: Array
+(
+    [user_id] => 58
+    [first_name] => Gwen
+    [role] => admin
+    [ip] => ::1
+    [user_agent] => Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/134.0.0.0 Safari/537.36
+)
+
+[23-Mar-2025 10:53:32 Europe/Berlin] Authenticated User: ID=58, Name=Gwen, Role=admin
+[23-Mar-2025 10:53:32 Europe/Berlin] Raw input: {"action":"UPDATE","table":"surgeries","record_id":"5","values":{"title":"Surgery 3","description":"Surgery Desc 3","price":"3456.00","duration":"11","branch_ids":["6","7"],"staff_ids":["3","4","1"],"start_date":"2025-03-25T00:00","end_date":"2025-03-27T00:00"},"relationships":{"branches":[],"staff":[]}}
+[23-Mar-2025 10:53:32 Europe/Berlin] PHP Warning:  Array to string conversion in C:\xampp\htdocs\admin_dashboard_backend\actions\generic_crud.php on line 111
+[23-Mar-2025 10:53:32 Europe/Berlin] PHP Warning:  Array to string conversion in C:\xampp\htdocs\admin_dashboard_backend\actions\generic_crud.php on line 111
+[23-Mar-2025 10:53:32 Europe/Berlin] Junction table not found: surgeries_branches
+[23-Mar-2025 10:53:32 Europe/Berlin] Junction table not found: surgeries_staff
+[23-Mar-2025 10:53:32 Europe/Berlin] Audit Log Values:
+[23-Mar-2025 10:53:32 Europe/Berlin] User ID: 58
+[23-Mar-2025 10:53:32 Europe/Berlin] User Name: Gwen
+[23-Mar-2025 10:53:32 Europe/Berlin] User Role: admin
+[23-Mar-2025 10:53:32 Europe/Berlin] ✅ Audit log created successfully
+[23-Mar-2025 10:53:38 Europe/Berlin] Session Data at Start: Array
+(
+)
+
+[23-Mar-2025 10:53:38 Europe/Berlin] Session Data at Start: Array
+(
+    [user_id] => 58
+    [first_name] => Gwen
+    [role] => admin
+    [ip] => ::1
+    [user_agent] => Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/134.0.0.0 Safari/537.36
+)
+
+[23-Mar-2025 10:53:38 Europe/Berlin] Authenticated User: ID=58, Name=Gwen, Role=admin
+[23-Mar-2025 10:53:38 Europe/Berlin] Raw input: {"action":"UPDATE","table":"surgeries","record_id":"5","values":{"title":"Surgery 3","description":"Surgery Desc 3","price":"3456.00","duration":"11","branch_ids":["6","7"],"staff_ids":["3","4","1"],"start_date":"2025-03-25T00:00","end_date":"2025-03-27T00:00"},"relationships":{"branches":[],"staff":[]}}
+[23-Mar-2025 10:53:38 Europe/Berlin] PHP Warning:  Array to string conversion in C:\xampp\htdocs\admin_dashboard_backend\actions\generic_crud.php on line 111
+[23-Mar-2025 10:53:38 Europe/Berlin] PHP Warning:  Array to string conversion in C:\xampp\htdocs\admin_dashboard_backend\actions\generic_crud.php on line 111
+[23-Mar-2025 10:53:38 Europe/Berlin] Junction table not found: surgeries_branches
+[23-Mar-2025 10:53:38 Europe/Berlin] Junction table not found: surgeries_staff
+[23-Mar-2025 10:53:38 Europe/Berlin] Audit Log Values:
+[23-Mar-2025 10:53:38 Europe/Berlin] User ID: 58
+[23-Mar-2025 10:53:38 Europe/Berlin] User Name: Gwen
+[23-Mar-2025 10:53:38 Europe/Berlin] User Role: admin
+[23-Mar-2025 10:53:38 Europe/Berlin] ✅ Audit log created successfully
+[23-Mar-2025 10:53:40 Europe/Berlin] Session Data at Start: Array
+(
+    [user_id] => 58
+    [first_name] => Gwen
+    [role] => admin
+    [ip] => ::1
+    [user_agent] => Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/134.0.0.0 Safari/537.36
+)
+
+[23-Mar-2025 10:53:40 Europe/Berlin] Authenticated User: ID=58, Name=Gwen, Role=admin
+[23-Mar-2025 10:53:40 Europe/Berlin] Raw input: 
+[23-Mar-2025 10:55:39 Europe/Berlin] Session Data at Start: Array
+(
+)
+
+[23-Mar-2025 10:55:39 Europe/Berlin] Session Data at Start: Array
+(
+    [user_id] => 58
+    [first_name] => Gwen
+    [role] => admin
+    [ip] => ::1
+    [user_agent] => Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/134.0.0.0 Safari/537.36
+)
+
+[23-Mar-2025 10:55:39 Europe/Berlin] Authenticated User: ID=58, Name=Gwen, Role=admin
+[23-Mar-2025 10:55:39 Europe/Berlin] Raw input: {"action":"DELETE","table":"products","record_id":"1017","relationships":{"branches":[],"staff":[]}}
+[23-Mar-2025 10:55:39 Europe/Berlin] Junction table not found: products_branches
+[23-Mar-2025 10:55:39 Europe/Berlin] Junction table not found: products_staff
+[23-Mar-2025 10:55:39 Europe/Berlin] Audit Log Values:
+[23-Mar-2025 10:55:39 Europe/Berlin] User ID: 58
+[23-Mar-2025 10:55:39 Europe/Berlin] User Name: Gwen
+[23-Mar-2025 10:55:39 Europe/Berlin] User Role: admin
+[23-Mar-2025 10:55:39 Europe/Berlin] ✅ Audit log created successfully
+[23-Mar-2025 10:55:42 Europe/Berlin] Session Data at Start: Array
+(
+    [user_id] => 58
+    [first_name] => Gwen
+    [role] => admin
+    [ip] => ::1
+    [user_agent] => Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/134.0.0.0 Safari/537.36
+)
+
+[23-Mar-2025 10:55:42 Europe/Berlin] Authenticated User: ID=58, Name=Gwen, Role=admin
+[23-Mar-2025 10:55:42 Europe/Berlin] Raw input: {"action":"DELETE","table":"products","record_id":"1016","relationships":{"branches":[],"staff":[]}}
+[23-Mar-2025 10:55:42 Europe/Berlin] Junction table not found: products_branches
+[23-Mar-2025 10:55:42 Europe/Berlin] Junction table not found: products_staff
+[23-Mar-2025 10:55:42 Europe/Berlin] Audit Log Values:
+[23-Mar-2025 10:55:42 Europe/Berlin] User ID: 58
+[23-Mar-2025 10:55:42 Europe/Berlin] User Name: Gwen
+[23-Mar-2025 10:55:42 Europe/Berlin] User Role: admin
+[23-Mar-2025 10:55:42 Europe/Berlin] ✅ Audit log created successfully
+[23-Mar-2025 10:57:36 Europe/Berlin] Session Data at Start: Array
+(
+)
+
+[23-Mar-2025 10:57:36 Europe/Berlin] Session Data at Start: Array
+(
+    [user_id] => 58
+    [first_name] => Gwen
+    [role] => admin
+    [ip] => ::1
+    [user_agent] => Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/134.0.0.0 Safari/537.36
+)
+
+[23-Mar-2025 10:57:36 Europe/Berlin] Authenticated User: ID=58, Name=Gwen, Role=admin
+[23-Mar-2025 10:57:36 Europe/Berlin] Raw input: {"action":"UPDATE","table":"promos","record_id":"8","values":{"name":"Promo 3","description":"Promo 3 desc","price":"199.00","duration":"12","branch_ids":["6","7"],"staff_ids":["3","1"],"start_date":"2025-03-25T21:38","end_date":"2025-03-29T22:38"},"relationships":{"branches":[],"staff":[]}}
+[23-Mar-2025 10:57:36 Europe/Berlin] PHP Warning:  Array to string conversion in C:\xampp\htdocs\admin_dashboard_backend\actions\generic_crud.php on line 111
+[23-Mar-2025 10:57:36 Europe/Berlin] PHP Warning:  Array to string conversion in C:\xampp\htdocs\admin_dashboard_backend\actions\generic_crud.php on line 111
+[23-Mar-2025 10:57:36 Europe/Berlin] Junction table not found: promos_branches
+[23-Mar-2025 10:57:36 Europe/Berlin] Junction table not found: promos_staff
+[23-Mar-2025 10:57:36 Europe/Berlin] Audit Log Values:
+[23-Mar-2025 10:57:36 Europe/Berlin] User ID: 58
+[23-Mar-2025 10:57:36 Europe/Berlin] User Name: Gwen
+[23-Mar-2025 10:57:36 Europe/Berlin] User Role: admin
+[23-Mar-2025 10:57:36 Europe/Berlin] ✅ Audit log created successfully
+[23-Mar-2025 10:58:26 Europe/Berlin] Session Data at Start: Array
+(
+)
+
+[23-Mar-2025 10:58:26 Europe/Berlin] Session Data at Start: Array
+(
+    [user_id] => 58
+    [first_name] => Gwen
+    [role] => admin
+    [ip] => ::1
+    [user_agent] => Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/134.0.0.0 Safari/537.36
+)
+
+[23-Mar-2025 10:58:26 Europe/Berlin] Authenticated User: ID=58, Name=Gwen, Role=admin
+[23-Mar-2025 10:58:26 Europe/Berlin] Raw input: {"action":"UPDATE","table":"promos","record_id":"8","values":{"name":"Promo 3","description":"Promo 3 desc","price":"199.00","duration":"12","branch_ids":["7","6"],"staff_ids":["1","3","4"],"start_date":"2025-03-25T21:38","end_date":"2025-03-29T22:38"},"relationships":{"branches":[],"staff":[]}}
+[23-Mar-2025 10:58:26 Europe/Berlin] Junction table not found: promos_branches
+[23-Mar-2025 10:58:26 Europe/Berlin] Junction table not found: promos_staff
+[23-Mar-2025 10:58:26 Europe/Berlin] Audit Log Values:
+[23-Mar-2025 10:58:26 Europe/Berlin] User ID: 58
+[23-Mar-2025 10:58:26 Europe/Berlin] User Name: Gwen
+[23-Mar-2025 10:58:26 Europe/Berlin] User Role: admin
+[23-Mar-2025 10:58:26 Europe/Berlin] ✅ Audit log created successfully
+[23-Mar-2025 12:17:05 Europe/Berlin] Session Data at Start: Array
+(
+)
+
+[23-Mar-2025 12:17:05 Europe/Berlin] Session Data at Start: Array
+(
+    [user_id] => 58
+    [first_name] => Gwen
+    [role] => admin
+    [ip] => ::1
+    [user_agent] => Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/134.0.0.0 Safari/537.36
+)
+
+[23-Mar-2025 12:17:05 Europe/Berlin] Authenticated User: ID=58, Name=Gwen, Role=admin
+[23-Mar-2025 12:17:05 Europe/Berlin] Raw input: {"action":"UPDATE","table":"surgeries","record_id":"11","values":{"title":"Surgeryy","description":"Surg Appt","price":"455.00","duration":"7","branch_ids":["6","7"],"staff_ids":["1","3","4"],"start_date":"2025-03-24T00:00","end_date":"2025-03-26T00:00"},"relationships":{"branches":[],"staff":[]}}
+[23-Mar-2025 12:17:05 Europe/Berlin] Junction table not found: surgeries_branches
+[23-Mar-2025 12:17:05 Europe/Berlin] Junction table not found: surgeries_staff
+[23-Mar-2025 12:17:05 Europe/Berlin] Audit Log Values:
+[23-Mar-2025 12:17:05 Europe/Berlin] User ID: 58
+[23-Mar-2025 12:17:05 Europe/Berlin] User Name: Gwen
+[23-Mar-2025 12:17:05 Europe/Berlin] User Role: admin
+[23-Mar-2025 12:17:05 Europe/Berlin] ✅ Audit log created successfully
+[23-Mar-2025 12:17:21 Europe/Berlin] Session Data at Start: Array
+(
+)
+
+[23-Mar-2025 12:17:21 Europe/Berlin] Session Data at Start: Array
+(
+    [user_id] => 58
+    [first_name] => Gwen
+    [role] => admin
+    [ip] => ::1
+    [user_agent] => Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/134.0.0.0 Safari/537.36
+)
+
+[23-Mar-2025 12:17:21 Europe/Berlin] Authenticated User: ID=58, Name=Gwen, Role=admin
+[23-Mar-2025 12:17:21 Europe/Berlin] Raw input: {"action":"UPDATE","table":"surgeries","record_id":"11","values":{"title":"Surgeryy","description":"Surg Appt","price":"455.00","duration":"7","branch_ids":["6","7"],"staff_ids":["1","3","4"],"start_date":"2025-03-24T00:00","end_date":"2025-03-26T00:00"},"relationships":{"branches":[],"staff":[]}}
+[23-Mar-2025 12:17:21 Europe/Berlin] Junction table not found: surgeries_branches
+[23-Mar-2025 12:17:21 Europe/Berlin] Junction table not found: surgeries_staff
+[23-Mar-2025 12:17:21 Europe/Berlin] Audit Log Values:
+[23-Mar-2025 12:17:21 Europe/Berlin] User ID: 58
+[23-Mar-2025 12:17:21 Europe/Berlin] User Name: Gwen
+[23-Mar-2025 12:17:21 Europe/Berlin] User Role: admin
+[23-Mar-2025 12:17:21 Europe/Berlin] ✅ Audit log created successfully
+[23-Mar-2025 12:17:49 Europe/Berlin] Session Data at Start: Array
+(
+)
+
+[23-Mar-2025 12:17:49 Europe/Berlin] Session Data at Start: Array
+(
+    [user_id] => 58
+    [first_name] => Gwen
+    [role] => admin
+    [ip] => ::1
+    [user_agent] => Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/134.0.0.0 Safari/537.36
+)
+
+[23-Mar-2025 12:17:49 Europe/Berlin] Authenticated User: ID=58, Name=Gwen, Role=admin
+[23-Mar-2025 12:17:49 Europe/Berlin] Raw input: {"action":"UPDATE","table":"surgeries","record_id":"11","values":{"title":"Surgeryy","description":"Surg Appt","price":"455.00","duration":"7","branch_ids":["6","7"],"staff_ids":["1","3","4"],"start_date":"2025-03-24T00:00","end_date":"2025-03-26T00:00"},"relationships":{"branches":[],"staff":[]}}
+[23-Mar-2025 12:17:49 Europe/Berlin] Junction table not found: surgeries_branches
+[23-Mar-2025 12:17:49 Europe/Berlin] Junction table not found: surgeries_staff
+[23-Mar-2025 12:17:49 Europe/Berlin] Audit Log Values:
+[23-Mar-2025 12:17:49 Europe/Berlin] User ID: 58
+[23-Mar-2025 12:17:49 Europe/Berlin] User Name: Gwen
+[23-Mar-2025 12:17:49 Europe/Berlin] User Role: admin
+[23-Mar-2025 12:17:49 Europe/Berlin] ✅ Audit log created successfully
+[23-Mar-2025 12:18:01 Europe/Berlin] Session Data at Start: Array
+(
+)
+
+[23-Mar-2025 12:18:01 Europe/Berlin] Session Data at Start: Array
+(
+    [user_id] => 58
+    [first_name] => Gwen
+    [role] => admin
+    [ip] => ::1
+    [user_agent] => Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/134.0.0.0 Safari/537.36
+)
+
+[23-Mar-2025 12:18:01 Europe/Berlin] Authenticated User: ID=58, Name=Gwen, Role=admin
+[23-Mar-2025 12:18:01 Europe/Berlin] Raw input: {"action":"UPDATE","table":"surgeries","record_id":"11","values":{"title":"Surgeryy","description":"Surg Appt","price":"455.00","duration":"7","branch_ids":["6","7"],"staff_ids":["1","3","4"],"start_date":"2025-03-24T00:00","end_date":"2025-03-26T00:00"},"relationships":{"branches":[],"staff":[]}}
+[23-Mar-2025 12:18:01 Europe/Berlin] Junction table not found: surgeries_branches
+[23-Mar-2025 12:18:01 Europe/Berlin] Junction table not found: surgeries_staff
+[23-Mar-2025 12:18:01 Europe/Berlin] Audit Log Values:
+[23-Mar-2025 12:18:01 Europe/Berlin] User ID: 58
+[23-Mar-2025 12:18:01 Europe/Berlin] User Name: Gwen
+[23-Mar-2025 12:18:01 Europe/Berlin] User Role: admin
+[23-Mar-2025 12:18:01 Europe/Berlin] ✅ Audit log created successfully
+[23-Mar-2025 12:18:38 Europe/Berlin] Session Data at Start: Array
+(
+)
+
+[23-Mar-2025 12:18:38 Europe/Berlin] Session Data at Start: Array
+(
+    [user_id] => 58
+    [first_name] => Gwen
+    [role] => admin
+    [ip] => ::1
+    [user_agent] => Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/134.0.0.0 Safari/537.36
+)
+
+[23-Mar-2025 12:18:38 Europe/Berlin] Authenticated User: ID=58, Name=Gwen, Role=admin
+[23-Mar-2025 12:18:38 Europe/Berlin] Raw input: {"action":"UPDATE","table":"promos","record_id":"8","values":{"name":"Promo 3","description":"Promo 3 desc","price":"199.00","duration":"12","branch_ids":["7","6"],"staff_ids":["1","3","4"],"start_date":"2025-03-25T21:38","end_date":"2025-03-29T22:38"},"relationships":{"branches":[],"staff":[]}}
+[23-Mar-2025 12:18:38 Europe/Berlin] Junction table not found: promos_branches
+[23-Mar-2025 12:18:38 Europe/Berlin] Junction table not found: promos_staff
+[23-Mar-2025 12:18:38 Europe/Berlin] Audit Log Values:
+[23-Mar-2025 12:18:38 Europe/Berlin] User ID: 58
+[23-Mar-2025 12:18:38 Europe/Berlin] User Name: Gwen
+[23-Mar-2025 12:18:38 Europe/Berlin] User Role: admin
+[23-Mar-2025 12:18:38 Europe/Berlin] ✅ Audit log created successfully
+[23-Mar-2025 12:23:28 Europe/Berlin] Session Data at Start: Array
+(
+)
+
+[23-Mar-2025 12:23:28 Europe/Berlin] Session Data at Start: Array
+(
+    [user_id] => 58
+    [first_name] => Gwen
+    [role] => admin
+    [ip] => ::1
+    [user_agent] => Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/134.0.0.0 Safari/537.36
+)
+
+[23-Mar-2025 12:23:28 Europe/Berlin] Authenticated User: ID=58, Name=Gwen, Role=admin
+[23-Mar-2025 12:23:28 Europe/Berlin] Raw input: {"action":"UPDATE","table":"promos","record_id":"8","values":{"name":"Promo 3","description":"Promo 3 desc","price":"199.00","duration":"12","branch_ids":["6","7"],"staff_ids":["1","3","4","8"],"start_date":"2025-03-25T21:38","end_date":"2025-03-29T22:38"},"relationships":{"branches":[],"staff":[]}}
+[23-Mar-2025 12:23:28 Europe/Berlin] Junction table not found: promos_branches
+[23-Mar-2025 12:23:28 Europe/Berlin] Junction table not found: promos_staff
+[23-Mar-2025 12:23:28 Europe/Berlin] Audit Log Values:
+[23-Mar-2025 12:23:28 Europe/Berlin] User ID: 58
+[23-Mar-2025 12:23:28 Europe/Berlin] User Name: Gwen
+[23-Mar-2025 12:23:28 Europe/Berlin] User Role: admin
+[23-Mar-2025 12:23:28 Europe/Berlin] ✅ Audit log created successfully
+[23-Mar-2025 12:27:39 Europe/Berlin] Session Data at Start: Array
+(
+)
+
+[23-Mar-2025 12:27:39 Europe/Berlin] Session Data at Start: Array
+(
+    [user_id] => 58
+    [first_name] => Gwen
+    [role] => admin
+    [ip] => ::1
+    [user_agent] => Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/134.0.0.0 Safari/537.36
+)
+
+[23-Mar-2025 12:27:39 Europe/Berlin] Authenticated User: ID=58, Name=Gwen, Role=admin
+[23-Mar-2025 12:27:39 Europe/Berlin] Raw input: {"action":"UPDATE","table":"faqs","record_id":"1010","values":{"question":"Is it safe","answer":"Yes itis"},"relationships":{"branches":[],"staff":[]}}
+[23-Mar-2025 12:27:39 Europe/Berlin] Junction table not found: faqs_branches
+[23-Mar-2025 12:27:39 Europe/Berlin] Junction table not found: faqs_staff
+[23-Mar-2025 12:27:39 Europe/Berlin] Audit Log Values:
+[23-Mar-2025 12:27:39 Europe/Berlin] User ID: 58
+[23-Mar-2025 12:27:39 Europe/Berlin] User Name: Gwen
+[23-Mar-2025 12:27:39 Europe/Berlin] User Role: admin
+[23-Mar-2025 12:27:39 Europe/Berlin] ✅ Audit log created successfully
+[23-Mar-2025 12:27:48 Europe/Berlin] Session Data at Start: Array
+(
+)
+
+[23-Mar-2025 12:27:48 Europe/Berlin] Session Data at Start: Array
+(
+)
+
+[23-Mar-2025 12:27:48 Europe/Berlin] Session Data at Start: Array
+(
+    [user_id] => 58
+    [first_name] => Gwen
+    [role] => admin
+    [ip] => ::1
+    [user_agent] => Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/134.0.0.0 Safari/537.36
+)
+
+[23-Mar-2025 12:27:48 Europe/Berlin] Authenticated User: ID=58, Name=Gwen, Role=admin
+[23-Mar-2025 12:27:48 Europe/Berlin] Raw input: {"action":"READ","table":"faqs","relationships":{"branches":[],"staff":[]}}
+[23-Mar-2025 12:27:48 Europe/Berlin] Session Data at Start: Array
+(
+    [user_id] => 58
+    [first_name] => Gwen
+    [role] => admin
+    [ip] => ::1
+    [user_agent] => Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/134.0.0.0 Safari/537.36
+)
+
+[23-Mar-2025 12:27:48 Europe/Berlin] Authenticated User: ID=58, Name=Gwen, Role=admin
+[23-Mar-2025 12:27:48 Europe/Berlin] Raw input: {"action":"READ","table":"faqs","relationships":{"branches":[],"staff":[]}}
+[23-Mar-2025 12:27:50 Europe/Berlin] Session Data at Start: Array
+(
+    [user_id] => 58
+    [first_name] => Gwen
+    [role] => admin
+    [ip] => ::1
+    [user_agent] => Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/134.0.0.0 Safari/537.36
+)
+
+[23-Mar-2025 12:27:50 Europe/Berlin] Authenticated User: ID=58, Name=Gwen, Role=admin
+[23-Mar-2025 12:27:50 Europe/Berlin] Raw input: {"action":"READ","table":"faqs","relationships":{"branches":[],"staff":[]}}
+[23-Mar-2025 12:27:50 Europe/Berlin] Session Data at Start: Array
+(
+    [user_id] => 58
+    [first_name] => Gwen
+    [role] => admin
+    [ip] => ::1
+    [user_agent] => Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/134.0.0.0 Safari/537.36
+)
+
+[23-Mar-2025 12:27:50 Europe/Berlin] Authenticated User: ID=58, Name=Gwen, Role=admin
+[23-Mar-2025 12:27:50 Europe/Berlin] Raw input: {"action":"READ","table":"faqs","relationships":{"branches":[],"staff":[]}}
+[23-Mar-2025 12:27:51 Europe/Berlin] Session Data at Start: Array
+(
+    [user_id] => 58
+    [first_name] => Gwen
+    [role] => admin
+    [ip] => ::1
+    [user_agent] => Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/134.0.0.0 Safari/537.36
+)
+
+[23-Mar-2025 12:27:51 Europe/Berlin] Authenticated User: ID=58, Name=Gwen, Role=admin
+[23-Mar-2025 12:27:51 Europe/Berlin] Raw input: {"action":"READ","table":"faqs","relationships":{"branches":[],"staff":[]}}
+[23-Mar-2025 12:27:51 Europe/Berlin] Session Data at Start: Array
+(
+    [user_id] => 58
+    [first_name] => Gwen
+    [role] => admin
+    [ip] => ::1
+    [user_agent] => Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/134.0.0.0 Safari/537.36
+)
+
+[23-Mar-2025 12:27:51 Europe/Berlin] Authenticated User: ID=58, Name=Gwen, Role=admin
+[23-Mar-2025 12:27:51 Europe/Berlin] Raw input: {"action":"READ","table":"faqs","relationships":{"branches":[],"staff":[]}}
+[23-Mar-2025 12:28:08 Europe/Berlin] Session Data at Start: Array
+(
+)
+
+[23-Mar-2025 12:28:08 Europe/Berlin] Session Data at Start: Array
+(
+)
+
+[23-Mar-2025 12:28:08 Europe/Berlin] Session Data at Start: Array
+(
+    [user_id] => 58
+    [first_name] => Gwen
+    [role] => admin
+    [ip] => ::1
+    [user_agent] => Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/134.0.0.0 Safari/537.36
+)
+
+[23-Mar-2025 12:28:08 Europe/Berlin] Authenticated User: ID=58, Name=Gwen, Role=admin
+[23-Mar-2025 12:28:08 Europe/Berlin] Raw input: {"action":"READ","table":"faqs","relationships":{"branches":[],"staff":[]}}
+[23-Mar-2025 12:28:08 Europe/Berlin] Session Data at Start: Array
+(
+    [user_id] => 58
+    [first_name] => Gwen
+    [role] => admin
+    [ip] => ::1
+    [user_agent] => Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/134.0.0.0 Safari/537.36
+)
+
+[23-Mar-2025 12:28:08 Europe/Berlin] Authenticated User: ID=58, Name=Gwen, Role=admin
+[23-Mar-2025 12:28:08 Europe/Berlin] Raw input: {"action":"READ","table":"faqs","relationships":{"branches":[],"staff":[]}}
+[23-Mar-2025 12:58:18 Europe/Berlin] Session Data at Start: Array
+(
+)
+
+[23-Mar-2025 12:58:18 Europe/Berlin] Session Data at Start: Array
+(
+    [user_id] => 58
+    [first_name] => Gwen
+    [role] => admin
+    [ip] => ::1
+    [user_agent] => Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/134.0.0.0 Safari/537.36
+)
+
+[23-Mar-2025 12:58:18 Europe/Berlin] Authenticated User: ID=58, Name=Gwen, Role=admin
+[23-Mar-2025 12:58:18 Europe/Berlin] Raw input: {"action":"UPDATE","table":"promos","record_id":"3","values":{"name":"Armand 2","description":"Seeerrcvvicee","price":"11.00","duration":"7","branch_ids":["6","7"],"staff_ids":["1","3"],"start_date":"2025-03-09T03:14","end_date":"2025-03-25T07:19"},"relationships":{"branches":[],"staff":[]}}
+[23-Mar-2025 12:58:18 Europe/Berlin] Audit Log Values:
+[23-Mar-2025 12:58:18 Europe/Berlin] User ID: 58
+[23-Mar-2025 12:58:18 Europe/Berlin] User Name: Gwen
+[23-Mar-2025 12:58:18 Europe/Berlin] User Role: admin
+[23-Mar-2025 12:58:18 Europe/Berlin] ✅ Audit log created successfully
+[23-Mar-2025 13:16:12 Europe/Berlin] Session Data at Start: Array
+(
+)
+
+[23-Mar-2025 13:16:12 Europe/Berlin] Session Data at Start: Array
+(
+    [user_id] => 57
+    [first_name] => Rovin
+    [role] => employee
+    [ip] => ::1
+    [user_agent] => Mozilla/5.0 (Linux; Android 6.0; Nexus 5 Build/MRA58N) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/134.0.0.0 Mobile Safari/537.36
+)
+
+[23-Mar-2025 13:16:12 Europe/Berlin] Authenticated User: ID=57, Name=Rovin, Role=employee
+[23-Mar-2025 13:16:12 Europe/Berlin] Raw input: {"action":"CREATE","table":"promos","values":{"name":"Promo 67","description":"67 desc","price":"67","duration":"8","branch_ids":["6"],"staff_ids":["1","4"],"start_date":"2025-03-25T20:15","end_date":"2025-03-26T20:16"},"relationships":{"branches":[],"staff":[]}}
+[23-Mar-2025 13:16:12 Europe/Berlin] Audit Log Values:
+[23-Mar-2025 13:16:12 Europe/Berlin] User ID: 57
+[23-Mar-2025 13:16:12 Europe/Berlin] User Name: Rovin
+[23-Mar-2025 13:16:12 Europe/Berlin] User Role: employee
+[23-Mar-2025 13:16:12 Europe/Berlin] ✅ Audit log created successfully
+[23-Mar-2025 13:16:36 Europe/Berlin] Session Data at Start: Array
+(
+)
+
+[23-Mar-2025 13:16:36 Europe/Berlin] Session Data at Start: Array
+(
+    [user_id] => 57
+    [first_name] => Rovin
+    [role] => employee
+    [ip] => ::1
+    [user_agent] => Mozilla/5.0 (Linux; Android 6.0; Nexus 5 Build/MRA58N) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/134.0.0.0 Mobile Safari/537.36
+)
+
+[23-Mar-2025 13:16:36 Europe/Berlin] Authenticated User: ID=57, Name=Rovin, Role=employee
+[23-Mar-2025 13:16:36 Europe/Berlin] Raw input: {"action":"UPDATE","table":"promos","record_id":"8","values":{"name":"Promo 3","description":"Promo 3 desc","price":"199.00","duration":"12","branch_ids":["7","6"],"staff_ids":["3","1","4"],"start_date":"2025-03-25T21:38","end_date":"2025-03-29T22:38"},"relationships":{"branches":[],"staff":[]}}
+[23-Mar-2025 13:16:36 Europe/Berlin] Audit Log Values:
+[23-Mar-2025 13:16:36 Europe/Berlin] User ID: 57
+[23-Mar-2025 13:16:36 Europe/Berlin] User Name: Rovin
+[23-Mar-2025 13:16:36 Europe/Berlin] User Role: employee
+[23-Mar-2025 13:16:36 Europe/Berlin] ✅ Audit log created successfully
