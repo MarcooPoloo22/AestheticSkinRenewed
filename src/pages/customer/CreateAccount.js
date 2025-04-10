@@ -83,7 +83,7 @@ const CreateAccount = () => {
     return (
         <div className="create-account-container d-flex justify-content-center align-items-center">
                  <div className="form-box p-4">
-                 <h2 className="text-center mb-4">Create your account</h2>
+                 <h2 className="text-center mb-4">Create your Account</h2>
                  <form onSubmit={handleSubmit}>
                  <div className="row mb-3">
                  <div className="col-12 col-md-4 mb-3 mb-md-0">
