@@ -153,6 +153,106 @@ const BookingPageRegistered = ({ user }) => {
     }
   }, [formData.appointment_date, formData.staff_id]);
 
+  const handleSurgeryPayment = async () => {
+    setIsLoadingPayment(true);
+    try {
+      const response = await fetch("http://localhost/admin_dashboard_backend/fetch_payment_details.php");
+      if (!response.ok) throw new Error("Failed to fetch payment details");
+      const result = await response.json();
+      
+      if (!result.data || !result.data.gcash_number) {
+        throw new Error("Invalid payment details format");
+      }
+      
+      setPaymentDetails(result);
+      showPaymentModal(result.data);
+    } catch (error) {
+      console.error("Error fetching payment details:", error);
+      MySwal.fire({
+        title: "Error!",
+        text: error.message,
+        icon: "error",
+        confirmButtonText: "OK",
+      });
+    } finally {
+      setIsLoadingPayment(false);
+    }
+  };
+
+  const showConfirmationModal = () => {
+    const serviceName = services.find(s => s.id === formData.service)?.name || formData.service;
+    const branchName = branches.find(b => b.id === formData.branch_id)?.name || formData.branch_id;
+    const staffName = staffList.find(s => s.id === formData.staff_id)?.name || formData.staff_id;
+
+    MySwal.fire({
+      title: '<strong>Booking Summary</strong>',
+      html: `
+        <div class="booking-summary">
+          <div class="summary-row">
+            <span class="summary-label">Service Type:</span>
+            <span class="summary-value">${formData.service_type}</span>
+          </div>
+          <div class="summary-row">
+            <span class="summary-label">Service:</span>
+            <span class="summary-value">${serviceName}</span>
+          </div>
+          <div class="summary-row">
+            <span class="summary-label">Branch:</span>
+            <span class="summary-value">${branchName}</span>
+          </div>
+          <div class="summary-row">
+            <span class="summary-label">Staff:</span>
+            <span class="summary-value">${staffName}</span>
+          </div>
+          <div class="summary-row">
+            <span class="summary-label">Date:</span>
+            <span class="summary-value">${formData.appointment_date}</span>
+          </div>
+          <div class="summary-row">
+            <span class="summary-label">Time:</span>
+            <span class="summary-value">${formData.appointment_time}</span>
+          </div>
+        </div>
+      `,
+      showCancelButton: true,
+      confirmButtonText: 'Book Now',
+      cancelButtonText: 'Cancel',
+      reverseButtons: true,
+      customClass: {
+        popup: 'booking-summary-popup',
+        confirmButton: 'btn btn-confirm',
+        cancelButton: 'btn btn-cancel'
+      }
+    }).then((result) => {
+      if (result.isConfirmed) {
+        if (formData.service_type === "Surgery") {
+          handleSurgeryPayment();
+        } else {
+          handleAppointmentSubmission();
+        }
+      }
+    });
+  };
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    
+    const requiredFields = ['service_type', 'service', 'branch_id', 'staff_id', 'appointment_date', 'appointment_time'];
+    
+    for (const field of requiredFields) {
+      if (!formData[field]) {
+        Swal.fire({
+          icon: 'error',
+          title: 'Missing Information',
+          text: `Please fill in ${field.replace('_', ' ')}.`,
+        });
+        return;
+      }
+    }
+
+    showConfirmationModal();
+  };
+
   const handleChange = (e) => {
     const { name, value } = e.target;
     setFormData({ ...formData, [name]: value });
@@ -279,50 +379,7 @@ const BookingPageRegistered = ({ user }) => {
       });
     }
   };
-
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    console.log("Form Data:", formData);
-
-    if (!user) {
-      Swal.fire({
-        icon: "error",
-        title: "Not Logged In",
-        text: "You need to log in to book an appointment.",
-      });
-      return;
-    }
-
-    if (formData.service_type === "Surgery") {
-      setIsLoadingPayment(true);
-      try {
-        const response = await fetch("http://localhost/admin_dashboard_backend/fetch_payment_details.php");
-        if (!response.ok) throw new Error("Failed to fetch payment details");
-        const result = await response.json();
-        
-        if (!result.data || !result.data.gcash_number) {
-          throw new Error("Invalid payment details format");
-        }
-        
-        setPaymentDetails(result);
-        showPaymentModal(result.data);
-      } catch (error) {
-        console.error("Error fetching payment details:", error);
-        MySwal.fire({
-          title: "Error!",
-          text: error.message,
-          icon: "error",
-          confirmButtonText: "OK",
-        });
-      } finally {
-        setIsLoadingPayment(false);
-      }
-      return;
-    }
-
-    handleAppointmentSubmission();
-  };
-
+  
   const timeSlots = [
     "09:00 AM",
     "10:00 AM",
@@ -640,6 +697,118 @@ const BookingPageGuest = () => {
     }
   }, [formData.appointment_date, formData.staff_id]);
 
+  const handleSurgeryPayment = async () => {
+    setIsLoadingPayment(true);
+    try {
+      const response = await fetch("http://localhost/admin_dashboard_backend/fetch_payment_details.php");
+      if (!response.ok) throw new Error("Failed to fetch payment details");
+      const result = await response.json();
+      
+      if (!result.data || !result.data.gcash_number) {
+        throw new Error("Invalid payment details format");
+      }
+      
+      setPaymentDetails(result);
+      showPaymentModal(result.data);
+    } catch (error) {
+      console.error("Error fetching payment details:", error);
+      MySwal.fire({
+        title: "Error!",
+        text: error.message,
+        icon: "error",
+        confirmButtonText: "OK",
+      });
+    } finally {
+      setIsLoadingPayment(false);
+    }
+  };
+
+  const showConfirmationModal = () => {
+    const serviceName = services.find(s => s.id === formData.service)?.name || formData.service;
+    const branchName = branches.find(b => b.id === formData.branch_id)?.name || formData.branch_id;
+    const staffName = staffList.find(s => s.id === formData.staff_id)?.name || formData.staff_id;
+
+    MySwal.fire({
+      title: '<strong>Booking Summary</strong>',
+      html: `
+        <div class="booking-summary">
+          <div class="summary-row">
+            <span class="summary-label">Service Type:</span>
+            <span class="summary-value">${formData.service_type}</span>
+          </div>
+          <div class="summary-row">
+            <span class="summary-label">Service:</span>
+            <span class="summary-value">${serviceName}</span>
+          </div>
+          <div class="summary-row">
+            <span class="summary-label">Branch:</span>
+            <span class="summary-value">${branchName}</span>
+          </div>
+          <div class="summary-row">
+            <span class="summary-label">Staff:</span>
+            <span class="summary-value">${staffName}</span>
+          </div>
+          <div class="summary-row">
+            <span class="summary-label">Date:</span>
+            <span class="summary-value">${formData.appointment_date}</span>
+          </div>
+          <div class="summary-row">
+            <span class="summary-label">Time:</span>
+            <span class="summary-value">${formData.appointment_time}</span>
+          </div>
+          <div class="summary-row">
+            <span class="summary-label">Name:</span>
+            <span class="summary-value">${formData.first_name} ${formData.last_name}</span>
+          </div>
+          <div class="summary-row">
+            <span class="summary-label">Email:</span>
+            <span class="summary-value">${formData.email}</span>
+          </div>
+          <div class="summary-row">
+            <span class="summary-label">Contact:</span>
+            <span class="summary-value">${formData.contact_no}</span>
+          </div>
+        </div>
+      `,
+      showCancelButton: true,
+      confirmButtonText: 'Book Now',
+      cancelButtonText: 'Cancel',
+      reverseButtons: true,
+      customClass: {
+        popup: 'booking-summary-popup',
+        confirmButton: 'btn btn-confirm',
+        cancelButton: 'btn btn-cancel'
+      }
+    }).then((result) => {
+      if (result.isConfirmed) {
+        if (formData.service_type === "Surgery") {
+          handleSurgeryPayment();
+        } else {
+          handleAppointmentSubmission();
+        }
+      }
+    });
+  };
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    
+    const requiredFields = ['first_name', 'last_name', 'email', 'contact_no', 'service_type', 'service', 'branch_id', 'staff_id', 'appointment_date', 'appointment_time'];
+    
+    for (const field of requiredFields) {
+      if (!formData[field]) {
+        Swal.fire({
+          icon: 'error',
+          title: 'Missing Information',
+          text: `Please fill in ${field.replace('_', ' ')}.`,
+        });
+        return;
+      }
+    }
+
+    showConfirmationModal();
+  };
+
   const handleChange = (e) => {
     const { name, value } = e.target;
     setFormData({ ...formData, [name]: value });
@@ -770,41 +939,7 @@ const BookingPageGuest = () => {
       });
     }
   };
-
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    console.log("Form Data:", formData);
-
-    if (formData.service_type === "Surgery") {
-      setIsLoadingPayment(true);
-      try {
-        const response = await fetch("http://localhost/admin_dashboard_backend/fetch_payment_details.php");
-        if (!response.ok) throw new Error("Failed to fetch payment details");
-        const result = await response.json();
-        
-        if (!result.data || !result.data.gcash_number) {
-          throw new Error("Invalid payment details format");
-        }
-        
-        setPaymentDetails(result);
-        showPaymentModal(result.data);
-      } catch (error) {
-        console.error("Error fetching payment details:", error);
-        MySwal.fire({
-          title: "Error!",
-          text: error.message,
-          icon: "error",
-          confirmButtonText: "OK",
-        });
-      } finally {
-        setIsLoadingPayment(false);
-      }
-      return;
-    }
-
-    handleAppointmentSubmission();
-  };
-
+  
   const timeSlots = [
     "09:00 AM",
     "10:00 AM",
