@@ -1,97 +1,146 @@
 <?php
-header("Access-Control-Allow-Origin: http://localhost:3000");
-header("Access-Control-Allow-Credentials: true");
-header("Content-Type: application/json; charset=UTF-8");
-header("Access-Control-Allow-Methods: GET, POST, PUT, OPTIONS");
-header("Access-Control-Allow-Headers: Content-Type, Authorization, X-Requested-With");
+session_start();
 
-// Handle preflight requests
+header("Access-Control-Allow-Origin: http://localhost:3000");
+header("Content-Type: application/json; charset=UTF-8");
+header("Access-Control-Allow-Methods: PUT, POST, OPTIONS");
+header("Access-Control-Allow-Headers: Content-Type, Authorization, X-Requested-With");
+header("Access-Control-Allow-Credentials: true");
+
 if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
     http_response_code(200);
     exit();
 }
 
-$servername = "localhost";
-$username = "root";
-$password = "";
-$dbname = "asr";
+if (!isset($_SESSION['user'])) {
+    http_response_code(401);
+    echo json_encode(["status" => "error", "message" => "User is not logged in."]);
+    exit();
+}
+$user = $_SESSION['user'];
 
-// Create connection
-$conn = new mysqli($servername, $username, $password, $dbname);
+require_once 'audit_logger.php';
 
-// Check connection
+$servername   = "localhost";
+$dbUsername   = "root";
+$dbPassword   = "";
+$dbname       = "asr";
+
+$conn = new mysqli($servername, $dbUsername, $dbPassword, $dbname);
 if ($conn->connect_error) {
     http_response_code(500);
-    echo json_encode([
-        "status" => "error",
-        "message" => "Database connection failed: " . $conn->connect_error
-    ]);
+    echo json_encode(["status" => "error", "message" => "Database connection failed: " . $conn->connect_error]);
     exit();
 }
 
-// Get the input data
-$data = json_decode(file_get_contents('php://input'), true);
-
-try {
-    // Validate input
-    $requiredFields = [
-        'gcash_number', 'gcash_name', 'gcash_amount',
-        'paymaya_number', 'paymaya_name', 'paymaya_amount',
-        'bank_name', 'bank_account_number', 'bank_account_name', 'bank_amount'
-    ];
-    
-    foreach ($requiredFields as $field) {
-        if (!isset($data[$field])) {
-            throw new Exception("Missing required field: $field");
-        }
-    }
-
-    // Prepare and execute the update query
-    $stmt = $conn->prepare("
-        UPDATE payment_details SET
-            gcash_number = ?,
-            gcash_name = ?,
-            gcash_amount = ?,
-            paymaya_number = ?,
-            paymaya_name = ?,
-            paymaya_amount = ?,
-            bank_name = ?,
-            bank_account_number = ?,
-            bank_account_name = ?,
-            bank_amount = ?
-        WHERE id = (SELECT id FROM (SELECT id FROM payment_details ORDER BY id DESC LIMIT 1) as temp)
-    ");
-
-    $stmt->bind_param(
-        "ssssssssss",
-        $data['gcash_number'],
-        $data['gcash_name'],
-        $data['gcash_amount'],
-        $data['paymaya_number'],
-        $data['paymaya_name'],
-        $data['paymaya_amount'],
-        $data['bank_name'],
-        $data['bank_account_number'],
-        $data['bank_account_name'],
-        $data['bank_amount']
-    );
-
-    if (!$stmt->execute()) {
-        throw new Exception("Failed to update payment details: " . $stmt->error);
-    }
-
-    echo json_encode([
-        'status' => 'success',
-        'message' => 'Payment details updated successfully'
-    ]);
-} catch (Exception $e) {
+// Get the raw JSON input
+$data = json_decode(file_get_contents("php://input"), true);
+if (!$data) {
     http_response_code(400);
-    echo json_encode([
-        'status' => 'error',
-        'message' => $e->getMessage()
-    ]);
-} finally {
-    if (isset($stmt)) $stmt->close();
-    $conn->close();
+    echo json_encode(["status" => "error", "message" => "Invalid input data."]);
+    exit();
 }
+
+// Validate required fields
+$requiredFields = [
+    'gcash_number', 'gcash_name', 'gcash_amount',
+    'paymaya_number', 'paymaya_name', 'paymaya_amount',
+    'bank_name', 'bank_account_number', 'bank_account_name', 'bank_amount'
+];
+foreach ($requiredFields as $field) {
+    if (!isset($data[$field])) {
+        http_response_code(400);
+        echo json_encode(["status" => "error", "message" => "Missing required field: $field"]);
+        exit();
+    }
+}
+
+$gcash_number        = $data['gcash_number'];
+$gcash_name          = $data['gcash_name'];
+$gcash_amount        = $data['gcash_amount'];
+$paymaya_number      = $data['paymaya_number'];
+$paymaya_name        = $data['paymaya_name'];
+$paymaya_amount      = $data['paymaya_amount'];
+$bank_name           = $data['bank_name'];
+$bank_account_number = $data['bank_account_number'];
+$bank_account_name   = $data['bank_account_name'];
+$bank_amount         = $data['bank_amount'];
+
+// Use subquery workaround to update the "latest" row in payment_details
+$updateSql = "
+    UPDATE payment_details SET
+        gcash_number = ?,
+        gcash_name = ?,
+        gcash_amount = ?,
+        paymaya_number = ?,
+        paymaya_name = ?,
+        paymaya_amount = ?,
+        bank_name = ?,
+        bank_account_number = ?,
+        bank_account_name = ?,
+        bank_amount = ?
+    WHERE id = (
+        SELECT id FROM (SELECT id FROM payment_details ORDER BY id DESC LIMIT 1) AS temp
+    )
+";
+
+// Retrieve the old record for audit logging
+$stmt_old = $conn->prepare("SELECT * FROM payment_details ORDER BY id DESC LIMIT 1");
+$stmt_old->execute();
+$oldRecordResult = $stmt_old->get_result();
+$oldRecord = $oldRecordResult->fetch_assoc();
+$stmt_old->close();
+
+$stmt = $conn->prepare($updateSql);
+if (!$stmt) {
+    http_response_code(500);
+    echo json_encode(["status" => "error", "message" => "Prepare failed: " . $conn->error]);
+    exit();
+}
+
+$stmt->bind_param(
+    "ssdssdsssd",
+    $gcash_number,
+    $gcash_name,
+    $gcash_amount,
+    $paymaya_number,
+    $paymaya_name,
+    $paymaya_amount,
+    $bank_name,
+    $bank_account_number,
+    $bank_account_name, 
+    $bank_amount
+);
+
+
+if (!$stmt->execute()) {
+    http_response_code(500);
+    echo json_encode(["status" => "error", "message" => "Failed to update payment details: " . $stmt->error]);
+    $stmt->close();
+    $conn->close();
+    exit();
+}
+$stmt->close();
+
+// Retrieve the updated record for audit logging
+$stmt_new = $conn->prepare("SELECT * FROM payment_details ORDER BY id DESC LIMIT 1");
+$stmt_new->execute();
+$newRecord = $stmt_new->get_result()->fetch_assoc();
+$stmt_new->close();
+
+// Log the audit trail with action "UPDATE"
+logAuditTrail(
+    $conn,
+    $user['id'],
+    $user['first_name'],
+    $user['role'],
+    'UPDATE',
+    'payment_details',
+    $oldRecord,
+    $newRecord,
+    "Updated payment details"
+);
+
+echo json_encode(["status" => "success", "message" => "Payment details updated successfully"]);
+$conn->close();
 ?>

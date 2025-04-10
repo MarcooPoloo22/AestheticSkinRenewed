@@ -30,6 +30,7 @@ const FAQTable = ({ setActivePage, activePage, data, setProducts, setProductToEd
       if (result.isConfirmed) {
         fetch('http://localhost/admin_dashboard_backend/delete_product.php', {
           method: 'DELETE',
+          credentials: 'include',
           headers: {
             'Content-Type': 'application/json',
           },
@@ -148,6 +149,7 @@ const ManageFAQEdit = ({ setActivePage, activePage, productToEdit, setProducts }
   
     fetch('http://localhost/admin_dashboard_backend/update_product.php', {
       method: 'POST',
+      credentials: 'include',
       body: formData,
     })
       .then(response => {
@@ -264,6 +266,7 @@ const ManageFAQAdd = ({ setActivePage, activePage, setProducts }) => {
 
     fetch('http://localhost/admin_dashboard_backend/add_product.php', {
       method: 'POST',
+      credentials: 'include',
       body: formData,
     })
       .then(response => {

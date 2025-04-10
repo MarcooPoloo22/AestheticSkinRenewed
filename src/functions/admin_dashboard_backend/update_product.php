@@ -6,101 +6,107 @@ header("Content-Type: application/json; charset=UTF-8");
 header("Access-Control-Allow-Methods: POST, OPTIONS");
 header("Access-Control-Allow-Headers: Content-Type");
 
+// Handle preflight
 if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
     exit(0);
 }
 
+// Check if user is logged in
+if (!isset($_SESSION['user'])) {
+    http_response_code(401);
+    echo json_encode(["error" => "User is not authenticated"]);
+    exit;
+}
+$user = $_SESSION['user'];
+
+// Include audit trail functionality
+require_once 'audit_logger.php';
+
+// Database connection
 $servername = "localhost";
-$username = "root";
-$password = "";
+$dbUsername = "root";
+$dbPassword = "";
 $dbname = "asr";
-
-$conn = new mysqli($servername, $username, $password, $dbname);
-
+$conn = new mysqli($servername, $dbUsername, $dbPassword, $dbname);
 if ($conn->connect_error) {
     http_response_code(500);
     echo json_encode(["error" => "Connection failed: " . $conn->connect_error]);
     exit;
 }
 
-// Get input data
-$id = $conn->real_escape_string($_POST['id']);
-$name = $conn->real_escape_string($_POST['name']);
-$description = $conn->real_escape_string($_POST['description']);
-$price = $conn->real_escape_string($_POST['price']);
+// Retrieve form data via $_POST and file (if any) via $_FILES
+$id = $_POST['id'] ?? '';
+$name = $_POST['name'] ?? '';
+$description = $_POST['description'] ?? '';
+$price = $_POST['price'] ?? '';
 
-// Retrieve user_id from session
-if (!isset($_SESSION['user_id'])) {
-    http_response_code(401);
-    echo json_encode(["error" => "User not authenticated"]);
+// Validate required fields
+if (empty($id) || empty($name) || empty($description) || empty($price)) {
+    echo json_encode(["error" => "ID, name, description, and price are required"]);
     exit;
 }
-$user_id = $_SESSION['user_id'];
 
-try {
-    // Get old data
-    $stmt = $conn->prepare("SELECT * FROM products WHERE id = ?");
-    $stmt->bind_param("i", $id);
-    $stmt->execute();
-    $oldData = $stmt->get_result()->fetch_assoc();
-    
-    if (!$oldData) {
-        throw new Exception("Product not found");
+// Fetch the current product record (old record) for auditing
+$stmt_old = $conn->prepare("SELECT * FROM products WHERE id = ?");
+$stmt_old->bind_param("i", $id);
+$stmt_old->execute();
+$oldProduct = $stmt_old->get_result()->fetch_assoc();
+$stmt_old->close();
+
+if (!$oldProduct) {
+    echo json_encode(["error" => "Product not found"]);
+    exit;
+}
+
+// Handle file upload if a new file is provided; otherwise use the existing file_url
+$fileUrl = $oldProduct['file_url'];
+if (isset($_FILES['file']) && $_FILES['file']['error'] === UPLOAD_ERR_OK) {
+    $uploadDir = 'uploads/';
+    if (!is_dir($uploadDir)) {
+        mkdir($uploadDir, 0777, true);
     }
-
-    // Handle file upload
-    $fileUrl = $oldData['file_url'];
-    if (isset($_FILES['file']) && $_FILES['file']['error'] === UPLOAD_ERR_OK) {
-        $uploadDir = 'uploads/';
-        if (!is_dir($uploadDir)) mkdir($uploadDir, 0777, true);
-        $uploadFile = $uploadDir . basename($_FILES['file']['name']);
-        if (move_uploaded_file($_FILES['file']['tmp_name'], $uploadFile)) {
-            $fileUrl = 'http://localhost/admin_dashboard_backend/' . $uploadFile;
-        } else {
-            throw new Exception("Failed to upload file");
-        }
+    $fileName = uniqid() . '-' . basename($_FILES['file']['name']);
+    $filePath = $uploadDir . $fileName;
+    if (move_uploaded_file($_FILES['file']['tmp_name'], $filePath)) {
+        $fileUrl = 'http://localhost/admin_dashboard_backend/' . $filePath;
+    } else {
+        echo json_encode(["error" => "Failed to upload file"]);
+        exit;
     }
+}
 
-    // Update product with user_id
-    $stmt = $conn->prepare("UPDATE products SET name=?, description=?, price=?, file_url=?, user_id=? WHERE id=?");
-    $stmt->bind_param("ssdsii", $name, $description, $price, $fileUrl, $user_id, $id);
-    
-    if (!$stmt->execute()) {
-        throw new Exception($stmt->error);
-    }
+// Update the product
+$stmt = $conn->prepare("UPDATE products SET name=?, description=?, price=?, file_url=? WHERE id=?");
+if (!$stmt) {
+    echo json_encode(["error" => "Failed to prepare update statement: " . $conn->error]);
+    exit;
+}
+$stmt->bind_param("ssdsi", $name, $description, $price, $fileUrl, $id);
+if ($stmt->execute()) {
+    // Fetch updated record for audit logging
+    $stmt_new = $conn->prepare("SELECT * FROM products WHERE id = ?");
+    $stmt_new->bind_param("i", $id);
+    $stmt_new->execute();
+    $newProduct = $stmt_new->get_result()->fetch_assoc();
+    $stmt_new->close();
 
-    // Log to audit
-    $newData = json_encode([
-        'name' => $name,
-        'description' => $description,
-        'price' => $price,
-        'file_url' => $fileUrl
-    ]);
-    $oldDataJson = json_encode($oldData); // Store JSON-encoded old data in a variable
-    
-    $logStmt = $conn->prepare("INSERT INTO audit_logs (user_id, user_name, user_role, action_type, table_name, new_value, old_value) 
-                              VALUES (?, ?, ?, ?, ?, ?, ?)");
-    $actionType = "UPDATE";
-    $tableName = "products";
-    $logStmt->bind_param("issssss", 
-        $_SESSION['user_id'],
-        $_SESSION['first_name'],
-        $_SESSION['role'],
-        $actionType,
-        $tableName,
-        $newData,
-        $oldDataJson // Pass the variable instead of the function result
+    // Log the audit trail with action 'UPDATE'
+    logAuditTrail(
+        $conn,
+        $user['id'],
+        $user['first_name'],
+        $user['role'],
+        'UPDATE',
+        'products',
+        $oldProduct,
+        $newProduct,
+        "Updated product: " . $newProduct['name']
     );
-    if (!$logStmt->execute()) {
-        throw new Exception($logStmt->error);
-    }
 
     echo json_encode(["message" => "Product updated successfully"]);
-
-} catch (Exception $e) {
-    http_response_code(500);
-    echo json_encode(["error" => $e->getMessage()]);
-} finally {
-    $conn->close();
+} else {
+    echo json_encode(["error" => "Error updating product: " . $stmt->error]);
 }
+$stmt->close();
+$conn->close();
 ?>

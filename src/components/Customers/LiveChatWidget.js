@@ -1,13 +1,12 @@
-// src/components/LiveChatWidget.js
 import React, { useEffect } from "react";
 
 const LiveChatWidget = () => {
   useEffect(() => {
-    // Initialize LiveChat
     window.__lc = window.__lc || {};
-    window.__lc.license = 19092376;
-    window.__lc.integration_name = "manual_channels";
+    window.__lc.license = 19124207;
+    window.__lc.integration_name = "manual_onboarding";
     window.__lc.product_name = "livechat";
+
     (function (n, t, c) {
       function i(n) {
         return e._h ? e._h.apply(null, n) : e._q.push(n);
@@ -52,7 +51,7 @@ const LiveChatWidget = () => {
 
   return (
     <noscript>
-      <a href="https://www.livechat.com/chat-with/19092376/" rel="nofollow">
+      <a href="https://www.livechat.com/chat-with/19124207/" rel="nofollow">
         Chat with us
       </a>
       , powered by{" "}

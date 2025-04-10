@@ -29,6 +29,7 @@ const FAQTable = ({ setActivePage, activePage, data, setServices, setServiceToEd
       if (result.isConfirmed) {
         fetch('http://localhost/admin_dashboard_backend/delete_service.php', {
           method: 'DELETE',
+          credentials: 'include',
           headers: {
             'Content-Type': 'application/json',
           },
@@ -221,6 +222,7 @@ const ServiceForm = ({ setActivePage, initialData, isEditing, setServices }) => 
   
     fetch(`http://localhost/admin_dashboard_backend/${isEditing ? 'update' : 'add'}_service.php`, {
       method: 'POST',
+      credentials: 'include',
       body: formPayload,
     })
       .then(response => {

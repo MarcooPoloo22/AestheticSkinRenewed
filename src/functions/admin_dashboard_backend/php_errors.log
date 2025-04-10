@@ -54,3 +54,13 @@ Stack trace:
 Stack trace:
 #0 {main}
   thrown in C:\xampp\htdocs\admin_dashboard_backend\update_surgery_image.php on line 36
+[09-Apr-2025 16:14:32 Europe/Berlin] PHP Fatal error:  Uncaught Error: mysqli_stmt object is already closed in C:\xampp\htdocs\admin_dashboard_backend\add_surgery.php:161
+Stack trace:
+#0 C:\xampp\htdocs\admin_dashboard_backend\add_surgery.php(161): mysqli_stmt->close()
+#1 {main}
+  thrown in C:\xampp\htdocs\admin_dashboard_backend\add_surgery.php on line 161
+[09-Apr-2025 16:14:45 Europe/Berlin] PHP Fatal error:  Uncaught Error: mysqli_stmt object is already closed in C:\xampp\htdocs\admin_dashboard_backend\add_surgery.php:161
+Stack trace:
+#0 C:\xampp\htdocs\admin_dashboard_backend\add_surgery.php(161): mysqli_stmt->close()
+#1 {main}
+  thrown in C:\xampp\htdocs\admin_dashboard_backend\add_surgery.php on line 161

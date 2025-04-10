@@ -137,3 +137,87 @@
     font-weight: bold; 
     margin-bottom: 5px; 
 }
+
+/* Existing styles above this remain unchanged */
+/* Responsive Fixes for Mobile */
+@media (max-width: 768px) {
+    .white-box {
+      width: 95%;
+      padding: 20px;
+    }
+  
+    .booking-title {
+      font-size: 2rem;
+    }
+  
+    .form-control,
+    .form-select,
+    .staff-dropdown,
+    .book-control {
+      font-size: 1rem;
+      height: auto;
+      width: 100%;
+    }
+  
+    .btn-primary {
+      width: 100%;
+      font-size: 1rem;
+      padding: 10px 15px;
+    }
+  
+    .d-grid.col-6 {
+      width: 100% !important;
+    }
+  
+    .row {
+      flex-direction: column;
+    }
+  
+    .col,
+    .col-md-6 {
+      width: 100%;
+    }
+  }
+  
+  @media (max-width: 480px) {
+    .booking-title {
+      font-size: 1.5rem;
+    }
+  
+    .white-box {
+      width: 95%;
+      padding: 20px 18px;
+    }
+  
+    .btn-primary {
+      font-size: 0.95rem;
+      padding: 10px;
+    }
+  
+    .form-control,
+    .form-select,
+    .staff-dropdown,
+    .book-control {
+      font-size: 0.95rem;
+      width: 100%;
+    }
+  }
+  
+  /* Make sure booking title sits above background */
+  .booking-title {
+    position: relative;
+    z-index: 1;
+  }
+  
+  /* Make sure the button stays inside container and resizes */
+  .d-grid {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+  }
+  
+  .d-grid button {
+    max-width: 300px;
+    width: 100%;
+  }
+  

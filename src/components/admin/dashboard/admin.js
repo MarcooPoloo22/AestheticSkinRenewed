@@ -31,7 +31,9 @@ const UserTable = ({ setActivePage, users, fetchUsers }) => {
       try {
         const response = await fetch(
           `http://localhost/admin_dashboard_backend/user_delete_user.php?id=${id}`,
-          { method: "DELETE" }
+          { method: "DELETE",
+            credentials: "include"
+           }
         );
 
         if (!response.ok) throw new Error("Failed to delete user");
@@ -119,6 +121,7 @@ const ManageUserEdit = ({ setActivePage, user, fetchUsers }) => {
         "http://localhost/admin_dashboard_backend/user_update_user.php",
         {
           method: "PUT",
+          credentials: "include",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({ ...formData, id: user.id }),
         }
@@ -240,6 +243,7 @@ const ManageUserAdd = ({ setActivePage, fetchUsers }) => {
         "http://localhost/admin_dashboard_backend/user_add_user.php",
         {
           method: "POST",
+          credentials: "include",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify(formData),
         }

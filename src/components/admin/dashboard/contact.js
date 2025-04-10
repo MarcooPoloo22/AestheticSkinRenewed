@@ -56,10 +56,10 @@ const AdminContact = ({ setActivePage }) => {
     try {
       const response = await fetch("http://localhost/admin_dashboard_backend/update_contact.php", {
         method: "POST",
+        credentials: "include",
         headers: {
           "Content-Type": "application/json",
         },
-        credentials: "include", // Include cookies if needed
         body: JSON.stringify(contactData),
       });
 

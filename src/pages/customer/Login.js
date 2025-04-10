@@ -30,11 +30,11 @@ const Login = ({ isLoggedIn, setIsLoggedIn, setUser }) => {
     try {
       const response = await fetch("http://localhost/login.php", {
         method: "POST",
+        credentials: "include",
         headers: {
           "Content-Type": "application/json",
         },
         body: JSON.stringify(formData),
-        credentials: "include",
       });
 
       const result = await response.json();

@@ -82,7 +82,6 @@ try {
         }
 
         $surgeryId = $stmt->insert_id;
-        $stmt->close();
 
         // Insert branches
         $stmt = $conn->prepare("INSERT INTO surgery_branches (surgery_id, branch_id) VALUES (?, ?)");
@@ -106,7 +105,11 @@ try {
             }
         }
 
-        echo json_encode(["message" => "Surgery added successfully"]);
+        // Now close the statement after all insertions
+        $stmt->close();
+
+        // Return success response
+        echo json_encode(["message" => "Surgery added successfully", "surgery_id" => $surgeryId]);
     } else {
         throw new Exception("Invalid or incomplete data received");
     }

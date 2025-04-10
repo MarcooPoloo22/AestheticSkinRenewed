@@ -18,22 +18,28 @@ if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
     exit(0);
 }
 
+// Start session and check user
+session_start();
+if (!isset($_SESSION['user'])) {
+    echo json_encode(['status' => 'error', 'message' => 'User is not logged in.']);
+    exit;
+}
+$user = $_SESSION['user'];
+
+// Include audit trail functionality
+require_once 'audit_logger.php';
+
 // Database connection
 $servername = "localhost";
 $username = "root";
 $password = "";
 $dbname = "asr";
-
 $conn = new mysqli($servername, $username, $password, $dbname);
 if ($conn->connect_error) {
     die(json_encode(["error" => "Database connection failed: " . $conn->connect_error]));
 }
 
-// Debugging log
-file_put_contents("debug_log.txt", "POST Data: " . print_r($_POST, true) . "\n", FILE_APPEND);
-file_put_contents("debug_log.txt", "FILES Data: " . print_r($_FILES, true) . "\n", FILE_APPEND);
-
-// Get form data
+// Get form data (from POST variables)
 $name = $_POST['name'] ?? '';
 $description = $_POST['description'] ?? '';
 $price = $_POST['price'] ?? '';
@@ -105,37 +111,56 @@ if (!$stmt) {
     echo json_encode(['status' => 'error', 'message' => 'Failed to prepare statement: ' . $conn->error]);
     exit;
 }
-
 $stmt->bind_param("ssdsi", $name, $description, $price, $file_url, $duration);
 if ($stmt->execute()) {
     $service_id = $stmt->insert_id;
+    // Get the newly created service record for logging
+    $getStmt = $conn->prepare("SELECT * FROM services WHERE id = ?");
+    $getStmt->bind_param("i", $service_id);
+    $getStmt->execute();
+    $newService = $getStmt->get_result()->fetch_assoc();
+    $getStmt->close();
 
     // Insert into service_branches
     foreach ($branch_ids as $branch_id) {
-        $stmt = $conn->prepare("INSERT INTO service_branches (service_id, branch_id) VALUES (?, ?)");
-        $stmt->bind_param("ii", $service_id, $branch_id);
-        if (!$stmt->execute()) {
-            echo json_encode(['status' => 'error', 'message' => 'Failed to insert into service_branches: ' . $stmt->error]);
+        $stmt_branch = $conn->prepare("INSERT INTO service_branches (service_id, branch_id) VALUES (?, ?)");
+        $stmt_branch->bind_param("ii", $service_id, $branch_id);
+        if (!$stmt_branch->execute()) {
+            echo json_encode(['status' => 'error', 'message' => 'Failed to insert into service_branches: ' . $stmt_branch->error]);
             exit;
         }
+        $stmt_branch->close();
     }
 
     // Insert into service_staff
     foreach ($staff_ids as $staff_id) {
-        $stmt = $conn->prepare("INSERT INTO service_staff (service_id, staff_id) VALUES (?, ?)");
-        $stmt->bind_param("ii", $service_id, $staff_id);
-        if (!$stmt->execute()) {
-            echo json_encode(['status' => 'error', 'message' => 'Failed to insert into service_staff: ' . $stmt->error]);
+        $stmt_staff = $conn->prepare("INSERT INTO service_staff (service_id, staff_id) VALUES (?, ?)");
+        $stmt_staff->bind_param("ii", $service_id, $staff_id);
+        if (!$stmt_staff->execute()) {
+            echo json_encode(['status' => 'error', 'message' => 'Failed to insert into service_staff: ' . $stmt_staff->error]);
             exit;
         }
+        $stmt_staff->close();
     }
+
+    // Log the audit trail (action: CREATE)
+    logAuditTrail(
+        $conn,
+        $user['id'],
+        $user['first_name'],
+        $user['role'],
+        'CREATE',
+        'services',
+        null,
+        $newService,
+        "Created service: " . $name
+    );
 
     echo json_encode(['status' => 'success', 'message' => 'Service added successfully', 'id' => $service_id]);
 } else {
     echo json_encode(['status' => 'error', 'message' => 'Failed to add service: ' . $stmt->error]);
 }
 
-// Close connections
 $stmt->close();
 $conn->close();
 ?>

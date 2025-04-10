@@ -34,6 +34,7 @@ const BranchTable = ({ setActivePage, branches, fetchBranches }) => {
           "http://localhost/admin_dashboard_backend/branch_delete_branch.php",
           {
             method: "DELETE",
+            credentials: "include",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify({ id }),
           }
@@ -184,6 +185,7 @@ const ManageBranchEdit = ({ setActivePage, branch, fetchBranches }) => {
         "http://localhost/admin_dashboard_backend/branch_update_branch.php",
         {
           method: "PUT",
+          credentials: "include",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({ id: branch.id, name: branchName }),
         }
@@ -229,6 +231,7 @@ const ManageBranchEdit = ({ setActivePage, branch, fetchBranches }) => {
           "http://localhost/admin_dashboard_backend/branch_add_staff.php",
           {
             method: "POST",
+            credentials: "include",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify({ name: staffName, branch_id: branch.id }),
           }
@@ -263,6 +266,7 @@ const ManageBranchEdit = ({ setActivePage, branch, fetchBranches }) => {
           "http://localhost/admin_dashboard_backend/branch_delete_staff.php",
           {
             method: "DELETE",
+            credentials: "include",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify({ id: staffId }),
           }
@@ -309,6 +313,7 @@ const ManageBranchEdit = ({ setActivePage, branch, fetchBranches }) => {
           "http://localhost/admin_dashboard_backend/branch_update_staff.php",
           {
             method: "PUT",
+            credentials: "include",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify({ id: staffMember.id, name: newStaffName }),
           }
@@ -401,6 +406,7 @@ const ManageBranchAdd = ({ setActivePage, fetchBranches }) => {
         "http://localhost/admin_dashboard_backend/branch_add_branch.php",
         {
           method: "POST",
+          credentials: "include",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({ name: branchName }),
         }
