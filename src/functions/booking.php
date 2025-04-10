@@ -13,6 +13,9 @@ ini_set('error_log', 'C:\xampp\htdocs\error.log');
 
 require __DIR__ . '/vendor/autoload.php';
 
+use PHPMailer\PHPMailer\PHPMailer;
+use PHPMailer\PHPMailer\Exception;
+
 $dotenv = Dotenv\Dotenv::createImmutable(__DIR__);
 $dotenv->load();
 
@@ -189,10 +192,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $email = filter_var($data['email'], FILTER_SANITIZE_EMAIL);
     $contact_no = htmlspecialchars($data['contact_no']);
     $service_type = htmlspecialchars($data['service_type']);
+    $service_id = isset($data['service']) ? htmlspecialchars($data['service']) : null;
     $branch_id = htmlspecialchars($data['branch_id']);
     $staff_id = htmlspecialchars($data['staff_id']);
     $appointment_date = $data['appointment_date'];
     $appointment_time = $data['appointment_time'];
+    $send_email = isset($data['send_email']) ? (bool)$data['send_email'] : false;
 
     // Validate input
     if (!$first_name || !$last_name || !$email || !$contact_no || !$service_type || !$branch_id || !$staff_id || !$appointment_date || !$appointment_time) {
@@ -232,15 +237,17 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
     // Insert the booking
     try {
+        $conn->beginTransaction();
+        
         $stmt = $conn->prepare("
             INSERT INTO bookings (
                 user_id, first_name, last_name, email, contact_no, 
-                service_type, branch_id, staff_id, 
+                service_type, service_id, branch_id, staff_id, 
                 appointment_date, appointment_time, status, rating,
                 created_at
             ) VALUES (
                 :user_id, :first_name, :last_name, :email, :contact_no, 
-                :service_type, :branch_id, :staff_id, 
+                :service_type, :service_id, :branch_id, :staff_id, 
                 :appointment_date, :appointment_time, 'pending', NULL,
                 NOW()
             )
@@ -252,14 +259,125 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             ':email' => $email,
             ':contact_no' => $contact_no,
             ':service_type' => $service_type,
+            ':service_id' => $service_id,
             ':branch_id' => $branch_id,
             ':staff_id' => $staff_id,
             ':appointment_date' => $appointment_date,
             ':appointment_time' => $appointment_time,
         ]);
 
-        echo json_encode(['status' => 'success', 'message' => 'Appointment booked successfully!']);
+        $bookingId = $conn->lastInsertId();
+        
+        // Get additional details for email if requested
+        if ($send_email) {
+            // Get service name
+            $serviceName = "Service";
+            if ($service_id) {
+                $stmt = $conn->prepare("SELECT name FROM services WHERE id = :service_id");
+                $stmt->execute([':service_id' => $service_id]);
+                $service = $stmt->fetch(PDO::FETCH_ASSOC);
+                if ($service) {
+                    $serviceName = $service['name'];
+                }
+            }
+            
+            // Get branch name
+            $stmt = $conn->prepare("SELECT name FROM branches WHERE id = :branch_id");
+            $stmt->execute([':branch_id' => $branch_id]);
+            $branch = $stmt->fetch(PDO::FETCH_ASSOC);
+            $branchName = $branch ? $branch['name'] : "Unknown Branch";
+            
+            // Get staff name
+            $stmt = $conn->prepare("SELECT name FROM staff WHERE id = :staff_id");
+            $stmt->execute([':staff_id' => $staff_id]);
+            $staff = $stmt->fetch(PDO::FETCH_ASSOC);
+            $staffName = $staff ? $staff['name'] : "Our Staff";
+            
+            // Format date for display
+            $displayDate = date('F j, Y', strtotime($appointment_date));
+            
+            try {
+                $mail = new PHPMailer(true);
+                
+                // Server settings
+                $mail->isSMTP();
+                $mail->Host       = $_ENV['SMTP_HOST'];
+                $mail->SMTPAuth   = true;
+                $mail->Username   = $_ENV['SMTP_USERNAME'];
+                $mail->Password   = $_ENV['SMTP_PASSWORD'];
+                $mail->SMTPSecure = PHPMailer::ENCRYPTION_STARTTLS;
+                $mail->Port       = (int)$_ENV['SMTP_PORT'];
+                
+                // Recipients
+                $mail->setFrom($_ENV['SMTP_FROM_EMAIL'], $_ENV['SMTP_FROM_NAME']);
+                $mail->addAddress($email, $first_name . ' ' . $last_name);
+                
+                // Content
+                $mail->isHTML(true);
+                $mail->Subject = 'Your Booking Confirmation at Aesthetic Skin Renewed';
+                
+                // HTML email body
+                $mail->Body = "
+                    <h1>Booking Confirmation #$bookingId</h1>
+                    <p>Dear $first_name,</p>
+                    <p>Thank you for booking with Aesthetic Skin Renewed!</p>
+                    
+                    <h2>Appointment Details</h2>
+                    <p><strong>Type:</strong> $service_type</p>
+                    <p><strong>Service:</strong> $serviceName</p>
+                    <p><strong>Branch:</strong> $branchName</p>
+                    <p><strong>Staff:</strong> $staffName</p>
+                    <p><strong>Date:</strong> $displayDate</p>
+                    <p><strong>Time:</strong> $appointment_time</p>
+                    
+                    <p>We look forward to seeing you!</p>
+                    <p>If you need to reschedule or have any questions, please contact us.</p>
+                    
+                    <p>Best regards,<br>Aesthetic Skin Renewed Team</p>
+                ";
+                
+                // Plain text version for non-HTML email clients
+                $mail->AltBody = "Booking Confirmation #$bookingId\n\n" .
+                    "Dear $first_name,\n\n" .
+                    "Thank you for booking with Aesthetic Skin Renewed!\n\n" .
+                    "Appointment Details:\n" .
+                    "Type: $service_type\n" .
+                    "Service: $serviceName\n" .
+                    "Branch: $branchName\n" .
+                    "Staff: $staffName\n" .
+                    "Date: $displayDate\n" .
+                    "Time: $appointment_time\n\n" .
+                    "We look forward to seeing you!\n\n" .
+                    "Best regards,\nAesthetic Skin Renewed Team";
+                
+                $mail->send();
+            } catch (Exception $e) {
+                error_log("Email sending failed: " . $e->getMessage());
+                $emailError = $e->getMessage();
+            }
+        }
+        
+        $conn->commit();
+        
+        $response = [
+            'status' => 'success', 
+            'message' => 'Appointment booked successfully!',
+            'booking_id' => $bookingId
+        ];
+        
+        if ($send_email) {
+            $response['email_sent'] = true;
+            $response['email_message'] = 'Confirmation email has been sent.';
+            if (isset($emailError)) {
+                $response['email_error'] = $emailError;
+            }
+        }
+        
+        echo json_encode($response);
     } catch (PDOException $e) {
+        if ($conn->inTransaction()) {
+            $conn->rollBack();
+        }
         error_log('Database Error: ' . $e->getMessage());
         http_response_code(500);
         echo json_encode(['status' => 'error', 'message' => 'Failed to book appointment.']);

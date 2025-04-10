@@ -346,10 +346,12 @@ const BookingPageRegistered = ({ user }) => {
           email: user.email,
           contact_no: user.contact_no,
           service_type: formData.service_type,
+          service: formData.service,
           branch_id: formData.branch_id,
           staff_id: formData.staff_id,
           appointment_date: formData.appointment_date,
           appointment_time: formData.appointment_time,
+          send_email: true
         }),
       });
 
@@ -360,6 +362,12 @@ const BookingPageRegistered = ({ user }) => {
           icon: "success",
           title: "Success!",
           text: result.message,
+          html: `
+            <div>
+              <p>${result.message}</p>
+              <p>A confirmation email has been sent to ${user.email}</p>
+            </div>
+          `,
         }).then(() => {
           navigate("/profile");
         });
@@ -902,10 +910,12 @@ const BookingPageGuest = () => {
           email: formData.email,
           contact_no: formData.contact_no,
           service_type: formData.service_type,
+          service: formData.service,
           branch_id: formData.branch_id,
           staff_id: formData.staff_id,
           appointment_date: formData.appointment_date,
           appointment_time: formData.appointment_time,
+          send_email: true
         }),
       });
 
@@ -916,12 +926,13 @@ const BookingPageGuest = () => {
           icon: "success",
           title: "Success!",
           text: result.message,
-        }).then(() => {
-          Swal.fire({
-            icon: "info",
-            title: "Important Notice",
-            text: "Any schedule changes or cancellations will require you to call our support number: 123-456-7890.",
-          });
+          html: `
+            <div>
+              <p>${result.message}</p>
+              <p>A confirmation email has been sent to ${formData.email}</p>
+              <p>Any schedule changes or cancellations will require you to call our support number: 123-456-7890.</p>
+            </div>
+          `,
         });
       } else {
         Swal.fire({
