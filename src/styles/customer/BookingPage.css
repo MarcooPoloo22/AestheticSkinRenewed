@@ -1,223 +1,244 @@
 .booking-container {
-    position: relative;
-    width: 100%;
-    height: 250px; 
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    overflow: hidden;
-  }
-  
-  .booking-bg {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-    position: absolute;
-    top: 0;
-    left: 0;
-    z-index: 0;
-  }
-  
-  .booking-title-wrapper {
-    position: relative;
-    z-index: 1;
-    text-align: center;
-  }
-  
-  .booking-title {
-    color: white;
-    font-size:  2.5rem; 
-    font-family: "Georgia", "Garamond", "Palatino Linotype", "Book Antiqua", serif;
-    font-weight: 700;
-    text-shadow: 2px 2px 6px rgba(0, 0, 0, 0.6);
-  }
+  position: relative;
+  width: 100%;
+  height: 250px; 
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+}
 
+.booking-bg {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  position: absolute;
+  top: 0;
+  left: 0;
+  z-index: 0;
+}
+
+.booking-title-wrapper {
+  position: relative;
+  z-index: 1;
+  text-align: center;
+}
+
+.booking-title {
+  color: white;
+  font-size: 2.5rem; 
+  font-family: "Georgia", "Garamond", "Palatino Linotype", "Book Antiqua", serif;
+  font-weight: 700;
+  text-shadow: 2px 2px 6px rgba(0, 0, 0, 0.6);
+  position: relative;
+  z-index: 1;
+}
 
 .white-box {
-    background-color: white;
-    width: 50%; /* Adjust width */
-    max-width: 800px;
-    margin: 30px auto; /* Centers horizontally */
-    padding: 30px;
-    border-radius: 10px;
-    box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.2);
-    text-align: center; /* Centers text */
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-
+  background-color: white;
+  width: 50%;
+  max-width: 800px;
+  margin: 30px auto;
+  padding: 30px;
+  border-radius: 10px;
+  box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.2);
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
 }
 
-.branch-label {
-    text-align: left;  
-    font-weight: bold; 
-    margin-bottom: 5px; 
-
+.branch-label,
+.service-label,
+.bookdate-label,
+.booktime-label,
+.staffselect-label,
+.fname-label,
+.lname-label,
+.email-label,
+.connumb-label {
+  text-align: left;  
+  font-weight: bold; 
+  margin-bottom: 5px; 
 }
-
-.service-label {
-    text-align: left;  
-    font-weight: bold; 
-    margin-bottom: 5px; 
-
-}
-
-.bookdate-label {
-    text-align: left;  
-    font-weight: bold; 
-    margin-bottom: 5px; 
-
-}
-
-
-.booktime-label {
-    text-align: left;  
-    font-weight: bold; 
-    margin-bottom: 5px; 
-
-}
-
-.staffselect-label {
-    text-align: left;  
-    font-weight: bold; 
-    margin-bottom: 5px; 
-}
-
-
-.staff-dropdown {
-    width: 300px;  
-}
-
-
-.short-dropdown {
-    width: 100px; 
-    height: 38px; 
-}
-
 
 .form-control {
-    font-size: 1.2rem; /* Make text inside input larger */
-    height: 48px; /* Adjust height to match dropdown */
-    padding: 10px; /* Add spacing */
+  font-size: 1.2rem;
+  height: 48px;
+  padding: 10px;
 }
 
 .book-control {
-    width: 300px; 
+  width: 300px; 
+}
+
+.staff-dropdown {
+  width: 300px;  
+}
+
+.short-dropdown {
+  width: 100px; 
+  height: 38px; 
 }
 
 .btn-primary {
-    padding: 12px 20px;
-    font-size: 18px;
-    border-radius: 10px;
-    background-color: black;
+  padding: 12px 20px;
+  font-size: 18px;
+  border-radius: 10px;
+  background-color: black;
 }
+
 .btn-primary:hover {
-    background-color: #333;
+  background-color: #333;
 }
 
-
-.fname-label {
-    text-align: left;  
-    font-weight: bold; 
-    margin-bottom: 5px; 
+.booking-summary-popup {
+  max-width: 600px;
+  border-radius: 10px;
+  padding: 25px;
+  background-color: white;
 }
 
-.lname-label {
-    text-align: left;  
-    font-weight: bold; 
-    margin-bottom: 5px; 
-}
-.email-label {
-    text-align: left;  
-    font-weight: bold; 
-    margin-bottom: 5px; 
-}
-.connumb-label {
-    text-align: left;  
-    font-weight: bold; 
-    margin-bottom: 5px; 
+.booking-summary {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  padding: 15px 0;
+  text-align: left;
 }
 
-/* Existing styles above this remain unchanged */
-/* Responsive Fixes for Mobile */
+.summary-row {
+  display: flex;
+  justify-content: space-between;
+  padding: 10px 0;
+  border-bottom: 1px solid #eee;
+}
+
+.summary-label {
+  font-weight: bold;
+  color: #555;
+  font-size: 1.1rem;
+}
+
+.summary-value {
+  color: #333;
+  font-size: 1.1rem;
+}
+
+.swal2-actions {
+  gap: 15px;
+  margin-top: 25px;
+}
+
+.btn-confirm {
+  background-color: #6CB33F;
+  color: white;
+  border: none;
+  padding: 12px 24px;
+  border-radius: 8px;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
+
+.btn-confirm:hover {
+  background-color: #a2bf5a;
+}
+
+.btn-cancel {
+  background-color: #dc3545;
+  color: #ffffff;
+  border: none;
+  padding: 12px 24px;
+  border-radius: 8px;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
+
+.btn-cancel:hover {
+  background-color: #b52a37;
+}
+
 @media (max-width: 768px) {
-    .white-box {
-      width: 95%;
-      padding: 20px;
-    }
-  
-    .booking-title {
-      font-size: 2rem;
-    }
-  
-    .form-control,
-    .form-select,
-    .staff-dropdown,
-    .book-control {
-      font-size: 1rem;
-      height: auto;
-      width: 100%;
-    }
-  
-    .btn-primary {
-      width: 100%;
-      font-size: 1rem;
-      padding: 10px 15px;
-    }
-  
-    .d-grid.col-6 {
-      width: 100% !important;
-    }
-  
-    .row {
-      flex-direction: column;
-    }
-  
-    .col,
-    .col-md-6 {
-      width: 100%;
-    }
+  .white-box {
+    width: 95%;
+    padding: 20px;
   }
-  
-  @media (max-width: 480px) {
-    .booking-title {
-      font-size: 1.5rem;
-    }
-  
-    .white-box {
-      width: 95%;
-      padding: 20px 18px;
-    }
-  
-    .btn-primary {
-      font-size: 0.95rem;
-      padding: 10px;
-    }
-  
-    .form-control,
-    .form-select,
-    .staff-dropdown,
-    .book-control {
-      font-size: 0.95rem;
-      width: 100%;
-    }
-  }
-  
-  /* Make sure booking title sits above background */
+
   .booking-title {
-    position: relative;
-    z-index: 1;
+    font-size: 2rem;
   }
-  
-  /* Make sure the button stays inside container and resizes */
-  .d-grid {
-    width: 100%;
-    display: flex;
-    justify-content: center;
-  }
-  
-  .d-grid button {
-    max-width: 300px;
+
+  .form-control,
+  .form-select,
+  .staff-dropdown,
+  .book-control {
+    font-size: 1rem;
+    height: auto;
     width: 100%;
   }
+
+  .btn-primary {
+    width: 100%;
+    font-size: 1rem;
+    padding: 10px 15px;
+  }
+
+  .d-grid.col-6 {
+    width: 100% !important;
+  }
+
+  .row {
+    flex-direction: column;
+  }
+
+  .col,
+  .col-md-6 {
+    width: 100%;
+  }
   
+  .booking-summary-popup {
+    width: 90%;
+    padding: 20px;
+  }
+  
+  .summary-label,
+  .summary-value {
+    font-size: 1rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .booking-title {
+    font-size: 1.5rem;
+  }
+
+  .white-box {
+    width: 95%;
+    padding: 20px 18px;
+  }
+
+  .btn-primary {
+    font-size: 0.95rem;
+    padding: 10px;
+  }
+
+  .form-control,
+  .form-select,
+  .staff-dropdown,
+  .book-control {
+    font-size: 0.95rem;
+    width: 100%;
+  }
+  
+  .swal2-actions {
+    flex-direction: column;
+    gap: 10px;
+  }
+  
+  .btn-confirm,
+  .btn-cancel {
+    width: 100%;
+  }
+}
