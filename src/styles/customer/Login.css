@@ -2,7 +2,7 @@ body {
   margin: 0;
   font-family: Arial, sans-serif;
   background-color: #f5f5f5;
-  caret-color: transparent;
+
 }
 .login-container {
   display: flex;
@@ -11,7 +11,7 @@ body {
   min-height: calc(100vh - 100px);
   padding: 20px;
   background-color: #f9f9f9;
-  caret-color: transparent;
+  
 }
 
 .login-form-container {
@@ -105,4 +105,30 @@ body {
 
 .login-form a:hover {
   text-decoration: underline;
+}
+
+@media (max-width: 768px) {
+  .login-form-container {
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .login-image {
+    margin-right: 0;
+    margin-bottom: 20px;
+    width: 100%;
+    max-width: 300px;
+  }
+
+  .login-image img {
+    width: 100%;
+    height: auto;
+    max-height: 300px;
+    object-fit: cover;
+    border-radius: 10px;
+  }
+
+  .login-form {
+    width: 100%;
+  }
 }
