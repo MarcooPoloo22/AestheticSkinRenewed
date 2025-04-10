@@ -15,7 +15,7 @@ import { RiLockPasswordLine } from "react-icons/ri";
 import {
   MdOutlineMedicalServices,
   MdOutlineEditCalendar,
-  MdPayment
+  MdPayment,
 } from "react-icons/md";
 import { BsPeople } from "react-icons/bs";
 import { IoCallOutline, IoSettingsOutline } from "react-icons/io5";
@@ -46,9 +46,9 @@ const Header = ({ onLogout, user }) => {
     <nav className="header">
       <div className="admin-header">
         <div className="admin">
-          <span className="admin-name">{user?.first_name || 'User'}</span>
+          <span className="admin-name">{user?.first_name || "User"}</span>
           <span className="role">
-            {user?.role === 'admin' ? 'Administrator' : 'Employee'}
+            {user?.role === "admin" ? "Administrator" : "Employee"}
           </span>
         </div>
         <button className="admin-logout" onClick={onLogout}>
@@ -123,7 +123,7 @@ const Dashboard = ({ isLoggedIn, user, setUser, setIsLoggedIn }) => {
             onClick={() => setActivePage("Profile")}
             isActive={activePage === "Profile"}
           >
-            <VscSettings className="icon"/> Branch
+            <VscSettings className="icon" /> Branch
           </Button>
           <div className="divider" />
           <Button
@@ -239,35 +239,29 @@ const Dashboard = ({ isLoggedIn, user, setUser, setIsLoggedIn }) => {
     <div className="dashboard-container">
       <div className="sidebar">
         <Link className="logo" to="/admindashboard">
-            <img
-              src={logo}
-              alt="Logo"
-              className="logo"
-            />
-          </Link>
-        <div className="sidebar-buttons">
-          {getSidebarButtons()}
-        </div>
+          <img src={logo} alt="Logo" className="logo" />
+        </Link>
+        <div className="sidebar-buttons">{getSidebarButtons()}</div>
         <img src={frame1} className="design-pic" alt="Dashboard Design" />
       </div>
-  
+
       <div className="content-area">
         <Header onLogout={handleLogout} user={user} />
-        
+
         <div className="welcome-container">
           <img src={welcome} className="welcome" alt="Welcome" />
           <div className="welcome-overlay">
             <div className="welcome-role">
-              Welcome, {user?.role === 'admin' ? 'admin!' : 'employee!'}
+              Welcome, {user?.role === "admin" ? "admin!" : "employee!"}
             </div>
             <div className="welcome-message">
-              {user?.role === 'admin' 
-              ? "Welcome to the Admin Dashboard – Manage all system features, user accounts, and operations."
-              : "Welcome to the Employee Portal – View and manage appointments, and check staff availability."}
+              {user?.role === "admin"
+                ? "Welcome to the Admin Dashboard – Manage all system features, user accounts, and operations."
+                : "Welcome to the Employee Portal – View and manage appointments, and check staff availability."}
             </div>
           </div>
         </div>
-  
+
         {pages[activePage]}
       </div>
     </div>

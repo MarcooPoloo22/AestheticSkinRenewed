@@ -1,11 +1,30 @@
-// src/components/admin/dashboard/messages.js
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useRef } from "react";
 import "../../../styles/admin/messages.css";
 
 function Messages() {
   const [chats, setChats] = useState([]);
   const [selectedChat, setSelectedChat] = useState(null);
   const [replyText, setReplyText] = useState("");
+
+  const [pollInterval, setPollInterval] = useState(10000);
+  const [lastEventCount, setLastEventCount] = useState(0);
+  const inactivityTimerRef = useRef(null);
+
+  const handleActivity = () => {
+    if (pollInterval === 3000) return;
+
+    console.log("Activity detected - switching to 3s poll interval");
+    setPollInterval(3000);
+
+    if (inactivityTimerRef.current) {
+      clearTimeout(inactivityTimerRef.current);
+    }
+
+    inactivityTimerRef.current = setTimeout(() => {
+      console.log("No further activity, reverting to 10s poll interval");
+      setPollInterval(10000);
+    }, 30000);
+  };
 
   const fetchChats = async () => {
     try {
@@ -22,6 +41,12 @@ function Messages() {
       const res = await fetch(`/api/livechat/chats/${chatId}`);
       const data = await res.json();
       setSelectedChat(data);
+
+      const newCount = data?.thread?.events?.length || 0;
+      if (newCount > lastEventCount) {
+        handleActivity();
+      }
+      setLastEventCount(newCount);
     } catch (err) {
       console.error("Error fetching chat details:", err);
     }
@@ -37,6 +62,7 @@ function Messages() {
         body: JSON.stringify({ message: replyText }),
       });
       setReplyText("");
+      handleActivity();
       fetchChatDetails(chatId);
     } catch (err) {
       console.error("Error sending message:", err);
@@ -51,18 +77,21 @@ function Messages() {
 
   useEffect(() => {
     fetchChats();
-    const inboxInterval = setInterval(fetchChats, 1000);
-    return () => clearInterval(inboxInterval);
-  }, []);
 
-  useEffect(() => {
-    if (selectedChat) {
-      const chatInterval = setInterval(() => {
+    const intervalId = setInterval(() => {
+      fetchChats();
+      if (selectedChat?.id) {
         fetchChatDetails(selectedChat.id);
-      }, 1000);
-      return () => clearInterval(chatInterval);
-    }
-  }, [selectedChat]);
+      }
+    }, pollInterval);
+
+    return () => clearInterval(intervalId);
+  }, [pollInterval, selectedChat]);
+  const handleSelectChat = (chatId) => {
+    setSelectedChat(null);
+    setLastEventCount(0);
+    fetchChatDetails(chatId);
+  };
 
   return (
     <div className="messages-container">
@@ -78,7 +107,7 @@ function Messages() {
               className={`chat-item ${
                 selectedChat && selectedChat.id === chat.id ? "active" : ""
               }`}
-              onClick={() => fetchChatDetails(chat.id)}
+              onClick={() => handleSelectChat(chat.id)}
             >
               <div className="chat-id">{chat.id}</div>
               <div className="chat-snippet">
