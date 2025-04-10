@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import logo from "../../assets/admin/ASR Logo.png";
 import frame1 from "../../assets/admin/DashboardDesign.png";
 import welcome from "../../assets/admin/Graphic Side.png";
@@ -238,7 +238,13 @@ const Dashboard = ({ isLoggedIn, user, setUser, setIsLoggedIn }) => {
   return (
     <div className="dashboard-container">
       <div className="sidebar">
-        <img src={logo} className="logo" alt="Logo" />
+        <Link className="logo" to="/admindashboard">
+            <img
+              src={logo}
+              alt="Logo"
+              className="logo"
+            />
+          </Link>
         <div className="sidebar-buttons">
           {getSidebarButtons()}
         </div>

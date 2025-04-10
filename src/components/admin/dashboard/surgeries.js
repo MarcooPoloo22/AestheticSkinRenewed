@@ -66,6 +66,7 @@ const SurgeryTable = ({ setActivePage, activePage, data, fetchSurgeries }) => {
       try {
         const response = await fetch(`http://localhost/admin_dashboard_backend/delete_surgery.php`, {
           method: 'DELETE',
+          credentials: 'include',
           headers: {
             'Content-Type': 'application/json',
           },
@@ -263,6 +264,7 @@ const ManageSurgeryEdit = ({ setActivePage, activePage, fetchSurgeries }) => {
   try {
     const response = await fetch('http://localhost/admin_dashboard_backend/update_surgery.php', {
       method: 'POST',
+      credentials: 'include',
       body: formPayload,
     });
 
@@ -546,6 +548,7 @@ const ManageSurgeryAdd = ({ setActivePage, activePage, fetchSurgeries }) => {
     try {
       const response = await fetch(`http://localhost/admin_dashboard_backend/add_surgery.php`, {
         method: 'POST',
+        credentials: 'include',
         body: formPayload,
       });
 

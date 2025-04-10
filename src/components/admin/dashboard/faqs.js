@@ -30,6 +30,7 @@ const FAQTable = ({ setActivePage, activePage, data, setFaqs, setFaqToEdit }) =>
       if (result.isConfirmed) {
         fetch('http://localhost/admin_dashboard_backend/delete_faq.php', {
           method: 'DELETE',
+          credentials: 'include',
           headers: {
             'Content-Type': 'application/json',
           },
@@ -120,14 +121,19 @@ const ManageFAQEdit = ({ setActivePage, activePage, faqToEdit, setFaqs }) => {
   const handleSubmit = (e) => {
     e.preventDefault();
   
-    const formData = new FormData();
-    formData.append("id", faqToEdit.id);
-    formData.append("question", question);
-    formData.append("answer", answer);
+    const payload = {
+      id: faqToEdit.id,
+      question,
+      answer,
+    };
   
     fetch('http://localhost/admin_dashboard_backend/update_faq.php', {
       method: 'PUT',
-      body: formData,
+      credentials: 'include',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify(payload),
     })
       .then(response => {
         if (!response.ok) {
@@ -219,6 +225,7 @@ const ManageFAQAdd = ({ setActivePage, activePage, setFaqs }) => {
   
     fetch('http://localhost/admin_dashboard_backend/add_faq.php', {
       method: 'POST',
+      credentials: 'include',
       headers: {
         'Content-Type': 'application/json',
       },

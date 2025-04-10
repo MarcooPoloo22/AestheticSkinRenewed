@@ -16,7 +16,6 @@ const customStyles = {
   },
 };
 
-// Mapping of database column names to user-friendly labels
 const fieldMapping = {
   id: "ID",
   name: "Name",
@@ -30,10 +29,8 @@ const fieldMapping = {
   updated_at: "Updated At",
   branch_ids: "Branches",
   staff_ids: "Staff",
-  // Removed file_url (Image URL)
 };
 
-// Helper function to compute differences between two objects
 const getDifferences = (oldObj, newObj) => {
   oldObj = oldObj || {};
   newObj = newObj || {};
@@ -86,10 +83,11 @@ const FAQTable = ({ data, loading, totalRows, currentPage, perPage, handlePageCh
       width: '100px'
     },
     {
-      name: 'Table',
-      selector: row => row.table_name,
+      name: 'Description',  // Changed from 'Table'
+      selector: row => row.description,  // Changed from table_name
       sortable: true,
-      width: '120px'
+      width: '300px',
+      wrap: true
     },
     {
       name: 'Changes',
@@ -107,15 +105,11 @@ const FAQTable = ({ data, loading, totalRows, currentPage, perPage, handlePageCh
           newData = {};
         }
 
-        // Compute the differences
         const diffs = getDifferences(oldData, newData);
-
-        // Filter out "updated_at", "created_at", and "file_url" fields
         const changedFields = Object.keys(diffs).filter(
           field => field !== 'updated_at' && field !== 'created_at' && field !== 'file_url'
         );
 
-        // Map database field names to user-friendly labels
         const friendlyNames = changedFields.map(field => fieldMapping[field] || field);
 
         return (

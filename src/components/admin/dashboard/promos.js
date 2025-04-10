@@ -67,6 +67,7 @@ const FAQTable = ({ setActivePage, activePage, data, fetchPromos }) => {
       try {
         const response = await fetch(`http://localhost/admin_dashboard_backend/delete_promo.php`, {
           method: 'DELETE',
+          credentials: 'include',
           headers: {
             'Content-Type': 'application/json',
           },
@@ -246,6 +247,7 @@ const ManageFAQEdit = ({ setActivePage, activePage, fetchPromos }) => {
   try {
     const response = await fetch(`http://localhost/admin_dashboard_backend/update_promo.php`, {
       method: 'POST',
+      credentials: 'include',
       body: formPayload, // Send as FormData
     });
 
@@ -529,6 +531,7 @@ const ManageFAQAdd = ({ setActivePage, activePage, fetchPromos }) => {
     try {
       const response = await fetch(`http://localhost/admin_dashboard_backend/add_promo.php`, {
         method: 'POST',
+        credentials: 'include',
         body: formPayload,
       });
 
