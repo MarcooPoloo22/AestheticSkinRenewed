@@ -593,9 +593,19 @@ const BookingPageGuest = () => {
   const [staffList, setStaffList] = useState([]);
   const [bookedSlots, setBookedSlots] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
-  const [paymentDetails, setPaymentDetails] = useState(null);
   const [isLoadingPayment, setIsLoadingPayment] = useState(false);
   const navigate = useNavigate();
+
+  useEffect(() => {
+    if (formData.service_type === "Surgery") {
+      setFormData(prev => ({ ...prev, service_type: "" }));
+      Swal.fire({
+        icon: 'info',
+        title: 'Registered Customers Only',
+        text: 'Please login or register to book surgery services.',
+      });
+    }
+  }, [formData.service_type]);
 
   useEffect(() => {
     if (formData.service_type) {
@@ -810,80 +820,6 @@ const BookingPageGuest = () => {
     setFormData({ ...formData, [name]: value });
   };
 
-  const showPaymentModal = (paymentData) => {
-    MySwal.fire({
-      html: (
-        <>
-          <div className="booking-container">
-            <img
-              src="./assets/bookinghead.jpg"
-              alt="Booking Background"
-              className="booking-bg"
-            />
-            <h1 className="booking-title">Upload Payment</h1>
-          </div>
-          <br />
-          <div className="white-box my-5">
-            <div className="container">
-              <p 
-                style={{
-                  fontSize: "1.5rem",
-                  fontWeight: "bold",
-                  color: "#4169E1",
-                  textAlign: "center",
-                  textTransform: "uppercase",
-                  marginBottom: "20px"
-                }}
-              >
-                Minimum 50% Down Payment Required
-              </p>
-
-              <p className="gcash-label">GCash payment Details</p>
-              <p className="gcash-details">GCash Number: {paymentData.gcash_number}</p>
-              <p className="gcash-details">GCash Name: {paymentData.gcash_name}</p>
-              <p className="gcash-details">Amount: {paymentData.gcash_amount}</p>
-              
-              <p className="paymaya-label">PayMaya payment Details</p>
-              <p className="paymaya-details">PayMaya Number: {paymentData.paymaya_number}</p>
-              <p className="paymaya-details">PayMaya Name: {paymentData.paymaya_name}</p>
-              <p className="paymaya-details">Amount: {paymentData.paymaya_amount}</p>
-              
-              <p className="bank-label">Bank payment Details</p>
-              <p className="bank-details">Bank: {paymentData.bank_name}</p>
-              <p className="bank-details">Account Number: {paymentData.bank_account_number}</p>
-              <p className="bank-details">Account Name: {paymentData.bank_account_name}</p>
-              <p className="bank-details">Amount: {paymentData.bank_amount}</p>
-              
-              <div className="mb-3">
-                <p className="receipt-label">Upload Payment Receipt</p>
-                <input className="form-control" type="file" id="formFileMultiple" multiple />
-              </div>
-              
-              <div className="d-grid gap-2 col-6 mx-auto">
-                <br />
-                <button 
-                  className="btn btn-payment" 
-                  type="button"
-                  onClick={() => {
-                    MySwal.close();
-                    handleAppointmentSubmission();
-                  }}
-                >
-                  Submit Payment
-                </button>
-              </div>
-            </div>
-          </div>
-        </>
-      ),
-      showConfirmButton: false,
-      width: '80%',
-      customClass: {
-        popup: 'sweet-alert-popup'
-      }
-    });
-  };
-
   const handleAppointmentSubmission = async () => {
     try {
       const response = await fetch("http://localhost/booking.php", {
@@ -939,6 +875,15 @@ const BookingPageGuest = () => {
     }
   };
   
+=======
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    console.log("Form Data:", formData);
+    handleAppointmentSubmission();
+  };
+
+>>>>>>> Stashed changes
   const timeSlots = [
     "09:00 AM",
     "10:00 AM",
@@ -1030,7 +975,13 @@ const BookingPageGuest = () => {
                 <option value="">Select Type</option>
                 <option value="Promo">Promo</option>
                 <option value="Service">Service</option>
-                <option value="Surgery">Surgery</option>
+                <option 
+                  value="Surgery" 
+                  disabled
+                  style={{ color: '#ccc', backgroundColor: '#f5f5f5' }}
+                >
+                  Surgery (Registered Customers Only)
+                </option>
               </select>
             </div>
             <div className="col-md-6">
@@ -1166,8 +1117,7 @@ const BookingPageGuest = () => {
               onClick={handleSubmit}
               disabled={isLoadingPayment}
             >
-              {isLoadingPayment ? "Loading..." : 
-               formData.service_type === "Surgery" ? "Continue to Payment" : "Book Appointment"}
+              {isLoadingPayment ? "Loading..." : "Book Appointment"}
             </button>
           </div>
         </div>
