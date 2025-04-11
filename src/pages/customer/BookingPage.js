@@ -874,6 +874,7 @@ const BookingPageGuest = () => {
       });
     }
   };
+<<<<<<< Updated upstream
   
 =======
 
