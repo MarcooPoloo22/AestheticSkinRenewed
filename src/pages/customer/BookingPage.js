@@ -180,10 +180,10 @@ const BookingPageRegistered = ({ user }) => {
   };
 
   const showConfirmationModal = () => {
-    const serviceName = services.find(s => s.id === formData.service)?.name || formData.service;
-    const branchName = branches.find(b => b.id === formData.branch_id)?.name || formData.branch_id;
-    const staffName = staffList.find(s => s.id === formData.staff_id)?.name || formData.staff_id;
-
+    const serviceObj = services.find(s => s.id.toString() === formData.service.toString());
+    const branchObj = branches.find(b => b.id.toString() === formData.branch_id.toString());
+    const staffObj = staffList.find(s => s.id.toString() === formData.staff_id.toString());
+  
     MySwal.fire({
       title: '<strong>Booking Summary</strong>',
       html: `
@@ -194,15 +194,15 @@ const BookingPageRegistered = ({ user }) => {
           </div>
           <div class="summary-row">
             <span class="summary-label">Service:</span>
-            <span class="summary-value">${serviceName}</span>
+            <span class="summary-value">${serviceObj?.name || 'N/A'}</span>
           </div>
           <div class="summary-row">
             <span class="summary-label">Branch:</span>
-            <span class="summary-value">${branchName}</span>
+            <span class="summary-value">${branchObj?.name || 'N/A'}</span>
           </div>
           <div class="summary-row">
             <span class="summary-label">Staff:</span>
-            <span class="summary-value">${staffName}</span>
+            <span class="summary-value">${staffObj?.name || 'N/A'}</span>
           </div>
           <div class="summary-row">
             <span class="summary-label">Date:</span>
@@ -732,10 +732,10 @@ const BookingPageGuest = () => {
   };
 
   const showConfirmationModal = () => {
-    const serviceName = services.find(s => s.id === formData.service)?.name || formData.service;
-    const branchName = branches.find(b => b.id === formData.branch_id)?.name || formData.branch_id;
-    const staffName = staffList.find(s => s.id === formData.staff_id)?.name || formData.staff_id;
-
+    const serviceObj = services.find(s => s.id.toString() === formData.service.toString());
+    const branchObj = branches.find(b => b.id.toString() === formData.branch_id.toString());
+    const staffObj = staffList.find(s => s.id.toString() === formData.staff_id.toString());
+  
     MySwal.fire({
       title: '<strong>Booking Summary</strong>',
       html: `
@@ -746,15 +746,15 @@ const BookingPageGuest = () => {
           </div>
           <div class="summary-row">
             <span class="summary-label">Service:</span>
-            <span class="summary-value">${serviceName}</span>
+            <span class="summary-value">${serviceObj?.name || 'N/A'}</span>
           </div>
           <div class="summary-row">
             <span class="summary-label">Branch:</span>
-            <span class="summary-value">${branchName}</span>
+            <span class="summary-value">${branchObj?.name || 'N/A'}</span>
           </div>
           <div class="summary-row">
             <span class="summary-label">Staff:</span>
-            <span class="summary-value">${staffName}</span>
+            <span class="summary-value">${staffObj?.name || 'N/A'}</span>
           </div>
           <div class="summary-row">
             <span class="summary-label">Date:</span>
@@ -763,18 +763,6 @@ const BookingPageGuest = () => {
           <div class="summary-row">
             <span class="summary-label">Time:</span>
             <span class="summary-value">${formData.appointment_time}</span>
-          </div>
-          <div class="summary-row">
-            <span class="summary-label">Name:</span>
-            <span class="summary-value">${formData.first_name} ${formData.last_name}</span>
-          </div>
-          <div class="summary-row">
-            <span class="summary-label">Email:</span>
-            <span class="summary-value">${formData.email}</span>
-          </div>
-          <div class="summary-row">
-            <span class="summary-label">Contact:</span>
-            <span class="summary-value">${formData.contact_no}</span>
           </div>
         </div>
       `,
