@@ -79,19 +79,23 @@ body {
 }
 
 .login-form .btn {
-  background-color: black;
+  background: linear-gradient(to right, #8BC34A, #66BB6A); /* green gradient */
   color: white;
   padding: 10px;
   border: none;
-  border-radius: 10px;
+  border-radius: 12px;
   cursor: pointer;
   width: 100%;
   caret-color: transparent;
+  font-size: 16px;
+  transition: background 0.3s ease, transform 0.2s ease;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
 }
 
 .login-form .btn:hover {
-  background-color: #333;
-  color: white;
+  background: linear-gradient(to right, #7CB342, #4CAF50); /* darker on hover */
+  transform: translateY(-2px);
+  color: white; /* keeps text white on hover */
 }
 
 .login-form a {

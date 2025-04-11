@@ -1170,7 +1170,7 @@ const BookingPageGuest = () => {
               All time slots are booked for the selected date. Please choose another date.
             </div>
           )}
-
+          <br />
           <div className="d-grid gap-2 col-6 mx-auto">
             <button
               className="btn btn-primary"
