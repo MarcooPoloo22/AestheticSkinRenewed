@@ -1,11 +1,12 @@
 import React, { useState, useEffect } from "react";
+import "../../styles/customer/Services.css";
 
 function ProductsPage() {
   const [products, setProducts] = useState([]);
   const [selectedProduct, setSelectedProduct] = useState(null);
   const [showModal, setShowModal] = useState(false);
-  const MAX_LETTERS = 100;
   const MAX_WORDS = 15;
+  const MAX_CHARS = 100;
 
   useEffect(() => {
     fetch('http://localhost/admin_dashboard_backend/fetch_products.php')
@@ -14,24 +15,19 @@ function ProductsPage() {
       .catch(error => console.error('Error fetching products:', error));
   }, []);
 
-  const truncateDescription = (description) => {
-    if (!description) return '';
+  const truncateDescription = (text) => {
+    if (!text) return '';
     
-    const words = description.split(' ');
+    // First truncate by character length
+    let truncated = text.length > MAX_CHARS ? text.substring(0, MAX_CHARS) + '...' : text;
+    
+    // Then truncate by word count if needed
+    const words = truncated.split(' ');
     if (words.length > MAX_WORDS) {
-      return words.slice(0, MAX_WORDS).join(' ') + '...';
+      truncated = words.slice(0, MAX_WORDS).join(' ') + '...';
     }
     
-    if (description.length > MAX_LETTERS) {
-      return description.substring(0, MAX_LETTERS) + '...';
-    }
-    
-    return description;
-  };
-
-  const shouldShowSeeMore = (description) => {
-    if (!description) return false;
-    return description.split(' ').length > MAX_WORDS || description.length > MAX_LETTERS;
+    return truncated;
   };
 
   const handleCardClick = (product, e) => {
@@ -49,36 +45,33 @@ function ProductsPage() {
           <h1 className="service-title">Our Products</h1>
         </div>
       </div>
-      <div className="container my-4">
-        <div className="row mt-3">
+      <div className="container my-5">
+        <div className="row g-4 mt-3">
           {products.map((product) => (
-            <div className="col-md-12 col-lg-6 mb-4" key={product.id}>
+            <div className="col-12 col-md-6" key={product.id}>
               <div 
-                className="card mx-auto shadow-sm"
+                className="card mb-4 mx-auto shadow-sm"
                 style={{ 
                   width: "100%", 
-                  minHeight: "220px",
-                  maxHeight: "400px",
+                  height: "220px", 
                   cursor: "pointer",
                   display: "flex",
-                  flexDirection: "row",
-                  overflow: "hidden"
+                  flexDirection: "row"
                 }}
                 onClick={(e) => handleCardClick(product, e)}
               >
                 <div style={{ 
-                  width: "40%", 
-                  minHeight: "220px",
-                  overflow: "hidden",
-                  flexShrink: 0
+                  width: "40%",
+                  height: "100%",
+                  overflow: "hidden"
                 }}>
                   <img
                     src={product.file_url || './assets/default-image.jpg'}
                     alt={product.name}
-                    style={{ 
-                      width: "100%", 
-                      height: "100%", 
-                      objectFit: "cover" 
+                    style={{
+                      width: "100%",
+                      height: "100%",
+                      objectFit: "cover"
                     }}
                     onError={(e) => {
                       e.target.src = './assets/default-image.jpg';
@@ -90,25 +83,26 @@ function ProductsPage() {
                   padding: "15px",
                   display: "flex",
                   flexDirection: "column",
-                  overflowY: "auto"
+                  justifyContent: "space-between"
                 }}>
-                  <h5 style={{ 
-                    fontSize: "1.1rem",
-                    marginBottom: "10px",
-                    overflow: "hidden",
-                    textOverflow: "ellipsis",
-                    whiteSpace: "nowrap"
-                  }}>
-                    {product.name}
-                  </h5>
-                  <div style={{
-                    flexGrow: 1,
-                    overflow: "hidden",
-                    marginBottom: "10px"
-                  }}>
-                    <p style={{ fontSize: "0.9rem" }}>
+                  <div>
+                    <h5 style={{ 
+                      fontSize: "1.1rem",
+                      marginBottom: "10px",
+                      overflow: "hidden",
+                      textOverflow: "ellipsis",
+                      whiteSpace: "nowrap"
+                    }}>
+                      {product.name}
+                    </h5>
+                    <p style={{
+                      fontSize: "0.9rem",
+                      marginBottom: "10px",
+                      height: "60px",
+                      overflow: "hidden"
+                    }}>
                       {truncateDescription(product.description)}
-                      {shouldShowSeeMore(product.description) && (
+                      {(product.description && (product.description.split(' ').length > MAX_WORDS || product.description.length > MAX_CHARS)) && (
                         <span 
                           className="see-more-link text-primary"
                           onClick={(e) => {
@@ -123,7 +117,7 @@ function ProductsPage() {
                       )}
                     </p>
                   </div>
-                  <div style={{ marginTop: "auto" }}>
+                  <div>
                     <small className="text-muted">Price: ₱{parseFloat(product.price).toLocaleString()}</small>
                   </div>
                 </div>
@@ -151,7 +145,7 @@ function ProductsPage() {
             backgroundColor: 'white',
             padding: '20px',
             borderRadius: '8px',
-            maxWidth: '800px',
+            maxWidth: '600px',
             width: '90%',
             maxHeight: '80vh',
             overflow: 'auto',
@@ -179,29 +173,22 @@ function ProductsPage() {
             </button>
             <div style={{ display: 'flex', flexDirection: 'column', gap: '20px' }}>
               <div style={{ display: 'flex', gap: '20px', flexDirection: window.innerWidth < 768 ? 'column' : 'row' }}>
-                <div style={{ flex: 1, minHeight: '300px' }}>
+                <div style={{ flex: 1 }}>
                   <img
                     src={selectedProduct.file_url || './assets/default-image.jpg'}
                     alt={selectedProduct.name}
                     style={{
                       width: '100%',
-                      height: '100%',
+                      height: '200px',
                       objectFit: 'cover',
                       borderRadius: '4px'
-                    }}
-                    onError={(e) => {
-                      e.target.src = './assets/default-image.jpg';
                     }}
                   />
                 </div>
                 <div style={{ flex: 2 }}>
                   <h2 style={{ marginTop: 0 }}>{selectedProduct.name}</h2>
-                  <div style={{ maxHeight: '300px', overflowY: 'auto' }}>
-                    <p style={{ whiteSpace: 'pre-line' }}>{selectedProduct.description}</p>
-                  </div>
-                  <p style={{ marginTop: '15px', fontWeight: 'bold' }}>
-                    Price: ₱{parseFloat(selectedProduct.price).toLocaleString()}
-                  </p>
+                  <p>{selectedProduct.description}</p>
+                  <small className="text-muted">Price: ₱{parseFloat(selectedProduct.price).toLocaleString()}</small>
                 </div>
               </div>
             </div>
