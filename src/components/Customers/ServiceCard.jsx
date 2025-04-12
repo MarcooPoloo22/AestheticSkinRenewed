@@ -5,14 +5,21 @@ const ServiceCard = ({ title, description, image, updated, link, id }) => {
   const navigate = useNavigate();
   const [showModal, setShowModal] = useState(false);
   const MAX_WORDS = 15;
+  const MAX_CHARS = 100;
 
   const truncateDescription = (text) => {
     if (!text) return '';
-    const words = text.split(' ');
+    
+    // First truncate by character length
+    let truncated = text.length > MAX_CHARS ? text.substring(0, MAX_CHARS) + '...' : text;
+    
+    // Then truncate by word count if needed
+    const words = truncated.split(' ');
     if (words.length > MAX_WORDS) {
-      return words.slice(0, MAX_WORDS).join(' ') + '...';
+      truncated = words.slice(0, MAX_WORDS).join(' ') + '...';
     }
-    return text;
+    
+    return truncated;
   };
 
   const handleClick = (e) => {
@@ -83,7 +90,7 @@ const ServiceCard = ({ title, description, image, updated, link, id }) => {
               overflow: "hidden"
             }}>
               {truncateDescription(description)}
-              {description && description.split(' ').length > MAX_WORDS && (
+              {(description && (description.split(' ').length > MAX_WORDS || description.length > MAX_CHARS)) && (
                 <span 
                   className="see-more-link text-primary"
                   onClick={() => setShowModal(true)}
