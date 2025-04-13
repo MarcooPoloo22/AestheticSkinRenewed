@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
+import { useLocation } from "react-router-dom";
 import Swal from "sweetalert2";
 import withReactContent from "sweetalert2-react-content";
 import "../../styles/customer/BookingPage.css";
@@ -15,9 +16,14 @@ const validateDate = (dateString) => {
 };
 
 const BookingPageRegistered = ({ user }) => {
+  const location = useLocation();
+  const queryParams = new URLSearchParams(location.search);
+  const serviceTypeParam = queryParams.get('type');
+  const serviceIdParam = queryParams.get('serviceId');
+
   const [formData, setFormData] = useState({
-    service_type: "",
-    service: "",
+    service_type: serviceTypeParam || "",
+    service: serviceIdParam || "",
     branch_id: "",
     staff_id: "",
     appointment_date: "",
@@ -449,6 +455,12 @@ const BookingPageRegistered = ({ user }) => {
                   </option>
                 ))}
               </select>
+              {serviceIdParam && (
+                <div className="alert alert-info mt-2 mb-3 small">
+                  <i className="bi bi-info-circle me-2"></i>
+                  Auto-selected: {services.find(s => s.id.toString() === serviceIdParam)?.name || 'Service'}
+                </div>
+              )}
             </div>
           </div>
 
@@ -575,13 +587,18 @@ const BookingPageRegistered = ({ user }) => {
 };
 
 const BookingPageGuest = () => {
+  const location = useLocation();
+  const queryParams = new URLSearchParams(location.search);
+  const serviceTypeParam = queryParams.get('type');
+  const serviceIdParam = queryParams.get('serviceId');
+
   const [formData, setFormData] = useState({
     first_name: "",
     last_name: "",
     email: "",
     contact_no: "",
-    service_type: "",
-    service: "",
+    service_type: serviceTypeParam || "",
+    service: serviceIdParam || "",
     branch_id: "",
     staff_id: "",
     appointment_date: "",
@@ -593,7 +610,6 @@ const BookingPageGuest = () => {
   const [staffList, setStaffList] = useState([]);
   const [bookedSlots, setBookedSlots] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
-  const [isLoadingPayment, setIsLoadingPayment] = useState(false);
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -714,33 +730,7 @@ const BookingPageGuest = () => {
       setBookedSlots([]);
     }
   }, [formData.appointment_date, formData.staff_id]);
-
-  const handleSurgeryPayment = async () => {
-    setIsLoadingPayment(true);
-    try {
-      const response = await fetch("http://localhost/admin_dashboard_backend/fetch_payment_details.php");
-      if (!response.ok) throw new Error("Failed to fetch payment details");
-      const result = await response.json();
-      
-      if (!result.data || !result.data.gcash_number) {
-        throw new Error("Invalid payment details format");
-      }
-      
-      setPaymentDetails(result);
-      showPaymentModal(result.data);
-    } catch (error) {
-      console.error("Error fetching payment details:", error);
-      MySwal.fire({
-        title: "Error!",
-        text: error.message,
-        icon: "error",
-        confirmButtonText: "OK",
-      });
-    } finally {
-      setIsLoadingPayment(false);
-    }
-  };
-
+  
   const showConfirmationModal = () => {
     const serviceObj = services.find(s => s.id.toString() === formData.service.toString());
     const branchObj = branches.find(b => b.id.toString() === formData.branch_id.toString());
@@ -787,11 +777,7 @@ const BookingPageGuest = () => {
       }
     }).then((result) => {
       if (result.isConfirmed) {
-        if (formData.service_type === "Surgery") {
-          handleSurgeryPayment();
-        } else {
-          handleAppointmentSubmission();
-        }
+        handleAppointmentSubmission();
       }
     });
   };
@@ -874,17 +860,7 @@ const BookingPageGuest = () => {
       });
     }
   };
-<<<<<<< Updated upstream
   
-=======
-
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    console.log("Form Data:", formData);
-    handleAppointmentSubmission();
-  };
-
->>>>>>> Stashed changes
   const timeSlots = [
     "09:00 AM",
     "10:00 AM",
@@ -994,11 +970,15 @@ const BookingPageGuest = () => {
                 value={formData.service}
                 onChange={handleChange}
                 required
-                disabled={!formData.service_type}
+                disabled={!formData.service_type || formData.service_type === "Surgery"}
               >
                 <option value="">Select service</option>
                 {services.map((service) => (
-                  <option key={service.id} value={service.id}>
+                  <option 
+                    key={service.id} 
+                    value={service.id}
+                    disabled={formData.service_type === "Surgery"}
+                  >
                     {service.name}
                   </option>
                 ))}
@@ -1116,9 +1096,9 @@ const BookingPageGuest = () => {
               className="btn btn-primary"
               type="button"
               onClick={handleSubmit}
-              disabled={isLoadingPayment}
+              disabled={isLoading}
             >
-              {isLoadingPayment ? "Loading..." : "Book Appointment"}
+              {isLoading ? "Loading..." : "Book Appointment"}
             </button>
           </div>
         </div>
