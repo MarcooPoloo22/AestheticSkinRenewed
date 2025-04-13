@@ -28,11 +28,13 @@ $query = "
     b.appointment_time,
     b.status,
     b.file_url AS receipt_url, -- Payment Receipt
-    b.rating,                  -- <-- NEW: Rating column
+    b.rating,                  -- Rating column
+    b.branch_id,               -- Branch ID for edit prepopulation
+    b.staff_id,                -- Staff ID for edit prepopulation
     s.name AS staff_name,
     br.name AS branch_name
   FROM bookings b
-  LEFT JOIN staff s    ON b.staff_id   = s.id
+  LEFT JOIN staff s    ON b.staff_id = s.id
   LEFT JOIN branches br ON b.branch_id = br.id
   WHERE 1=1
 ";
