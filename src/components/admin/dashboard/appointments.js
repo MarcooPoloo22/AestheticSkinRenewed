@@ -85,7 +85,7 @@ const AppointmentTable = ({
       sortable: true,
     },
     // ---------------------
-    // NEW: Payment Receipt Column
+    // Payment Receipt Column
     // ---------------------
     {
       name: "Payment Receipt",
@@ -100,6 +100,14 @@ const AppointmentTable = ({
       ignoreRowClick: true,
       allowOverflow: true,
       button: true,
+    },
+    // ---------------------
+    // Rating Column
+    // ---------------------
+    {
+      name: "Rating",
+      selector: (row) => (row.rating !== null ? row.rating : "N/A"),
+      sortable: true,
     },
     {
       name: "Action",
@@ -225,6 +233,7 @@ const ManageAppointmentEdit = ({
   const [staffList, setStaffList] = useState([]);
   const [loadingStaff, setLoadingStaff] = useState(false);
 
+  // The local formData, including rating + payment receipt (file)
   const [formData, setFormData] = useState({
     id: appointment.id || "",
     first_name: appointment.first_name || "",
@@ -240,6 +249,9 @@ const ManageAppointmentEdit = ({
       : "",
     status: appointment.status || "pending",
     user_id: appointment.user_id || "",
+    rating: appointment.rating || "",
+    // NEW: Payment Receipt file
+    fileReceipt: null,
   });
 
   useEffect(() => {
@@ -299,6 +311,12 @@ const ManageAppointmentEdit = ({
     setFormData((prev) => ({ ...prev, service_type: e.target.value }));
   };
 
+  // Payment receipt file onChange
+  const handleFileChange = (e) => {
+    const file = e.target.files?.[0] || null;
+    setFormData((prev) => ({ ...prev, fileReceipt: file }));
+  };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
 
@@ -314,9 +332,15 @@ const ManageAppointmentEdit = ({
     formPayload.append("appointment_date", formData.appointment_date);
     formPayload.append("appointment_time", formData.appointment_time);
     formPayload.append("status", formData.status);
+    formPayload.append("rating", formData.rating);
 
     if (formData.user_id !== "") {
       formPayload.append("user_id", formData.user_id);
+    }
+
+    // Append the file if not null
+    if (formData.fileReceipt) {
+      formPayload.append("receipt_file", formData.fileReceipt);
     }
 
     try {
@@ -328,6 +352,7 @@ const ManageAppointmentEdit = ({
         }
       );
       if (!response.ok) {
+        // If the server sends { "error": "..." }, we can retrieve it:
         const errorData = await response.json();
         throw new Error(errorData.error || "Failed to update appointment");
       }
@@ -529,6 +554,34 @@ const ManageAppointmentEdit = ({
               required
             />
           </div>
+          {/* Rating field */}
+          <div className="form-group">
+            <label className="questionLabel" htmlFor="ratingInput">
+              Rating
+            </label>
+            <input
+              type="number"
+              className="questionInput"
+              id="ratingInput"
+              name="rating"
+              value={formData.rating}
+              onChange={handleChange}
+              placeholder="e.g. 5"
+            />
+          </div>
+          {/* Payment Receipt file upload */}
+          <div className="form-group">
+            <label className="questionLabel" htmlFor="receiptFile">
+              Payment Receipt
+            </label>
+            <input
+              className="questionInput"
+              id="receiptFile"
+              type="file"
+              onChange={handleFileChange}
+            />
+          </div>
+
           <button type="submit" className="button-ManageFAQEdit">
             Save
           </button>
@@ -559,6 +612,9 @@ const ManageAppointmentAdd = ({ setActivePage, fetchAppointments }) => {
     staff_id: "",
     appointment_date: "",
     appointment_time: "",
+    rating: "",
+    // Payment receipt file
+    fileReceipt: null,
   });
 
   useEffect(() => {
@@ -653,6 +709,12 @@ const ManageAppointmentAdd = ({ setActivePage, fetchAppointments }) => {
     setFormData((prev) => ({ ...prev, service_type: e.target.value }));
   };
 
+  // Payment receipt file onChange
+  const handleFileChange = (e) => {
+    const file = e.target.files?.[0] || null;
+    setFormData((prev) => ({ ...prev, fileReceipt: file }));
+  };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     const formPayload = new FormData();
@@ -666,6 +728,12 @@ const ManageAppointmentAdd = ({ setActivePage, fetchAppointments }) => {
     formPayload.append("staff_id", formData.staff_id);
     formPayload.append("appointment_date", formData.appointment_date);
     formPayload.append("appointment_time", formData.appointment_time);
+    formPayload.append("rating", formData.rating);
+
+    // Append the file if not null
+    if (formData.fileReceipt) {
+      formPayload.append("receipt_file", formData.fileReceipt);
+    }
 
     try {
       const response = await fetch(
@@ -875,6 +943,34 @@ const ManageAppointmentAdd = ({ setActivePage, fetchAppointments }) => {
               required
             />
           </div>
+          {/* Rating field */}
+          <div className="form-group">
+            <label className="questionLabel" htmlFor="ratingInput">
+              Rating
+            </label>
+            <input
+              type="number"
+              className="questionInput"
+              id="ratingInput"
+              name="rating"
+              value={formData.rating}
+              onChange={handleChange}
+              placeholder="e.g. 5"
+            />
+          </div>
+          {/* Payment Receipt file upload */}
+          <div className="form-group">
+            <label className="questionLabel" htmlFor="receiptFile">
+              Payment Receipt
+            </label>
+            <input
+              className="questionInput"
+              id="receiptFile"
+              type="file"
+              onChange={handleFileChange}
+            />
+          </div>
+
           <button type="submit" className="button-ManageFAQEdit">
             Create Appointment
           </button>

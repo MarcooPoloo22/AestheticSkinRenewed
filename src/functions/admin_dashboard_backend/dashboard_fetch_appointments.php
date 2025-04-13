@@ -27,7 +27,8 @@ $query = "
     b.appointment_date,
     b.appointment_time,
     b.status,
-    b.file_url AS receipt_url,  -- alias for Payment Receipt
+    b.file_url AS receipt_url, -- Payment Receipt
+    b.rating,                  -- <-- NEW: Rating column
     s.name AS staff_name,
     br.name AS branch_name
   FROM bookings b
@@ -40,15 +41,15 @@ $params = array();
 $types  = '';
 
 if ( $branch_id ) {
-    $query     .= ' AND b.branch_id = ?';
-    $params[]   = $branch_id;
-    $types     .= 'i';
+    $query    .= ' AND b.branch_id = ?';
+    $params[]  = $branch_id;
+    $types    .= 'i';
 }
 
 if ( $staff_id ) {
-    $query     .= ' AND b.staff_id = ?';
-    $params[]   = $staff_id;
-    $types     .= 'i';
+    $query    .= ' AND b.staff_id = ?';
+    $params[]  = $staff_id;
+    $types    .= 'i';
 }
 
 $query .= ' ORDER BY b.appointment_date, b.appointment_time';
@@ -63,7 +64,7 @@ $stmt->execute();
 $result = $stmt->get_result();
 $appointments = array();
 
-while( $row = $result->fetch_assoc() ) {
+while ( $row = $result->fetch_assoc() ) {
     $appointments[] = $row;
 }
 
