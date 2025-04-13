@@ -1,42 +1,72 @@
 <?php
-header( 'Access-Control-Allow-Origin: http://localhost:3000' );
+header( 'Access-Control-Allow-Origin: *' );
 header( 'Content-Type: application/json; charset=UTF-8' );
-header("Access-Control-Allow-Credentials: true");
-header( 'Access-Control-Allow-Methods: GET, POST, OPTIONS, DELETE' );
+header( 'Access-Control-Allow-Methods: GET' );
+header( 'Access-Control-Max-Age: 3600' );
+header( 'Access-Control-Allow-Credentials: true' );
 header( 'Access-Control-Allow-Headers: Content-Type, Access-Control-Allow-Headers, Authorization, X-Requested-With' );
 
-// Handle preflight OPTIONS request
-if ( $_SERVER[ 'REQUEST_METHOD' ] === 'OPTIONS' ) {
-    http_response_code( 200 );
-    exit();
+$servername = 'localhost';
+$username   = 'root';
+$password   = '';
+$dbname     = 'asr';
+
+$conn = new mysqli( $servername, $username, $password, $dbname );
+
+$branch_id = isset( $_GET[ 'branch_id' ] ) ? $_GET[ 'branch_id' ] : null;
+$staff_id  = isset( $_GET[ 'staff_id' ] )  ? $_GET[ 'staff_id' ]  : null;
+
+$query = "
+  SELECT 
+    b.id,
+    b.service_type,
+    b.first_name,
+    b.last_name,
+    b.email,
+    b.contact_no,
+    b.appointment_date,
+    b.appointment_time,
+    b.status,
+    b.file_url AS receipt_url, -- Payment Receipt
+    b.rating,                  -- <-- NEW: Rating column
+    s.name AS staff_name,
+    br.name AS branch_name
+  FROM bookings b
+  LEFT JOIN staff s    ON b.staff_id   = s.id
+  LEFT JOIN branches br ON b.branch_id = br.id
+  WHERE 1=1
+";
+
+$params = array();
+$types  = '';
+
+if ( $branch_id ) {
+    $query    .= ' AND b.branch_id = ?';
+    $params[]  = $branch_id;
+    $types    .= 'i';
 }
 
-if ( $_SERVER[ 'REQUEST_METHOD' ] === 'OPTIONS' ) {
-    http_response_code( 200 );
-    exit();
+if ( $staff_id ) {
+    $query    .= ' AND b.staff_id = ?';
+    $params[]  = $staff_id;
+    $types    .= 'i';
 }
 
-$host = 'localhost';
-$dbname = 'asr';
-$username = 'root';
-$password = '';
+$query .= ' ORDER BY b.appointment_date, b.appointment_time';
 
-try {
-    $conn = new PDO( "mysql:host=$host;dbname=$dbname", $username, $password );
-    $conn->setAttribute( PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION );
-} catch ( PDOException $e ) {
-    http_response_code( 500 );
-    echo json_encode( [ 'status' => 'error', 'message' => 'Database connection failed.' ] );
-    exit();
+$stmt = $conn->prepare( $query );
+
+if ( !empty( $params ) ) {
+    $stmt->bind_param( $types, ...$params );
 }
 
-try {
-    $stmt = $conn->prepare( 'SELECT * FROM bookings' );
-    $stmt->execute();
-    $appointments = $stmt->fetchAll( PDO::FETCH_ASSOC );
-    echo json_encode( $appointments );
-} catch ( PDOException $e ) {
-    http_response_code( 500 );
-    echo json_encode( [ 'status' => 'error', 'message' => 'Error fetching appointments.' ] );
+$stmt->execute();
+$result = $stmt->get_result();
+$appointments = array();
+
+while ( $row = $result->fetch_assoc() ) {
+    $appointments[] = $row;
 }
+
+echo json_encode( $appointments );
 ?>
