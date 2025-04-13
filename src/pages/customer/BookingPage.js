@@ -36,6 +36,7 @@ const BookingPageRegistered = ({ user }) => {
   const [bookedSlots, setBookedSlots] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
   const [paymentDetails, setPaymentDetails] = useState(null);
+  const [receiptFile, setReceiptFile] = useState(null);
   const [isLoadingPayment, setIsLoadingPayment] = useState(false);
   const navigate = useNavigate();
 
@@ -55,7 +56,14 @@ const BookingPageRegistered = ({ user }) => {
     if (formData.service_type) {
       fetch(`http://localhost/admin_dashboard_backend/bookingpage_services.php?type=${formData.service_type}`)
         .then((response) => response.json())
-        .then((data) => setServices(data))
+        .then((data) => {
+          // Add service_type to each service object
+          const servicesWithType = data.map(service => ({
+            ...service,
+            service_type: formData.service_type
+          }));
+          setServices(servicesWithType);
+        })
         .catch((error) => console.error("Error fetching services:", error));
     } else {
       setServices([]);
@@ -162,6 +170,7 @@ const BookingPageRegistered = ({ user }) => {
   const handleSurgeryPayment = async () => {
     setIsLoadingPayment(true);
     try {
+      const serviceObj = services.find(s => s.id.toString() === formData.service.toString());
       const response = await fetch("http://localhost/admin_dashboard_backend/fetch_payment_details.php");
       if (!response.ok) throw new Error("Failed to fetch payment details");
       const result = await response.json();
@@ -171,7 +180,7 @@ const BookingPageRegistered = ({ user }) => {
       }
       
       setPaymentDetails(result);
-      showPaymentModal(result.data);
+      showPaymentModal(result.data, serviceObj.price);
     } catch (error) {
       console.error("Error fetching payment details:", error);
       MySwal.fire({
@@ -203,6 +212,10 @@ const BookingPageRegistered = ({ user }) => {
             <span class="summary-value">${serviceObj?.name || 'N/A'}</span>
           </div>
           <div class="summary-row">
+            <span class="summary-label">Price:</span>
+            <span class="summary-value">₱${serviceObj?.price || 'N/A'}</span>
+          </div>
+          <div class="summary-row">
             <span class="summary-label">Branch:</span>
             <span class="summary-value">${branchObj?.name || 'N/A'}</span>
           </div>
@@ -218,6 +231,12 @@ const BookingPageRegistered = ({ user }) => {
             <span class="summary-label">Time:</span>
             <span class="summary-value">${formData.appointment_time}</span>
           </div>
+          ${formData.service_type === "Surgery" ? `
+          <div class="summary-row">
+            <span class="summary-label" style="color: #4169E1; font-weight: bold;">Required Down Payment (50%):</span>
+            <span class="summary-value" style="color: #4169E1; font-weight: bold;">₱${(serviceObj?.price * 0.5).toFixed(2) || 'N/A'}</span>
+          </div>
+          ` : ''}
         </div>
       `,
       showCancelButton: true,
@@ -264,7 +283,8 @@ const BookingPageRegistered = ({ user }) => {
     setFormData({ ...formData, [name]: value });
   };
 
-  const showPaymentModal = (paymentData) => {
+  const showPaymentModal = (paymentData, price) => {
+    const downPayment = (price * 0.5).toFixed(2);
     MySwal.fire({
       html: (
         <>
@@ -291,26 +311,38 @@ const BookingPageRegistered = ({ user }) => {
               >
                 Minimum 50% Down Payment Required
               </p>
-
+  
+              <p className="total-price" style={{fontSize: "1.2rem", fontWeight: "bold"}}>
+                Total Price: ₱{price}
+              </p>
+              <p className="down-payment" style={{fontSize: "1.2rem", fontWeight: "bold", color: "#4169E1"}}>
+                Required Down Payment (50%): ₱{downPayment}
+              </p>
+  
               <p className="gcash-label">GCash payment Details</p>
               <p className="gcash-details">GCash Number: {paymentData.gcash_number}</p>
               <p className="gcash-details">GCash Name: {paymentData.gcash_name}</p>
-              <p className="gcash-details">Amount: {paymentData.gcash_amount}</p>
               
               <p className="paymaya-label">PayMaya payment Details</p>
               <p className="paymaya-details">PayMaya Number: {paymentData.paymaya_number}</p>
               <p className="paymaya-details">PayMaya Name: {paymentData.paymaya_name}</p>
-              <p className="paymaya-details">Amount: {paymentData.paymaya_amount}</p>
               
               <p className="bank-label">Bank payment Details</p>
               <p className="bank-details">Bank: {paymentData.bank_name}</p>
               <p className="bank-details">Account Number: {paymentData.bank_account_number}</p>
               <p className="bank-details">Account Name: {paymentData.bank_account_name}</p>
-              <p className="bank-details">Amount: {paymentData.bank_amount}</p>
               
               <div className="mb-3">
-                <p className="receipt-label">Upload Payment Receipt</p>
-                <input className="form-control" type="file" id="formFileMultiple" multiple />
+                <p className="receipt-label">Upload Payment Receipt (Required)</p>
+                <input 
+                  className="form-control" 
+                  type="file" 
+                  id="receiptFile"
+                  accept="image/*,.pdf"
+                  onChange={(e) => setReceiptFile(e.target.files[0])}
+                  required
+                />
+                <small className="text-muted">Accepted formats: JPG, PNG, PDF (Max 5MB)</small>
               </div>
               
               <div className="d-grid gap-2 col-6 mx-auto">
@@ -319,6 +351,14 @@ const BookingPageRegistered = ({ user }) => {
                   className="btn btn-payment" 
                   type="button"
                   onClick={() => {
+                    if (!receiptFile) {
+                      Swal.fire({
+                        icon: 'error',
+                        title: 'Missing Receipt',
+                        text: 'Please upload your payment receipt to continue',
+                      });
+                      return;
+                    }
                     MySwal.close();
                     handleAppointmentSubmission();
                   }}
@@ -351,8 +391,7 @@ const BookingPageRegistered = ({ user }) => {
           last_name: user.last_name,
           email: user.email,
           contact_no: user.contact_no,
-          service_type: formData.service_type,
-          service: formData.service,
+          service_type: formData.service,
           branch_id: formData.branch_id,
           staff_id: formData.staff_id,
           appointment_date: formData.appointment_date,
@@ -451,7 +490,7 @@ const BookingPageRegistered = ({ user }) => {
                 <option value="">Select service</option>
                 {services.map((service) => (
                   <option key={service.id} value={service.id}>
-                    {service.name}
+                    {service.name} (₱{service.price})
                   </option>
                 ))}
               </select>
@@ -627,7 +666,14 @@ const BookingPageGuest = () => {
     if (formData.service_type) {
       fetch(`http://localhost/admin_dashboard_backend/bookingpage_services.php?type=${formData.service_type}`)
         .then((response) => response.json())
-        .then((data) => setServices(data))
+        .then((data) => {
+          // Add service_type to each service object
+          const servicesWithType = data.map(service => ({
+            ...service,
+            service_type: formData.service_type
+          }));
+          setServices(servicesWithType);
+        })
         .catch((error) => console.error("Error fetching services:", error));
     } else {
       setServices([]);
@@ -819,8 +865,7 @@ const BookingPageGuest = () => {
           last_name: formData.last_name,
           email: formData.email,
           contact_no: formData.contact_no,
-          service_type: formData.service_type,
-          service: formData.service,
+          service_type: formData.service,
           branch_id: formData.branch_id,
           staff_id: formData.staff_id,
           appointment_date: formData.appointment_date,
@@ -979,7 +1024,7 @@ const BookingPageGuest = () => {
                     value={service.id}
                     disabled={formData.service_type === "Surgery"}
                   >
-                    {service.name}
+                    {service.name} (₱{service.price})
                   </option>
                 ))}
               </select>

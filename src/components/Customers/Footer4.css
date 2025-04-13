@@ -49,3 +49,29 @@
   font-size: 0.9rem;
   color: #e2e2e2;
 }
+
+
+/* Policy Popup Styling */
+.policy-popup {
+  max-width: 800px;
+  border-radius: 15px !important;
+}
+
+.policy-content {
+  max-height: 60vh;
+  overflow-y: auto;
+  padding: 15px;
+  text-align: left;
+  font-size: 14px;
+  line-height: 1.6;
+  white-space: pre-wrap;
+}
+
+.policy-text {
+  color: #333 !important;
+}
+
+.swal2-close {
+  font-size: 28px !important;
+  color: #666 !important;
+}

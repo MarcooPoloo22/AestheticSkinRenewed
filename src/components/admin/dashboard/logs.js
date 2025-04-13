@@ -86,6 +86,9 @@ const fieldMapping = {
   //Privacy Policy
   privacy_policy: "Privacy Policy",
   terms_condition: "Terms and Conditions",
+
+  //Appointmens
+  staff_id: "Staff",
 };
 
 const getDifferences = (oldObj, newObj) => {
@@ -168,7 +171,7 @@ const FAQTable = ({ data, loading, totalRows, currentPage, perPage, handlePageCh
   
         const diffs = getDifferences(oldData, newData);
         const changedFields = Object.keys(diffs).filter(
-          field => !['id', 'count', 'verified', 'last_updated', 'created_at', 'updated_at', 'verification_token', 'staff_ids', 'branch_ids', 'password'].includes(field)
+          field => !['id', 'count', 'user_id', 'verified', 'last_updated', 'created_at', 'updated_at', 'verification_token', 'staff_ids', 'branch_ids', 'password'].includes(field)
         );
   
         const friendlyNames = changedFields.map(field => fieldMapping[field] || field);
@@ -179,7 +182,7 @@ const FAQTable = ({ data, loading, totalRows, currentPage, perPage, handlePageCh
               <span>Changed: {friendlyNames.join(', ')}</span>
             ) : (
               <span>No changes detected.</span>
-            )}
+             )}
           </div>
         );
       },
