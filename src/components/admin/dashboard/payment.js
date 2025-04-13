@@ -7,14 +7,11 @@ const AdminPayment = ({ setActivePage }) => {
   const [paymentDetails, setPaymentDetails] = useState({
     gcash_number: "",
     gcash_name: "",
-    gcash_amount: "",
     paymaya_number: "",
     paymaya_name: "",
-    paymaya_amount: "",
     bank_name: "",
     bank_account_number: "",
-    bank_account_name: "",
-    bank_amount: ""
+    bank_account_name: ""
   });
 
   // Fetch payment data from the backend
@@ -131,18 +128,6 @@ const AdminPayment = ({ setActivePage }) => {
               required
             />
           </div>
-          <div className="form-group">
-            <label className="answerLabel" htmlFor="gcash_amount">Amount</label>
-            <input
-              className="answerInput"
-              type="number"
-              id="gcash_amount"
-              name="gcash_amount"
-              value={paymentDetails.gcash_amount}
-              onChange={handleChange}
-              required
-            />
-          </div>
 
           {/* PayMaya Section */}
           <p style={{paddingTop: "25px"}} className="questionLabel">PayMaya Payment Details</p>
@@ -166,18 +151,6 @@ const AdminPayment = ({ setActivePage }) => {
               id="paymaya_name"
               name="paymaya_name"
               value={paymentDetails.paymaya_name}
-              onChange={handleChange}
-              required
-            />
-          </div>
-          <div className="form-group">
-            <label className="answerLabel" htmlFor="paymaya_amount">Amount</label>
-            <input
-              className="answerInput"
-              type="number"
-              id="paymaya_amount"
-              name="paymaya_amount"
-              value={paymentDetails.paymaya_amount}
               onChange={handleChange}
               required
             />
@@ -217,18 +190,6 @@ const AdminPayment = ({ setActivePage }) => {
               id="bank_account_name"
               name="bank_account_name"
               value={paymentDetails.bank_account_name}
-              onChange={handleChange}
-              required
-            />
-          </div>
-          <div className="form-group">
-            <label className="answerLabel" htmlFor="bank_amount">Amount</label>
-            <input
-              className="answerInput"
-              type="number"
-              id="bank_amount"
-              name="bank_amount"
-              value={paymentDetails.bank_amount}
               onChange={handleChange}
               required
             />

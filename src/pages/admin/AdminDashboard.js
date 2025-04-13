@@ -12,6 +12,7 @@ import { RiDiscountPercentLine, RiEditBoxLine } from "react-icons/ri";
 import { AiOutlineShopping } from "react-icons/ai";
 import { FaRegHandPaper } from "react-icons/fa";
 import { RiLockPasswordLine } from "react-icons/ri";
+import { MdOutlinePolicy } from "react-icons/md";
 import {
   MdOutlineMedicalServices,
   MdOutlineEditCalendar,
@@ -34,6 +35,7 @@ import Surgeries from "../../components/admin/dashboard/surgeries.js";
 import Users from "../../components/admin/dashboard/users.js";
 import Password from "../../components/admin/dashboard/password.js";
 import Payment from "../../components/admin/dashboard/payment.js";
+import Policy from "../../components/admin/dashboard/policy.js";
 
 const Button = ({ children, onClick, isActive }) => (
   <button className={`button ${isActive ? "active" : ""}`} onClick={onClick}>
@@ -101,6 +103,7 @@ const Dashboard = ({ isLoggedIn, user, setUser, setIsLoggedIn }) => {
     ManageSurgeries: <Surgeries />,
     ManageContact: <Contact />,
     ManagePayment: <Payment />,
+    ManagePolicy: <Policy />,
     ManageAppointments: <Appointments />,
     ManageUsers: <Users />,
     ManageAdmin: <Admin />,
@@ -173,6 +176,12 @@ const Dashboard = ({ isLoggedIn, user, setUser, setIsLoggedIn }) => {
             isActive={activePage === "ManagePayment"}
           >
             <MdPayment className="icon" /> Manage Payment
+          </Button>
+          <Button
+            onClick={() => setActivePage("ManagePolicy")}
+            isActive={activePage === "ManagePolicy"}
+          >
+            <MdOutlinePolicy className="icon" /> Manage Policy
           </Button>
           <div className="divider" />
           <Button

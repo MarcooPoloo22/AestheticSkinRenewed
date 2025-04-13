@@ -14,6 +14,18 @@ const customStyles = {
       justifyContent: 'center',
     },
   },
+  cells: {
+    style: {
+      whiteSpace: 'normal',
+      wordWrap: 'break-word',
+    },
+  },
+  headCells: {
+    style: {
+      whiteSpace: 'normal',
+      wordWrap: 'break-word',
+    },
+  },
 };
 
 const FAQTable = ({ setActivePage, activePage, data, setFaqs, setFaqToEdit }) => {
@@ -78,11 +90,17 @@ const FAQTable = ({ setActivePage, activePage, data, setFaqs, setFaqToEdit }) =>
       name: 'Questions',
       selector: row => row.question,
       sortable: true,
+      wrap: true,
+      minWidth: '150px',
+      maxWidth: '300px',
     },
     {
       name: 'Answer',
       selector: row => row.answer,
       sortable: true,
+      wrap: true,
+      minWidth: '150px',
+      maxWidth: '900px',
     },
     {
       name: 'Action',
@@ -99,20 +117,25 @@ const FAQTable = ({ setActivePage, activePage, data, setFaqs, setFaqToEdit }) =>
       ignoreRowClick: true,
       allowOverflow: true,
       button: true,
+      width: '69px',
     },
   ];
-
+  
   return (
     <DataTable
-      columns={columns}
-      data={data}
-      pagination
-      highlightOnHover
-      responsive
+      columns={columns} 
+      data={data} 
+      pagination 
+      paginationRowsPerPageOptions={[10, 20, 30]}
+      highlightOnHover 
+      responsive 
       customStyles={customStyles}
+      dense
+      fixedHeader
+      fixedHeaderScrollHeight="400px"
     />
   );
-};
+};  
 
 const ManageFAQEdit = ({ setActivePage, activePage, faqToEdit, setFaqs }) => {
   const [question, setQuestion] = useState(faqToEdit.question);

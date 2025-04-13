@@ -26,19 +26,24 @@ const UserTable = ({ setActivePage, users, fetchUsers }) => {
       confirmButtonText: "Yes, delete it!",
       cancelButtonText: "No, cancel!",
     });
-
+  
     if (result.isConfirmed) {
       try {
         const response = await fetch(
           `http://localhost/admin_dashboard_backend/user_delete_user.php?id=${id}`,
-          { method: "DELETE",
+          { 
+            method: "DELETE",
             credentials: "include"
-           }
+          }
         );
-
-        if (!response.ok) throw new Error("Failed to delete user");
+  
+        const responseData = await response.json();
         
-        Swal.fire("Deleted!", "User has been deleted.", "success");
+        if (!response.ok) {
+          throw new Error(responseData.error || "Failed to delete user");
+        }
+        
+        Swal.fire("Deleted!", responseData.message, "success");
         fetchUsers();
       } catch (error) {
         Swal.fire("Error!", error.message, "error");

@@ -14,6 +14,18 @@ const customStyles = {
       justifyContent: 'center',
     },
   },
+  cells: {
+    style: {
+      whiteSpace: 'normal',
+      wordWrap: 'break-word',
+    },
+  },
+  headCells: {
+    style: {
+      whiteSpace: 'normal',
+      wordWrap: 'break-word',
+    },
+  },
 };
 
 // MultiSelectDropdown Component
@@ -100,16 +112,47 @@ const FAQTable = ({ setActivePage, activePage, data, fetchPromos }) => {
   };
 
   const columns = [
-    { name: 'Name', selector: row => row.name, sortable: true },
-    { name: 'Description', selector: row => row.description, sortable: true },
-    { name: 'Price', selector: row => row.price, sortable: true },
+    { 
+      name: 'Name', 
+      selector: row => row.name, 
+      sortable: true,
+      wrap: true,
+      minWidth: '150px',
+      maxWidth: '200px',
+    },
+    { 
+      name: 'Description', 
+      selector: row => row.description, 
+      sortable: true,
+      wrap: true,
+      minWidth: '300px',
+    },
+    { 
+      name: 'Price', 
+      selector: row => row.price, 
+      sortable: true,
+      width: '80px',
+    },
     {
       name: 'File',
       cell: row => <a href={row.file_url} target="_blank" rel="noopener noreferrer">View File</a>,
       ignoreRowClick: true,
+      width: '100px',
     },
-    { name: 'Start Date & Time', selector: row => new Date(row.start_date).toLocaleString(), sortable: true },
-    { name: 'End Date & Time', selector: row => new Date(row.end_date).toLocaleString(), sortable: true },
+    { 
+      name: 'Start Date & Time', 
+      selector: row => new Date(row.start_date).toLocaleString(), 
+      sortable: true,
+      wrap: true,
+      minWidth: '150px',
+    },
+    { 
+      name: 'End Date & Time', 
+      selector: row => new Date(row.end_date).toLocaleString(), 
+      sortable: true,
+      wrap: true,
+      minWidth: '150px',
+    },
     {
       name: 'Action',
       cell: row => (
@@ -123,10 +166,22 @@ const FAQTable = ({ setActivePage, activePage, data, fetchPromos }) => {
         </div>
       ),
       ignoreRowClick: true,
+      width: '69px',
     },
   ];
 
-  return <DataTable columns={columns} data={data} pagination highlightOnHover responsive customStyles={customStyles} />;
+  return <DataTable 
+  columns={columns} 
+  data={data} 
+  pagination 
+  paginationRowsPerPageOptions={[10, 20, 30]}
+  highlightOnHover 
+  responsive 
+  customStyles={customStyles}
+  dense
+  fixedHeader
+  fixedHeaderScrollHeight="400px"
+/>;
 };
 
 // ManageFAQEdit Component

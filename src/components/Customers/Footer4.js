@@ -20,9 +20,6 @@ const Footer4 = () => {
                 Privacy Policy
               </a>
               <a href="#!" className="footer-link">
-                Security
-              </a>
-              <a href="#!" className="footer-link">
                 Terms & Condition
               </a>
               <p className="footer-copy">
