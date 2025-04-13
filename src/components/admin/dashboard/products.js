@@ -14,6 +14,18 @@ const customStyles = {
       justifyContent: 'center',
     },
   },
+  cells: {
+    style: {
+      whiteSpace: 'normal',
+      wordWrap: 'break-word',
+    },
+  },
+  headCells: {
+    style: {
+      whiteSpace: 'normal',
+      wordWrap: 'break-word',
+    },
+  },
 };
 
 const FAQTable = ({ setActivePage, activePage, data, setProducts, setProductToEdit }) => {
@@ -72,22 +84,28 @@ const FAQTable = ({ setActivePage, activePage, data, setProducts, setProductToEd
     });
   };
 
-  // Define columns
+  // Define columns with responsive settings
   const columns = [
     {
       name: 'Name',
       selector: row => row.name,
       sortable: true,
+      wrap: true,
+      minWidth: '150px',
+      maxWidth: '200px',
     },
     {
       name: 'Description',
       selector: row => row.description,
       sortable: true,
+      wrap: true,
+      minWidth: '300px',
     },
     {
       name: 'Price',
       selector: row => row.price,
       sortable: true,
+      width: '100px',
     },
     {
       name: 'File',
@@ -97,7 +115,7 @@ const FAQTable = ({ setActivePage, activePage, data, setProducts, setProductToEd
         </a>
       ),
       ignoreRowClick: true,
-      allowOverflow: true,
+      width: '100px',
     },
     {
       name: 'Action',
@@ -112,23 +130,27 @@ const FAQTable = ({ setActivePage, activePage, data, setProducts, setProductToEd
         </div>
       ),
       ignoreRowClick: true,
-      allowOverflow: true,
-      button: true,
+      width: '69px',
     },
   ];
 
   return (
     <DataTable
-      columns={columns}
-      data={data}
-      pagination
-      highlightOnHover
-      responsive
+      columns={columns} 
+      data={data} 
+      pagination 
+      paginationRowsPerPageOptions={[10, 20, 30]}
+      highlightOnHover 
+      responsive 
       customStyles={customStyles}
+      dense
+      fixedHeader
+      fixedHeaderScrollHeight="400px"
     />
   );
 };
 
+// Rest of your code remains the same...
 const ManageFAQEdit = ({ setActivePage, activePage, productToEdit, setProducts }) => {
   const [name, setName] = useState(productToEdit.name);
   const [description, setDescription] = useState(productToEdit.description);

@@ -14,21 +14,78 @@ const customStyles = {
       padding: '8px',
     },
   },
+  cells: {
+    style: {
+      whiteSpace: 'normal',
+      wordWrap: 'break-word',
+    },
+  },
+  headCells: {
+    style: {
+      whiteSpace: 'normal',
+      wordWrap: 'break-word',
+    },
+  },
 };
 
 const fieldMapping = {
-  id: "ID",
+  // Common Fields
   name: "Name",
   description: "Description",
   price: "Price",
+  duration: "Duration",
+  status: "Status",
+  rating: "Rating",
+  
+  // Bookings
+  first_name: "First Name",
+  last_name: "Last Name",
+  email: "Email",
+  contact_no: "Contact Number",
+  service_type: "Service Type",
+  appointment_date: "Appointment Date",
+  appointment_time: "Appointment Time",
+  file_url: "File",
+
+  // Branches
+  phone: "Phone Number",
+  
+  // Contact Info
+  facebook: "Facebook",
+  instagram: "Instagram",
+  twitter: "Twitter",
+
+  // FAQs
+  question: "Question",
+  answer: "Answer",
+
+  // Payment Details
+  gcash_number: "GCash Number",
+  gcash_name: "GCash Name",
+  paymaya_number: "PayMaya Number",
+  paymaya_name: "PayMaya Name",
+  bank_name: "Bank Name",
+  bank_account_number: "Bank Account Number",
+  bank_account_name: "Bank Account Name",
+
+  // Products/Services/Promos
   image_url: "Image",
   start_date: "Start Date",
   end_date: "End Date",
-  duration: "Duration",
-  created_at: "Created At",
-  updated_at: "Updated At",
-  branch_ids: "Branches",
-  staff_ids: "Staff",
+
+  // Staff
+  branch_id: "Associated Branch",
+
+  // Surgeries
+  title: "Title",
+
+  // Users
+  middle_initial: "Middle Initial",
+  role: "User Role",
+
+  //Privacy Policy
+  privacy_policy: "Privacy Policy",
+  terms_condition: "Terms and Conditions",
 };
 
 const getDifferences = (oldObj, newObj) => {
@@ -50,19 +107,22 @@ const FAQTable = ({ data, loading, totalRows, currentPage, perPage, handlePageCh
       name: 'Timestamp',
       selector: row => new Date(row.timestamp).toLocaleString(),
       sortable: true,
-      width: '170px'
+      width: '180px',
+      wrap: true,
     },
     {
       name: 'User',
       selector: row => row.user_name,
       sortable: true,
-      width: '150px'
+      width: '150px',
+      wrap: true,
     },
     {
       name: 'Role',
       selector: row => row.user_role,
       sortable: true,
-      width: '120px'
+      width: '120px',
+      wrap: true,
     },
     {
       name: 'Action',
@@ -80,14 +140,15 @@ const FAQTable = ({ data, loading, totalRows, currentPage, perPage, handlePageCh
           {row.action_type}
         </span>
       ),
-      width: '100px'
+      width: '100px',
+      wrap: true,
     },
     {
-      name: 'Description',  // Changed from 'Table'
-      selector: row => row.description,  // Changed from table_name
+      name: 'Description',
+      selector: row => row.description,
       sortable: true,
-      width: '300px',
-      wrap: true
+      minWidth: '280px',
+      wrap: true,
     },
     {
       name: 'Changes',
@@ -104,14 +165,14 @@ const FAQTable = ({ data, loading, totalRows, currentPage, perPage, handlePageCh
         } catch (error) {
           newData = {};
         }
-
+  
         const diffs = getDifferences(oldData, newData);
         const changedFields = Object.keys(diffs).filter(
-          field => field !== 'updated_at' && field !== 'created_at' && field !== 'file_url'
+          field => !['id', 'count', 'verified', 'last_updated', 'created_at', 'updated_at', 'verification_token', 'staff_ids', 'branch_ids', 'password'].includes(field)
         );
-
+  
         const friendlyNames = changedFields.map(field => fieldMapping[field] || field);
-
+  
         return (
           <div className="changes-container">
             {friendlyNames.length > 0 ? (
@@ -122,16 +183,21 @@ const FAQTable = ({ data, loading, totalRows, currentPage, perPage, handlePageCh
           </div>
         );
       },
-      width: '300px',
-      wrap: true
+      minWidth: '280px',
+      wrap: true,
     }
   ];
+  
 
   return (
     <DataTable
+      dense
+      fixedHeader
+      fixedHeaderScrollHeight="400px"
       columns={columns}
       data={data}
       pagination
+      paginationRowsPerPageOptions={[10, 20, 30]}
       paginationServer
       paginationTotalRows={totalRows}
       paginationPerPage={perPage}

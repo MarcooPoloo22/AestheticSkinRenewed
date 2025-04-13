@@ -14,6 +14,18 @@ const customStyles = {
       justifyContent: "center",
     },
   },
+  cells: {
+    style: {
+      whiteSpace: 'normal',
+      wordWrap: 'break-word',
+    },
+  },
+  headCells: {
+    style: {
+      whiteSpace: 'normal',
+      wordWrap: 'break-word',
+    },
+  },
 };
 
 // MultiSelectDropdown Component (same as in promos.js)
@@ -98,15 +110,46 @@ const SurgeryTable = ({ setActivePage, activePage, data, fetchSurgeries }) => {
   };
 
   const columns = [
-    { name: 'Title', selector: row => row.title, sortable: true },
-    { name: 'Description', selector: row => row.description, sortable: true },
-    { name: 'Start Date', selector: row => new Date(row.start_date).toLocaleString(), sortable: true },
-    { name: 'End Date', selector: row => new Date(row.end_date).toLocaleString(), sortable: true },
-    { name: 'Price', selector: row => row.price, sortable: true },
+    { 
+      name: 'Title', 
+      selector: row => row.title, 
+      sortable: true,
+      wrap: true,
+      minWidth: '150px',
+      maxWidth: '200px',
+    },
+    { 
+      name: 'Description', 
+      selector: row => row.description, 
+      sortable: true,
+      wrap: true,
+      minWidth: '300px',
+    },
+    { 
+      name: 'Start Date', 
+      selector: row => new Date(row.start_date).toLocaleString(), 
+      sortable: true,
+      wrap: true,
+      minWidth: '180px',
+    },
+    { 
+      name: 'End Date', 
+      selector: row => new Date(row.end_date).toLocaleString(), 
+      sortable: true,
+      wrap: true,
+      minWidth: '180px',
+    },
+    { 
+      name: 'Price', 
+      selector: row => row.price, 
+      sortable: true,
+      width: '100px',
+    },
     {
       name: 'Image',
       cell: row => <a href={row.image_url} target="_blank" rel="noopener noreferrer">View Image</a>,
       ignoreRowClick: true,
+      width: '100px',
     },
     {
       name: 'Action',
@@ -121,10 +164,24 @@ const SurgeryTable = ({ setActivePage, activePage, data, fetchSurgeries }) => {
         </div>
       ),
       ignoreRowClick: true,
+      width: '69px',
     },
   ];
 
-  return <DataTable columns={columns} data={data} pagination highlightOnHover responsive customStyles={customStyles} />;
+  return (
+    <DataTable 
+      columns={columns} 
+      data={data} 
+      pagination 
+      paginationRowsPerPageOptions={[10, 20, 30]}
+      highlightOnHover 
+      responsive 
+      customStyles={customStyles}
+      dense
+      fixedHeader
+      fixedHeaderScrollHeight="400px"
+    />
+  );
 };
 
 const ManageSurgeryEdit = ({ setActivePage, activePage, fetchSurgeries }) => {

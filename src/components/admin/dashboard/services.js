@@ -14,6 +14,18 @@ const customStyles = {
       justifyContent: 'center',
     },
   },
+  cells: {
+    style: {
+      whiteSpace: 'normal',
+      wordWrap: 'break-word',
+    },
+  },
+  headCells: {
+    style: {
+      whiteSpace: 'normal',
+      wordWrap: 'break-word',
+    },
+  },
 };
 
 const FAQTable = ({ setActivePage, activePage, data, setServices, setServiceToEdit }) => {
@@ -56,13 +68,34 @@ const FAQTable = ({ setActivePage, activePage, data, setServices, setServiceToEd
   };
 
   const columns = [
-    { name: 'Name', selector: row => row.name, sortable: true },
-    { name: 'Description', selector: row => row.description, sortable: true },
-    { name: 'Price', selector: row => row.price, sortable: true },
+    {
+      name: 'Name',
+      selector: row => row.name,
+      sortable: true,
+      wrap: true,
+      minWidth: '150px',
+      maxWidth: '200px',
+    },
+    {
+      name: 'Description',
+      selector: row => row.description,
+      sortable: true,
+      wrap: true,
+      minWidth: '300px',
+    },
+    {
+      name: 'Price',
+      selector: row => row.price,
+      sortable: true,
+      width: '80px',
+    },
     {
       name: 'File',
-      cell: row => <a href={row.file_url} target="_blank" rel="noopener noreferrer">View File</a>,
+      cell: row => (
+        <a href={row.file_url} target="_blank" rel="noopener noreferrer">View File</a>
+      ),
       ignoreRowClick: true,
+      width: '100px',
     },
     {
       name: 'Action',
@@ -77,10 +110,23 @@ const FAQTable = ({ setActivePage, activePage, data, setServices, setServiceToEd
         </div>
       ),
       ignoreRowClick: true,
+      width: '69px',
     },
   ];
+  
 
-  return <DataTable columns={columns} data={data} pagination highlightOnHover responsive customStyles={customStyles} />;
+  return <DataTable
+  columns={columns} 
+      data={data} 
+      pagination 
+      paginationRowsPerPageOptions={[10, 20, 30]}
+      highlightOnHover 
+      responsive 
+      customStyles={customStyles}
+      dense
+      fixedHeader
+      fixedHeaderScrollHeight="400px"
+   />;
 };
 
 const MultiSelectDropdown = ({ options = [], selectedValues, onToggle, placeholder, disabled }) => {

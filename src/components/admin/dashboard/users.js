@@ -156,6 +156,7 @@ const FAQs = () => {
       try {
         const response = await fetch('http://localhost/admin_dashboard_backend/delete_user.php', {
           method: 'DELETE',
+          credentials: 'include',
           headers: {
             'Content-Type': 'application/json',
           },
