@@ -661,9 +661,9 @@ const BookingPageGuest = () => {
     last_name: "",
     email: "",
     contact_no: "",
-    service_type: serviceTypeParam || "",
+    service_category: serviceTypeParam || "",
+    service_type: "",
     service: serviceIdParam || "",
-    service_name: "", 
     branch_id: "",
     staff_id: "",
     appointment_date: "",
@@ -678,34 +678,33 @@ const BookingPageGuest = () => {
   const navigate = useNavigate();
 
   useEffect(() => {
-    if (formData.service_type === "Surgery") {
-      setFormData(prev => ({ ...prev, service_type: "" }));
+    if (formData.service_category === "Surgery") {
+      setFormData(prev => ({ ...prev, service_category: "" }));
       Swal.fire({
         icon: 'info',
         title: 'Registered Customers Only',
         text: 'Please login or register to book surgery services.',
       });
     }
-  }, [formData.service_type]);
+  }, [formData.service_category]);
 
   useEffect(() => {
-    if (formData.service_type) {
-      fetch(`http://localhost/admin_dashboard_backend/bookingpage_services.php?type=${formData.service_type}`)
+    if (formData.service_category) {
+      fetch(`http://localhost/admin_dashboard_backend/bookingpage_services.php?type=${formData.service_category}`)
         .then((response) => response.json())
         .then((data) => {
-          // Add service_type to each service object
           const servicesWithType = data.map(service => ({
             ...service,
-            service_type: formData.service_type
+            service_category: formData.service_category
           }));
           setServices(servicesWithType);
         })
         .catch((error) => console.error("Error fetching services:", error));
     } else {
       setServices([]);
-      setFormData((prev) => ({ ...prev, service: "", branch_id: "", staff_id: "" }));
+      setFormData((prev) => ({ ...prev, service: "", service_type: "", branch_id: "", staff_id: "" }));
     }
-  }, [formData.service_type]);
+  }, [formData.service_category]);
 
   useEffect(() => {
     if (formData.service) {
@@ -734,7 +733,7 @@ const BookingPageGuest = () => {
       setBranches([]);
       setFormData((prev) => ({ ...prev, branch_id: "", staff_id: "" }));
     }
-  }, [formData.service]);
+  }, [formData.service, formData.service_category]);
 
   useEffect(() => {
     if (formData.branch_id) {
@@ -813,12 +812,12 @@ const BookingPageGuest = () => {
       html: `
         <div class="booking-summary">
           <div class="summary-row">
-            <span class="summary-label">Service Type:</span>
-            <span class="summary-value">${formData.service_type}</span>
+            <span class="summary-label">Service Category:</span>
+            <span class="summary-value">${formData.service_category}</span>
           </div>
           <div class="summary-row">
             <span class="summary-label">Service:</span>
-            <span class="summary-value">${serviceObj?.name || 'N/A'}</span>
+            <span class="summary-value">${formData.service_type}</span>
           </div>
           <div class="summary-row">
             <span class="summary-label">Branch:</span>
@@ -857,7 +856,7 @@ const BookingPageGuest = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     
-    const requiredFields = ['first_name', 'last_name', 'email', 'contact_no', 'service_type', 'service', 'branch_id', 'staff_id', 'appointment_date', 'appointment_time'];
+    const requiredFields = ['first_name', 'last_name', 'email', 'contact_no', 'service_category', 'service', 'service_type', 'branch_id', 'staff_id', 'appointment_date', 'appointment_time'];
     
     for (const field of requiredFields) {
       if (!formData[field]) {
@@ -881,7 +880,7 @@ const BookingPageGuest = () => {
       setFormData(prev => ({
         ...prev,
         [name]: value,
-        service_type: selectedService?.name || "", // Set service_type to service name
+        service_type: selectedService?.name || "",
         branch_id: "",
         staff_id: ""
       }));
@@ -903,21 +902,18 @@ const BookingPageGuest = () => {
     try {
       const convertedTime = convertTime12to24(formData.appointment_time);
       
-      // Create FormData object
       const formDataToSend = new FormData();
       
-      // Append receipt file if exists
       if (receiptFile) {
         formDataToSend.append('receipt', receiptFile);
       }
       
-      // Append other form data
       formDataToSend.append('first_name', formData.first_name);
       formDataToSend.append('last_name', formData.last_name);
       formDataToSend.append('email', formData.email);
       formDataToSend.append('contact_no', formData.contact_no);
-      formDataToSend.append('service', formData.service); // Service ID
-      formDataToSend.append('service_type', formData.service_type); // Service name
+      formDataToSend.append('service', formData.service);
+      formDataToSend.append('service_type', formData.service_type);
       formDataToSend.append('branch_id', formData.branch_id);
       formDataToSend.append('staff_id', formData.staff_id);
       formDataToSend.append('appointment_date', formData.appointment_date);
@@ -943,7 +939,7 @@ const BookingPageGuest = () => {
             </div>
           `,
         }).then(() => {
-          navigate("/profile");
+          navigate("/");
         });
       } else {
         Swal.fire({
@@ -1071,14 +1067,13 @@ const BookingPageGuest = () => {
                 value={formData.service}
                 onChange={handleChange}
                 required
-                disabled={!formData.service_type || formData.service_type === "Surgery"}
+                disabled={!formData.service_category || formData.service_category === "Surgery"}
               >
                 <option value="">Select service</option>
                 {services.map((service) => (
                   <option 
                     key={service.id} 
                     value={service.id}
-                    disabled={formData.service_type === "Surgery"}
                   >
                     {service.name} (₱{service.price})
                   </option>
