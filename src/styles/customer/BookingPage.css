@@ -252,3 +252,52 @@
     width: 100%;
   }
 }
+
+/* Remove default SweetAlert padding/margins */
+.custom-payment-modal {
+  padding: 10px !important;
+  margin: 0 !important;
+  width: 100% !important;
+  max-width: 720px !important; /* Limits width for larger screens */
+}
+
+/* Make sure the content is centered */
+.custom-html-container {
+  padding: 0 !important;
+  margin: 0 !important;
+  width: 100% !important;
+  text-align: center !important;
+}
+
+/* Override SweetAlert's container width */
+.payment-modal-content .container {
+  width: 100% !important;
+  max-width: none !important;
+  padding: 10px !important;
+  margin: 0 !important;
+}
+
+/* Add responsiveness */
+@media (max-width: 768px) {
+  .custom-payment-modal {
+    width: 90% !important; /* Reduce the width to 90% on smaller screens */
+    padding: 5px !important; /* Optional: reduce padding */
+  }
+
+  .payment-modal-content .container {
+    width: 100% !important;
+    padding: 5px !important; /* Reduce padding for mobile devices */
+  }
+}
+
+@media (max-width: 480px) {
+  .custom-payment-modal {
+    width: 95% !important; /* Further reduce width on very small screens */
+    padding: 5px !important;
+  }
+
+  .payment-modal-content .container {
+    padding: 5px !important; /* Reduce padding further on very small screens */
+  }
+}
+

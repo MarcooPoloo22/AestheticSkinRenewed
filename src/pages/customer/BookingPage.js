@@ -15,6 +15,14 @@ const validateDate = (dateString) => {
   return selectedDate >= today;
 };
 
+const convertTime12to24 = (time12h) => {
+  const [time, modifier] = time12h.split(' ');
+  let [hours, minutes] = time.split(':');
+  if (hours === '12') hours = '00';
+  if (modifier === 'PM') hours = parseInt(hours, 10) + 12;
+  return `${hours.toString().padStart(2, '0')}:${minutes}:00`;
+};
+
 const BookingPageRegistered = ({ user }) => {
   const location = useLocation();
   const queryParams = new URLSearchParams(location.search);
@@ -22,7 +30,8 @@ const BookingPageRegistered = ({ user }) => {
   const serviceIdParam = queryParams.get('serviceId');
 
   const [formData, setFormData] = useState({
-    service_type: serviceTypeParam || "",
+    service_category: serviceTypeParam || "",
+    service_type: "",
     service: serviceIdParam || "",
     branch_id: "",
     staff_id: "",
@@ -53,27 +62,26 @@ const BookingPageRegistered = ({ user }) => {
   }, [user, navigate]);
 
   useEffect(() => {
-    if (formData.service_type) {
-      fetch(`http://localhost/admin_dashboard_backend/bookingpage_services.php?type=${formData.service_type}`)
+    if (formData.service_category) {
+      fetch(`http://localhost/admin_dashboard_backend/bookingpage_services.php?type=${formData.service_category}`)
         .then((response) => response.json())
         .then((data) => {
-          // Add service_type to each service object
           const servicesWithType = data.map(service => ({
             ...service,
-            service_type: formData.service_type
+            service_category: formData.service_category
           }));
           setServices(servicesWithType);
         })
         .catch((error) => console.error("Error fetching services:", error));
     } else {
       setServices([]);
-      setFormData((prev) => ({ ...prev, service: "", branch_id: "", staff_id: "" }));
+      setFormData((prev) => ({ ...prev, service: "", service_type: "", branch_id: "", staff_id: "" }));
     }
-  }, [formData.service_type]);
+  }, [formData.service_category]);
 
   useEffect(() => {
     if (formData.service) {
-      fetch(`http://localhost/admin_dashboard_backend/bookingpage_branches.php?serviceId=${encodeURIComponent(formData.service)}&type=${formData.service_type}`)
+      fetch(`http://localhost/admin_dashboard_backend/bookingpage_branches.php?serviceId=${encodeURIComponent(formData.service)}&type=${formData.service_category}`)
         .then((response) => {
           if (!response.ok) {
             throw new Error('Network response was not ok');
@@ -98,7 +106,7 @@ const BookingPageRegistered = ({ user }) => {
       setBranches([]);
       setFormData((prev) => ({ ...prev, branch_id: "", staff_id: "" }));
     }
-  }, [formData.service]);
+  }, [formData.service, formData.service_category]);
 
   useEffect(() => {
     if (formData.branch_id) {
@@ -204,12 +212,12 @@ const BookingPageRegistered = ({ user }) => {
       html: `
         <div class="booking-summary">
           <div class="summary-row">
-            <span class="summary-label">Service Type:</span>
-            <span class="summary-value">${formData.service_type}</span>
+            <span class="summary-label">Service Category:</span>
+            <span class="summary-value">${formData.service_category}</span>
           </div>
           <div class="summary-row">
             <span class="summary-label">Service:</span>
-            <span class="summary-value">${serviceObj?.name || 'N/A'}</span>
+            <span class="summary-value">${formData.service_type}</span>
           </div>
           <div class="summary-row">
             <span class="summary-label">Price:</span>
@@ -231,7 +239,7 @@ const BookingPageRegistered = ({ user }) => {
             <span class="summary-label">Time:</span>
             <span class="summary-value">${formData.appointment_time}</span>
           </div>
-          ${formData.service_type === "Surgery" ? `
+          ${formData.service_category === "Surgery" ? `
           <div class="summary-row">
             <span class="summary-label" style="color: #4169E1; font-weight: bold;">Required Down Payment (50%):</span>
             <span class="summary-value" style="color: #4169E1; font-weight: bold;">₱${(serviceObj?.price * 0.5).toFixed(2) || 'N/A'}</span>
@@ -250,7 +258,7 @@ const BookingPageRegistered = ({ user }) => {
       }
     }).then((result) => {
       if (result.isConfirmed) {
-        if (formData.service_type === "Surgery") {
+        if (formData.service_category === "Surgery") {
           handleSurgeryPayment();
         } else {
           handleAppointmentSubmission();
@@ -262,7 +270,7 @@ const BookingPageRegistered = ({ user }) => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     
-    const requiredFields = ['service_type', 'service', 'branch_id', 'staff_id', 'appointment_date', 'appointment_time'];
+    const requiredFields = ['service_category', 'service', 'service_type', 'branch_id', 'staff_id', 'appointment_date', 'appointment_time'];
     
     for (const field of requiredFields) {
       if (!formData[field]) {
@@ -280,7 +288,28 @@ const BookingPageRegistered = ({ user }) => {
 
   const handleChange = (e) => {
     const { name, value } = e.target;
-    setFormData({ ...formData, [name]: value });
+  
+    if (name === "service") {
+      const selectedService = services.find(s => s.id.toString() === value);
+      setFormData(prev => ({
+        ...prev,
+        [name]: value,
+        service_type: selectedService?.name || "",
+        branch_id: "",
+        staff_id: ""
+      }));
+    } else if (name === "service_category") {
+      setFormData(prev => ({
+        ...prev,
+        [name]: value,
+        service: "",
+        service_type: "",
+        branch_id: "",
+        staff_id: ""
+      }));
+    } else {
+      setFormData(prev => ({ ...prev, [name]: value }));
+    }
   };
 
   const showPaymentModal = (paymentData, price) => {
@@ -288,125 +317,120 @@ const BookingPageRegistered = ({ user }) => {
     MySwal.fire({
       html: (
         <>
-          <div className="booking-container">
-            <img
-              src="./assets/asr_bookinghead.jpg"
-              alt="Booking Background"
-              className="booking-bg"
-            />
-            <h1 className="booking-title">Booking Appointment</h1>
-          </div>
-          <br />
-          <div className="white-box my-5">
-            <div className="container">
-              <p 
-                style={{
-                  fontSize: "1.5rem",
-                  fontWeight: "bold",
-                  color: "#4169E1",
-                  textAlign: "center",
-                  textTransform: "uppercase",
-                  marginBottom: "20px"
+          <div className="container" style={{ width: "100%", maxWidth: "700px", padding: "10px", margin: "0 auto" }}>
+            <p 
+              style={{
+                fontSize: "1.5rem",
+                fontWeight: "bold",
+                color: "#4169E1",
+                textAlign: "center",
+                textTransform: "uppercase",
+                marginBottom: "20px"
+              }}
+            >
+              Minimum 50% Down Payment Required
+            </p>
+    
+            <p className="total-price" style={{ fontSize: "1.2rem", fontWeight: "bold" }}>
+              Total Price: ₱{price}
+            </p>
+            <p className="down-payment" style={{ fontSize: "1.2rem", fontWeight: "bold", color: "#4169E1" }}>
+              Required Down Payment (50%): ₱{downPayment}
+            </p>
+    
+            <p className="gcash-label">GCash payment Details</p>
+            <p className="gcash-details">GCash Number: {paymentData.gcash_number}</p>
+            <p className="gcash-details">GCash Name: {paymentData.gcash_name}</p>
+    
+            <p className="paymaya-label">PayMaya payment Details</p>
+            <p className="paymaya-details">PayMaya Number: {paymentData.paymaya_number}</p>
+            <p className="paymaya-details">PayMaya Name: {paymentData.paymaya_name}</p>
+    
+            <p className="bank-label">Bank payment Details</p>
+            <p className="bank-details">Bank: {paymentData.bank_name}</p>
+            <p className="bank-details">Account Number: {paymentData.bank_account_number}</p>
+            <p className="bank-details">Account Name: {paymentData.bank_account_name}</p>
+    
+            <div className="mb-3">
+              <p className="receipt-label">Upload Payment Receipt (Required)</p>
+              <input 
+                className="form-control" 
+                type="file" 
+                id="receiptFile"
+                accept="image/*,.pdf"
+                onChange={(e) => setReceiptFile(e.target.files[0])}
+                required
+              />
+              <small className="text-muted">Accepted formats: JPG, PNG, PDF (Max 5MB)</small>
+            </div>
+    
+            <div className="d-grid gap-2 col-6 mx-auto">
+              <br />
+              <button 
+                className="btn btn-payment" 
+                type="button"
+                onClick={() => {
+                  if (!receiptFile) {
+                    Swal.fire({
+                      icon: 'error',
+                      title: 'Missing Receipt',
+                      text: 'Please upload your payment receipt to continue',
+                    });
+                    return;
+                  }
+                  Swal.close();
+                  handleAppointmentSubmission();
                 }}
               >
-                Minimum 50% Down Payment Required
-              </p>
-  
-              <p className="total-price" style={{fontSize: "1.2rem", fontWeight: "bold"}}>
-                Total Price: ₱{price}
-              </p>
-              <p className="down-payment" style={{fontSize: "1.2rem", fontWeight: "bold", color: "#4169E1"}}>
-                Required Down Payment (50%): ₱{downPayment}
-              </p>
-  
-              <p className="gcash-label">GCash payment Details</p>
-              <p className="gcash-details">GCash Number: {paymentData.gcash_number}</p>
-              <p className="gcash-details">GCash Name: {paymentData.gcash_name}</p>
-              
-              <p className="paymaya-label">PayMaya payment Details</p>
-              <p className="paymaya-details">PayMaya Number: {paymentData.paymaya_number}</p>
-              <p className="paymaya-details">PayMaya Name: {paymentData.paymaya_name}</p>
-              
-              <p className="bank-label">Bank payment Details</p>
-              <p className="bank-details">Bank: {paymentData.bank_name}</p>
-              <p className="bank-details">Account Number: {paymentData.bank_account_number}</p>
-              <p className="bank-details">Account Name: {paymentData.bank_account_name}</p>
-              
-              <div className="mb-3">
-                <p className="receipt-label">Upload Payment Receipt (Required)</p>
-                <input 
-                  className="form-control" 
-                  type="file" 
-                  id="receiptFile"
-                  accept="image/*,.pdf"
-                  onChange={(e) => setReceiptFile(e.target.files[0])}
-                  required
-                />
-                <small className="text-muted">Accepted formats: JPG, PNG, PDF (Max 5MB)</small>
-              </div>
-              
-              <div className="d-grid gap-2 col-6 mx-auto">
-                <br />
-                <button 
-                  className="btn btn-payment" 
-                  type="button"
-                  onClick={() => {
-                    if (!receiptFile) {
-                      Swal.fire({
-                        icon: 'error',
-                        title: 'Missing Receipt',
-                        text: 'Please upload your payment receipt to continue',
-                      });
-                      return;
-                    }
-                    MySwal.close();
-                    handleAppointmentSubmission();
-                  }}
-                >
-                  Submit Payment
-                </button>
-              </div>
+                Submit Payment
+              </button>
             </div>
           </div>
         </>
       ),
       showConfirmButton: false,
-      width: '80%',
+      width: '100%',
       customClass: {
-        popup: 'sweet-alert-popup'
+        popup: 'custom-payment-modal',
+        htmlContainer: 'custom-html-container'
       }
-    });
+    });    
   };
 
   const handleAppointmentSubmission = async () => {
     try {
+      const convertedTime = convertTime12to24(formData.appointment_time);
+      
+      const formDataToSend = new FormData();
+      
+      if (receiptFile) {
+        formDataToSend.append('receipt', receiptFile);
+      }
+      
+      formDataToSend.append('user_id', user.id);
+      formDataToSend.append('first_name', user.first_name);
+      formDataToSend.append('last_name', user.last_name);
+      formDataToSend.append('email', user.email);
+      formDataToSend.append('contact_no', user.contact_no);
+      formDataToSend.append('service', formData.service);
+      formDataToSend.append('service_type', formData.service_type);
+      formDataToSend.append('branch_id', formData.branch_id);
+      formDataToSend.append('staff_id', formData.staff_id);
+      formDataToSend.append('appointment_date', formData.appointment_date);
+      formDataToSend.append('appointment_time', convertedTime);
+      formDataToSend.append('send_email', 'true');
+  
       const response = await fetch("http://localhost/booking.php", {
         method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          user_id: user.id,
-          first_name: user.first_name,
-          last_name: user.last_name,
-          email: user.email,
-          contact_no: user.contact_no,
-          service_type: formData.service,
-          branch_id: formData.branch_id,
-          staff_id: formData.staff_id,
-          appointment_date: formData.appointment_date,
-          appointment_time: formData.appointment_time,
-          send_email: true
-        }),
+        body: formDataToSend,
       });
-
+  
       const result = await response.json();
-
+  
       if (result.status === "success") {
         Swal.fire({
           icon: "success",
           title: "Success!",
-          text: result.message,
           html: `
             <div>
               <p>${result.message}</p>
@@ -465,8 +489,8 @@ const BookingPageRegistered = ({ user }) => {
               <p className="branch-label">Choose Type</p>
               <select
                 className="form-select form-select-lg mb-3"
-                name="service_type"
-                value={formData.service_type}
+                name="service_category"
+                value={formData.service_category}
                 onChange={handleChange}
                 required
               >
@@ -485,7 +509,7 @@ const BookingPageRegistered = ({ user }) => {
                 value={formData.service}
                 onChange={handleChange}
                 required
-                disabled={!formData.service_type}
+                disabled={!formData.service_category}
               >
                 <option value="">Select service</option>
                 {services.map((service) => (
@@ -616,7 +640,7 @@ const BookingPageRegistered = ({ user }) => {
               disabled={isLoadingPayment}
             >
               {isLoadingPayment ? "Loading..." : 
-               formData.service_type === "Surgery" ? "Continue to Payment" : "Book Appointment"}
+               formData.service_category === "Surgery" ? "Continue to Payment" : "Book Appointment"}
             </button>
           </div>
         </div>
@@ -628,6 +652,7 @@ const BookingPageRegistered = ({ user }) => {
 const BookingPageGuest = () => {
   const location = useLocation();
   const queryParams = new URLSearchParams(location.search);
+  const [receiptFile, setReceiptFile] = useState(null);
   const serviceTypeParam = queryParams.get('type');
   const serviceIdParam = queryParams.get('serviceId');
 
@@ -638,6 +663,7 @@ const BookingPageGuest = () => {
     contact_no: "",
     service_type: serviceTypeParam || "",
     service: serviceIdParam || "",
+    service_name: "", 
     branch_id: "",
     staff_id: "",
     appointment_date: "",
@@ -683,7 +709,7 @@ const BookingPageGuest = () => {
 
   useEffect(() => {
     if (formData.service) {
-      fetch(`http://localhost/admin_dashboard_backend/bookingpage_branches.php?serviceId=${encodeURIComponent(formData.service)}&type=${formData.service_type}`)
+      fetch(`http://localhost/admin_dashboard_backend/bookingpage_branches.php?serviceId=${encodeURIComponent(formData.service)}&type=${formData.service_category}`)
         .then((response) => {
           if (!response.ok) {
             throw new Error('Network response was not ok');
@@ -849,45 +875,75 @@ const BookingPageGuest = () => {
 
   const handleChange = (e) => {
     const { name, value } = e.target;
-    setFormData({ ...formData, [name]: value });
+  
+    if (name === "service") {
+      const selectedService = services.find(s => s.id.toString() === value);
+      setFormData(prev => ({
+        ...prev,
+        [name]: value,
+        service_type: selectedService?.name || "", // Set service_type to service name
+        branch_id: "",
+        staff_id: ""
+      }));
+    } else if (name === "service_category") {
+      setFormData(prev => ({
+        ...prev,
+        [name]: value,
+        service: "",
+        service_type: "",
+        branch_id: "",
+        staff_id: ""
+      }));
+    } else {
+      setFormData(prev => ({ ...prev, [name]: value }));
+    }
   };
-
+  
   const handleAppointmentSubmission = async () => {
     try {
+      const convertedTime = convertTime12to24(formData.appointment_time);
+      
+      // Create FormData object
+      const formDataToSend = new FormData();
+      
+      // Append receipt file if exists
+      if (receiptFile) {
+        formDataToSend.append('receipt', receiptFile);
+      }
+      
+      // Append other form data
+      formDataToSend.append('first_name', formData.first_name);
+      formDataToSend.append('last_name', formData.last_name);
+      formDataToSend.append('email', formData.email);
+      formDataToSend.append('contact_no', formData.contact_no);
+      formDataToSend.append('service', formData.service); // Service ID
+      formDataToSend.append('service_type', formData.service_type); // Service name
+      formDataToSend.append('branch_id', formData.branch_id);
+      formDataToSend.append('staff_id', formData.staff_id);
+      formDataToSend.append('appointment_date', formData.appointment_date);
+      formDataToSend.append('appointment_time', convertedTime);
+      formDataToSend.append('send_email', 'true');
+  
       const response = await fetch("http://localhost/booking.php", {
         method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          user_id: null,
-          first_name: formData.first_name,
-          last_name: formData.last_name,
-          email: formData.email,
-          contact_no: formData.contact_no,
-          service_type: formData.service,
-          branch_id: formData.branch_id,
-          staff_id: formData.staff_id,
-          appointment_date: formData.appointment_date,
-          appointment_time: formData.appointment_time,
-          send_email: true
-        }),
+        body: formDataToSend,
       });
-
+  
       const result = await response.json();
-
+  
       if (result.status === "success") {
         Swal.fire({
           icon: "success",
           title: "Success!",
-          text: result.message,
           html: `
             <div>
               <p>${result.message}</p>
               <p>A confirmation email has been sent to ${formData.email}</p>
-              <p>Any schedule changes or cancellations will require you to call our support number: 123-456-7890.</p>
+              ${receiptFile && `<p>Receipt uploaded successfully</p>`}
             </div>
           `,
+        }).then(() => {
+          navigate("/profile");
         });
       } else {
         Swal.fire({
@@ -989,8 +1045,8 @@ const BookingPageGuest = () => {
               <p className="branch-label">Choose Type</p>
               <select
                 className="form-select form-select-lg mb-3"
-                name="service_type"
-                value={formData.service_type}
+                name="service_category"
+                value={formData.service_category}
                 onChange={handleChange}
                 required
               >
