@@ -79,8 +79,8 @@ body {
 }
 
 .login-form .btn {
-  background: linear-gradient(to right, #8BC34A, #66BB6A); /* green gradient */
-  color: white;
+  background: linear-gradient(to right, #8BC34A, #66BB6A); 
+  color: white !important;
   padding: 10px;
   border: none;
   border-radius: 12px;
@@ -92,11 +92,16 @@ body {
   box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
 }
 
-.login-form .btn:hover {
-  background: linear-gradient(to right, #7CB342, #4CAF50); /* darker on hover */
+
+.login-form .btn:hover,
+.login-form .btn:focus,
+.login-form .btn:active {
+  background: linear-gradient(to right, #7CB342, #4CAF50); 
   transform: translateY(-2px);
-  color: white; /* keeps text white on hover */
+  color: white !important;
+  outline: none;
 }
+
 
 .login-form a {
   display: block;
