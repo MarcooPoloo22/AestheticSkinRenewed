@@ -49,8 +49,8 @@
 .booking-history {
   background: white;
   padding: 20px;
+  height: 100%;
   border-radius: 8px;
-  box-shadow: 0 3px 10px rgba(0, 0, 0, 0.1);
 }
 
 .account-info-grid {
@@ -140,7 +140,7 @@
 }
 
 .booking-history {
-  max-height: calc(100vh - 250px);
+  max-height: calc(100vh - 110px);
   overflow-y: auto;
   padding-right: 10px;
 }

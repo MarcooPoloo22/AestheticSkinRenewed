@@ -175,32 +175,44 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET') {
     }
 }
 
-$input = file_get_contents("php://input");
-$data = json_decode($input, true);
-
-if (!$data && $_SERVER['REQUEST_METHOD'] !== 'GET') {
-    http_response_code(400);
-    echo json_encode(['status' => 'error', 'message' => 'Invalid input data.']);
-    exit();
-}
-
 // Handle POST requests (new bookings)
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    $user_id = isset($data['user_id']) ? $data['user_id'] : null;
-    $first_name = htmlspecialchars($data['first_name']);
-    $last_name = htmlspecialchars($data['last_name']);
-    $email = filter_var($data['email'], FILTER_SANITIZE_EMAIL);
-    $contact_no = htmlspecialchars($data['contact_no']);
-    $service_type = htmlspecialchars($data['service_type']);
-    $service_id = isset($data['service']) ? htmlspecialchars($data['service']) : null;
-    $branch_id = htmlspecialchars($data['branch_id']);
-    $staff_id = htmlspecialchars($data['staff_id']);
-    $appointment_date = $data['appointment_date'];
-    $appointment_time = $data['appointment_time'];
-    $send_email = isset($data['send_email']) ? (bool)$data['send_email'] : false;
+    // Get form data from POST
+    $user_id = isset($_POST['user_id']) ? $_POST['user_id'] : null;
+    $first_name = htmlspecialchars($_POST['first_name']);
+    $last_name = htmlspecialchars($_POST['last_name']);
+    $email = filter_var($_POST['email'], FILTER_SANITIZE_EMAIL);
+    $contact_no = htmlspecialchars($_POST['contact_no']);
+    $service_type = htmlspecialchars($_POST['service_type']);
+    $service_id = isset($_POST['service']) ? htmlspecialchars($_POST['service']) : null;
+    $branch_id = htmlspecialchars($_POST['branch_id']);
+    $staff_id = htmlspecialchars($_POST['staff_id']);
+    $appointment_date = $_POST['appointment_date'];
+    $appointment_time = $_POST['appointment_time'];
+    $send_email = isset($_POST['send_email']) ? (bool)$_POST['send_email'] : false;
+
+    // Handle file upload
+    $file_url = null;
+    if (isset($_FILES['receipt'])) {
+        $uploadDir = __DIR__ . '/admin_dashboard_backend/uploads/';
+        
+        if (!file_exists($uploadDir)) {
+            mkdir($uploadDir, 0777, true);
+        }
+        
+        $fileName = uniqid() . '_' . basename($_FILES['receipt']['name']);
+        $targetPath = $uploadDir . $fileName;
+        
+        if (move_uploaded_file($_FILES['receipt']['tmp_name'], $targetPath)) {
+            $file_url = 'http://localhost/admin_dashboard_backend/uploads/' . $fileName;
+        } else {
+            error_log('File upload failed: ' . $_FILES['receipt']['error']);
+        }
+    }
 
     // Validate input
-    if (!$first_name || !$last_name || !$email || !$contact_no || !$service_type || !$branch_id || !$staff_id || !$appointment_date || !$appointment_time) {
+    if (!$first_name || !$last_name || !$email || !$contact_no || !$service_type || 
+        !$branch_id || !$staff_id || !$appointment_date || !$appointment_time) {
         http_response_code(400);
         echo json_encode(['status' => 'error', 'message' => 'All fields are required.']);
         exit();
@@ -242,14 +254,14 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $stmt = $conn->prepare("
             INSERT INTO bookings (
                 user_id, first_name, last_name, email, contact_no, 
-                service_type, service_id, branch_id, staff_id, 
+                service_type, branch_id, staff_id, 
                 appointment_date, appointment_time, status, rating,
-                created_at
+                file_url, created_at
             ) VALUES (
                 :user_id, :first_name, :last_name, :email, :contact_no, 
-                :service_type, :service_id, :branch_id, :staff_id, 
+                :service_type, :branch_id, :staff_id, 
                 :appointment_date, :appointment_time, 'pending', NULL,
-                NOW()
+                :file_url, NOW()
             )
         ");
         $stmt->execute([
@@ -259,11 +271,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             ':email' => $email,
             ':contact_no' => $contact_no,
             ':service_type' => $service_type,
-            ':service_id' => $service_id,
             ':branch_id' => $branch_id,
             ':staff_id' => $staff_id,
             ':appointment_date' => $appointment_date,
             ':appointment_time' => $appointment_time,
+            ':file_url' => $file_url
         ]);
 
         $bookingId = $conn->lastInsertId();
@@ -373,6 +385,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             }
         }
         
+        if ($file_url) {
+            $response['file_url'] = $file_url;
+        }
+        
         echo json_encode($response);
     } catch (PDOException $e) {
         if ($conn->inTransaction()) {
@@ -385,6 +401,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 } 
 // Handle PUT requests (rating submissions)
 elseif ($_SERVER['REQUEST_METHOD'] === 'PUT') {
+    $input = file_get_contents("php://input");
+    $data = json_decode($input, true);
+
     if (!isset($data['booking_id']) || !isset($data['rating'])) {
         http_response_code(400);
         echo json_encode(['status' => 'error', 'message' => 'Booking ID and rating are required.']);
