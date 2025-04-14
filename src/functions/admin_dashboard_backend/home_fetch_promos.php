@@ -19,7 +19,11 @@ if ($conn->connect_error) {
 }
 
 try {
-    // Query to get active promos
+    // Get today's date and time boundaries
+    $startOfDay = date('Y-m-d 00:00:00');
+    $endOfDay = date('Y-m-d 23:59:59');
+    
+    // Query to get active promos that are within today's datetime range
     $sql = "SELECT 
                 id, 
                 name, 
@@ -30,13 +34,17 @@ try {
                 start_date,
                 end_date
             FROM promos
+            WHERE start_date <= ? AND end_date >= ?
             ORDER BY created_at DESC";
     
-    $result = $conn->query($sql);
-
-    if (!$result) {
-        throw new Exception("Query error: " . $conn->error);
+    $stmt = $conn->prepare($sql);
+    if (!$stmt) {
+        throw new Exception("Prepare failed: " . $conn->error);
     }
+    
+    $stmt->bind_param("ss", $endOfDay, $startOfDay);
+    $stmt->execute();
+    $result = $stmt->get_result();
 
     $promos = [];
     while($row = $result->fetch_assoc()) {

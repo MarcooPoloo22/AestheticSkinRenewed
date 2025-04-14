@@ -69,7 +69,7 @@ $branch_id = intval($_POST['branch_id'] ?? 0);
 $staff_id = intval($_POST['staff_id'] ?? 0);
 $appointment_date = $_POST['appointment_date'] ?? '';
 $appointment_time = $_POST['appointment_time'] ?? '';
-$status = in_array($_POST['status'] ?? 'pending', ['pending', 'confirmed', 'cancelled']) ? $_POST['status'] : 'pending';
+$status = in_array($_POST['status'] ?? 'pending', ['pending', 'confirmed', 'completed','cancelled']) ? $_POST['status'] : 'pending';
 $rating = isset($_POST['rating']) && $_POST['rating'] !== '' ? intval($_POST['rating']) : null;
 
 // Check slot availability
