@@ -289,12 +289,14 @@ const ProfilePage = ({ user, setUser, isLoggedIn }) => {
                     </div>
                   ))}
                 </div>
+                <div className="button-group">
                 <button className="save-button" onClick={handleSave}>
                   Save
                 </button>
                 <button className="cancel-button" onClick={handleCancel}>
                   Cancel
                 </button>
+              </div>
               </>
             ) : (
               <>

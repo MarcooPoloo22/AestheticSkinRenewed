@@ -64,6 +64,21 @@
   font-weight: bold;
 }
 
+.account-info-grid label {
+  font-weight: bold;
+  margin-right: 10px;
+}
+
+.account-info-grid p strong {
+  font-weight: bold;
+  margin-right: 10px;
+}
+
+.account-info-grid > div {
+  display: flex;
+  align-items: center;
+}
+
 .account-info-grid input,
 .password-change input {
   width: 100%;
@@ -99,6 +114,10 @@
   font-size: 16px;
   border: none;
   margin-top: 10px;
+}
+
+.save-button {
+  margin-right: 15px;
 }
 
 .cancel-button {
@@ -177,6 +196,12 @@
 .rating-display {
   color: #ffc107;
   font-weight: bold;
+}
+
+.button-group {
+  display: flex;
+  gap: 15px;
+  margin-top: 20px;
 }
 
 @media (max-width: 768px) {
