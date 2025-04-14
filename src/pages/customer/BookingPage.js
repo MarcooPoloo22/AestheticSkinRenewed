@@ -935,7 +935,6 @@ const BookingPageGuest = () => {
             <div>
               <p>${result.message}</p>
               <p>A confirmation email has been sent to ${formData.email}</p>
-              ${receiptFile && `<p>Receipt uploaded successfully</p>`}
             </div>
           `,
         }).then(() => {
