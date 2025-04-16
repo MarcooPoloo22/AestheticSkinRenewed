@@ -2,8 +2,6 @@ import { useState, useEffect } from "react";
 import DataTable from "react-data-table-component";
 import Swal from "sweetalert2";
 import "../../../styles/admin/dashboard/faqs.css";
-
-// Icons
 import { FaRegTrashAlt, FaRegEdit } from "react-icons/fa";
 import { IoArrowBackOutline } from "react-icons/io5";
 import { CiSearch } from "react-icons/ci";
@@ -16,7 +14,6 @@ const customStyles = {
   },
 };
 
-// DataTable for displaying branches
 const BranchTable = ({ setActivePage, branches, fetchBranches }) => {
   const handleDeleteBranch = async (id) => {
     const result = await Swal.fire({
@@ -108,12 +105,21 @@ const BranchTable = ({ setActivePage, branches, fetchBranches }) => {
   );
 };
 
-// New StaffTable component renders staff in a DataTable
-const StaffTable = ({ staff, handleEditStaff, handleDeleteStaff }) => {
+const StaffTable = ({ staff, handleEditStaff, handleDeleteStaff, manageDoctorAvailability }) => {
   const columns = [
     {
       name: "Staff Name",
       selector: (row) => row.name,
+      sortable: true,
+    },
+    {
+      name: "Branch",
+      selector: (row) => row.branch_name,
+      sortable: true,
+    },
+    {
+      name: "Role",
+      selector: (row) => row.is_surgery_staff === 1 ? "DOCTOR" : "STAFF",
       sortable: true,
     },
     {
@@ -123,6 +129,23 @@ const StaffTable = ({ staff, handleEditStaff, handleDeleteStaff }) => {
           <button onClick={() => handleEditStaff(row)} className="edit-button">
             <FaRegEdit />
           </button>
+          {row.is_surgery_staff === 1 && (
+            <button 
+              onClick={() => manageDoctorAvailability(row.id, row.name)}
+              className="availability-button"
+              style={{ 
+                backgroundColor: '#4CAF50', 
+                color: 'white',
+                border: 'none',
+                borderRadius: '4px',
+                padding: '5px 10px',
+                margin: '0 5px',
+                cursor: 'pointer'
+              }}
+            >
+              Manage Availability
+            </button>
+          )}
           <button
             onClick={() => handleDeleteStaff(row.id)}
             className="delete-button"
@@ -153,23 +176,35 @@ const ManageBranchEdit = ({ setActivePage, branch, fetchBranches }) => {
   const [branchName, setBranchName] = useState(branch.name);
   const [staff, setStaff] = useState([]);
 
-  // Fetch staff for the selected branch
   const fetchStaff = async () => {
     try {
       const response = await fetch(
         `http://localhost/admin_dashboard_backend/branch_fetch_staff.php?branch_ids=${branch.id}`
       );
+      
       if (!response.ok) {
-        throw new Error("Failed to fetch staff");
+        const errorData = await response.json();
+        throw new Error(errorData.message || 'Failed to fetch staff');
       }
+      
       const resData = await response.json();
+      
       if (resData.success) {
-        setStaff(resData.data);
+        setStaff(resData.data.map(member => ({
+          ...member,
+          is_surgery_staff: member.is_surgery_staff === 1 ? 1 : 0
+        })));
       } else {
         throw new Error(resData.message);
       }
     } catch (error) {
       console.error("Error fetching staff:", error);
+      Swal.fire({
+        title: "Error!",
+        text: error.message,
+        icon: "error",
+        confirmButtonText: "OK",
+      });
     }
   };
 
@@ -177,7 +212,6 @@ const ManageBranchEdit = ({ setActivePage, branch, fetchBranches }) => {
     fetchStaff();
   }, []);
 
-  // Update branch name
   const handleUpdateBranch = async (e) => {
     e.preventDefault();
     try {
@@ -190,9 +224,12 @@ const ManageBranchEdit = ({ setActivePage, branch, fetchBranches }) => {
           body: JSON.stringify({ id: branch.id, name: branchName }),
         }
       );
+      
       if (!response.ok) {
-        throw new Error("Failed to update branch");
+        const errorData = await response.json();
+        throw new Error(errorData.message || 'Failed to update branch');
       }
+      
       const resData = await response.json();
       Swal.fire({
         title: "Success!",
@@ -205,7 +242,7 @@ const ManageBranchEdit = ({ setActivePage, branch, fetchBranches }) => {
     } catch (error) {
       Swal.fire({
         title: "Error!",
-        text: "Failed to update branch. Please check the console for details.",
+        text: error.message || "Failed to update branch",
         icon: "error",
         confirmButtonText: "OK",
       });
@@ -213,19 +250,303 @@ const ManageBranchEdit = ({ setActivePage, branch, fetchBranches }) => {
     }
   };
 
-  // Add new staff via SweetAlert
-  const handleAddStaff = async () => {
-    const { value: staffName } = await Swal.fire({
-      title: "Add New Staff",
-      input: "text",
-      inputLabel: "Staff Name",
-      inputPlaceholder: "Enter staff name",
-      showCancelButton: true,
-      inputValidator: (value) => {
-        if (!value) return "You need to write something!";
-      },
+  const manageDoctorAvailability = async (doctorId, doctorName) => {
+    let currentAvailability = [];
+    try {
+      const response = await fetch(
+        `http://localhost/admin_dashboard_backend/doctor_get_availability.php?doctor_id=${doctorId}`
+      );
+      if (response.ok) {
+        const data = await response.json();
+        if (data.success) {
+          currentAvailability = data.availability || [];
+          console.log('Fetched availability:', currentAvailability); // Debug log
+        }
+      }
+    } catch (error) {
+      console.error("Error fetching availability:", error);
+    }
+  
+
+    const container = document.createElement('div');
+    container.style.textAlign = 'left';
+    
+    const title = document.createElement('h4');
+    title.textContent = `Manage Availability for ${doctorName}`;
+    container.appendChild(title);
+    
+    const instructions = document.createElement('p');
+    instructions.textContent = 'Add available date and time slots for this doctor:';
+    container.appendChild(instructions);
+    
+    const inputGroup = document.createElement('div');
+    inputGroup.style.display = 'grid';
+    inputGroup.style.gridTemplateColumns = '1fr 1fr auto';
+    inputGroup.style.gap = '10px';
+    inputGroup.style.marginBottom = '15px';
+    
+    const dateInput = document.createElement('input');
+    dateInput.type = 'date';
+    dateInput.id = 'availability-date';
+    dateInput.style.padding = '8px';
+    dateInput.min = new Date().toISOString().split('T')[0];
+    inputGroup.appendChild(dateInput);
+    
+    const timeInput = document.createElement('input');
+    timeInput.type = 'time';
+    timeInput.id = 'availability-time';
+    timeInput.style.padding = '8px';
+    timeInput.step = '1800';
+    inputGroup.appendChild(timeInput);
+    
+    const addButton = document.createElement('button');
+    addButton.textContent = 'Add Slot';
+    addButton.style.padding = '8px 15px';
+    addButton.style.backgroundColor = '#4CAF50';
+    addButton.style.color = 'white';
+    addButton.style.border = 'none';
+    addButton.style.borderRadius = '4px';
+    addButton.style.cursor = 'pointer';
+    addButton.onclick = async () => {
+      const date = dateInput.value;
+      const time = timeInput.value;
+      
+      if (!date || !time) {
+        Swal.showValidationMessage('Please select both date and time');
+        return;
+      }
+      
+      const dateTime = `${date} ${time}:00`;
+      
+      try {
+        const response = await fetch(
+          "http://localhost/admin_dashboard_backend/doctor_add_availability.php",
+          {
+            method: "POST",
+            credentials: "include",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ 
+              doctor_id: doctorId,
+              date_time: dateTime 
+            }),
+          }
+        );
+        
+        if (!response.ok) {
+          throw new Error("Failed to add availability");
+        }
+        
+        const resData = await response.json();
+        if (resData.success) {
+          currentAvailability.push(dateTime);
+          currentAvailability.sort();
+          renderAvailabilityList();
+          dateInput.value = '';
+          timeInput.value = '';
+        } else {
+          Swal.showValidationMessage(resData.message || "Failed to add availability");
+        }
+      } catch (error) {
+        Swal.showValidationMessage("Failed to add availability");
+        console.error("Error adding availability:", error);
+      }
+    };
+    inputGroup.appendChild(addButton);
+    container.appendChild(inputGroup);
+    
+    const availabilityList = document.createElement('div');
+    availabilityList.id = 'availability-list';
+    availabilityList.style.maxHeight = '300px';
+    availabilityList.style.overflowY = 'auto';
+    container.appendChild(availabilityList);
+    
+    const renderAvailabilityList = () => {
+      availabilityList.innerHTML = '';
+      
+      if (currentAvailability.length === 0) {
+        const emptyMsg = document.createElement('p');
+        emptyMsg.textContent = 'No availability slots added yet';
+        emptyMsg.style.textAlign = 'center';
+        emptyMsg.style.color = '#777';
+        availabilityList.appendChild(emptyMsg);
+        return;
+      }
+      
+      const groupedByDate = currentAvailability.reduce((acc, dt) => {
+        const date = dt.split(' ')[0];
+        if (!acc[date]) acc[date] = [];
+        acc[date].push(dt.split(' ')[1].substring(0, 5));
+        return acc;
+      }, {});
+      
+      Object.entries(groupedByDate).forEach(([date, times]) => {
+        const dateGroup = document.createElement('div');
+        dateGroup.style.marginBottom = '15px';
+        
+        const dateHeader = document.createElement('div');
+        dateHeader.style.display = 'flex';
+        dateHeader.style.justifyContent = 'space-between';
+        dateHeader.style.alignItems = 'center';
+        dateHeader.style.marginBottom = '5px';
+        dateHeader.style.paddingBottom = '5px';
+        dateHeader.style.borderBottom = '1px solid #eee';
+        
+        const dateText = document.createElement('strong');
+        dateText.textContent = new Date(date).toLocaleDateString('en-US', { 
+          weekday: 'long', 
+          year: 'numeric', 
+          month: 'long', 
+          day: 'numeric' 
+        });
+        dateHeader.appendChild(dateText);
+        
+        const deleteDateButton = document.createElement('button');
+        deleteDateButton.textContent = 'Remove All';
+        deleteDateButton.style.padding = '3px 8px';
+        deleteDateButton.style.fontSize = '12px';
+        deleteDateButton.style.backgroundColor = '#f44336';
+        deleteDateButton.style.color = 'white';
+        deleteDateButton.style.border = 'none';
+        deleteDateButton.style.borderRadius = '3px';
+        deleteDateButton.style.cursor = 'pointer';
+        deleteDateButton.onclick = async () => {
+          try {
+            const response = await fetch(
+              "http://localhost/admin_dashboard_backend/doctor_remove_availability.php",
+              {
+                method: "POST",
+                credentials: "include",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ 
+                  doctor_id: doctorId,
+                  date_time: `${date}%`
+                }),
+              }
+            );
+            
+            if (!response.ok) {
+              throw new Error("Failed to remove availability");
+            }
+            
+            const resData = await response.json();
+            if (resData.success) {
+              currentAvailability = currentAvailability.filter(dt => !dt.startsWith(date));
+              renderAvailabilityList();
+            } else {
+              Swal.showValidationMessage(resData.message || "Failed to remove availability");
+            }
+          } catch (error) {
+            Swal.showValidationMessage("Failed to remove availability");
+            console.error("Error removing availability:", error);
+          }
+        };
+        dateHeader.appendChild(deleteDateButton);
+        dateGroup.appendChild(dateHeader);
+        
+        const timesContainer = document.createElement('div');
+        timesContainer.style.display = 'flex';
+        timesContainer.style.flexWrap = 'wrap';
+        timesContainer.style.gap = '5px';
+        
+        times.forEach(time => {
+          const timeItem = document.createElement('div');
+          timeItem.style.display = 'flex';
+          timeItem.style.alignItems = 'center';
+          timeItem.style.gap = '5px';
+          timeItem.style.padding = '3px 8px';
+          timeItem.style.backgroundColor = '#e3f2fd';
+          timeItem.style.borderRadius = '3px';
+          
+          const timeText = document.createElement('span');
+          timeText.textContent = time;
+          timeItem.appendChild(timeText);
+          
+          const deleteButton = document.createElement('button');
+          deleteButton.textContent = '×';
+          deleteButton.style.background = 'none';
+          deleteButton.style.border = 'none';
+          deleteButton.style.color = '#f44336';
+          deleteButton.style.cursor = 'pointer';
+          deleteButton.style.padding = '0';
+          deleteButton.onclick = async () => {
+            try {
+              const response = await fetch(
+                "http://localhost/admin_dashboard_backend/doctor_remove_availability.php",
+                {
+                  method: "POST",
+                  credentials: "include",
+                  headers: { "Content-Type": "application/json" },
+                  body: JSON.stringify({ 
+                    doctor_id: doctorId,
+                    date_time: `${date} ${time}:00`
+                  }),
+                }
+              );
+              
+              if (!response.ok) {
+                throw new Error("Failed to remove availability");
+              }
+              
+              const resData = await response.json();
+              if (resData.success) {
+                currentAvailability = currentAvailability.filter(dt => dt !== `${date} ${time}:00`);
+                renderAvailabilityList();
+              } else {
+                Swal.showValidationMessage(resData.message || "Failed to remove availability");
+              }
+            } catch (error) {
+              Swal.showValidationMessage("Failed to remove availability");
+              console.error("Error removing availability:", error);
+            }
+          };
+          timeItem.appendChild(deleteButton);
+          timesContainer.appendChild(timeItem);
+        });
+        
+        dateGroup.appendChild(timesContainer);
+        availabilityList.appendChild(dateGroup);
+      });
+    };
+    
+    renderAvailabilityList();
+    
+    await Swal.fire({
+      title: `Manage Doctor Availability`,
+      html: container,
+      width: '700px',
+      showConfirmButton: false,
+      showCloseButton: true
     });
-    if (staffName) {
+  };
+
+  const handleAddStaff = async () => {
+    const { value: formValues } = await Swal.fire({
+      title: "Add New Staff",
+      html: `
+        <input id="staff-name" class="swal2-input" placeholder="Staff Name">
+        <div style="margin-top: 1rem; text-align: left;">
+          <label>
+            <input type="checkbox" id="doctor-checkbox"> 
+            This staff member is a DOCTOR (Surgery Staff)
+          </label>
+        </div>
+      `,
+      focusConfirm: false,
+      showCancelButton: true,
+      preConfirm: () => {
+        return {
+          name: document.getElementById('staff-name').value,
+          isDoctor: document.getElementById('doctor-checkbox').checked
+        };
+      },
+      inputValidator: (value) => {
+        if (!document.getElementById('staff-name').value) {
+          return "You need to enter a staff name!";
+        }
+      }
+    });
+
+    if (formValues) {
       try {
         const response = await fetch(
           "http://localhost/admin_dashboard_backend/branch_add_staff.php",
@@ -233,24 +554,53 @@ const ManageBranchEdit = ({ setActivePage, branch, fetchBranches }) => {
             method: "POST",
             credentials: "include",
             headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({ name: staffName, branch_id: branch.id }),
+            body: JSON.stringify({ 
+              name: formValues.name, 
+              branch_id: branch.id,
+              is_surgery_staff: formValues.isDoctor ? 1 : 0
+            }),
           }
         );
+
+        if (!response.ok) {
+          const errorData = await response.json();
+          throw new Error(errorData.message || 'Failed to add staff');
+        }
+
         const resData = await response.json();
+        
         if (resData.status === "success") {
-          setStaff([...staff, { id: resData.id, name: staffName }]);
-          Swal.fire("Success!", "Staff added successfully!", "success");
-        } else {
-          Swal.fire("Error", resData.message || "Failed to add staff", "error");
+          const newStaff = { 
+            id: resData.id, 
+            name: formValues.name,
+            branch_name: branch.name,
+            is_surgery_staff: resData.is_surgery_staff
+          };
+          
+          setStaff([...staff, newStaff]);
+          
+          Swal.fire({
+            title: "Success!",
+            text: "Staff added successfully!",
+            icon: "success",
+          });
+          
+          if (formValues.isDoctor) {
+            await manageDoctorAvailability(resData.id, formValues.name);
+          }
         }
       } catch (error) {
-        Swal.fire("Error", "Failed to add staff", "error");
+        Swal.fire({
+          title: "Error!",
+          text: error.message || "Failed to add staff",
+          icon: "error",
+          confirmButtonText: "OK",
+        });
         console.error("Error adding staff:", error);
       }
     }
   };
 
-  // Delete a staff member
   const handleDeleteStaff = async (staffId) => {
     const result = await Swal.fire({
       title: "Are you sure?",
@@ -260,6 +610,7 @@ const ManageBranchEdit = ({ setActivePage, branch, fetchBranches }) => {
       confirmButtonText: "Yes, delete it!",
       cancelButtonText: "No, cancel!",
     });
+    
     if (result.isConfirmed) {
       try {
         const response = await fetch(
@@ -271,9 +622,12 @@ const ManageBranchEdit = ({ setActivePage, branch, fetchBranches }) => {
             body: JSON.stringify({ id: staffId }),
           }
         );
+        
         if (!response.ok) {
-          throw new Error("Failed to delete staff");
+          const errorData = await response.json();
+          throw new Error(errorData.message || 'Failed to delete staff');
         }
+        
         const resData = await response.json();
         Swal.fire({
           title: "Deleted!",
@@ -285,7 +639,7 @@ const ManageBranchEdit = ({ setActivePage, branch, fetchBranches }) => {
       } catch (error) {
         Swal.fire({
           title: "Error!",
-          text: "Failed to delete staff. Please check the console for details.",
+          text: error.message || "Failed to delete staff",
           icon: "error",
           confirmButtonText: "OK",
         });
@@ -294,20 +648,34 @@ const ManageBranchEdit = ({ setActivePage, branch, fetchBranches }) => {
     }
   };
 
-  // Edit staff member's name via SweetAlert
   const handleEditStaff = async (staffMember) => {
-    const { value: newStaffName } = await Swal.fire({
-      title: "Edit Staff Name",
-      input: "text",
-      inputLabel: "Staff Name",
-      inputPlaceholder: "Enter new staff name",
-      inputValue: staffMember.name,
+    const { value: formValues } = await Swal.fire({
+      title: "Edit Staff",
+      html: `
+        <input id="staff-name" class="swal2-input" placeholder="Staff Name" value="${staffMember.name}">
+        <div style="margin-top: 1rem; text-align: left;">
+          <label>
+            <input type="checkbox" id="doctor-checkbox" ${staffMember.is_surgery_staff === 1 ? 'checked' : ''}> 
+            This staff member is a DOCTOR (Surgery Staff)
+          </label>
+        </div>
+      `,
+      focusConfirm: false,
       showCancelButton: true,
-      inputValidator: (value) => {
-        if (!value) return "You need to write something!";
+      preConfirm: () => {
+        return {
+          name: document.getElementById('staff-name').value,
+          isDoctor: document.getElementById('doctor-checkbox').checked
+        };
       },
+      inputValidator: (value) => {
+        if (!document.getElementById('staff-name').value) {
+          return "You need to enter a staff name!";
+        }
+      }
     });
-    if (newStaffName && newStaffName !== staffMember.name) {
+
+    if (formValues && (formValues.name !== staffMember.name || formValues.isDoctor !== (staffMember.is_surgery_staff === 1))) {
       try {
         const response = await fetch(
           "http://localhost/admin_dashboard_backend/branch_update_staff.php",
@@ -315,28 +683,47 @@ const ManageBranchEdit = ({ setActivePage, branch, fetchBranches }) => {
             method: "PUT",
             credentials: "include",
             headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({ id: staffMember.id, name: newStaffName }),
+            body: JSON.stringify({ 
+              id: staffMember.id, 
+              name: formValues.name,
+              is_surgery_staff: formValues.isDoctor ? 1 : 0
+            }),
           }
         );
+
         if (!response.ok) {
-          throw new Error("Failed to update staff");
+          const errorData = await response.json();
+          throw new Error(errorData.message || 'Failed to update staff');
         }
+
         const resData = await response.json();
+
         Swal.fire({
           title: "Success!",
           text: resData.message,
           icon: "success",
           confirmButtonText: "OK",
         });
-        setStaff(
-          staff.map((member) =>
-            member.id === staffMember.id ? { ...member, name: newStaffName } : member
-          )
+
+        const updatedStaff = staff.map((member) =>
+          member.id === staffMember.id 
+            ? { 
+                ...member, 
+                name: formValues.name,
+                is_surgery_staff: resData.is_surgery_staff
+              } 
+            : member
         );
+
+        setStaff(updatedStaff);
+
+        if (formValues.isDoctor) {
+          await manageDoctorAvailability(staffMember.id, formValues.name);
+        }
       } catch (error) {
         Swal.fire({
           title: "Error!",
-          text: "Failed to update staff. Please check the console for details.",
+          text: error.message || "Failed to update staff",
           icon: "error",
           confirmButtonText: "OK",
         });
@@ -378,11 +765,11 @@ const ManageBranchEdit = ({ setActivePage, branch, fetchBranches }) => {
         </form>
         <div className="form-group">
           <label className="questionLabel">Staff Available:</label>
-          {/* Use the StaffTable to render staff in a DataTable */}
           <StaffTable
             staff={staff}
             handleEditStaff={handleEditStaff}
             handleDeleteStaff={handleDeleteStaff}
+            manageDoctorAvailability={manageDoctorAvailability}
           />
           <div className="edit-branch-button-center">
             <button onClick={handleAddStaff} className="button-ManageFAQEdit">

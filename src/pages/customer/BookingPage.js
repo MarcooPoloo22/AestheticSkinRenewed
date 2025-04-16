@@ -47,7 +47,19 @@ const BookingPageRegistered = ({ user }) => {
   const [paymentDetails, setPaymentDetails] = useState(null);
   const [receiptFile, setReceiptFile] = useState(null);
   const [isLoadingPayment, setIsLoadingPayment] = useState(false);
+  const [doctorAvailability, setDoctorAvailability] = useState({});
+  const [availableTimeSlots, setAvailableTimeSlots] = useState([]);
   const navigate = useNavigate();
+
+  const standardTimeSlots = [
+    "09:00 AM",
+    "10:00 AM",
+    "11:00 AM",
+    "01:00 PM",
+    "02:00 PM",
+    "03:00 PM",
+    "04:00 PM",
+  ];
 
   useEffect(() => {
     if (!user) {
@@ -145,35 +157,93 @@ const BookingPageRegistered = ({ user }) => {
   useEffect(() => {
     if (formData.appointment_date && formData.staff_id) {
       setIsLoading(true);
-      fetch(`http://localhost/booking.php?date=${formData.appointment_date}&staff_id=${formData.staff_id}`)
-        .then((response) => {
-          if (!response.ok) {
-            throw new Error('Network response was not ok');
-          }
-          return response.json();
-        })
-        .then((data) => {
-          if (data.status === 'success') {
-            setBookedSlots(data.booked_slots || []);
-          } else {
-            throw new Error(data.message || 'Failed to fetch booked slots.');
-          }
-        })
-        .catch((error) => {
-          console.error("Error fetching booked slots:", error);
-          Swal.fire({
-            icon: 'error',
-            title: 'Error',
-            text: 'Failed to fetch booked slots. Please try again.',
+      
+      if (formData.service_category === "Surgery") {
+        fetch(`http://localhost/admin_dashboard_backend/fetch_doctor_availability.php?doctor_id=${formData.staff_id}`)
+          .then((response) => {
+            if (!response.ok) {
+              throw new Error('Network response was not ok');
+            }
+            return response.json();
+          })
+          .then((data) => {
+            if (data.status === 'success') {
+              setDoctorAvailability(data.available_slots || []);
+              fetch(`http://localhost/booking.php?date=${formData.appointment_date}&staff_id=${formData.staff_id}`)
+                .then((response) => {
+                  if (!response.ok) {
+                    throw new Error('Network response was not ok');
+                  }
+                  return response.json();
+                })
+                .then((bookedData) => {
+                  if (bookedData.status === 'success') {
+                    setBookedSlots(bookedData.booked_slots || []);
+                  }
+                })
+                .catch((error) => {
+                  console.error("Error fetching booked slots:", error);
+                });
+            } else {
+              throw new Error(data.message || 'Failed to fetch doctor availability.');
+            }
+          })
+          .catch((error) => {
+            console.error("Error fetching doctor availability:", error);
+            if (!error.message.includes('No availability found')) {
+              Swal.fire({
+                icon: 'error',
+                title: 'Error',
+                text: 'Failed to fetch doctor availability. Please try again.',
+              });
+            }
+            setDoctorAvailability([]);
+          })
+          .finally(() => {
+            setIsLoading(false);
           });
-        })
-        .finally(() => {
-          setIsLoading(false);
-        });
+      } else {
+        fetch(`http://localhost/booking.php?date=${formData.appointment_date}&staff_id=${formData.staff_id}`)
+          .then((response) => {
+            if (!response.ok) {
+              throw new Error('Network response was not ok');
+            }
+            return response.json();
+          })
+          .then((data) => {
+            if (data.status === 'success') {
+              setBookedSlots(data.booked_slots || []);
+            } else {
+              throw new Error(data.message || 'Failed to fetch booked slots.');
+            }
+          })
+          .catch((error) => {
+            console.error("Error fetching booked slots:", error);
+            Swal.fire({
+              icon: 'error',
+              title: 'Error',
+              text: 'Failed to fetch booked slots. Please try again.',
+            });
+          })
+          .finally(() => {
+            setIsLoading(false);
+          });
+      }
     } else {
       setBookedSlots([]);
+      setDoctorAvailability([]);
     }
-  }, [formData.appointment_date, formData.staff_id]);
+  }, [formData.appointment_date, formData.staff_id, formData.service_category]);
+
+  useEffect(() => {
+    if (formData.service_category === "Surgery") {
+      const availableSlots = doctorAvailability.filter(slot => !bookedSlots.includes(slot));
+      setAvailableTimeSlots(availableSlots);
+    } else {
+      const availableSlots = standardTimeSlots.filter(slot => !bookedSlots.includes(slot));
+      setAvailableTimeSlots(availableSlots);
+    }
+  }, [doctorAvailability, bookedSlots, formData.service_category]);
 
   const handleSurgeryPayment = async () => {
     setIsLoadingPayment(true);
@@ -456,16 +526,6 @@ const BookingPageRegistered = ({ user }) => {
       });
     }
   };
-  
-  const timeSlots = [
-    "09:00 AM",
-    "10:00 AM",
-    "11:00 AM",
-    "01:00 PM",
-    "02:00 PM",
-    "03:00 PM",
-    "04:00 PM",
-  ];
 
   return (
     <>
@@ -561,7 +621,7 @@ const BookingPageRegistered = ({ user }) => {
                 <option value="">Select Staff</option>
                 {staffList.map((staff) => (
                   <option key={staff.id} value={staff.id}>
-                    {staff.name}
+                    {staff.name} {staff.role === 'DOCTOR' ? '(Doctor)' : ''}
                   </option>
                 ))}
               </select>
@@ -602,17 +662,18 @@ const BookingPageRegistered = ({ user }) => {
                 value={formData.appointment_time}
                 onChange={handleChange}
                 required
-                disabled={isLoading}
+                disabled={isLoading || availableTimeSlots.length === 0}
               >
                 <option value="">Select Time</option>
                 {isLoading ? (
-                  <option disabled>Loading...</option>
+                  <option disabled>Loading availability...</option>
+                ) : availableTimeSlots.length === 0 ? (
+                  <option disabled>No available time slots</option>
                 ) : (
-                  timeSlots.map((slot) => (
+                  availableTimeSlots.map((slot) => (
                     <option
                       key={slot}
                       value={slot}
-                      disabled={bookedSlots.includes(slot)}
                       style={{
                         backgroundColor: bookedSlots.includes(slot) ? "#f0f0f0" : "inherit",
                         color: bookedSlots.includes(slot) ? "#a0a0a0" : "inherit",
@@ -623,12 +684,20 @@ const BookingPageRegistered = ({ user }) => {
                   ))
                 )}
               </select>
+              {formData.service_category === "Surgery" && (
+                <div className="alert alert-info mt-2">
+                  <i className="bi bi-info-circle me-2"></i>
+                  Surgery time slots are based on doctor availability
+                </div>
+              )}
             </div>
           </div>
 
-          {bookedSlots.length === timeSlots.length && (
+          {availableTimeSlots.length === 0 && !isLoading && (
             <div className="alert alert-warning mt-3">
-              All time slots are booked for the selected date. Please choose another date.
+              {formData.service_category === "Surgery" 
+                ? "No available surgery slots for the selected doctor and date. Please choose another date or doctor."
+                : "All time slots are booked for the selected date. Please choose another date."}
             </div>
           )}
 
@@ -637,7 +706,7 @@ const BookingPageRegistered = ({ user }) => {
               className="btn btn-primary"
               type="button"
               onClick={handleSubmit}
-              disabled={isLoadingPayment}
+              disabled={isLoadingPayment || availableTimeSlots.length === 0}
             >
               {isLoadingPayment ? "Loading..." : 
                formData.service_category === "Surgery" ? "Continue to Payment" : "Book Appointment"}
@@ -676,6 +745,16 @@ const BookingPageGuest = () => {
   const [bookedSlots, setBookedSlots] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
   const navigate = useNavigate();
+
+  const standardTimeSlots = [
+    "09:00 AM",
+    "10:00 AM",
+    "11:00 AM",
+    "01:00 PM",
+    "02:00 PM",
+    "03:00 PM",
+    "04:00 PM",
+  ];
 
   useEffect(() => {
     if (formData.service_category === "Surgery") {
@@ -956,16 +1035,6 @@ const BookingPageGuest = () => {
       });
     }
   };
-  
-  const timeSlots = [
-    "09:00 AM",
-    "10:00 AM",
-    "11:00 AM",
-    "01:00 PM",
-    "02:00 PM",
-    "03:00 PM",
-    "04:00 PM",
-  ];
 
   return (
     <>
@@ -1162,7 +1231,7 @@ const BookingPageGuest = () => {
                 {isLoading ? (
                   <option disabled>Loading...</option>
                 ) : (
-                  timeSlots.map((slot) => (
+                  standardTimeSlots.map((slot) => (
                     <option
                       key={slot}
                       value={slot}
@@ -1180,7 +1249,7 @@ const BookingPageGuest = () => {
             </div>
           </div>
 
-          {bookedSlots.length === timeSlots.length && (
+          {bookedSlots.length === standardTimeSlots.length && (
             <div className="alert alert-warning mt-3">
               All time slots are booked for the selected date. Please choose another date.
             </div>

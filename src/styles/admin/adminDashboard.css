@@ -426,3 +426,50 @@
     width: 700px;
     justify-content: flex-start;
   }
+
+  .time-slot-manager {
+    margin-top: 20px;
+    padding: 15px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+}
+
+.time-slot-input {
+    display: flex;
+    margin-bottom: 10px;
+}
+
+.time-slot-input input {
+    flex: 1;
+    padding: 8px;
+    margin-right: 10px;
+}
+
+.time-slot-input button {
+    padding: 8px 15px;
+    background-color: #4CAF50;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+.time-slots-list {
+    max-height: 200px;
+    overflow-y: auto;
+}
+
+.time-slot-item {
+    display: flex;
+    justify-content: space-between;
+    padding: 8px;
+    border-bottom: 1px solid #eee;
+}
+
+.delete-slot-button {
+    background: none;
+    border: none;
+    color: red;
+    cursor: pointer;
+    font-size: 16px;
+}
