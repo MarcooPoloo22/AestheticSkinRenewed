@@ -14,24 +14,48 @@ $username = "root";
 $password = "";
 $dbname = "asr";
 
-$branchId = isset($_GET['branchId']) ? $_GET['branchId'] : die(json_encode(array("error" => "Branch ID parameter is required")));
+// Get all required parameters
+$branchId = isset($_GET['branchId']) ? $_GET['branchId'] : die(json_encode(["error" => "Branch ID required"]));
+$serviceId = isset($_GET['serviceId']) ? $_GET['serviceId'] : die(json_encode(["error" => "Service ID required"]));
+$serviceType = isset($_GET['type']) ? $_GET['type'] : die(json_encode(["error" => "Service type required"]));
+
+// Determine bridge table and foreign key column based on service type
+switch($serviceType) {
+    case 'Surgery':
+        $bridgeTable = 'surgery_staff';
+        $foreignKey = 'surgery_id';
+        break;
+    case 'Promo':
+        $bridgeTable = 'promo_staff';
+        $foreignKey = 'promo_id';
+        break;
+    case 'Service':
+        $bridgeTable = 'service_staff';
+        $foreignKey = 'service_id';
+        break;
+    default:
+        die(json_encode(["error" => "Invalid service type"]));
+}
 
 $conn = new mysqli($servername, $username, $password, $dbname);
 if ($conn->connect_error) {
-    die(json_encode(array("error" => "Connection failed: " . $conn->connect_error)));
+    die(json_encode(["error" => "Connection failed: " . $conn->connect_error]));
 }
 
-$query = "SELECT * FROM staff WHERE branch_id = ?";
+// Prepare query to get staff associated with both service and branch
+$query = "SELECT s.* FROM staff s
+          JOIN $bridgeTable bt ON s.id = bt.staff_id
+          WHERE bt.$foreignKey = ? AND s.branch_id = ?";
+
 $stmt = $conn->prepare($query);
-
 if (!$stmt) {
-    die(json_encode(array("error" => "Prepare failed: " . $conn->error)));
+    die(json_encode(["error" => "Prepare failed: " . $conn->error]));
 }
 
-$stmt->bind_param("i", $branchId);
+$stmt->bind_param("ii", $serviceId, $branchId);
 
 if (!$stmt->execute()) {
-    die(json_encode(array("error" => "Execute failed: " . $stmt->error)));
+    die(json_encode(["error" => "Execute failed: " . $stmt->error]));
 }
 
 $result = $stmt->get_result();

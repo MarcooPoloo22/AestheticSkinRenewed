@@ -32,9 +32,9 @@ CREATE TABLE IF NOT EXISTS `audit_logs` (
   `description` text DEFAULT NULL,
   `old_value` text DEFAULT NULL,
   PRIMARY KEY (`audit_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=172 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=193 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
--- Dumping data for table asr.audit_logs: ~141 rows (approximately)
+-- Dumping data for table asr.audit_logs: ~173 rows (approximately)
 INSERT INTO `audit_logs` (`audit_id`, `user_id`, `user_name`, `user_role`, `action_type`, `table_name`, `new_value`, `timestamp`, `description`, `old_value`) VALUES
 	(20, 44, 'Gabriello', 'admin', 'UPDATE', 'promos', '{"id":7,"name":"Promo 45877","description":"Desc 5","price":"123.00","file_url":null,"start_date":"2025-03-24 17:23:00","end_date":"2025-03-31 13:21:00","duration":5,"created_at":"2025-03-23 13:17:21","updated_at":"2025-03-23 13:33:06","branch_ids":"[]","staff_ids":"[]"}', '2025-03-23 06:26:14', NULL, '{"id":7,"name":"Promo 45877","description":"Desc 5","price":"123.00","file_url":null,"start_date":"2025-03-24 17:23:00","end_date":"2025-03-31 13:21:00","duration":5,"created_at":"2025-03-23 13:17:21","updated_at":"2025-03-23 13:33:06","branch_ids":"[]","staff_ids":"[]"}'),
 	(21, 44, 'Gabriello', 'admin', 'UPDATE', 'promos', '{"id":7,"name":"Promo 45877","description":"Desc 5","price":"123.00","file_url":null,"start_date":"2025-03-24 17:23:00","end_date":"2025-03-31 13:21:00","duration":6,"created_at":"2025-03-23 13:17:21","updated_at":"2025-03-23 14:35:08","branch_ids":"[\\"7\\",\\"6\\"]","staff_ids":"[\\"1\\",\\"3\\"]"}', '2025-03-23 06:35:08', NULL, '{"id":7,"name":"Promo 45877","description":"Desc 5","price":"123.00","file_url":null,"start_date":"2025-03-24 17:23:00","end_date":"2025-03-31 13:21:00","duration":5,"created_at":"2025-03-23 13:17:21","updated_at":"2025-03-23 13:33:06","branch_ids":"[]","staff_ids":"[]"}'),
@@ -187,7 +187,28 @@ INSERT INTO `audit_logs` (`audit_id`, `user_id`, `user_name`, `user_role`, `acti
 	(168, 44, 'Gabriello', 'admin', 'UPDATE', 'promos', '{"id":11,"name":"ASR Immunomax Drip","description":"High Dose IV Vitamin C for whitening and to counteract. FREE Radicals, Tumors and Cancer Cells (5+1 Promo), +1 or 10 Treatment Points","price":"7495.00","file_url":"http:\\/\\/localhost\\/admin_dashboard_backend\\/uploads\\/67e01e47491f1-67e01dd211554-bart.jpg","start_date":"2025-04-13 22:44:00","end_date":"2025-05-02 22:44:00","duration":3,"created_at":"2025-03-23 22:44:23","updated_at":"2025-04-14 00:03:00","branch_ids":null,"staff_ids":null}', '2025-04-13 16:03:00', 'Updated promo: ASR Immunomax Drip', '{"id":11,"name":"ASR Immunomax Drip","description":"High Dose IV Vitamin C for whitening and to counteract. FREE Radicals, Tumors and Cancer Cells (5+1 Promo), +1 or 10 Treatment Points","price":"7495.00","file_url":"http:\\/\\/localhost\\/admin_dashboard_backend\\/uploads\\/67e01e47491f1-67e01dd211554-bart.jpg","start_date":"2025-04-22 22:44:00","end_date":"2025-05-02 22:44:00","duration":3,"created_at":"2025-03-23 22:44:23","updated_at":"2025-04-14 00:02:18","branch_ids":null,"staff_ids":null}'),
 	(169, 44, 'Gabriello', 'admin', 'UPDATE', 'bookings', '{"id":50,"user_id":null,"first_name":"Randolph","last_name":"Alvarado","email":"alvaradorandolph@gmail.com","contact_no":"09052752202","service_type":"Surgery 2","appointment_date":"2025-04-15","appointment_time":"11:00:00","status":"cancelled","created_at":"2025-04-14 18:07:48","staff_id":1,"branch_id":6,"rating":null,"file_url":"http:\\/\\/localhost\\/admin_dashboard_backend\\/uploads\\/67fcde74e4125_67e01dd211554-bart.jpg"}', '2025-04-14 10:36:00', 'Updated appointment for alvaradorandolph@gmail.com', '{"id":50,"user_id":35,"first_name":"Randolph","last_name":"Alvarado","email":"alvaradorandolph@gmail.com","contact_no":"09052752202","service_type":"Surgery 2","appointment_date":"2025-04-15","appointment_time":"11:00:00","status":"pending","created_at":"2025-04-14 18:07:48","staff_id":1,"branch_id":6,"rating":null,"file_url":"http:\\/\\/localhost\\/admin_dashboard_backend\\/uploads\\/67fcde74e4125_67e01dd211554-bart.jpg"}'),
 	(170, 44, 'Gabriello', 'admin', 'UPDATE', 'bookings', '{"id":51,"user_id":null,"first_name":"Randolph","last_name":"Alvarado","email":"alvaradorandolph@gmail.com","contact_no":"09052752202","service_type":"Deep Cleansing Facial","appointment_date":"2025-04-15","appointment_time":"13:00:00","status":"completed","created_at":"2025-04-14 18:32:45","staff_id":4,"branch_id":6,"rating":null,"file_url":null}', '2025-04-14 10:36:54', 'Updated appointment for alvaradorandolph@gmail.com', '{"id":51,"user_id":35,"first_name":"Randolph","last_name":"Alvarado","email":"alvaradorandolph@gmail.com","contact_no":"09052752202","service_type":"Deep Cleansing Facial","appointment_date":"2025-04-15","appointment_time":"13:00:00","status":"pending","created_at":"2025-04-14 18:32:45","staff_id":4,"branch_id":6,"rating":null,"file_url":null}'),
-	(171, 44, 'Gabriello', 'admin', 'UPDATE', 'bookings', '{"id":42,"user_id":null,"first_name":"Randolph","last_name":"Alvarado","email":"alvaradorandolph@gmail.com","contact_no":"09052752202","service_type":"Acne Control Facial","appointment_date":"2025-04-14","appointment_time":"14:00:00","status":"cancelled","created_at":"2025-04-13 23:41:52","staff_id":1,"branch_id":6,"rating":null,"file_url":null}', '2025-04-14 10:37:36', 'Updated appointment for alvaradorandolph@gmail.com', '{"id":42,"user_id":35,"first_name":"Randolph","last_name":"Alvarado","email":"alvaradorandolph@gmail.com","contact_no":"09052752202","service_type":"Acne Control Facial","appointment_date":"2025-04-14","appointment_time":"14:00:00","status":"pending","created_at":"2025-04-13 23:41:52","staff_id":1,"branch_id":6,"rating":null,"file_url":null}');
+	(171, 44, 'Gabriello', 'admin', 'UPDATE', 'bookings', '{"id":42,"user_id":null,"first_name":"Randolph","last_name":"Alvarado","email":"alvaradorandolph@gmail.com","contact_no":"09052752202","service_type":"Acne Control Facial","appointment_date":"2025-04-14","appointment_time":"14:00:00","status":"cancelled","created_at":"2025-04-13 23:41:52","staff_id":1,"branch_id":6,"rating":null,"file_url":null}', '2025-04-14 10:37:36', 'Updated appointment for alvaradorandolph@gmail.com', '{"id":42,"user_id":35,"first_name":"Randolph","last_name":"Alvarado","email":"alvaradorandolph@gmail.com","contact_no":"09052752202","service_type":"Acne Control Facial","appointment_date":"2025-04-14","appointment_time":"14:00:00","status":"pending","created_at":"2025-04-13 23:41:52","staff_id":1,"branch_id":6,"rating":null,"file_url":null}'),
+	(172, 44, 'Gabriello', 'admin', 'CREATE', 'staff', '{"id":22,"name":"YEYEYE","branch_id":9,"role":"STAFF","is_surgery_staff":0}', '2025-04-17 03:24:37', 'Created staff: YEYEYE', NULL),
+	(173, 44, 'Gabriello', 'admin', 'UPDATE', 'staff', '{"id":22,"name":"YEYEYE","branch_id":9,"role":"STAFF","is_surgery_staff":1}', '2025-04-17 03:27:01', 'Updated staff: YEYEYE (Surgery Staff: 1)', '{"id":22,"name":"YEYEYE","branch_id":9,"role":"STAFF","is_surgery_staff":0}'),
+	(174, 44, 'Gabriello', 'admin', 'CREATE', 'doctor_availability', '{"doctor_id":22,"date_time":"2025-04-18 00:00:00"}', '2025-04-17 03:47:37', 'Added availability slot for doctor 22 at 2025-04-18 00:00:00', NULL),
+	(175, 44, 'Gabriello', 'admin', 'CREATE', 'doctor_availability', '{"doctor_id":22,"date_time":"2025-04-24 11:51:00"}', '2025-04-17 03:48:12', 'Added availability slot for doctor 22 at 2025-04-24 11:51:00', NULL),
+	(176, 44, 'Gabriello', 'admin', 'CREATE', 'staff', '{"id":23,"name":"Gab","branch_id":9,"role":"STAFF","is_surgery_staff":1}', '2025-04-17 03:58:14', 'Created staff: Gab (Surgery Staff: 1)', NULL),
+	(177, 44, 'Gabriello', 'admin', 'CREATE', 'doctor_availability', '{"doctor_id":23,"date_time":"2025-04-18 11:00:00"}', '2025-04-17 03:58:25', 'Added availability slot for doctor 23 at 2025-04-18 11:00:00', NULL),
+	(178, 44, 'Gabriello', 'admin', 'DELETE', 'doctor_availability', NULL, '2025-04-17 04:01:55', 'Removed availability slot for doctor 23 at 2025-04-18%', '{"doctor_id":23,"date_time":"2025-04-18%"}'),
+	(179, 44, 'Gabriello', 'admin', 'DELETE', 'doctor_availability', NULL, '2025-04-17 04:33:59', 'Removed availability slot for doctor 22 at 2025-04-24 11:51:00', '{"doctor_id":22,"date_time":"2025-04-24 11:51:00"}'),
+	(180, 44, 'Gabriello', 'admin', 'UPDATE', 'surgeries', '{"id":15,"title":"asdas","description":"adas","price":"123.00","image_url":"http:\\/\\/localhost\\/admin_dashboard_backend\\/uploads\\/surgeries\\/6800a83135833-67dffdcfed396-67dd0247dc581-hair_treatment.jpg","duration":5,"created_at":"2025-04-17 15:05:21","updated_at":"2025-04-17 15:06:39","branch_ids":null,"staff_ids":null,"time_slots":null}', '2025-04-17 07:06:39', 'Updated surgery: asdas', '{"id":15,"title":"asdas","description":"adas","price":"123.00","image_url":"http:\\/\\/localhost\\/admin_dashboard_backend\\/uploads\\/surgeries\\/6800a83135833-67dffdcfed396-67dd0247dc581-hair_treatment.jpg","duration":1,"created_at":"2025-04-17 15:05:21","updated_at":"2025-04-17 15:05:21","branch_ids":null,"staff_ids":null,"time_slots":null}'),
+	(181, 44, 'Gabriello', 'admin', 'DELETE', 'surgeries', NULL, '2025-04-17 10:19:25', 'Deleted surgery: Surgery 1', '{"id":2,"title":"Surgery 1","description":"This is the description for Surgery 1","price":"9998.00","image_url":"http:\\/\\/localhost\\/admin_dashboard_backend\\/uploads\\/surgeries\\/67e020c02c2e7-spongebob.webp","duration":12,"created_at":"2025-03-20 04:57:12","updated_at":"2025-03-23 22:54:56","branch_ids":"[\\"6\\",\\"7\\"]","staff_ids":"[\\"1\\",\\"3\\",\\"4\\",\\"8\\",\\"9\\"]","time_slots":null}'),
+	(182, 44, 'Gabriello', 'admin', 'DELETE', 'surgeries', NULL, '2025-04-17 10:19:29', 'Deleted surgery: Surgery 2', '{"id":4,"title":"Surgery 2","description":"This is the description for Surgery 1","price":"10998.00","image_url":"http:\\/\\/localhost\\/admin_dashboard_backend\\/uploads\\/surgeries\\/67e020d2f31b1-tomjerry.jpg","duration":6,"created_at":"2025-03-23 16:36:02","updated_at":"2025-03-23 22:55:53","branch_ids":null,"staff_ids":null,"time_slots":null}'),
+	(183, 44, 'Gabriello', 'admin', 'DELETE', 'surgeries', NULL, '2025-04-17 10:19:33', 'Deleted surgery: Surgery 3', '{"id":5,"title":"Surgery 3","description":"This is the description for Surgery 3","price":"12999.00","image_url":"http:\\/\\/localhost\\/admin_dashboard_backend\\/uploads\\/surgeries\\/67e02149c58e4-tomjerry.jpg","duration":11,"created_at":"2025-03-23 16:56:09","updated_at":"2025-03-23 22:57:13","branch_ids":"Array","staff_ids":"Array","time_slots":null}'),
+	(184, 44, 'Gabriello', 'admin', 'DELETE', 'surgeries', NULL, '2025-04-17 10:19:48', 'Deleted surgery: Surgery 4', '{"id":6,"title":"Surgery 4","description":"This is the description for Surgery 4","price":"15999.00","image_url":"http:\\/\\/localhost\\/admin_dashboard_backend\\/uploads\\/surgeries\\/67e0216758af3-dora.jpg","duration":11,"created_at":"2025-03-23 16:56:54","updated_at":"2025-03-23 22:57:43","branch_ids":"[\\"7\\",\\"6\\"]","staff_ids":"[\\"3\\",\\"1\\",\\"4\\"]","time_slots":null}'),
+	(185, 44, 'Gabriello', 'admin', 'DELETE', 'surgeries', NULL, '2025-04-17 10:19:53', 'Deleted surgery: asda', '{"id":12,"title":"asda","description":"asdads","price":"213.00","image_url":"http:\\/\\/localhost\\/admin_dashboard_backend\\/uploads\\/surgeries\\/67f680c8913e4-67e01dd211554-bart.jpg","duration":10,"created_at":"2025-04-09 22:14:32","updated_at":"2025-04-09 22:14:32","branch_ids":null,"staff_ids":null,"time_slots":null}'),
+	(186, 44, 'Gabriello', 'admin', 'DELETE', 'surgeries', NULL, '2025-04-17 10:19:57', 'Deleted surgery: asdas', '{"id":15,"title":"asdas","description":"adas","price":"123.00","image_url":"http:\\/\\/localhost\\/admin_dashboard_backend\\/uploads\\/surgeries\\/6800a83135833-67dffdcfed396-67dd0247dc581-hair_treatment.jpg","duration":5,"created_at":"2025-04-17 15:05:21","updated_at":"2025-04-17 15:06:39","branch_ids":null,"staff_ids":null,"time_slots":null}'),
+	(187, 44, 'Gabriello', 'admin', 'CREATE', 'surgeries', '{"id":16,"title":"Surgery 1","description":"This is the description for Surgery 1","price":"122.00","image_url":"http:\\/\\/localhost\\/admin_dashboard_backend\\/uploads\\/surgeries\\/6800d754e1d34-67dffdbc9dbb4-body_scrub.jpg","duration":1,"created_at":"2025-04-17 18:26:28","updated_at":"2025-04-17 18:26:28","branch_ids":null,"staff_ids":null,"time_slots":null}', '2025-04-17 10:26:28', 'Created new surgery: Surgery 1', NULL),
+	(188, 44, 'Gabriello', 'admin', 'CREATE', 'doctor_availability', '{"doctor_id":23,"date_time":"2025-04-28 18:30:00"}', '2025-04-17 10:27:01', 'Added availability slot for doctor 23 at 2025-04-28 18:30:00', NULL),
+	(189, 44, 'Gabriello', 'admin', 'CREATE', 'doctor_availability', '{"doctor_id":23,"date_time":"2025-04-28 19:30:00"}', '2025-04-17 10:27:05', 'Added availability slot for doctor 23 at 2025-04-28 19:30:00', NULL),
+	(190, 44, 'Gabriello', 'admin', 'CREATE', 'doctor_availability', '{"doctor_id":23,"date_time":"2025-04-28 20:30:00"}', '2025-04-17 10:27:11', 'Added availability slot for doctor 23 at 2025-04-28 20:30:00', NULL),
+	(191, 44, 'Gabriello', 'admin', 'UPDATE', 'surgeries', '{"id":16,"title":"Surgery 1","description":"This is the description for Surgery 1","price":"122.00","image_url":"http:\\/\\/localhost\\/admin_dashboard_backend\\/uploads\\/surgeries\\/6800d754e1d34-67dffdbc9dbb4-body_scrub.jpg","duration":1,"created_at":"2025-04-17 18:26:28","updated_at":"2025-04-17 18:26:28","branch_ids":null,"staff_ids":null,"time_slots":null}', '2025-04-17 10:38:39', 'Updated surgery: Surgery 1', '{"id":16,"title":"Surgery 1","description":"This is the description for Surgery 1","price":"122.00","image_url":"http:\\/\\/localhost\\/admin_dashboard_backend\\/uploads\\/surgeries\\/6800d754e1d34-67dffdbc9dbb4-body_scrub.jpg","duration":1,"created_at":"2025-04-17 18:26:28","updated_at":"2025-04-17 18:26:28","branch_ids":null,"staff_ids":null,"time_slots":null}'),
+	(192, 44, 'Gabriello', 'admin', 'CREATE', 'services', '{"id":20,"name":"aa","description":"aa","price":"123.00","file_url":"uploads\\/67de8d5635819-cheesy burger.jpg","duration":1}', '2025-04-17 10:52:03', 'Created service: aa', NULL);
 
 -- Dumping structure for table asr.bookings
 CREATE TABLE IF NOT EXISTS `bookings` (
@@ -213,9 +234,9 @@ CREATE TABLE IF NOT EXISTS `bookings` (
   KEY `idx_status_date` (`status`,`appointment_date`),
   CONSTRAINT `bookings_ibfk_1` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`) ON DELETE SET NULL,
   CONSTRAINT `fk_staff` FOREIGN KEY (`staff_id`) REFERENCES `staff` (`id`) ON DELETE CASCADE
-) ENGINE=InnoDB AUTO_INCREMENT=54 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=55 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
--- Dumping data for table asr.bookings: ~12 rows (approximately)
+-- Dumping data for table asr.bookings: ~14 rows (approximately)
 INSERT INTO `bookings` (`id`, `user_id`, `first_name`, `last_name`, `email`, `contact_no`, `service_type`, `appointment_date`, `appointment_time`, `status`, `created_at`, `staff_id`, `branch_id`, `rating`, `file_url`) VALUES
 	(33, 35, 'Randolph', 'Alvarado', 'alvaradorandolph@gmail.com', '09052752202', 'Surgery', '2025-04-23', '11:00:00', 'pending', '2025-04-11 21:24:55', 4, 6, NULL, 'http://localhost/uploads/67f988a7acc7b_67dffdbc9dbb4-body_scrub.jpg'),
 	(42, NULL, 'Randolph', 'Alvarado', 'alvaradorandolph@gmail.com', '09052752202', 'Acne Control Facial', '2025-04-14', '14:00:00', 'cancelled', '2025-04-13 15:41:52', 1, 6, NULL, NULL),
@@ -229,7 +250,8 @@ INSERT INTO `bookings` (`id`, `user_id`, `first_name`, `last_name`, `email`, `co
 	(50, NULL, 'Randolph', 'Alvarado', 'alvaradorandolph@gmail.com', '09052752202', 'Surgery 2', '2025-04-15', '11:00:00', 'cancelled', '2025-04-14 10:07:48', 1, 6, NULL, 'http://localhost/admin_dashboard_backend/uploads/67fcde74e4125_67e01dd211554-bart.jpg'),
 	(51, NULL, 'Randolph', 'Alvarado', 'alvaradorandolph@gmail.com', '09052752202', 'Deep Cleansing Facial', '2025-04-15', '13:00:00', 'completed', '2025-04-14 10:32:45', 4, 6, NULL, NULL),
 	(52, NULL, 'Gabriello', 'Gerald Herrera', 'gabgerald@yahoo.com', '09760314957', 'ASR Immunomax Drip', '2025-04-14', '13:00:00', 'pending', '2025-04-14 10:47:04', 1, 6, NULL, NULL),
-	(53, NULL, 'Gabriello', 'Gerald Herrera', 'gabgerald@yahoo.com', '09760314957', 'Vampire Facial', '2025-04-14', '14:00:00', 'pending', '2025-04-14 10:49:27', 1, 6, NULL, NULL);
+	(53, NULL, 'Gabriello', 'Gerald Herrera', 'gabgerald@yahoo.com', '09760314957', 'Vampire Facial', '2025-04-14', '14:00:00', 'pending', '2025-04-14 10:49:27', 1, 6, NULL, NULL),
+	(54, 35, 'Randolph', 'Alvarado', 'alvaradorandolph@gmail.com', '09052752202', 'Surgery 1', '2025-04-28', '19:30:00', 'pending', '2025-04-17 12:53:49', 23, 9, NULL, 'http://localhost/admin_dashboard_backend/uploads/6800f9ddb3b3e_67dffdbc9dbb4-body_scrub.jpg');
 
 -- Dumping structure for table asr.branches
 CREATE TABLE IF NOT EXISTS `branches` (
@@ -257,6 +279,25 @@ CREATE TABLE IF NOT EXISTS `contact_info` (
 -- Dumping data for table asr.contact_info: ~0 rows (approximately)
 INSERT INTO `contact_info` (`id`, `phone`, `facebook`, `instagram`, `twitter`) VALUES
 	(1, '+63 9123456789 / +632123123', 'https://www.facebook.com/ASRSpaPHasdasda', 'https://www.facebook.com/ASRSpaPHsdasd', 'https://www.facebook.com/ASRSpaPHasdads');
+
+-- Dumping structure for table asr.doctor_availability
+CREATE TABLE IF NOT EXISTS `doctor_availability` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `doctor_id` int(11) NOT NULL,
+  `date_time` datetime NOT NULL,
+  `created_at` timestamp NOT NULL DEFAULT current_timestamp(),
+  PRIMARY KEY (`id`),
+  KEY `doctor_id` (`doctor_id`),
+  CONSTRAINT `doctor_availability_ibfk_1` FOREIGN KEY (`doctor_id`) REFERENCES `staff` (`id`) ON DELETE CASCADE
+) ENGINE=InnoDB AUTO_INCREMENT=8 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+-- Dumping data for table asr.doctor_availability: ~5 rows (approximately)
+INSERT INTO `doctor_availability` (`id`, `doctor_id`, `date_time`, `created_at`) VALUES
+	(1, 22, '2025-04-18 00:00:00', '2025-04-17 03:47:37'),
+	(3, 23, '0000-00-00 00:00:00', '2025-04-17 03:58:14'),
+	(5, 23, '2025-04-28 18:30:00', '2025-04-17 10:27:01'),
+	(6, 23, '2025-04-28 19:30:00', '2025-04-17 10:27:05'),
+	(7, 23, '2025-04-28 20:30:00', '2025-04-17 10:27:11');
 
 -- Dumping structure for table asr.faqs
 CREATE TABLE IF NOT EXISTS `faqs` (
@@ -393,9 +434,9 @@ CREATE TABLE IF NOT EXISTS `services` (
   `file_url` varchar(255) NOT NULL,
   `duration` int(11) NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=20 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=21 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
--- Dumping data for table asr.services: ~8 rows (approximately)
+-- Dumping data for table asr.services: ~9 rows (approximately)
 INSERT INTO `services` (`id`, `name`, `description`, `price`, `file_url`, `duration`) VALUES
 	(10, 'Deep Cleansing Facial', 'Deep Cleansing Facial', 399.00, 'uploads/dora.jpg', 1),
 	(11, 'Acne Control Facial', 'Acne Control Facial', 499.00, 'uploads/hellokitty.png', 2),
@@ -404,7 +445,8 @@ INSERT INTO `services` (`id`, `name`, `description`, `price`, `file_url`, `durat
 	(14, 'Vampire Facial', 'Vampire Facial', 2999.00, 'uploads/spongebob.webp', 1),
 	(15, 'Skin Peeling (Chemical Peel)', 'Skin Peeling (Chemical Peel)', 1499.00, 'uploads/spongebob.webp', 1),
 	(16, 'HIFU V-Shaped Face Contouring with Free Treatment', 'Slimming Service', 999.00, 'uploads/bart.jpg', 1),
-	(17, 'High Dose IV Vitamin C Drip', 'Whitening Service - 799 Per Session', 799.00, 'uploads/spongebob.webp', 1);
+	(17, 'High Dose IV Vitamin C Drip', 'Whitening Service - 799 Per Session', 799.00, 'uploads/spongebob.webp', 1),
+	(20, 'aa', 'aa', 123.00, 'uploads/67de8d5635819-cheesy burger.jpg', 1);
 
 -- Dumping structure for table asr.service_branches
 CREATE TABLE IF NOT EXISTS `service_branches` (
@@ -416,7 +458,7 @@ CREATE TABLE IF NOT EXISTS `service_branches` (
   CONSTRAINT `service_branches_ibfk_2` FOREIGN KEY (`branch_id`) REFERENCES `branches` (`id`) ON DELETE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
--- Dumping data for table asr.service_branches: ~9 rows (approximately)
+-- Dumping data for table asr.service_branches: ~10 rows (approximately)
 INSERT INTO `service_branches` (`service_id`, `branch_id`) VALUES
 	(11, 6),
 	(12, 7),
@@ -426,7 +468,8 @@ INSERT INTO `service_branches` (`service_id`, `branch_id`) VALUES
 	(16, 6),
 	(17, 7),
 	(10, 6),
-	(10, 7);
+	(10, 7),
+	(20, 7);
 
 -- Dumping structure for table asr.service_staff
 CREATE TABLE IF NOT EXISTS `service_staff` (
@@ -438,7 +481,7 @@ CREATE TABLE IF NOT EXISTS `service_staff` (
   CONSTRAINT `service_staff_ibfk_2` FOREIGN KEY (`staff_id`) REFERENCES `staff` (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
--- Dumping data for table asr.service_staff: ~18 rows (approximately)
+-- Dumping data for table asr.service_staff: ~19 rows (approximately)
 INSERT INTO `service_staff` (`service_id`, `staff_id`) VALUES
 	(11, 1),
 	(11, 4),
@@ -457,7 +500,8 @@ INSERT INTO `service_staff` (`service_id`, `staff_id`) VALUES
 	(17, 3),
 	(10, 1),
 	(10, 4),
-	(10, 3);
+	(10, 3),
+	(20, 8);
 
 -- Dumping structure for table asr.site_policies
 CREATE TABLE IF NOT EXISTS `site_policies` (
@@ -477,28 +521,30 @@ CREATE TABLE IF NOT EXISTS `staff` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `name` varchar(255) NOT NULL,
   `branch_id` int(11) NOT NULL,
+  `role` varchar(20) DEFAULT 'STAFF',
+  `is_surgery_staff` tinyint(1) DEFAULT 0,
   PRIMARY KEY (`id`),
   KEY `staff_ibfk_1` (`branch_id`),
   CONSTRAINT `staff_ibfk_1` FOREIGN KEY (`branch_id`) REFERENCES `branches` (`id`) ON DELETE CASCADE
-) ENGINE=InnoDB AUTO_INCREMENT=22 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=24 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
--- Dumping data for table asr.staff: ~7 rows (approximately)
-INSERT INTO `staff` (`id`, `name`, `branch_id`) VALUES
-	(1, 'Ma. Agustherese Soreda', 6),
-	(3, 'Fritzie Y. Santos', 7),
-	(4, 'Ashley De Guzman', 6),
-	(8, 'Loraine Salamat', 7),
-	(9, 'Jucel Jordan', 7),
-	(12, 'Armand', 9),
-	(18, 'gwen', 9);
+-- Dumping data for table asr.staff: ~9 rows (approximately)
+INSERT INTO `staff` (`id`, `name`, `branch_id`, `role`, `is_surgery_staff`) VALUES
+	(1, 'Ma. Agustherese Soreda', 6, 'STAFF', 0),
+	(3, 'Fritzie Y. Santos', 7, 'STAFF', 0),
+	(4, 'Ashley De Guzman', 6, 'STAFF', 0),
+	(8, 'Loraine Salamat', 7, 'STAFF', 0),
+	(9, 'Jucel Jordan', 7, 'STAFF', 0),
+	(12, 'Armand', 9, 'STAFF', 0),
+	(18, 'gwen', 9, 'STAFF', 0),
+	(22, 'YEYEYE', 9, 'STAFF', 1),
+	(23, 'Gab', 9, 'STAFF', 1);
 
 -- Dumping structure for table asr.surgeries
 CREATE TABLE IF NOT EXISTS `surgeries` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `title` varchar(255) NOT NULL,
   `description` text NOT NULL,
-  `start_date` datetime NOT NULL,
-  `end_date` datetime NOT NULL,
   `price` decimal(10,2) NOT NULL,
   `image_url` varchar(255) DEFAULT NULL,
   `duration` int(11) NOT NULL,
@@ -506,16 +552,13 @@ CREATE TABLE IF NOT EXISTS `surgeries` (
   `updated_at` timestamp NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp(),
   `branch_ids` text DEFAULT NULL,
   `staff_ids` text DEFAULT NULL,
+  `time_slots` longtext CHARACTER SET utf8mb4 COLLATE utf8mb4_bin DEFAULT NULL CHECK (json_valid(`time_slots`)),
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=15 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=17 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
--- Dumping data for table asr.surgeries: ~5 rows (approximately)
-INSERT INTO `surgeries` (`id`, `title`, `description`, `start_date`, `end_date`, `price`, `image_url`, `duration`, `created_at`, `updated_at`, `branch_ids`, `staff_ids`) VALUES
-	(2, 'Surgery 1', 'This is the description for Surgery 1', '2025-03-23 00:00:00', '2025-03-31 00:00:00', 9998.00, 'http://localhost/admin_dashboard_backend/uploads/surgeries/67e020c02c2e7-spongebob.webp', 12, '2025-03-19 20:57:12', '2025-03-23 14:54:56', '["6","7"]', '["1","3","4","8","9"]'),
-	(4, 'Surgery 2', 'This is the description for Surgery 1', '2025-03-23 00:00:00', '2025-03-31 00:00:00', 10998.00, 'http://localhost/admin_dashboard_backend/uploads/surgeries/67e020d2f31b1-tomjerry.jpg', 6, '2025-03-23 08:36:02', '2025-03-23 14:55:53', NULL, NULL),
-	(5, 'Surgery 3', 'This is the description for Surgery 3', '2025-03-23 00:00:00', '2025-03-31 00:00:00', 12999.00, 'http://localhost/admin_dashboard_backend/uploads/surgeries/67e02149c58e4-tomjerry.jpg', 11, '2025-03-23 08:56:09', '2025-03-23 14:57:13', 'Array', 'Array'),
-	(6, 'Surgery 4', 'This is the description for Surgery 4', '2025-03-18 00:00:00', '2025-04-02 00:00:00', 15999.00, 'http://localhost/admin_dashboard_backend/uploads/surgeries/67e0216758af3-dora.jpg', 11, '2025-03-23 08:56:54', '2025-03-23 14:57:43', '["7","6"]', '["3","1","4"]'),
-	(12, 'asda', 'asdads', '2025-04-16 22:19:00', '2025-04-30 13:18:00', 213.00, 'http://localhost/admin_dashboard_backend/uploads/surgeries/67f680c8913e4-67e01dd211554-bart.jpg', 10, '2025-04-09 14:14:32', '2025-04-09 14:14:32', NULL, NULL);
+-- Dumping data for table asr.surgeries: ~1 rows (approximately)
+INSERT INTO `surgeries` (`id`, `title`, `description`, `price`, `image_url`, `duration`, `created_at`, `updated_at`, `branch_ids`, `staff_ids`, `time_slots`) VALUES
+	(16, 'Surgery 1', 'This is the description for Surgery 1', 122.00, 'http://localhost/admin_dashboard_backend/uploads/surgeries/6800d754e1d34-67dffdbc9dbb4-body_scrub.jpg', 1, '2025-04-17 10:26:28', '2025-04-17 10:26:28', NULL, NULL, NULL);
 
 -- Dumping structure for table asr.surgery_branches
 CREATE TABLE IF NOT EXISTS `surgery_branches` (
@@ -527,18 +570,9 @@ CREATE TABLE IF NOT EXISTS `surgery_branches` (
   CONSTRAINT `surgery_branches_ibfk_2` FOREIGN KEY (`branch_id`) REFERENCES `branches` (`id`) ON DELETE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
--- Dumping data for table asr.surgery_branches: ~10 rows (approximately)
+-- Dumping data for table asr.surgery_branches: ~1 rows (approximately)
 INSERT INTO `surgery_branches` (`surgery_id`, `branch_id`) VALUES
-	(2, 6),
-	(2, 7),
-	(4, 6),
-	(4, 7),
-	(5, 6),
-	(5, 7),
-	(6, 6),
-	(6, 7),
-	(12, 7),
-	(12, 9);
+	(16, 9);
 
 -- Dumping structure for table asr.surgery_staff
 CREATE TABLE IF NOT EXISTS `surgery_staff` (
@@ -550,23 +584,10 @@ CREATE TABLE IF NOT EXISTS `surgery_staff` (
   CONSTRAINT `surgery_staff_ibfk_2` FOREIGN KEY (`staff_id`) REFERENCES `staff` (`id`) ON DELETE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
--- Dumping data for table asr.surgery_staff: ~15 rows (approximately)
+-- Dumping data for table asr.surgery_staff: ~2 rows (approximately)
 INSERT INTO `surgery_staff` (`surgery_id`, `staff_id`) VALUES
-	(2, 1),
-	(2, 3),
-	(2, 4),
-	(2, 8),
-	(2, 9),
-	(4, 1),
-	(4, 3),
-	(4, 4),
-	(5, 1),
-	(5, 3),
-	(6, 1),
-	(6, 3),
-	(6, 4),
-	(12, 3),
-	(12, 8);
+	(16, 22),
+	(16, 23);
 
 -- Dumping structure for table asr.users
 CREATE TABLE IF NOT EXISTS `users` (
@@ -584,7 +605,7 @@ CREATE TABLE IF NOT EXISTS `users` (
   UNIQUE KEY `email` (`email`)
 ) ENGINE=InnoDB AUTO_INCREMENT=69 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
--- Dumping data for table asr.users: ~6 rows (approximately)
+-- Dumping data for table asr.users: ~0 rows (approximately)
 INSERT INTO `users` (`id`, `first_name`, `middle_initial`, `last_name`, `email`, `password`, `contact_no`, `verified`, `verification_token`, `role`) VALUES
 	(35, 'Randolph', 'M', 'Alvarado', 'alvaradorandolph@gmail.com', '$2y$10$k6Agkx6/Tzh9jzQhLQMkgOUFMmhYERgG6TxEKsjzVJTAmoYlGdHTm', '09052752202', 1, NULL, 'customer'),
 	(40, 'Randolph', 'M', 'Alvarado', 'xere.sa.12@gmail.com', '$2y$10$LAm7aelI1Gwv2rduso08S.Pctik1AjK6/BNKMBqjOXeTWMpPakta2', '09232228423', 1, NULL, 'admin'),

@@ -126,20 +126,6 @@ const SurgeryTable = ({ setActivePage, activePage, data, fetchSurgeries }) => {
       minWidth: '300px',
     },
     { 
-      name: 'Start Date', 
-      selector: row => new Date(row.start_date).toLocaleString(), 
-      sortable: true,
-      wrap: true,
-      minWidth: '180px',
-    },
-    { 
-      name: 'End Date', 
-      selector: row => new Date(row.end_date).toLocaleString(), 
-      sortable: true,
-      wrap: true,
-      minWidth: '180px',
-    },
-    { 
       name: 'Price', 
       selector: row => row.price, 
       sortable: true,
@@ -203,8 +189,6 @@ const ManageSurgeryEdit = ({ setActivePage, activePage, fetchSurgeries }) => {
     }
   };
 
-  const { date: startDate, time: startTime } = parseDateTime(surgery.start_date);
-  const { date: endDate, time: endTime } = parseDateTime(surgery.end_date);
 
   const [formData, setFormData] = useState({
     id: surgery.id || '',
@@ -215,10 +199,6 @@ const ManageSurgeryEdit = ({ setActivePage, activePage, fetchSurgeries }) => {
     selectedBranches: surgery.branch_ids || [],
     selectedStaff: surgery.staff_ids || [],
     duration: surgery.duration || 1,
-    startDate,
-    startTime,
-    endDate,
-    endTime,
     image: null
   });
 
@@ -270,7 +250,10 @@ const ManageSurgeryEdit = ({ setActivePage, activePage, fetchSurgeries }) => {
         throw new Error("Invalid data format: expected an array");
       }
   
-      setStaff(result.data);
+      // Filter only those with is_surgery_staff === 1
+      const surgeryStaff = result.data.filter(staff => staff.is_surgery_staff === "1" || staff.is_surgery_staff === 1);
+  
+      setStaff(surgeryStaff);
     } catch (error) {
       console.error("Error fetching staff:", error);
       setStaff([]); // Fallback to empty array
@@ -279,6 +262,7 @@ const ManageSurgeryEdit = ({ setActivePage, activePage, fetchSurgeries }) => {
       setLoadingStaff(false);
     }
   };
+  
 
   const handleBranchToggle = (branchId) => {
     setFormData(prev => ({
@@ -312,8 +296,6 @@ const ManageSurgeryEdit = ({ setActivePage, activePage, fetchSurgeries }) => {
   formPayload.append('duration', formData.duration);
   formPayload.append('branch_ids', JSON.stringify(formData.selectedBranches));
   formPayload.append('staff_ids', JSON.stringify(formData.selectedStaff));
-  formPayload.append('start_date', startDateTime);
-  formPayload.append('end_date', endDateTime);
   if (formData.image) {
     formPayload.append('image', formData.image);
   }
@@ -381,54 +363,7 @@ const ManageSurgeryEdit = ({ setActivePage, activePage, fetchSurgeries }) => {
               required
             />
           </div>
-          <div className="date-row">
-            <div className="date-input">
-              <label className="answerLabel" htmlFor="startDateInput">Start Date</label>
-              <input
-                type="date"
-                className="answerInput"
-                id="startDateInput"
-                value={formData.startDate}
-                onChange={e => setFormData(prev => ({ ...prev, startDate: e.target.value }))}
-                required
-              />
-            </div>
-            <div className="date-input">
-              <label className="answerLabel" htmlFor="startTimeInput">Start Time</label>
-              <input
-                type="time"
-                className="answerInput"
-                id="startTimeInput"
-                value={formData.startTime}
-                onChange={e => setFormData(prev => ({ ...prev, startTime: e.target.value }))}
-                required
-              />
-            </div>
-          </div>
-          <div className="date-row">
-            <div className="date-input">
-              <label className="answerLabel" htmlFor="endDateInput">End Date</label>
-              <input
-                type="date"
-                className="answerInput"
-                id="endDateInput"
-                value={formData.endDate}
-                onChange={e => setFormData(prev => ({ ...prev, endDate: e.target.value }))}
-                required
-              />
-            </div>
-            <div className="date-input">
-              <label className="answerLabel" htmlFor="endTimeInput">End Time</label>
-              <input
-                type="time"
-                className="answerInput"
-                id="endTimeInput"
-                value={formData.endTime}
-                onChange={e => setFormData(prev => ({ ...prev, endTime: e.target.value }))}
-                required
-              />
-            </div>
-          </div>
+          
           <div className="form-group">
             <label className="answerLabel" htmlFor="priceInput">Price</label>
             <input
@@ -459,7 +394,7 @@ const ManageSurgeryEdit = ({ setActivePage, activePage, fetchSurgeries }) => {
             />
           </div>
           <div className="form-group">
-            <label className="questionLabel">Select Staff:</label>
+            <label className="questionLabel">Select Doctor:</label>
             <MultiSelectDropdown
               options={staff}
               selectedValues={formData.selectedStaff}
@@ -555,7 +490,10 @@ const ManageSurgeryAdd = ({ setActivePage, activePage, fetchSurgeries }) => {
         throw new Error("Invalid data format: expected an array");
       }
   
-      setStaff(result.data);
+      // Filter only those with is_surgery_staff === 1
+      const surgeryStaff = result.data.filter(staff => staff.is_surgery_staff === "1" || staff.is_surgery_staff === 1);
+  
+      setStaff(surgeryStaff);
     } catch (error) {
       console.error("Error fetching staff:", error);
       setStaff([]); // Fallback to empty array
@@ -596,8 +534,6 @@ const ManageSurgeryAdd = ({ setActivePage, activePage, fetchSurgeries }) => {
     formPayload.append('duration', formData.duration);
     formPayload.append('branch_ids', JSON.stringify(formData.selectedBranches));
     formPayload.append('staff_ids', JSON.stringify(formData.selectedStaff));
-    formPayload.append('start_date', startDateTime);
-    formPayload.append('end_date', endDateTime);
     if (formData.image) {
       formPayload.append('image', formData.image);
     }
@@ -664,54 +600,6 @@ const ManageSurgeryAdd = ({ setActivePage, activePage, fetchSurgeries }) => {
               required
             />
           </div>
-          <div className="date-row">
-            <div className="date-input">
-              <label className="answerLabel" htmlFor="startDateInput">Start Date</label>
-              <input
-                type="date"
-                className="answerInput"
-                id="startDateInput"
-                value={formData.startDate}
-                onChange={e => setFormData(prev => ({ ...prev, startDate: e.target.value }))}
-                required
-              />
-            </div>
-            <div className="date-input">
-              <label className="answerLabel" htmlFor="startTimeInput">Start Time</label>
-              <input
-                type="time"
-                className="answerInput"
-                id="startTimeInput"
-                value={formData.startTime}
-                onChange={e => setFormData(prev => ({ ...prev, startTime: e.target.value }))}
-                required
-              />
-            </div>
-          </div>
-          <div className="date-row">
-            <div className="date-input">
-              <label className="answerLabel" htmlFor="endDateInput">End Date</label>
-              <input
-                type="date"
-                className="answerInput"
-                id="endDateInput"
-                value={formData.endDate}
-                onChange={e => setFormData(prev => ({ ...prev, endDate: e.target.value }))}
-                required
-              />
-            </div>
-            <div className="date-input">
-              <label className="answerLabel" htmlFor="endTimeInput">End Time</label>
-              <input
-                type="time"
-                className="answerInput"
-                id="endTimeInput"
-                value={formData.endTime}
-                onChange={e => setFormData(prev => ({ ...prev, endTime: e.target.value }))}
-                required
-              />
-            </div>
-          </div>
           <div className="form-group">
             <label className="answerLabel" htmlFor="priceInput">Price</label>
             <input
@@ -743,7 +631,7 @@ const ManageSurgeryAdd = ({ setActivePage, activePage, fetchSurgeries }) => {
             />
           </div>
           <div className="form-group">
-            <label className="questionLabel">Select Staff:</label>
+            <label className="questionLabel">Select Doctor:</label>
             <MultiSelectDropdown
               options={staff}
               selectedValues={formData.selectedStaff}
@@ -806,9 +694,7 @@ const SurgeryAppointments = () => {
   const filteredData = surgeries.filter(item =>
     item.title.toLowerCase().includes(searchText.toLowerCase()) ||
     item.description.toLowerCase().includes(searchText.toLowerCase()) ||
-    item.price.toLowerCase().includes(searchText.toLowerCase()) ||
-    new Date(item.start_date).toLocaleString().toLowerCase().includes(searchText.toLowerCase()) ||
-    new Date(item.end_date).toLocaleString().toLowerCase().includes(searchText.toLowerCase())
+    item.price.toLowerCase().includes(searchText.toLowerCase())
   );
 
   if (loading) return <div>Loading...</div>;

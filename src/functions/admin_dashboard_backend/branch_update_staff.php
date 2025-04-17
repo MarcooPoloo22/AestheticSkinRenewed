@@ -84,7 +84,7 @@ if ($stmt->execute()) {
         'staff',
         $oldStaff,
         $newStaff,
-        "Updated staff: " . $newStaff['name'] . " (Surgery Staff: " . $is_surgery_staff . ")"
+        "Updated staff: " . $newStaff['name']
     );
 
     echo json_encode([

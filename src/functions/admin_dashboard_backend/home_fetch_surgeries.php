@@ -25,7 +25,7 @@ try {
     $conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 
     // Fetch data from the surgeries table
-    $sql = "SELECT id, title, description, start_date, end_date, price, image_url, duration, created_at, updated_at FROM surgeries";
+    $sql = "SELECT id, title, description, price, image_url, duration, created_at, updated_at FROM surgeries";
     $stmt = $conn->prepare($sql);
     $stmt->execute();
 

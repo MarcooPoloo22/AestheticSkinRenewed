@@ -89,6 +89,9 @@ const fieldMapping = {
 
   //Appointmens
   staff_id: "Staff",
+  is_surgery_staff: "To Surgery Staff",
+  date_time: "Date and Time",
+  time_slots: "Time Slots",
 };
 
 const getDifferences = (oldObj, newObj) => {
@@ -171,7 +174,7 @@ const FAQTable = ({ data, loading, totalRows, currentPage, perPage, handlePageCh
   
         const diffs = getDifferences(oldData, newData);
         const changedFields = Object.keys(diffs).filter(
-          field => !['id', 'count', 'user_id', 'verified', 'last_updated', 'created_at', 'updated_at', 'verification_token', 'staff_ids', 'branch_ids', 'password'].includes(field)
+          field => !['id', 'doctor_id','count', 'user_id', 'verified', 'last_updated', 'created_at', 'updated_at', 'verification_token', 'staff_ids', 'branch_ids', 'password'].includes(field)
         );
   
         const friendlyNames = changedFields.map(field => fieldMapping[field] || field);

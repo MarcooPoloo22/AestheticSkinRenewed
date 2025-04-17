@@ -1,14 +1,26 @@
 <?php
+session_start();
 header("Access-Control-Allow-Origin: http://localhost:3000");
 header("Content-Type: application/json; charset=UTF-8");
 header("Access-Control-Allow-Methods: POST, OPTIONS");
 header("Access-Control-Allow-Headers: Content-Type, Authorization");
-header("Access-Control-Allow-Credentials: true"); // Add this line
+header("Access-Control-Allow-Credentials: true");
 
 if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
     http_response_code(200);
     exit(0);
 }
+
+// Check if user is logged in
+if (!isset($_SESSION['user'])) {
+    http_response_code(401);
+    echo json_encode(["error" => "User is not authenticated"]);
+    exit;
+}
+$user = $_SESSION['user'];
+
+// Include audit trail functionality
+require_once 'audit_logger.php';
 
 $servername = "localhost";
 $username = "root";
@@ -17,7 +29,9 @@ $dbname = "asr";
 
 $conn = new mysqli($servername, $username, $password, $dbname);
 if ($conn->connect_error) {
-    die(json_encode(["error" => "Connection failed: " . $conn->connect_error]));
+    http_response_code(500);
+    echo json_encode(["error" => "Connection failed: " . $conn->connect_error]);
+    exit;
 }
 
 $data = $_POST;
@@ -25,13 +39,11 @@ $file = $_FILES['image'] ?? null;
 
 try {
     if (
-        isset($data['title'], $data['description'], $data['price'], $data['start_date'], 
-              $data['end_date'], $data['duration'], $data['branch_ids'], $data['staff_ids']) &&
+        isset($data['title'], $data['description'], $data['price'], $data['duration'], 
+        $data['branch_ids'], $data['staff_ids']) &&
         !empty($data['title']) &&
         !empty($data['description']) &&
         !empty($data['price']) &&
-        !empty($data['start_date']) &&
-        !empty($data['end_date']) &&
         !empty($data['duration']) &&
         !empty($data['branch_ids']) &&
         !empty($data['staff_ids'])
@@ -40,8 +52,6 @@ try {
         $title = htmlspecialchars($data['title']);
         $description = htmlspecialchars($data['description']);
         $price = floatval($data['price']);
-        $startDate = $data['start_date'];
-        $endDate = $data['end_date'];
         $duration = intval($data['duration']);
         $branchIds = json_decode($data['branch_ids'], true);
         $staffIds = json_decode($data['staff_ids'], true);
@@ -71,17 +81,28 @@ try {
         }
 
         // Insert surgery
-        $stmt = $conn->prepare("INSERT INTO surgeries (title, description, price, image_url, start_date, end_date, duration) VALUES (?, ?, ?, ?, ?, ?, ?)");
+        $stmt = $conn->prepare("INSERT INTO surgeries (title, description, price, image_url, duration) VALUES (?, ?, ?, ?, ?)");
         if (!$stmt) {
             throw new Exception("Prepare failed: " . $conn->error);
         }
-        $stmt->bind_param("ssdsssi", $title, $description, $price, $imageUrl, $startDate, $endDate, $duration);
+        $stmt->bind_param("ssdsi", $title, $description, $price, $imageUrl, $duration);
 
         if (!$stmt->execute()) {
             throw new Exception("Error adding surgery: " . $stmt->error);
         }
 
         $surgeryId = $stmt->insert_id;
+
+        // Fetch the newly created surgery for audit trail
+        $stmt_new = $conn->prepare("SELECT * FROM surgeries WHERE id = ?");
+        $stmt_new->bind_param("i", $surgeryId);
+        $stmt_new->execute();
+        $newSurgery = $stmt_new->get_result()->fetch_assoc();
+        $stmt_new->close();
+
+        if (!$newSurgery) {
+            throw new Exception("Failed to retrieve created surgery record");
+        }
 
         // Insert branches
         $stmt = $conn->prepare("INSERT INTO surgery_branches (surgery_id, branch_id) VALUES (?, ?)");
@@ -105,8 +126,20 @@ try {
             }
         }
 
-        // Now close the statement after all insertions
         $stmt->close();
+
+        // Log audit trail
+        logAuditTrail(
+            $conn,
+            $user['id'],
+            $user['first_name'],
+            $user['role'],
+            'CREATE',
+            'surgeries',
+            null, 
+            $newSurgery,
+            "Created new surgery: " . $newSurgery['title']
+        );
 
         // Return success response
         echo json_encode(["message" => "Surgery added successfully", "surgery_id" => $surgeryId]);

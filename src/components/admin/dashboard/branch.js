@@ -5,6 +5,7 @@ import "../../../styles/admin/dashboard/faqs.css";
 import { FaRegTrashAlt, FaRegEdit } from "react-icons/fa";
 import { IoArrowBackOutline } from "react-icons/io5";
 import { CiSearch } from "react-icons/ci";
+import { MdOutlineEventAvailable } from "react-icons/md";
 
 const customStyles = {
   pagination: {
@@ -127,30 +128,18 @@ const StaffTable = ({ staff, handleEditStaff, handleDeleteStaff, manageDoctorAva
       cell: (row) => (
         <div>
           <button onClick={() => handleEditStaff(row)} className="edit-button">
-            <FaRegEdit />
+            <FaRegEdit size={16.72} />
           </button>
           {row.is_surgery_staff === 1 && (
-            <button 
-              onClick={() => manageDoctorAvailability(row.id, row.name)}
-              className="availability-button"
-              style={{ 
-                backgroundColor: '#4CAF50', 
-                color: 'white',
-                border: 'none',
-                borderRadius: '4px',
-                padding: '5px 10px',
-                margin: '0 5px',
-                cursor: 'pointer'
-              }}
-            >
-              Manage Availability
+            <button onClick={() => manageDoctorAvailability(row.id, row.name)} className="available-button">
+              <MdOutlineEventAvailable size={16.72}/>
             </button>
           )}
           <button
             onClick={() => handleDeleteStaff(row.id)}
             className="delete-button"
           >
-            <FaRegTrashAlt />
+            <FaRegTrashAlt size={14.5} />
           </button>
         </div>
       ),
@@ -524,7 +513,7 @@ const ManageBranchEdit = ({ setActivePage, branch, fetchBranches }) => {
       title: "Add New Staff",
       html: `
         <input id="staff-name" class="swal2-input" placeholder="Staff Name">
-        <div style="margin-top: 1rem; text-align: left;">
+        <div style="margin-top: 4rem; text-align: center;">
           <label>
             <input type="checkbox" id="doctor-checkbox"> 
             This staff member is a DOCTOR (Surgery Staff)
@@ -653,7 +642,7 @@ const ManageBranchEdit = ({ setActivePage, branch, fetchBranches }) => {
       title: "Edit Staff",
       html: `
         <input id="staff-name" class="swal2-input" placeholder="Staff Name" value="${staffMember.name}">
-        <div style="margin-top: 1rem; text-align: left;">
+        <div style="margin-top: 4rem; text-align: center;">
           <label>
             <input type="checkbox" id="doctor-checkbox" ${staffMember.is_surgery_staff === 1 ? 'checked' : ''}> 
             This staff member is a DOCTOR (Surgery Staff)

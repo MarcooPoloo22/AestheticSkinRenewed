@@ -45,11 +45,20 @@ const BookingPageRegistered = ({ user }) => {
   const [bookedSlots, setBookedSlots] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
   const [paymentDetails, setPaymentDetails] = useState(null);
+  const [availableDates, setAvailableDates] = useState([]);
   const [receiptFile, setReceiptFile] = useState(null);
   const [isLoadingPayment, setIsLoadingPayment] = useState(false);
   const [doctorAvailability, setDoctorAvailability] = useState({});
   const [availableTimeSlots, setAvailableTimeSlots] = useState([]);
   const navigate = useNavigate();
+
+  const convertTime24to12 = (time24) => {
+    const [hours, minutes] = time24.split(':');
+    const hour = parseInt(hours, 10);
+    const ampm = hour >= 12 ? 'PM' : 'AM';
+    const twelveHour = hour % 12 || 12;
+    return `${twelveHour.toString().padStart(2, '0')}:${minutes} ${ampm}`;
+  };
 
   const standardTimeSlots = [
     "09:00 AM",
@@ -121,13 +130,8 @@ const BookingPageRegistered = ({ user }) => {
   }, [formData.service, formData.service_category]);
 
   useEffect(() => {
-    if (formData.branch_id) {
-      fetch(`http://localhost/admin_dashboard_backend/bookingpage_staff.php?branchId=${encodeURIComponent(formData.branch_id)}`, {
-        method: 'GET',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-      })
+    if (formData.branch_id && formData.service && formData.service_category) {
+      fetch(`http://localhost/admin_dashboard_backend/bookingpage_staff.php?branchId=${encodeURIComponent(formData.branch_id)}&serviceId=${encodeURIComponent(formData.service)}&type=${encodeURIComponent(formData.service_category)}`)
         .then((response) => {
           if (!response.ok) {
             throw new Error(`HTTP error! Status: ${response.status}`);
@@ -152,7 +156,31 @@ const BookingPageRegistered = ({ user }) => {
       setStaffList([]);
       setFormData((prev) => ({ ...prev, staff_id: "" }));
     }
-  }, [formData.branch_id]);
+  }, [formData.branch_id, formData.service, formData.service_category]);
+
+  useEffect(() => {
+    if (formData.service_category === "Surgery" && formData.staff_id) {
+      fetch(`http://localhost/admin_dashboard_backend/fetch_doctor_availability.php?doctor_id=${formData.staff_id}`)
+        .then(response => {
+          if (!response.ok) throw new Error('Network response was not ok');
+          return response.json();
+        })
+        .then(data => {
+          if (data.status === 'success') {
+            const dates = [...new Set(data.available_slots.map(slot => slot.split(' ')[0]))];
+            setAvailableDates(dates);
+          } else {
+            throw new Error(data.message || 'Failed to fetch availability');
+          }
+        })
+        .catch(error => {
+          console.error("Error fetching doctor dates:", error);
+          setAvailableDates([]);
+        });
+    } else {
+      setAvailableDates([]);
+    }
+  }, [formData.staff_id, formData.service_category]);
 
   useEffect(() => {
     if (formData.appointment_date && formData.staff_id) {
@@ -237,13 +265,19 @@ const BookingPageRegistered = ({ user }) => {
 
   useEffect(() => {
     if (formData.service_category === "Surgery") {
-      const availableSlots = doctorAvailability.filter(slot => !bookedSlots.includes(slot));
+      const slotsForDate = doctorAvailability
+        .filter(slot => slot.startsWith(formData.appointment_date))
+        .map(slot => {
+          const timePart = slot.split(' ')[1].substring(0, 5); // "09:00:00" -> "09:00"
+          return convertTime24to12(timePart);
+        });
+      const availableSlots = slotsForDate.filter(slot => !bookedSlots.includes(slot));
       setAvailableTimeSlots(availableSlots);
     } else {
       const availableSlots = standardTimeSlots.filter(slot => !bookedSlots.includes(slot));
       setAvailableTimeSlots(availableSlots);
     }
-  }, [doctorAvailability, bookedSlots, formData.service_category]);
+  }, [doctorAvailability, bookedSlots, formData.appointment_date, formData.service_category]);
 
   const handleSurgeryPayment = async () => {
     setIsLoadingPayment(true);
@@ -693,13 +727,34 @@ const BookingPageRegistered = ({ user }) => {
             </div>
           </div>
 
-          {availableTimeSlots.length === 0 && !isLoading && (
-            <div className="alert alert-warning mt-3">
-              {formData.service_category === "Surgery" 
-                ? "No available surgery slots for the selected doctor and date. Please choose another date or doctor."
-                : "All time slots are booked for the selected date. Please choose another date."}
-            </div>
-          )}
+          {formData.appointment_date && availableTimeSlots.length === 0 && !isLoading && (
+  <div className="alert alert-warning mt-3">
+    {formData.service_category === "Surgery" ? (
+      availableDates.length > 0 ? (
+        <div>
+          <p>No available slots for Dr. {staffList.find(staff => staff.id.toString() === formData.staff_id.toString())?.name} on {formData.appointment_date}. Available dates:</p>
+          <ul className="available-dates-list">
+            {availableDates.map(date => (
+              <li key={date}>
+                {new Date(date).toLocaleDateString('en-US', {
+                  weekday: 'short',
+                  year: 'numeric',
+                  month: 'short',
+                  day: 'numeric'
+                })}
+              </li>
+            ))}
+          </ul>
+          <p className="mt-2 mb-0">Please select one of these dates from the date picker.</p>
+        </div>
+      ) : (
+        <p>No available dates for Dr. {staffList.find(staff => staff.id.toString() === formData.staff_id.toString())?.name}. Please choose another doctor.</p>
+      )
+    ) : (
+      "All time slots are booked for the selected date. Please choose another date."
+    )}
+  </div>
+)}
 
           <div className="d-grid gap-2 col-6 mx-auto">
             <button
@@ -815,13 +870,8 @@ const BookingPageGuest = () => {
   }, [formData.service, formData.service_category]);
 
   useEffect(() => {
-    if (formData.branch_id) {
-      fetch(`http://localhost/admin_dashboard_backend/bookingpage_staff.php?branchId=${encodeURIComponent(formData.branch_id)}`, {
-        method: 'GET',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-      })
+    if (formData.branch_id && formData.service && formData.service_category) {
+      fetch(`http://localhost/admin_dashboard_backend/bookingpage_staff.php?branchId=${encodeURIComponent(formData.branch_id)}&serviceId=${encodeURIComponent(formData.service)}&type=${encodeURIComponent(formData.service_category)}`)
         .then((response) => {
           if (!response.ok) {
             throw new Error(`HTTP error! Status: ${response.status}`);
@@ -846,7 +896,7 @@ const BookingPageGuest = () => {
       setStaffList([]);
       setFormData((prev) => ({ ...prev, staff_id: "" }));
     }
-  }, [formData.branch_id]);
+  }, [formData.branch_id, formData.service, formData.service_category]);
 
   useEffect(() => {
     if (formData.appointment_date && formData.staff_id) {

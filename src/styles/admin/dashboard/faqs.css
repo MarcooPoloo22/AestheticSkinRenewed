@@ -90,7 +90,16 @@
     color: #4F9EF7;
     cursor: pointer;
   }
-  
+
+  .available-button{
+    background-color: transparent;
+    border: none;
+    padding: 0px;
+    margin-bottom: 12px;
+    color: #4CAF50;
+    cursor: pointer;
+  }
+   
   .delete-button{
     background-color: transparent;
     border: none;

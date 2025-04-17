@@ -39,8 +39,7 @@ $file = $_FILES['image'] ?? null;
 
 if (
     !isset($data['id'], $data['title'], $data['description'], $data['price'], 
-           $data['start_date'], $data['end_date'], $data['duration'], 
-           $data['branch_ids'], $data['staff_ids'])
+           $data['duration'], $data['branch_ids'], $data['staff_ids'])
 ) {
     echo json_encode(["error" => "Invalid data received"]);
     exit;
@@ -50,8 +49,6 @@ $id = intval($data['id']);
 $title = htmlspecialchars($data['title']);
 $description = htmlspecialchars($data['description']);
 $price = floatval($data['price']);
-$startDate = $data['start_date'];
-$endDate = $data['end_date'];
 $duration = intval($data['duration']);
 $branchIds = json_decode($data['branch_ids'], true);
 $staffIds = json_decode($data['staff_ids'], true);
@@ -92,12 +89,12 @@ if ($file && $file['error'] === UPLOAD_ERR_OK) {
 }
 
 // Update the surgeries record
-$stmt = $conn->prepare("UPDATE surgeries SET title = ?, description = ?, price = ?, image_url = ?, start_date = ?, end_date = ?, duration = ? WHERE id = ?");
+$stmt = $conn->prepare("UPDATE surgeries SET title = ?, description = ?, price = ?, image_url = ?, duration = ? WHERE id = ?");
 if (!$stmt) {
     echo json_encode(["error" => "Prepare failed: " . $conn->error]);
     exit;
 }
-$stmt->bind_param("ssdsssii", $title, $description, $price, $imageUrl, $startDate, $endDate, $duration, $id);
+$stmt->bind_param("ssdsii", $title, $description, $price, $imageUrl, $duration, $id);
 
 if (!$stmt->execute()) {
     echo json_encode(["error" => "Error updating surgery: " . $stmt->error]);
