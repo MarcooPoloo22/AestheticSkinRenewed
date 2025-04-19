@@ -48,7 +48,7 @@ const BookingPageRegistered = ({ user }) => {
   const [availableDates, setAvailableDates] = useState([]);
   const [receiptFile, setReceiptFile] = useState(null);
   const [isLoadingPayment, setIsLoadingPayment] = useState(false);
-  const [doctorAvailability, setDoctorAvailability] = useState({});
+  const [doctorAvailability, setDoctorAvailability] = useState([]);
   const [availableTimeSlots, setAvailableTimeSlots] = useState([]);
   const navigate = useNavigate();
 
@@ -167,6 +167,7 @@ const BookingPageRegistered = ({ user }) => {
         })
         .then(data => {
           if (data.status === 'success') {
+            setDoctorAvailability(data.available_slots || []);
             const dates = [...new Set(data.available_slots.map(slot => slot.split(' ')[0]))];
             setAvailableDates(dates);
           } else {
@@ -176,9 +177,11 @@ const BookingPageRegistered = ({ user }) => {
         .catch(error => {
           console.error("Error fetching doctor dates:", error);
           setAvailableDates([]);
+          setDoctorAvailability([]);
         });
     } else {
       setAvailableDates([]);
+      setDoctorAvailability([]);
     }
   }, [formData.staff_id, formData.service_category]);
 
@@ -218,6 +221,7 @@ const BookingPageRegistered = ({ user }) => {
           })
           .catch((error) => {
             console.error("Error fetching doctor availability:", error);
+            setDoctorAvailability([]);
             if (!error.message.includes('No availability found')) {
               Swal.fire({
                 icon: 'error',
@@ -265,13 +269,17 @@ const BookingPageRegistered = ({ user }) => {
 
   useEffect(() => {
     if (formData.service_category === "Surgery") {
-      const slotsForDate = doctorAvailability
-        .filter(slot => slot.startsWith(formData.appointment_date))
+      const slotsForDate = Array.isArray(doctorAvailability) 
+        ? doctorAvailability.filter(slot => slot.startsWith(formData.appointment_date))
+        : [];
+        
+      const availableSlots = slotsForDate
         .map(slot => {
-          const timePart = slot.split(' ')[1].substring(0, 5); // "09:00:00" -> "09:00"
+          const timePart = slot.split(' ')[1]?.substring(0, 5) || '';
           return convertTime24to12(timePart);
-        });
-      const availableSlots = slotsForDate.filter(slot => !bookedSlots.includes(slot));
+        })
+        .filter(slot => !bookedSlots.includes(slot));
+        
       setAvailableTimeSlots(availableSlots);
     } else {
       const availableSlots = standardTimeSlots.filter(slot => !bookedSlots.includes(slot));
