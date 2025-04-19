@@ -48,7 +48,7 @@ const BookingPageRegistered = ({ user }) => {
   const [availableDates, setAvailableDates] = useState([]);
   const [receiptFile, setReceiptFile] = useState(null);
   const [isLoadingPayment, setIsLoadingPayment] = useState(false);
-  const [doctorAvailability, setDoctorAvailability] = useState({});
+  const [doctorAvailability, setDoctorAvailability] = useState([]);
   const [availableTimeSlots, setAvailableTimeSlots] = useState([]);
   const navigate = useNavigate();
 
@@ -81,6 +81,30 @@ const BookingPageRegistered = ({ user }) => {
       });
     }
   }, [user, navigate]);
+
+  useEffect(() => {
+    if (serviceTypeParam === "Surgery" && serviceIdParam) {
+      setFormData(prev => ({
+        ...prev,
+        service_category: "Surgery",
+        service: serviceIdParam
+      }));
+      
+      // Fetch surgery details to set the service_type
+      fetch(`http://localhost/admin_dashboard_backend/bookingpage_services.php?type=Surgery`)
+        .then((response) => response.json())
+        .then((data) => {
+          const selectedService = data.find(s => s.id.toString() === serviceIdParam);
+          if (selectedService) {
+            setFormData(prev => ({
+              ...prev,
+              service_type: selectedService.name
+            }));
+          }
+        })
+        .catch((error) => console.error("Error fetching surgery details:", error));
+    }
+  }, [serviceTypeParam, serviceIdParam]);
 
   useEffect(() => {
     if (formData.service_category) {
@@ -167,6 +191,7 @@ const BookingPageRegistered = ({ user }) => {
         })
         .then(data => {
           if (data.status === 'success') {
+            setDoctorAvailability(data.available_slots || []);
             const dates = [...new Set(data.available_slots.map(slot => slot.split(' ')[0]))];
             setAvailableDates(dates);
           } else {
@@ -176,9 +201,11 @@ const BookingPageRegistered = ({ user }) => {
         .catch(error => {
           console.error("Error fetching doctor dates:", error);
           setAvailableDates([]);
+          setDoctorAvailability([]);
         });
     } else {
       setAvailableDates([]);
+      setDoctorAvailability([]);
     }
   }, [formData.staff_id, formData.service_category]);
 
@@ -218,6 +245,7 @@ const BookingPageRegistered = ({ user }) => {
           })
           .catch((error) => {
             console.error("Error fetching doctor availability:", error);
+            setDoctorAvailability([]);
             if (!error.message.includes('No availability found')) {
               Swal.fire({
                 icon: 'error',
@@ -265,13 +293,17 @@ const BookingPageRegistered = ({ user }) => {
 
   useEffect(() => {
     if (formData.service_category === "Surgery") {
-      const slotsForDate = doctorAvailability
-        .filter(slot => slot.startsWith(formData.appointment_date))
+      const slotsForDate = Array.isArray(doctorAvailability) 
+        ? doctorAvailability.filter(slot => slot.startsWith(formData.appointment_date))
+        : [];
+        
+      const availableSlots = slotsForDate
         .map(slot => {
-          const timePart = slot.split(' ')[1].substring(0, 5); // "09:00:00" -> "09:00"
+          const timePart = slot.split(' ')[1]?.substring(0, 5) || '';
           return convertTime24to12(timePart);
-        });
-      const availableSlots = slotsForDate.filter(slot => !bookedSlots.includes(slot));
+        })
+        .filter(slot => !bookedSlots.includes(slot));
+        
       setAvailableTimeSlots(availableSlots);
     } else {
       const availableSlots = standardTimeSlots.filter(slot => !bookedSlots.includes(slot));
@@ -411,11 +443,16 @@ const BookingPageRegistered = ({ user }) => {
         branch_id: "",
         staff_id: ""
       }));
+      
+      // If switching away from surgery, clear any surgery-specific data
+      if (value !== "Surgery") {
+        setDoctorAvailability([]);
+        setAvailableDates([]);
+      }
     } else {
       setFormData(prev => ({ ...prev, [name]: value }));
     }
   };
-
   const showPaymentModal = (paymentData, price) => {
     const downPayment = (price * 0.5).toFixed(2);
     MySwal.fire({
@@ -612,10 +649,10 @@ const BookingPageRegistered = ({ user }) => {
                   </option>
                 ))}
               </select>
-              {serviceIdParam && (
+              {(serviceIdParam && formData.service_category === "Surgery") && (
                 <div className="alert alert-info mt-2 mb-3 small">
                   <i className="bi bi-info-circle me-2"></i>
-                  Auto-selected: {services.find(s => s.id.toString() === serviceIdParam)?.name || 'Service'}
+                  Auto-selected: {services.find(s => s.id.toString() === serviceIdParam)?.name || 'Surgery'}
                 </div>
               )}
             </div>
