@@ -1,6 +1,5 @@
 .ezy__comingsoon3 {
   padding: 4rem 0;
-  border-radius: 1rem;
   background: linear-gradient(135deg, #faf3eb 0%, #d0eae2 100%);
   box-shadow: 0 0 30px rgba(0, 0, 0, 0.05);
   color: #3e3e3e;
@@ -34,7 +33,7 @@
 
 /* Image styles */
 .ezy__comingsoon3-image-wrapper {
-  max-width: 220px;
+  max-width: 240px;
   margin: 0 auto;
   overflow: hidden;
   border-radius: 50%;
@@ -46,4 +45,16 @@
   height: 100%;
   object-fit: cover;
   border-radius: 50%;
+}
+
+.fade-in-section {
+  opacity: 0;
+  transform: translateY(40px);
+  transition: opacity 1.2s ease-out, transform 1.2s ease-out;
+  will-change: opacity, transform;
+}
+
+.fade-in-section.is-visible {
+  opacity: 1;
+  transform: none;
 }

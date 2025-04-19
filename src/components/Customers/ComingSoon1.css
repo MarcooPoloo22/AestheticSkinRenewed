@@ -43,11 +43,23 @@
 .ezy__comingsoon1-image-grid img {
   border-radius: 20px;
   object-fit: cover;
-  max-width: 30%;
+  max-width: 235px;
   height: auto;
   transition: transform 0.3s ease;
 }
 
 .ezy__comingsoon1-image-grid img:hover {
   transform: scale(1.03);
+}
+
+.fade-in-section {
+  opacity: 0;
+  transform: translateY(40px);
+  transition: opacity 1.2s ease-out, transform 1.2s ease-out;
+  will-change: opacity, transform;
+}
+
+.fade-in-section.is-visible {
+  opacity: 1;
+  transform: none;
 }

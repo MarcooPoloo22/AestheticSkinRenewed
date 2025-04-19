@@ -45,3 +45,26 @@
     object-fit: cover;
   }
   
+  @keyframes fadeIn {
+    from {
+      opacity: 0;
+      transform: translateY(20px); 
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+  
+  @media (max-width: 768px) {
+    .overlay {
+      background-color: transparent !important;
+    }
+  }
+  
+
+  .fade-in {
+    animation: fadeIn 0.8s ease-in-out;
+  }
+
+  

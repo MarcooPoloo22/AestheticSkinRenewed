@@ -47,8 +47,12 @@ function ProductsPage() {
       </div>
       <div className="container my-5">
         <div className="row g-4 mt-3">
-          {products.map((product) => (
-            <div className="col-12 col-md-6" key={product.id}>
+        {products.map((product, index) => (
+  <div 
+    className="col-12 col-md-6 fade-in"
+    key={product.id}
+    style={{ animationDelay: `${index * 100}ms`, animationFillMode: 'both' }}
+  >
               <div 
                 className="card mb-4 mx-auto shadow-sm"
                 style={{ 

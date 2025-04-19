@@ -102,18 +102,27 @@
   max-width: 300px;
 }
 
-.edit-button,
 .save-button,
 .cancel-button,
 .update-password {
-  background-color: #007bff;
+  background: linear-gradient(to right, #8BC34A, #66BB6A); /* green gradient */
   color: white;
+  text-align: center;
+  border: none;
+  cursor: pointer;
+  transition: background 0.3s ease, transform 0.2s ease;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
   padding: 10px;
   border-radius: 5px;
   cursor: pointer;
   font-size: 16px;
-  border: none;
-  margin-top: 10px;
+}
+
+.save-button:hover,
+.cancel-button:hover,
+.update-password:hover {
+  transform: translateY(-2px);
+  background: linear-gradient(to right, #7CB342, #4CAF50); /* darker on hover */
 }
 
 .save-button {
@@ -122,12 +131,6 @@
 
 .cancel-button {
   background-color: #dc3545;
-}
-
-.edit-button:hover,
-.save-button:hover,
-.update-password:hover {
-  background-color: #0056b3;
 }
 
 .cancel-button:hover {

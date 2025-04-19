@@ -23,15 +23,17 @@ function ServicePage() {
 
   return (
     <>
-      <div className="service-header" style={{ backgroundImage: "url('./assets/spa_services.jpg')" }}>
-        <div className="overlay">
-          <h1 className="service-title">Our Services</h1>
+      <div className="service-header" style={{ backgroundImage: "url('/assets/spa_services.jpg')" }}>
+        {window.innerWidth > 768 && (
+         <div className="overlay">
+         <h1 className="service-title">Our Services</h1>
         </div>
-      </div>
+       )}
+    </div>
       <div className="container my-5">
       <div className="row g-4 mt-3">
-                   {services.map((service) => (
-            <div className="col-12 col-md-6" key={service.id}>
+      {services.map((service, index) => (
+  <div className="col-12 col-md-6 fade-in" key={service.id} style={{ animationDelay: `${index * 100}ms`, animationFillMode: 'both' }}>
       <Card
         title={service.name}
         description={service.description}
