@@ -42,11 +42,12 @@
 .banner-logo {
   width: 160px;
   height: auto;
-  margin-bottom: 20px;
+  margin-bottom: 30px;
+
 }
 
 .banner-title {
-  font-size: 2.8rem;
+  font-size: 3.2rem;
   font-weight: 500;
   font-family: "Georgia", "Garamond", "Palatino Linotype", "Book Antiqua", serif;
   margin-bottom: 10px;
@@ -57,7 +58,7 @@
 .banner-subtitle {
   font-size: 1.3rem;
   font-weight: 400;
-  font-family: "Georgia", "Garamond", "Palatino Linotype", "Book Antiqua", serif;
+  font-family: "Georgia", "Garamond", "Palatino Linotype", "Book Antiqua", serif;  
   margin-bottom: 20px;
   text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.3);
   caret-color: transparent;

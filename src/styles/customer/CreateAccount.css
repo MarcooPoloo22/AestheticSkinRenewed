@@ -12,18 +12,17 @@ body {
     justify-content: center;
 }
 
-
 .form-box {
     background-color: white;
     padding: 40px;
+    padding-bottom: 60px; /* Adds extra space just below content */
     border-radius: 10px;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
     width: 700px;
-    height: 600px;
     max-width: 90%;
-
-
+    height: 520px;
 }
+
 
 .form-control {
     border-radius: 10px;

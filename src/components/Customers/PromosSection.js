@@ -4,6 +4,7 @@ import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
 import banner from "../../assets/customer/spa_massage.jpg";
 
+
 const PromosSection = () => {
   const settings = {
     dots: false,

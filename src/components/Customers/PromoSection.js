@@ -100,7 +100,7 @@ const Epcategory2 = () => {
       <Container>
         <Row className="align-items-center">
           <Col xs={8}>
-            <h2 className="ezy__epcategory2-heading">Promos</h2>
+            <h2 className="ezy__epcategory2-heading">Promo</h2>
           </Col>
           <Col xs={4} className="text-end">
             <Link className="ezy__epcategory2-btn" to="/promos" role="button">

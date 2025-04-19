@@ -76,8 +76,12 @@ function PromosPage() {
 
       <div className="container my-4">
         <div className="row mt-3">
-          {promoList.map((promo) => (
-            <div className="col-md-12 col-lg-6" key={promo.id}>
+        {promoList.map((promo, index) => (
+        <div
+             className="col-md-12 col-lg-6 fade-in"
+             key={promo.id}
+             style={{ animationDelay: `${index * 100}ms`, animationFillMode: 'both' }}
+         >
               <Card
                 title={promo.title}
                 description={promo.description}

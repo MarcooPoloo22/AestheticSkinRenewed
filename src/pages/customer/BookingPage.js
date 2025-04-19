@@ -795,7 +795,7 @@ const BookingPageRegistered = ({ user }) => {
 
           <div className="d-grid gap-2 col-6 mx-auto">
             <button
-              className="btn btn-primary"
+              className="btn-primary"
               type="button"
               onClick={handleSubmit}
               disabled={isLoadingPayment || availableTimeSlots.length === 0}

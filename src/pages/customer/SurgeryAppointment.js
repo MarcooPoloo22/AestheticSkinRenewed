@@ -57,10 +57,15 @@ function AppointmentPage() {
       <div className="container my-4">
         {loading && <div>Loading...</div>}
         {error && <div>Error: {error}</div>}
+       
         {!loading && !error && (
           <div className="row mt-3">
-            {surgeryAppointments.map((appointment) => (
-              <div className="col-md-12 col-lg-6" key={appointment.id}>
+           {surgeryAppointments.map((appointment, index) => (
+           <div
+               className="col-md-12 col-lg-6 fade-in"
+               key={appointment.id}
+               style={{ animationDelay: `${index * 100}ms` }}
+             >
                 <Card
                   title={appointment.title}
                   description={appointment.description}
