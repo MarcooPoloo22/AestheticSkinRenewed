@@ -83,6 +83,30 @@ const BookingPageRegistered = ({ user }) => {
   }, [user, navigate]);
 
   useEffect(() => {
+    if (serviceTypeParam === "Surgery" && serviceIdParam) {
+      setFormData(prev => ({
+        ...prev,
+        service_category: "Surgery",
+        service: serviceIdParam
+      }));
+      
+      // Fetch surgery details to set the service_type
+      fetch(`http://localhost/admin_dashboard_backend/bookingpage_services.php?type=Surgery`)
+        .then((response) => response.json())
+        .then((data) => {
+          const selectedService = data.find(s => s.id.toString() === serviceIdParam);
+          if (selectedService) {
+            setFormData(prev => ({
+              ...prev,
+              service_type: selectedService.name
+            }));
+          }
+        })
+        .catch((error) => console.error("Error fetching surgery details:", error));
+    }
+  }, [serviceTypeParam, serviceIdParam]);
+
+  useEffect(() => {
     if (formData.service_category) {
       fetch(`http://localhost/admin_dashboard_backend/bookingpage_services.php?type=${formData.service_category}`)
         .then((response) => response.json())
@@ -419,11 +443,16 @@ const BookingPageRegistered = ({ user }) => {
         branch_id: "",
         staff_id: ""
       }));
+      
+      // If switching away from surgery, clear any surgery-specific data
+      if (value !== "Surgery") {
+        setDoctorAvailability([]);
+        setAvailableDates([]);
+      }
     } else {
       setFormData(prev => ({ ...prev, [name]: value }));
     }
   };
-
   const showPaymentModal = (paymentData, price) => {
     const downPayment = (price * 0.5).toFixed(2);
     MySwal.fire({
@@ -620,10 +649,10 @@ const BookingPageRegistered = ({ user }) => {
                   </option>
                 ))}
               </select>
-              {serviceIdParam && (
+              {(serviceIdParam && formData.service_category === "Surgery") && (
                 <div className="alert alert-info mt-2 mb-3 small">
                   <i className="bi bi-info-circle me-2"></i>
-                  Auto-selected: {services.find(s => s.id.toString() === serviceIdParam)?.name || 'Service'}
+                  Auto-selected: {services.find(s => s.id.toString() === serviceIdParam)?.name || 'Surgery'}
                 </div>
               )}
             </div>
