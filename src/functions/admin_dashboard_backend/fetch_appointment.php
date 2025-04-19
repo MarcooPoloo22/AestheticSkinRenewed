@@ -19,6 +19,7 @@ $staff_id  = isset( $_GET[ 'staff_id' ] )  ? $_GET[ 'staff_id' ]  : null;
 $query = "
   SELECT 
     b.id,
+    b.user_id AS user_id ,
     b.service_type,
     b.first_name,
     b.last_name,

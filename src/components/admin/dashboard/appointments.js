@@ -70,57 +70,59 @@ const AppointmentTable = ({
       name: "Name",
       selector: (row) => `${row.first_name} ${row.last_name}`,
       sortable: true,
-      minWidth: '180px',
+      minWidth: "180px",
       wrap: true,
     },
     {
       name: "Email",
       selector: (row) => row.email,
       sortable: true,
-      minWidth: '200px',
+      minWidth: "200px",
       wrap: true,
     },
     {
       name: "Contact",
       selector: (row) => row.contact_no,
       sortable: true,
-      minWidth: '130px',
+      minWidth: "130px",
       wrap: true,
     },
     {
       name: "Service",
       selector: (row) => row.service_type,
       sortable: true,
-      minWidth: '160px',
+      minWidth: "160px",
       wrap: true,
     },
     {
       name: "Branch",
       selector: (row) => row.branch_name,
       sortable: true,
-      minWidth: '130px',
+      minWidth: "130px",
       wrap: true,
     },
     {
       name: "Staff",
       selector: (row) => row.staff_name,
       sortable: true,
-      minWidth: '130px',
+      minWidth: "130px",
       wrap: true,
     },
     {
       name: "Status",
       selector: (row) => row.status,
       sortable: true,
-      minWidth: '110px',
+      minWidth: "110px",
       wrap: true,
     },
     {
       name: "Date & Time",
       selector: (row) =>
-        `${new Date(row.appointment_date).toLocaleDateString()} ${row.appointment_time}`,
+        `${new Date(row.appointment_date).toLocaleDateString()} ${
+          row.appointment_time
+        }`,
       sortable: true,
-      minWidth: '180px',
+      minWidth: "180px",
       wrap: true,
     },
     {
@@ -136,13 +138,13 @@ const AppointmentTable = ({
       ignoreRowClick: true,
       allowOverflow: true,
       button: true,
-      width: '140px',
+      width: "140px",
     },
     {
       name: "Rating",
       selector: (row) => (row.rating !== null ? row.rating : "N/A"),
       sortable: true,
-      width: '90px',
+      width: "90px",
       wrap: true,
     },
     {
@@ -166,10 +168,9 @@ const AppointmentTable = ({
         </div>
       ),
       ignoreRowClick: true,
-      width: '80px',
+      width: "80px",
     },
   ];
-  
 
   return (
     <DataTable
