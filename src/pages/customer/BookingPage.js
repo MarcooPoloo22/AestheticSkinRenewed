@@ -214,7 +214,7 @@ const BookingPageRegistered = ({ user }) => {
       setIsLoading(true);
       
       if (formData.service_category === "Surgery") {
-        fetch(`http://localhost/admin_dashboard_backend/fetch_doctor_availability.php?doctor_id=${formData.staff_id}`)
+        fetch(`http://localhost/admin_dashboard_backend/doctor_get_availability.php?doctor_id=${formData.staff_id}`)
           .then((response) => {
             if (!response.ok) {
               throw new Error('Network response was not ok');
