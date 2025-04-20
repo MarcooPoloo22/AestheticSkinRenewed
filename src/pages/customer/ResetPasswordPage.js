@@ -80,7 +80,8 @@ const ResetPasswordPage = () => {
           />
         </div>
         {error && <p className="error-message">{error}</p>}
-        <button type="submit">Reset Password</button>
+        <br />
+        <button type="submit" className="btn-reset">Reset Password</button>
       </form>
     </div>
   );
