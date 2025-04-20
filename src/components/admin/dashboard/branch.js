@@ -164,6 +164,7 @@ const StaffTable = ({ staff, handleEditStaff, handleDeleteStaff, manageDoctorAva
 const ManageBranchEdit = ({ setActivePage, branch, fetchBranches }) => {
   const [branchName, setBranchName] = useState(branch.name);
   const [staff, setStaff] = useState([]);
+  const [refreshKey, setRefreshKey] = useState(0);
 
   const fetchStaff = async () => {
     try {
@@ -199,7 +200,7 @@ const ManageBranchEdit = ({ setActivePage, branch, fetchBranches }) => {
 
   useEffect(() => {
     fetchStaff();
-  }, []);
+  }, [refreshKey]);
 
   const handleUpdateBranch = async (e) => {
     e.preventDefault();
@@ -241,21 +242,24 @@ const ManageBranchEdit = ({ setActivePage, branch, fetchBranches }) => {
 
   const manageDoctorAvailability = async (doctorId, doctorName) => {
     let currentAvailability = [];
-    try {
-      const response = await fetch(
-        `http://localhost/admin_dashboard_backend/doctor_get_availability.php?doctor_id=${doctorId}`
-      );
-      if (response.ok) {
-        const data = await response.json();
-        if (data.success) {
-          currentAvailability = data.availability || [];
-          console.log('Fetched availability:', currentAvailability); // Debug log
+    
+    const fetchAvailability = async () => {
+      try {
+        const response = await fetch(
+          `http://localhost/admin_dashboard_backend/doctor_get_availability.php?doctor_id=${doctorId}`
+        );
+        if (response.ok) {
+          const data = await response.json();
+          if (data.success) {
+            currentAvailability = data.availability || [];
+          }
         }
+      } catch (error) {
+        console.error("Error fetching availability:", error);
       }
-    } catch (error) {
-      console.error("Error fetching availability:", error);
-    }
-  
+    };
+
+    await fetchAvailability();
 
     const container = document.createElement('div');
     container.style.textAlign = 'left';
@@ -327,11 +331,11 @@ const ManageBranchEdit = ({ setActivePage, branch, fetchBranches }) => {
         
         const resData = await response.json();
         if (resData.success) {
-          currentAvailability.push(dateTime);
-          currentAvailability.sort();
+          await fetchAvailability();
           renderAvailabilityList();
           dateInput.value = '';
           timeInput.value = '';
+          setRefreshKey(prev => prev + 1);
         } else {
           Swal.showValidationMessage(resData.message || "Failed to add availability");
         }
@@ -419,8 +423,9 @@ const ManageBranchEdit = ({ setActivePage, branch, fetchBranches }) => {
             
             const resData = await response.json();
             if (resData.success) {
-              currentAvailability = currentAvailability.filter(dt => !dt.startsWith(date));
+              await fetchAvailability();
               renderAvailabilityList();
+              setRefreshKey(prev => prev + 1);
             } else {
               Swal.showValidationMessage(resData.message || "Failed to remove availability");
             }
@@ -478,8 +483,9 @@ const ManageBranchEdit = ({ setActivePage, branch, fetchBranches }) => {
               
               const resData = await response.json();
               if (resData.success) {
-                currentAvailability = currentAvailability.filter(dt => dt !== `${date} ${time}:00`);
+                await fetchAvailability();
                 renderAvailabilityList();
+                setRefreshKey(prev => prev + 1);
               } else {
                 Swal.showValidationMessage(resData.message || "Failed to remove availability");
               }
