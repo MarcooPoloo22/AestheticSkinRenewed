@@ -232,7 +232,7 @@ const ManageUserAdd = ({ setActivePage, fetchUsers }) => {
     last_name: '',
     email: '',
     contact_no: '',
-    role: 'employee',
+    role: 'employee', // Default role set to 'employee'
     password: '',
     password_confirmation: '',
   });
@@ -244,13 +244,24 @@ const ManageUserAdd = ({ setActivePage, fetchUsers }) => {
         throw new Error("Passwords do not match");
       }
 
+      // Prepare the data to send, excluding password_confirmation
+      const dataToSend = {
+        first_name: formData.first_name,
+        middle_initial: formData.middle_initial,
+        last_name: formData.last_name,
+        email: formData.email,
+        contact_no: formData.contact_no,
+        role: formData.role,
+        password: formData.password
+      };
+
       const response = await fetch(
         "http://localhost/admin_dashboard_backend/user_add_user.php",
         {
           method: "POST",
           credentials: "include",
           headers: { "Content-Type": "application/json" },
-          body: JSON.stringify(formData),
+          body: JSON.stringify(dataToSend),
         }
       );
 

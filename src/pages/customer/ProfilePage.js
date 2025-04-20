@@ -88,18 +88,46 @@ const ProfilePage = ({ user, setUser, isLoggedIn }) => {
       title: 'Rate your experience',
       input: 'radio',
       inputOptions: {
-        '1': '1 - Highly unsatisfactory',
-        '2': '2 - Unsatisfactory',
+        '1': '1 - Poor',
+        '2': '2 - Fair',
         '3': '3 - Neutral',
-        '4': '4 - Satisfactory',
-        '5': '5 - Highly satisfactory'
+        '4': '4 - Good',
+        '5': '5 - Excellent'
       },
       inputValidator: (value) => {
         if (!value) {
           return 'You need to choose a rating!';
         }
       },
-      showCancelButton: true
+      showCancelButton: true,
+      width: window.innerWidth > 768 ? '620px' : '90%',
+      didOpen: () => {
+        const radioContainer = document.querySelector('.swal2-radio');
+        if (radioContainer) {
+          // Mobile-first approach
+          if (window.innerWidth <= 768) {
+            radioContainer.style.flexDirection = 'column';
+            radioContainer.style.gap = '8px';
+            radioContainer.style.alignItems = 'flex-start';
+          } else {
+            radioContainer.style.display = 'flex';
+            radioContainer.style.flexDirection = 'row';
+            radioContainer.style.gap = '10px';
+            radioContainer.style.justifyContent = 'center';
+            radioContainer.style.alignItems = 'center';
+          }
+          
+          // Adjust labels for both mobile and desktop
+          const labels = radioContainer.querySelectorAll('label');
+          labels.forEach(label => {
+            label.style.margin = '0';
+            label.style.padding = '5px';
+            label.style.whiteSpace = 'normal'; // Changed from nowrap
+            label.style.textAlign = 'left';
+            label.style.width = '100%';
+          });
+        }
+      }
     });
 
     if (rating) {

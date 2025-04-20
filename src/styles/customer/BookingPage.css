@@ -218,6 +218,7 @@ button:focus {
 @media (max-width: 768px) {
 
   .white-box {
+    width: 80% !important;
     padding-left: 24px;
     padding-right: 24px;
   }
@@ -302,7 +303,7 @@ button:focus {
   }
 
   .white-box {
-    width: 95%;
+    width: 80% !important;
     padding: 20px 18px;
   }
 
