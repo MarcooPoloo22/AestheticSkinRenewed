@@ -32,9 +32,9 @@ CREATE TABLE IF NOT EXISTS `audit_logs` (
   `description` text DEFAULT NULL,
   `old_value` text DEFAULT NULL,
   PRIMARY KEY (`audit_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=193 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=244 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
--- Dumping data for table asr.audit_logs: ~173 rows (approximately)
+-- Dumping data for table asr.audit_logs: ~217 rows (approximately)
 INSERT INTO `audit_logs` (`audit_id`, `user_id`, `user_name`, `user_role`, `action_type`, `table_name`, `new_value`, `timestamp`, `description`, `old_value`) VALUES
 	(20, 44, 'Gabriello', 'admin', 'UPDATE', 'promos', '{"id":7,"name":"Promo 45877","description":"Desc 5","price":"123.00","file_url":null,"start_date":"2025-03-24 17:23:00","end_date":"2025-03-31 13:21:00","duration":5,"created_at":"2025-03-23 13:17:21","updated_at":"2025-03-23 13:33:06","branch_ids":"[]","staff_ids":"[]"}', '2025-03-23 06:26:14', NULL, '{"id":7,"name":"Promo 45877","description":"Desc 5","price":"123.00","file_url":null,"start_date":"2025-03-24 17:23:00","end_date":"2025-03-31 13:21:00","duration":5,"created_at":"2025-03-23 13:17:21","updated_at":"2025-03-23 13:33:06","branch_ids":"[]","staff_ids":"[]"}'),
 	(21, 44, 'Gabriello', 'admin', 'UPDATE', 'promos', '{"id":7,"name":"Promo 45877","description":"Desc 5","price":"123.00","file_url":null,"start_date":"2025-03-24 17:23:00","end_date":"2025-03-31 13:21:00","duration":6,"created_at":"2025-03-23 13:17:21","updated_at":"2025-03-23 14:35:08","branch_ids":"[\\"7\\",\\"6\\"]","staff_ids":"[\\"1\\",\\"3\\"]"}', '2025-03-23 06:35:08', NULL, '{"id":7,"name":"Promo 45877","description":"Desc 5","price":"123.00","file_url":null,"start_date":"2025-03-24 17:23:00","end_date":"2025-03-31 13:21:00","duration":5,"created_at":"2025-03-23 13:17:21","updated_at":"2025-03-23 13:33:06","branch_ids":"[]","staff_ids":"[]"}'),
@@ -208,7 +208,58 @@ INSERT INTO `audit_logs` (`audit_id`, `user_id`, `user_name`, `user_role`, `acti
 	(189, 44, 'Gabriello', 'admin', 'CREATE', 'doctor_availability', '{"doctor_id":23,"date_time":"2025-04-28 19:30:00"}', '2025-04-17 10:27:05', 'Added availability slot for doctor 23 at 2025-04-28 19:30:00', NULL),
 	(190, 44, 'Gabriello', 'admin', 'CREATE', 'doctor_availability', '{"doctor_id":23,"date_time":"2025-04-28 20:30:00"}', '2025-04-17 10:27:11', 'Added availability slot for doctor 23 at 2025-04-28 20:30:00', NULL),
 	(191, 44, 'Gabriello', 'admin', 'UPDATE', 'surgeries', '{"id":16,"title":"Surgery 1","description":"This is the description for Surgery 1","price":"122.00","image_url":"http:\\/\\/localhost\\/admin_dashboard_backend\\/uploads\\/surgeries\\/6800d754e1d34-67dffdbc9dbb4-body_scrub.jpg","duration":1,"created_at":"2025-04-17 18:26:28","updated_at":"2025-04-17 18:26:28","branch_ids":null,"staff_ids":null,"time_slots":null}', '2025-04-17 10:38:39', 'Updated surgery: Surgery 1', '{"id":16,"title":"Surgery 1","description":"This is the description for Surgery 1","price":"122.00","image_url":"http:\\/\\/localhost\\/admin_dashboard_backend\\/uploads\\/surgeries\\/6800d754e1d34-67dffdbc9dbb4-body_scrub.jpg","duration":1,"created_at":"2025-04-17 18:26:28","updated_at":"2025-04-17 18:26:28","branch_ids":null,"staff_ids":null,"time_slots":null}'),
-	(192, 44, 'Gabriello', 'admin', 'CREATE', 'services', '{"id":20,"name":"aa","description":"aa","price":"123.00","file_url":"uploads\\/67de8d5635819-cheesy burger.jpg","duration":1}', '2025-04-17 10:52:03', 'Created service: aa', NULL);
+	(192, 44, 'Gabriello', 'admin', 'CREATE', 'services', '{"id":20,"name":"aa","description":"aa","price":"123.00","file_url":"uploads\\/67de8d5635819-cheesy burger.jpg","duration":1}', '2025-04-17 10:52:03', 'Created service: aa', NULL),
+	(193, 44, 'Gabriello', 'admin', 'CREATE', 'users', '{"id":69,"first_name":"Aleah","middle_initial":"","last_name":"Bautista","email":"aleahbautista@gmail.com","password":"***REDACTED***","contact_no":"09123456789","verified":0,"verification_token":null,"role":"customer"}', '2025-04-20 11:03:46', 'Created user: aleahbautista@gmail.com', NULL),
+	(194, 44, 'Gabriello', 'admin', 'DELETE', 'users', NULL, '2025-04-20 11:10:50', 'Deleted user: aleahbautista@gmail.com', '{"id":69,"first_name":"Aleah","middle_initial":"","last_name":"Bautista","email":"aleahbautista@gmail.com","password":"***REDACTED***","contact_no":"09123456789","verified":0,"verification_token":null,"role":"customer"}'),
+	(195, 44, 'Gabriello', 'admin', 'CREATE', 'users', '{"id":70,"first_name":"Aleah","middle_initial":"","last_name":"Bautista","email":"aleahbautista@gmail.com","password":"***REDACTED***","contact_no":"09123456789","verified":0,"verification_token":null,"role":"admin"}', '2025-04-20 11:11:28', 'Created user: aleahbautista@gmail.com', NULL),
+	(196, 44, 'Gabriello', 'admin', 'CREATE', 'users', '{"id":71,"first_name":"Ma. Agustherese","middle_initial":"","last_name":"Soreda","email":"masoreda@gmail.com","password":"***REDACTED***","contact_no":"09123456789","verified":0,"verification_token":null,"role":"employee"}', '2025-04-20 11:11:59', 'Created user: masoreda@gmail.com', NULL),
+	(197, 44, 'Gabriello', 'admin', 'DELETE', 'users', NULL, '2025-04-20 11:12:05', 'Deleted user: xere.sa.12@gmail.com', '{"id":40,"first_name":"Randolph","middle_initial":"M","last_name":"Alvarado","email":"xere.sa.12@gmail.com","contact_no":"09232228423","verified":1,"verification_token":null,"role":"admin"}'),
+	(198, 44, 'Gabriello', 'admin', 'DELETE', 'users', NULL, '2025-04-20 11:12:10', 'Deleted user: empl@gmail.com', '{"id":68,"first_name":"Best Employee","middle_initial":null,"last_name":"Employee","email":"empl@gmail.com","contact_no":"09760314957","verified":1,"verification_token":null,"role":"employee"}'),
+	(199, 44, 'Gabriello', 'admin', 'DELETE', 'users', NULL, '2025-04-20 11:12:14', 'Deleted user: gwennie@yahoo.com', '{"id":58,"first_name":"Gwennie","middle_initial":"T.","last_name":"Navarro","email":"gwennie@yahoo.com","contact_no":"09760314957","verified":1,"verification_token":null,"role":"admin"}'),
+	(200, 44, 'Gabriello', 'admin', 'DELETE', 'users', NULL, '2025-04-20 11:12:18', 'Deleted user: armand@yahoo.com', '{"id":45,"first_name":"Armand","middle_initial":"G","last_name":"Ledor","email":"armand@yahoo.com","contact_no":"09428098248","verified":1,"verification_token":null,"role":"employee"}'),
+	(201, 44, 'Gabriello', 'admin', 'DELETE', 'users', NULL, '2025-04-20 11:12:22', 'Deleted user: gabgerald@yahoo.com', '{"id":44,"first_name":"Gabriello","middle_initial":"A","last_name":"Gerald Herrera","email":"gabgerald@yahoo.com","contact_no":"09428098248","verified":1,"verification_token":null,"role":"admin"}'),
+	(202, 70, 'Aleah', 'admin', 'CREATE', 'users', '{"id":72,"first_name":"Fritzie","middle_initial":"Y.","last_name":"Santos","email":"fritziesantos@gmail.com","password":"***REDACTED***","contact_no":"09123456789","verified":1,"verification_token":null,"role":"employee"}', '2025-04-20 11:15:13', 'Created user: fritziesantos@gmail.com', NULL),
+	(203, 70, 'Aleah', 'admin', 'DELETE', 'branches', NULL, '2025-04-20 11:17:30', 'Deleted branch: UST', '{"id":9,"name":"UST"}'),
+	(204, 70, 'Aleah', 'admin', 'CREATE', 'staff', '{"id":24,"name":"Doctor 1","branch_id":7,"role":"STAFF","is_surgery_staff":1}', '2025-04-20 11:18:30', 'Created staff: Doctor 1 (Surgery Staff: 1)', NULL),
+	(205, 70, 'Aleah', 'admin', 'CREATE', 'doctor_availability', '{"doctor_id":24,"date_time":"2025-04-21 17:00:00"}', '2025-04-20 11:19:12', 'Added availability slot for doctor 24 at 2025-04-21 17:00:00', NULL),
+	(206, 70, 'Aleah', 'admin', 'CREATE', 'doctor_availability', '{"doctor_id":24,"date_time":"2025-04-21 18:00:00"}', '2025-04-20 11:19:34', 'Added availability slot for doctor 24 at 2025-04-21 18:00:00', NULL),
+	(207, 70, 'Aleah', 'admin', 'CREATE', 'doctor_availability', '{"doctor_id":24,"date_time":"2025-04-23 11:00:00"}', '2025-04-20 11:20:04', 'Added availability slot for doctor 24 at 2025-04-23 11:00:00', NULL),
+	(208, 70, 'Aleah', 'admin', 'DELETE', 'bookings', NULL, '2025-04-20 22:28:54', 'Deleted appointment for: alvaradorandolph@gmail.com', '{"id":46,"user_id":null,"first_name":"Randolph","last_name":"Alvarado","email":"alvaradorandolph@gmail.com","contact_no":"09052752202","service_type":"Promo","appointment_date":"2025-04-14","appointment_time":"11:00:00","status":"pending","created_at":"2025-04-14 13:12:55","staff_id":8,"branch_id":7,"rating":null,"file_url":""}'),
+	(209, 70, 'Aleah', 'admin', 'DELETE', 'bookings', NULL, '2025-04-20 22:29:00', 'Deleted appointment for: gabgerald@yahoo.com', '{"id":52,"user_id":null,"first_name":"Gabriello","last_name":"Gerald Herrera","email":"gabgerald@yahoo.com","contact_no":"09760314957","service_type":"ASR Immunomax Drip","appointment_date":"2025-04-14","appointment_time":"13:00:00","status":"pending","created_at":"2025-04-14 18:47:04","staff_id":1,"branch_id":6,"rating":null,"file_url":null}'),
+	(210, 70, 'Aleah', 'admin', 'DELETE', 'bookings', NULL, '2025-04-20 22:29:11', 'Deleted appointment for: gabgerald@yahoo.com', '{"id":53,"user_id":null,"first_name":"Gabriello","last_name":"Gerald Herrera","email":"gabgerald@yahoo.com","contact_no":"09760314957","service_type":"Vampire Facial","appointment_date":"2025-04-14","appointment_time":"14:00:00","status":"pending","created_at":"2025-04-14 18:49:27","staff_id":1,"branch_id":6,"rating":null,"file_url":null}'),
+	(211, 70, 'Aleah', 'admin', 'DELETE', 'bookings', NULL, '2025-04-20 22:29:17', 'Deleted appointment for: alvaradorandolph@gmail.com', '{"id":42,"user_id":null,"first_name":"Randolph","last_name":"Alvarado","email":"alvaradorandolph@gmail.com","contact_no":"09052752202","service_type":"Acne Control Facial","appointment_date":"2025-04-14","appointment_time":"14:00:00","status":"cancelled","created_at":"2025-04-13 23:41:52","staff_id":1,"branch_id":6,"rating":null,"file_url":null}'),
+	(212, 70, 'Aleah', 'admin', 'DELETE', 'bookings', NULL, '2025-04-20 22:29:21', 'Deleted appointment for: alvaradorandolph@gmail.com', '{"id":43,"user_id":35,"first_name":"Randolph","last_name":"Alvarado","email":"alvaradorandolph@gmail.com","contact_no":"09052752202","service_type":"ASR Immunomax Drip","appointment_date":"2025-04-14","appointment_time":"15:00:00","status":"pending","created_at":"2025-04-14 00:43:16","staff_id":1,"branch_id":6,"rating":null,"file_url":null}'),
+	(213, 70, 'Aleah', 'admin', 'DELETE', 'bookings', NULL, '2025-04-20 22:29:25', 'Deleted appointment for: alvaradorandolph@gmail.com', '{"id":47,"user_id":null,"first_name":"Randolph","last_name":"Alvarado","email":"alvaradorandolph@gmail.com","contact_no":"09052752202","service_type":"Promo","appointment_date":"2025-04-14","appointment_time":"16:00:00","status":"pending","created_at":"2025-04-14 13:13:37","staff_id":1,"branch_id":6,"rating":null,"file_url":""}'),
+	(214, 70, 'Aleah', 'admin', 'DELETE', 'bookings', NULL, '2025-04-20 22:29:29', 'Deleted appointment for: alvaradorandolph@gmail.com', '{"id":50,"user_id":null,"first_name":"Randolph","last_name":"Alvarado","email":"alvaradorandolph@gmail.com","contact_no":"09052752202","service_type":"Surgery 2","appointment_date":"2025-04-15","appointment_time":"11:00:00","status":"cancelled","created_at":"2025-04-14 18:07:48","staff_id":1,"branch_id":6,"rating":null,"file_url":"http:\\/\\/localhost\\/admin_dashboard_backend\\/uploads\\/67fcde74e4125_67e01dd211554-bart.jpg"}'),
+	(215, 70, 'Aleah', 'admin', 'DELETE', 'bookings', NULL, '2025-04-20 22:29:33', 'Deleted appointment for: alvaradorandolph@gmail.com', '{"id":51,"user_id":null,"first_name":"Randolph","last_name":"Alvarado","email":"alvaradorandolph@gmail.com","contact_no":"09052752202","service_type":"Deep Cleansing Facial","appointment_date":"2025-04-15","appointment_time":"13:00:00","status":"completed","created_at":"2025-04-14 18:32:45","staff_id":4,"branch_id":6,"rating":null,"file_url":null}'),
+	(216, 70, 'Aleah', 'admin', 'DELETE', 'bookings', NULL, '2025-04-20 22:29:51', 'Deleted appointment for: alvaradorandolph@gmail.com', '{"id":44,"user_id":35,"first_name":"Randolph","last_name":"Alvarado","email":"alvaradorandolph@gmail.com","contact_no":"09052752202","service_type":"Intensive Whitening Facial","appointment_date":"2025-04-15","appointment_time":"14:00:00","status":"pending","created_at":"2025-04-14 00:43:52","staff_id":8,"branch_id":7,"rating":null,"file_url":null}'),
+	(217, 70, 'Aleah', 'admin', 'DELETE', 'bookings', NULL, '2025-04-20 22:29:55', 'Deleted appointment for: alvaradorandolph@gmail.com', '{"id":45,"user_id":35,"first_name":"Randolph","last_name":"Alvarado","email":"alvaradorandolph@gmail.com","contact_no":"09052752202","service_type":"Surgery 2","appointment_date":"2025-04-15","appointment_time":"14:00:00","status":"pending","created_at":"2025-04-14 00:44:51","staff_id":1,"branch_id":6,"rating":null,"file_url":null}'),
+	(218, 70, 'Aleah', 'admin', 'DELETE', 'bookings', NULL, '2025-04-20 22:29:59', 'Deleted appointment for: alvaradorandolph@gmail.com', '{"id":48,"user_id":35,"first_name":"Randolph","last_name":"Alvarado","email":"alvaradorandolph@gmail.com","contact_no":"09052752202","service_type":"Acne Control Facial","appointment_date":"2025-04-15","appointment_time":"15:00:00","status":"pending","created_at":"2025-04-14 18:04:29","staff_id":1,"branch_id":6,"rating":null,"file_url":null}'),
+	(219, 70, 'Aleah', 'admin', 'UPDATE', 'bookings', '{"id":49,"user_id":35,"first_name":"Randolph","last_name":"Alvarado","email":"alvaradorandolph@gmail.com","contact_no":"09052752202","service_type":"Intensive Whitening Facial","appointment_date":"2025-04-16","appointment_time":"11:00:00","status":"completed","created_at":"2025-04-14 18:06:17","staff_id":3,"branch_id":7,"rating":null,"file_url":null}', '2025-04-20 22:30:14', 'Updated appointment for alvaradorandolph@gmail.com', '{"id":49,"user_id":35,"first_name":"Randolph","last_name":"Alvarado","email":"alvaradorandolph@gmail.com","contact_no":"09052752202","service_type":"Intensive Whitening Facial","appointment_date":"2025-04-16","appointment_time":"11:00:00","status":"pending","created_at":"2025-04-14 18:06:17","staff_id":3,"branch_id":7,"rating":null,"file_url":null}'),
+	(220, 70, 'Aleah', 'admin', 'UPDATE', 'bookings', '{"id":33,"user_id":35,"first_name":"Randolph","last_name":"Alvarado","email":"alvaradorandolph@gmail.com","contact_no":"09052752202","service_type":"Intensive Whitening Facial","appointment_date":"2025-04-23","appointment_time":"11:00:00","status":"confirmed","created_at":"2025-04-12 05:24:55","staff_id":4,"branch_id":6,"rating":null,"file_url":"http:\\/\\/localhost\\/uploads\\/67f988a7acc7b_67dffdbc9dbb4-body_scrub.jpg"}', '2025-04-20 22:30:44', 'Updated appointment for alvaradorandolph@gmail.com', '{"id":33,"user_id":35,"first_name":"Randolph","last_name":"Alvarado","email":"alvaradorandolph@gmail.com","contact_no":"09052752202","service_type":"Surgery","appointment_date":"2025-04-23","appointment_time":"11:00:00","status":"pending","created_at":"2025-04-12 05:24:55","staff_id":4,"branch_id":6,"rating":null,"file_url":"http:\\/\\/localhost\\/uploads\\/67f988a7acc7b_67dffdbc9dbb4-body_scrub.jpg"}'),
+	(221, 70, 'Aleah', 'admin', 'UPDATE', 'bookings', '{"id":33,"user_id":35,"first_name":"Randolph","last_name":"Alvarado","email":"alvaradorandolph@gmail.com","contact_no":"09052752202","service_type":"Intensive Whitening Facial","appointment_date":"2025-04-21","appointment_time":"11:00:00","status":"completed","created_at":"2025-04-12 05:24:55","staff_id":4,"branch_id":6,"rating":null,"file_url":"http:\\/\\/localhost\\/uploads\\/67f988a7acc7b_67dffdbc9dbb4-body_scrub.jpg"}', '2025-04-20 22:48:10', 'Updated appointment for alvaradorandolph@gmail.com', '{"id":33,"user_id":35,"first_name":"Randolph","last_name":"Alvarado","email":"alvaradorandolph@gmail.com","contact_no":"09052752202","service_type":"Intensive Whitening Facial","appointment_date":"2025-04-21","appointment_time":"11:00:00","status":"confirmed","created_at":"2025-04-12 05:24:55","staff_id":4,"branch_id":6,"rating":null,"file_url":"http:\\/\\/localhost\\/uploads\\/67f988a7acc7b_67dffdbc9dbb4-body_scrub.jpg"}'),
+	(222, 70, 'Aleah', 'admin', 'UPDATE', 'services', '{"id":20,"name":"aaa","description":"aa","price":"123.00","file_url":"uploads\\/67de8d5635819-cheesy burger.jpg","duration":1}', '2025-04-20 22:49:52', 'Updated service: aaa', '{"id":20,"name":"aa","description":"aa","price":"123.00","file_url":"uploads\\/67de8d5635819-cheesy burger.jpg","duration":1}'),
+	(223, 70, 'Aleah', 'admin', 'DELETE', 'services', NULL, '2025-04-20 22:50:00', 'Deleted service: aaa', '{"id":20,"name":"aaa","description":"aa","price":"123.00","file_url":"uploads\\/67de8d5635819-cheesy burger.jpg","duration":1}'),
+	(224, 70, 'Aleah', 'admin', 'UPDATE', 'surgeries', '{"id":16,"title":"Surgery 1","description":"This is the description for Surgery 1","price":"122.00","image_url":"http:\\/\\/localhost\\/admin_dashboard_backend\\/uploads\\/surgeries\\/6800d754e1d34-67dffdbc9dbb4-body_scrub.jpg","duration":1,"created_at":"2025-04-17 18:26:28","updated_at":"2025-04-17 18:26:28","branch_ids":null,"staff_ids":null,"time_slots":null}', '2025-04-20 22:50:14', 'Updated surgery: Surgery 1', '{"id":16,"title":"Surgery 1","description":"This is the description for Surgery 1","price":"122.00","image_url":"http:\\/\\/localhost\\/admin_dashboard_backend\\/uploads\\/surgeries\\/6800d754e1d34-67dffdbc9dbb4-body_scrub.jpg","duration":1,"created_at":"2025-04-17 18:26:28","updated_at":"2025-04-17 18:26:28","branch_ids":null,"staff_ids":null,"time_slots":null}'),
+	(225, 70, 'Aleah', 'admin', 'UPDATE', 'faqs', '{"id":1011,"question":"How do I book an appointment?","answer":"You can easily book an appointment through our website. Just go to the Booking page, choose your preferred service, select a date and time, and fill in your contact information.t..."}', '2025-04-20 23:01:08', 'Updated FAQ: How do I book an appointment?', '{"id":1011,"question":"Question 1","answer":"Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt..."}'),
+	(226, 70, 'Aleah', 'admin', 'UPDATE', 'faqs', '{"id":1011,"question":"How do I book an appointment?","answer":"You can easily book an appointment through our website. Just go to the Booking page, choose your preferred service, select a date and time, and fill in your contact information."}', '2025-04-20 23:01:20', 'Updated FAQ: How do I book an appointment?', '{"id":1011,"question":"How do I book an appointment?","answer":"You can easily book an appointment through our website. Just go to the Booking page, choose your preferred service, select a date and time, and fill in your contact information.t..."}'),
+	(227, 70, 'Aleah', 'admin', 'UPDATE', 'faqs', '{"id":1012,"question":"Do I need to create an account to book a service?","answer":"No account is required to book an appointment. However, for surgery appointments, we require our users to create an account first. Creating an account allows you to manage your bookings."}', '2025-04-20 23:01:38', 'Updated FAQ: Do I need to create an account to book a service?', '{"id":1012,"question":"Question 2","answer":"Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt..."}'),
+	(228, 70, 'Aleah', 'admin', 'UPDATE', 'faqs', '{"id":1013,"question":"What services do you offer?","answer":"We offer a variety of skin and nail care services, including facials, waxing, manicures, pedicures, and more. Visit our Services page for a full list and descriptions."}', '2025-04-20 23:01:56', 'Updated FAQ: What services do you offer?', '{"id":1013,"question":"Question 3","answer":"Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt..."}'),
+	(229, 70, 'Aleah', 'admin', 'UPDATE', 'faqs', '{"id":1014,"question":"Can I reschedule or cancel my appointment?","answer":"Yes, you can reschedule or cancel your appointment at least __ hours in advance by contacting us directly."}', '2025-04-20 23:02:28', 'Updated FAQ: Can I reschedule or cancel my appointment?', '{"id":1014,"question":"Question 4","answer":"Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt..."}'),
+	(230, 70, 'Aleah', 'admin', 'UPDATE', 'faqs', '{"id":1015,"question":"Do you accept walk-ins?","answer":"While walk-ins are welcome, we highly recommend booking in advance to ensure availability."}', '2025-04-20 23:02:45', 'Updated FAQ: Do you accept walk-ins?', '{"id":1015,"question":"Question 5","answer":"Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt..."}'),
+	(231, 70, 'Aleah', 'admin', 'UPDATE', 'faqs', '{"id":1016,"question":"What are your operating hours?","answer":"Our spa is open from [Insert Hours Here]."}', '2025-04-20 23:03:00', 'Updated FAQ: What are your operating hours?', '{"id":1016,"question":"Question 6","answer":"Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt..."}'),
+	(232, 70, 'Aleah', 'admin', 'CREATE', 'faqs', '{"id":1021,"question":"What payment methods do you accept?","answer":"We accept gcash, paymaya, credit\\/debit cards for surgery appointments."}', '2025-04-20 23:03:13', 'Created FAQ: What payment methods do you accept?', NULL),
+	(233, 70, 'Aleah', 'admin', 'UPDATE', 'surgeries', '{"id":16,"title":"Surgery 1","description":"This is the description for Surgery 1","price":"122.00","image_url":"http:\\/\\/localhost\\/admin_dashboard_backend\\/uploads\\/surgeries\\/6800d754e1d34-67dffdbc9dbb4-body_scrub.jpg","duration":1,"created_at":"2025-04-17 18:26:28","updated_at":"2025-04-17 18:26:28","branch_ids":null,"staff_ids":null,"time_slots":null}', '2025-04-20 23:14:29', 'Updated surgery: Surgery 1', '{"id":16,"title":"Surgery 1","description":"This is the description for Surgery 1","price":"122.00","image_url":"http:\\/\\/localhost\\/admin_dashboard_backend\\/uploads\\/surgeries\\/6800d754e1d34-67dffdbc9dbb4-body_scrub.jpg","duration":1,"created_at":"2025-04-17 18:26:28","updated_at":"2025-04-17 18:26:28","branch_ids":null,"staff_ids":null,"time_slots":null}'),
+	(234, 70, 'Aleah', 'admin', 'CREATE', 'surgeries', '{"id":17,"title":"Barbie Arms Botox","description":"Barbie Arms Botox","price":"5998.00","image_url":"http:\\/\\/localhost\\/admin_dashboard_backend\\/uploads\\/surgeries\\/680580592f0fd-67dafb18ef171-body_scrub.jpg","duration":1,"created_at":"2025-04-21 07:16:41","updated_at":"2025-04-21 07:16:41","branch_ids":null,"staff_ids":null,"time_slots":null}', '2025-04-20 23:16:41', 'Created new surgery: Barbie Arms Botox', NULL),
+	(235, 70, 'Aleah', 'admin', 'DELETE', 'surgeries', NULL, '2025-04-20 23:16:52', 'Deleted surgery: Surgery 1', '{"id":16,"title":"Surgery 1","description":"This is the description for Surgery 1","price":"122.00","image_url":"http:\\/\\/localhost\\/admin_dashboard_backend\\/uploads\\/surgeries\\/6800d754e1d34-67dffdbc9dbb4-body_scrub.jpg","duration":1,"created_at":"2025-04-17 18:26:28","updated_at":"2025-04-17 18:26:28","branch_ids":null,"staff_ids":null,"time_slots":null}'),
+	(236, 70, 'Aleah', 'admin', 'UPDATE', 'surgeries', '{"id":17,"title":"Barbie Arms Botox","description":"Barbie Arms Botox","price":"5999.00","image_url":"http:\\/\\/localhost\\/admin_dashboard_backend\\/uploads\\/surgeries\\/680580592f0fd-67dafb18ef171-body_scrub.jpg","duration":1,"created_at":"2025-04-21 07:16:41","updated_at":"2025-04-21 07:16:59","branch_ids":null,"staff_ids":null,"time_slots":null}', '2025-04-20 23:16:59', 'Updated surgery: Barbie Arms Botox', '{"id":17,"title":"Barbie Arms Botox","description":"Barbie Arms Botox","price":"5998.00","image_url":"http:\\/\\/localhost\\/admin_dashboard_backend\\/uploads\\/surgeries\\/680580592f0fd-67dafb18ef171-body_scrub.jpg","duration":1,"created_at":"2025-04-21 07:16:41","updated_at":"2025-04-21 07:16:41","branch_ids":null,"staff_ids":null,"time_slots":null}'),
+	(237, 70, 'Aleah', 'admin', 'CREATE', 'surgeries', '{"id":18,"title":"Sweatox","description":"Sweatox","price":"7495.00","image_url":"http:\\/\\/localhost\\/admin_dashboard_backend\\/uploads\\/surgeries\\/68058090b0162-dora.jpg","duration":1,"created_at":"2025-04-21 07:17:36","updated_at":"2025-04-21 07:17:36","branch_ids":null,"staff_ids":null,"time_slots":null}', '2025-04-20 23:17:36', 'Created new surgery: Sweatox', NULL),
+	(238, 70, 'Aleah', 'admin', 'UPDATE', 'surgeries', '{"id":17,"title":"Barbie Arms Botox","description":"Barbie Arms Botox","price":"5999.00","image_url":"http:\\/\\/localhost\\/admin_dashboard_backend\\/uploads\\/surgeries\\/680580995a7a6-spongebob.webp","duration":1,"created_at":"2025-04-21 07:16:41","updated_at":"2025-04-21 07:17:45","branch_ids":null,"staff_ids":null,"time_slots":null}', '2025-04-20 23:17:45', 'Updated surgery: Barbie Arms Botox', '{"id":17,"title":"Barbie Arms Botox","description":"Barbie Arms Botox","price":"5999.00","image_url":"http:\\/\\/localhost\\/admin_dashboard_backend\\/uploads\\/surgeries\\/680580592f0fd-67dafb18ef171-body_scrub.jpg","duration":1,"created_at":"2025-04-21 07:16:41","updated_at":"2025-04-21 07:16:59","branch_ids":null,"staff_ids":null,"time_slots":null}'),
+	(239, 70, 'Aleah', 'admin', 'UPDATE', 'bookings', '{"id":56,"user_id":35,"first_name":"Randolph","last_name":"Alvarado","email":"alvaradorandolph@gmail.com","contact_no":"09052752202","service_type":"Intensive Whitening Facial","appointment_date":"2025-04-23","appointment_time":"14:00:00","status":"cancelled","created_at":"2025-04-21 07:23:40","staff_id":8,"branch_id":7,"rating":null,"file_url":null}', '2025-04-20 23:24:29', 'Updated appointment for alvaradorandolph@gmail.com', '{"id":56,"user_id":35,"first_name":"Randolph","last_name":"Alvarado","email":"alvaradorandolph@gmail.com","contact_no":"09052752202","service_type":"Intensive Whitening Facial","appointment_date":"2025-04-23","appointment_time":"14:00:00","status":"pending","created_at":"2025-04-21 07:23:40","staff_id":8,"branch_id":7,"rating":null,"file_url":null}'),
+	(240, 70, 'Aleah', 'admin', 'UPDATE', 'bookings', '{"id":55,"user_id":35,"first_name":"Randolph","last_name":"Alvarado","email":"alvaradorandolph@gmail.com","contact_no":"09052752202","service_type":"Vampire Facial","appointment_date":"2025-04-21","appointment_time":"13:00:00","status":"cancelled","created_at":"2025-04-21 06:51:24","staff_id":4,"branch_id":6,"rating":null,"file_url":null}', '2025-04-20 23:25:44', 'Updated appointment for alvaradorandolph@gmail.com', '{"id":55,"user_id":35,"first_name":"Randolph","last_name":"Alvarado","email":"alvaradorandolph@gmail.com","contact_no":"09052752202","service_type":"Vampire Facial","appointment_date":"2025-04-21","appointment_time":"13:00:00","status":"pending","created_at":"2025-04-21 06:51:24","staff_id":4,"branch_id":6,"rating":null,"file_url":null}'),
+	(241, 70, 'Aleah', 'admin', 'DELETE', 'bookings', NULL, '2025-04-20 23:26:12', 'Deleted appointment for: alvaradorandolph@gmail.com', '{"id":55,"user_id":35,"first_name":"Randolph","last_name":"Alvarado","email":"alvaradorandolph@gmail.com","contact_no":"09052752202","service_type":"Vampire Facial","appointment_date":"2025-04-21","appointment_time":"13:00:00","status":"cancelled","created_at":"2025-04-21 06:51:24","staff_id":4,"branch_id":6,"rating":null,"file_url":null}'),
+	(242, 70, 'Aleah', 'admin', 'DELETE', 'bookings', NULL, '2025-04-20 23:26:17', 'Deleted appointment for: alvaradorandolph@gmail.com', '{"id":56,"user_id":35,"first_name":"Randolph","last_name":"Alvarado","email":"alvaradorandolph@gmail.com","contact_no":"09052752202","service_type":"Intensive Whitening Facial","appointment_date":"2025-04-23","appointment_time":"14:00:00","status":"cancelled","created_at":"2025-04-21 07:23:40","staff_id":8,"branch_id":7,"rating":null,"file_url":null}'),
+	(243, 70, 'Aleah', 'admin', 'UPDATE', 'bookings', '{"id":57,"user_id":35,"first_name":"Randolph","last_name":"Alvarado","email":"alvaradorandolph@gmail.com","contact_no":"09052752202","service_type":"Intensive Whitening Facial","appointment_date":"2025-04-22","appointment_time":"13:00:00","status":"cancelled","created_at":"2025-04-21 07:26:38","staff_id":8,"branch_id":7,"rating":null,"file_url":null}', '2025-04-20 23:27:09', 'Updated appointment for alvaradorandolph@gmail.com', '{"id":57,"user_id":35,"first_name":"Randolph","last_name":"Alvarado","email":"alvaradorandolph@gmail.com","contact_no":"09052752202","service_type":"Intensive Whitening Facial","appointment_date":"2025-04-22","appointment_time":"13:00:00","status":"pending","created_at":"2025-04-21 07:26:38","staff_id":8,"branch_id":7,"rating":null,"file_url":null}');
 
 -- Dumping structure for table asr.bookings
 CREATE TABLE IF NOT EXISTS `bookings` (
@@ -234,24 +285,14 @@ CREATE TABLE IF NOT EXISTS `bookings` (
   KEY `idx_status_date` (`status`,`appointment_date`),
   CONSTRAINT `bookings_ibfk_1` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`) ON DELETE SET NULL,
   CONSTRAINT `fk_staff` FOREIGN KEY (`staff_id`) REFERENCES `staff` (`id`) ON DELETE CASCADE
-) ENGINE=InnoDB AUTO_INCREMENT=55 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=59 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
--- Dumping data for table asr.bookings: ~14 rows (approximately)
+-- Dumping data for table asr.bookings: ~4 rows (approximately)
 INSERT INTO `bookings` (`id`, `user_id`, `first_name`, `last_name`, `email`, `contact_no`, `service_type`, `appointment_date`, `appointment_time`, `status`, `created_at`, `staff_id`, `branch_id`, `rating`, `file_url`) VALUES
-	(33, 35, 'Randolph', 'Alvarado', 'alvaradorandolph@gmail.com', '09052752202', 'Surgery', '2025-04-23', '11:00:00', 'pending', '2025-04-11 21:24:55', 4, 6, NULL, 'http://localhost/uploads/67f988a7acc7b_67dffdbc9dbb4-body_scrub.jpg'),
-	(42, NULL, 'Randolph', 'Alvarado', 'alvaradorandolph@gmail.com', '09052752202', 'Acne Control Facial', '2025-04-14', '14:00:00', 'cancelled', '2025-04-13 15:41:52', 1, 6, NULL, NULL),
-	(43, 35, 'Randolph', 'Alvarado', 'alvaradorandolph@gmail.com', '09052752202', 'ASR Immunomax Drip', '2025-04-14', '15:00:00', 'pending', '2025-04-13 16:43:16', 1, 6, NULL, NULL),
-	(44, 35, 'Randolph', 'Alvarado', 'alvaradorandolph@gmail.com', '09052752202', 'Intensive Whitening Facial', '2025-04-15', '14:00:00', 'pending', '2025-04-13 16:43:52', 8, 7, NULL, NULL),
-	(45, 35, 'Randolph', 'Alvarado', 'alvaradorandolph@gmail.com', '09052752202', 'Surgery 2', '2025-04-15', '14:00:00', 'pending', '2025-04-13 16:44:51', 1, 6, NULL, NULL),
-	(46, NULL, 'Randolph', 'Alvarado', 'alvaradorandolph@gmail.com', '09052752202', 'Promo', '2025-04-14', '11:00:00', 'pending', '2025-04-14 05:12:55', 8, 7, NULL, ''),
-	(47, NULL, 'Randolph', 'Alvarado', 'alvaradorandolph@gmail.com', '09052752202', 'Promo', '2025-04-14', '16:00:00', 'pending', '2025-04-14 05:13:37', 1, 6, NULL, ''),
-	(48, 35, 'Randolph', 'Alvarado', 'alvaradorandolph@gmail.com', '09052752202', 'Acne Control Facial', '2025-04-15', '15:00:00', 'pending', '2025-04-14 10:04:29', 1, 6, NULL, NULL),
-	(49, 35, 'Randolph', 'Alvarado', 'alvaradorandolph@gmail.com', '09052752202', 'Intensive Whitening Facial', '2025-04-16', '11:00:00', 'pending', '2025-04-14 10:06:17', 3, 7, NULL, NULL),
-	(50, NULL, 'Randolph', 'Alvarado', 'alvaradorandolph@gmail.com', '09052752202', 'Surgery 2', '2025-04-15', '11:00:00', 'cancelled', '2025-04-14 10:07:48', 1, 6, NULL, 'http://localhost/admin_dashboard_backend/uploads/67fcde74e4125_67e01dd211554-bart.jpg'),
-	(51, NULL, 'Randolph', 'Alvarado', 'alvaradorandolph@gmail.com', '09052752202', 'Deep Cleansing Facial', '2025-04-15', '13:00:00', 'completed', '2025-04-14 10:32:45', 4, 6, NULL, NULL),
-	(52, NULL, 'Gabriello', 'Gerald Herrera', 'gabgerald@yahoo.com', '09760314957', 'ASR Immunomax Drip', '2025-04-14', '13:00:00', 'pending', '2025-04-14 10:47:04', 1, 6, NULL, NULL),
-	(53, NULL, 'Gabriello', 'Gerald Herrera', 'gabgerald@yahoo.com', '09760314957', 'Vampire Facial', '2025-04-14', '14:00:00', 'pending', '2025-04-14 10:49:27', 1, 6, NULL, NULL),
-	(54, 35, 'Randolph', 'Alvarado', 'alvaradorandolph@gmail.com', '09052752202', 'Surgery 1', '2025-04-28', '19:30:00', 'pending', '2025-04-17 12:53:49', 23, 9, NULL, 'http://localhost/admin_dashboard_backend/uploads/6800f9ddb3b3e_67dffdbc9dbb4-body_scrub.jpg');
+	(33, 35, 'Randolph', 'Alvarado', 'alvaradorandolph@gmail.com', '09052752202', 'Intensive Whitening Facial', '2025-04-21', '11:00:00', 'completed', '2025-04-11 21:24:55', 4, 6, NULL, 'http://localhost/uploads/67f988a7acc7b_67dffdbc9dbb4-body_scrub.jpg'),
+	(49, 35, 'Randolph', 'Alvarado', 'alvaradorandolph@gmail.com', '09052752202', 'Intensive Whitening Facial', '2025-04-16', '11:00:00', 'completed', '2025-04-14 10:06:17', 3, 7, 5, NULL),
+	(57, 35, 'Randolph', 'Alvarado', 'alvaradorandolph@gmail.com', '09052752202', 'Intensive Whitening Facial', '2025-04-22', '13:00:00', 'cancelled', '2025-04-20 23:26:38', 8, 7, NULL, NULL),
+	(58, 35, 'Randolph', 'Alvarado', 'alvaradorandolph@gmail.com', '09052752202', 'Intensive Whitening Facial', '2025-04-22', '13:00:00', 'pending', '2025-04-20 23:28:45', 3, 7, NULL, NULL);
 
 -- Dumping structure for table asr.branches
 CREATE TABLE IF NOT EXISTS `branches` (
@@ -263,8 +304,7 @@ CREATE TABLE IF NOT EXISTS `branches` (
 -- Dumping data for table asr.branches: ~3 rows (approximately)
 INSERT INTO `branches` (`id`, `name`) VALUES
 	(6, 'Katipunan'),
-	(7, 'Zabarte'),
-	(9, 'UST');
+	(7, 'Zabarte');
 
 -- Dumping structure for table asr.contact_info
 CREATE TABLE IF NOT EXISTS `contact_info` (
@@ -289,15 +329,14 @@ CREATE TABLE IF NOT EXISTS `doctor_availability` (
   PRIMARY KEY (`id`),
   KEY `doctor_id` (`doctor_id`),
   CONSTRAINT `doctor_availability_ibfk_1` FOREIGN KEY (`doctor_id`) REFERENCES `staff` (`id`) ON DELETE CASCADE
-) ENGINE=InnoDB AUTO_INCREMENT=8 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=12 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
--- Dumping data for table asr.doctor_availability: ~5 rows (approximately)
+-- Dumping data for table asr.doctor_availability: ~4 rows (approximately)
 INSERT INTO `doctor_availability` (`id`, `doctor_id`, `date_time`, `created_at`) VALUES
-	(1, 22, '2025-04-18 00:00:00', '2025-04-17 03:47:37'),
-	(3, 23, '0000-00-00 00:00:00', '2025-04-17 03:58:14'),
-	(5, 23, '2025-04-28 18:30:00', '2025-04-17 10:27:01'),
-	(6, 23, '2025-04-28 19:30:00', '2025-04-17 10:27:05'),
-	(7, 23, '2025-04-28 20:30:00', '2025-04-17 10:27:11');
+	(8, 24, '0000-00-00 00:00:00', '2025-04-20 11:18:30'),
+	(9, 24, '2025-04-21 17:00:00', '2025-04-20 11:19:12'),
+	(10, 24, '2025-04-21 18:00:00', '2025-04-20 11:19:33'),
+	(11, 24, '2025-04-23 11:00:00', '2025-04-20 11:20:04');
 
 -- Dumping structure for table asr.faqs
 CREATE TABLE IF NOT EXISTS `faqs` (
@@ -305,16 +344,17 @@ CREATE TABLE IF NOT EXISTS `faqs` (
   `question` varchar(255) NOT NULL,
   `answer` text NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=1021 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=1022 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
--- Dumping data for table asr.faqs: ~6 rows (approximately)
+-- Dumping data for table asr.faqs: ~7 rows (approximately)
 INSERT INTO `faqs` (`id`, `question`, `answer`) VALUES
-	(1011, 'Question 1', 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt...'),
-	(1012, 'Question 2', 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt...'),
-	(1013, 'Question 3', 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt...'),
-	(1014, 'Question 4', 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt...'),
-	(1015, 'Question 5', 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt...'),
-	(1016, 'Question 6', 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt...');
+	(1011, 'How do I book an appointment?', 'You can easily book an appointment through our website. Just go to the Booking page, choose your preferred service, select a date and time, and fill in your contact information.'),
+	(1012, 'Do I need to create an account to book a service?', 'No account is required to book an appointment. However, for surgery appointments, we require our users to create an account first. Creating an account allows you to manage your bookings.'),
+	(1013, 'What services do you offer?', 'We offer a variety of skin and nail care services, including facials, waxing, manicures, pedicures, and more. Visit our Services page for a full list and descriptions.'),
+	(1014, 'Can I reschedule or cancel my appointment?', 'Yes, you can reschedule or cancel your appointment at least __ hours in advance by contacting us directly.'),
+	(1015, 'Do you accept walk-ins?', 'While walk-ins are welcome, we highly recommend booking in advance to ensure availability.'),
+	(1016, 'What are your operating hours?', 'Our spa is open from [Insert Hours Here].'),
+	(1021, 'What payment methods do you accept?', 'We accept gcash, paymaya, credit/debit cards for surgery appointments.');
 
 -- Dumping structure for table asr.password_resets
 CREATE TABLE IF NOT EXISTS `password_resets` (
@@ -436,7 +476,7 @@ CREATE TABLE IF NOT EXISTS `services` (
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=21 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
--- Dumping data for table asr.services: ~9 rows (approximately)
+-- Dumping data for table asr.services: ~8 rows (approximately)
 INSERT INTO `services` (`id`, `name`, `description`, `price`, `file_url`, `duration`) VALUES
 	(10, 'Deep Cleansing Facial', 'Deep Cleansing Facial', 399.00, 'uploads/dora.jpg', 1),
 	(11, 'Acne Control Facial', 'Acne Control Facial', 499.00, 'uploads/hellokitty.png', 2),
@@ -445,8 +485,7 @@ INSERT INTO `services` (`id`, `name`, `description`, `price`, `file_url`, `durat
 	(14, 'Vampire Facial', 'Vampire Facial', 2999.00, 'uploads/spongebob.webp', 1),
 	(15, 'Skin Peeling (Chemical Peel)', 'Skin Peeling (Chemical Peel)', 1499.00, 'uploads/spongebob.webp', 1),
 	(16, 'HIFU V-Shaped Face Contouring with Free Treatment', 'Slimming Service', 999.00, 'uploads/bart.jpg', 1),
-	(17, 'High Dose IV Vitamin C Drip', 'Whitening Service - 799 Per Session', 799.00, 'uploads/spongebob.webp', 1),
-	(20, 'aa', 'aa', 123.00, 'uploads/67de8d5635819-cheesy burger.jpg', 1);
+	(17, 'High Dose IV Vitamin C Drip', 'Whitening Service - 799 Per Session', 799.00, 'uploads/spongebob.webp', 1);
 
 -- Dumping structure for table asr.service_branches
 CREATE TABLE IF NOT EXISTS `service_branches` (
@@ -468,8 +507,7 @@ INSERT INTO `service_branches` (`service_id`, `branch_id`) VALUES
 	(16, 6),
 	(17, 7),
 	(10, 6),
-	(10, 7),
-	(20, 7);
+	(10, 7);
 
 -- Dumping structure for table asr.service_staff
 CREATE TABLE IF NOT EXISTS `service_staff` (
@@ -481,7 +519,7 @@ CREATE TABLE IF NOT EXISTS `service_staff` (
   CONSTRAINT `service_staff_ibfk_2` FOREIGN KEY (`staff_id`) REFERENCES `staff` (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
--- Dumping data for table asr.service_staff: ~19 rows (approximately)
+-- Dumping data for table asr.service_staff: ~18 rows (approximately)
 INSERT INTO `service_staff` (`service_id`, `staff_id`) VALUES
 	(11, 1),
 	(11, 4),
@@ -500,8 +538,7 @@ INSERT INTO `service_staff` (`service_id`, `staff_id`) VALUES
 	(17, 3),
 	(10, 1),
 	(10, 4),
-	(10, 3),
-	(20, 8);
+	(10, 3);
 
 -- Dumping structure for table asr.site_policies
 CREATE TABLE IF NOT EXISTS `site_policies` (
@@ -526,19 +563,16 @@ CREATE TABLE IF NOT EXISTS `staff` (
   PRIMARY KEY (`id`),
   KEY `staff_ibfk_1` (`branch_id`),
   CONSTRAINT `staff_ibfk_1` FOREIGN KEY (`branch_id`) REFERENCES `branches` (`id`) ON DELETE CASCADE
-) ENGINE=InnoDB AUTO_INCREMENT=24 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=25 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
--- Dumping data for table asr.staff: ~9 rows (approximately)
+-- Dumping data for table asr.staff: ~6 rows (approximately)
 INSERT INTO `staff` (`id`, `name`, `branch_id`, `role`, `is_surgery_staff`) VALUES
 	(1, 'Ma. Agustherese Soreda', 6, 'STAFF', 0),
 	(3, 'Fritzie Y. Santos', 7, 'STAFF', 0),
 	(4, 'Ashley De Guzman', 6, 'STAFF', 0),
 	(8, 'Loraine Salamat', 7, 'STAFF', 0),
 	(9, 'Jucel Jordan', 7, 'STAFF', 0),
-	(12, 'Armand', 9, 'STAFF', 0),
-	(18, 'gwen', 9, 'STAFF', 0),
-	(22, 'YEYEYE', 9, 'STAFF', 1),
-	(23, 'Gab', 9, 'STAFF', 1);
+	(24, 'Doctor 1', 7, 'STAFF', 1);
 
 -- Dumping structure for table asr.surgeries
 CREATE TABLE IF NOT EXISTS `surgeries` (
@@ -554,11 +588,12 @@ CREATE TABLE IF NOT EXISTS `surgeries` (
   `staff_ids` text DEFAULT NULL,
   `time_slots` longtext CHARACTER SET utf8mb4 COLLATE utf8mb4_bin DEFAULT NULL CHECK (json_valid(`time_slots`)),
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=17 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=19 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
--- Dumping data for table asr.surgeries: ~1 rows (approximately)
+-- Dumping data for table asr.surgeries: ~2 rows (approximately)
 INSERT INTO `surgeries` (`id`, `title`, `description`, `price`, `image_url`, `duration`, `created_at`, `updated_at`, `branch_ids`, `staff_ids`, `time_slots`) VALUES
-	(16, 'Surgery 1', 'This is the description for Surgery 1', 122.00, 'http://localhost/admin_dashboard_backend/uploads/surgeries/6800d754e1d34-67dffdbc9dbb4-body_scrub.jpg', 1, '2025-04-17 10:26:28', '2025-04-17 10:26:28', NULL, NULL, NULL);
+	(17, 'Barbie Arms Botox', 'Barbie Arms Botox', 5999.00, 'http://localhost/admin_dashboard_backend/uploads/surgeries/680580995a7a6-spongebob.webp', 1, '2025-04-20 23:16:41', '2025-04-20 23:17:45', NULL, NULL, NULL),
+	(18, 'Sweatox', 'Sweatox', 7495.00, 'http://localhost/admin_dashboard_backend/uploads/surgeries/68058090b0162-dora.jpg', 1, '2025-04-20 23:17:36', '2025-04-20 23:17:36', NULL, NULL, NULL);
 
 -- Dumping structure for table asr.surgery_branches
 CREATE TABLE IF NOT EXISTS `surgery_branches` (
@@ -572,7 +607,8 @@ CREATE TABLE IF NOT EXISTS `surgery_branches` (
 
 -- Dumping data for table asr.surgery_branches: ~1 rows (approximately)
 INSERT INTO `surgery_branches` (`surgery_id`, `branch_id`) VALUES
-	(16, 9);
+	(17, 7),
+	(18, 7);
 
 -- Dumping structure for table asr.surgery_staff
 CREATE TABLE IF NOT EXISTS `surgery_staff` (
@@ -586,8 +622,8 @@ CREATE TABLE IF NOT EXISTS `surgery_staff` (
 
 -- Dumping data for table asr.surgery_staff: ~2 rows (approximately)
 INSERT INTO `surgery_staff` (`surgery_id`, `staff_id`) VALUES
-	(16, 22),
-	(16, 23);
+	(17, 24),
+	(18, 24);
 
 -- Dumping structure for table asr.users
 CREATE TABLE IF NOT EXISTS `users` (
@@ -603,16 +639,14 @@ CREATE TABLE IF NOT EXISTS `users` (
   `role` enum('admin','employee','customer') NOT NULL DEFAULT 'customer',
   PRIMARY KEY (`id`),
   UNIQUE KEY `email` (`email`)
-) ENGINE=InnoDB AUTO_INCREMENT=69 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=73 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
--- Dumping data for table asr.users: ~0 rows (approximately)
+-- Dumping data for table asr.users: ~4 rows (approximately)
 INSERT INTO `users` (`id`, `first_name`, `middle_initial`, `last_name`, `email`, `password`, `contact_no`, `verified`, `verification_token`, `role`) VALUES
-	(35, 'Randolph', 'M', 'Alvarado', 'alvaradorandolph@gmail.com', '$2y$10$k6Agkx6/Tzh9jzQhLQMkgOUFMmhYERgG6TxEKsjzVJTAmoYlGdHTm', '09052752202', 1, NULL, 'customer'),
-	(40, 'Randolph', 'M', 'Alvarado', 'xere.sa.12@gmail.com', '$2y$10$LAm7aelI1Gwv2rduso08S.Pctik1AjK6/BNKMBqjOXeTWMpPakta2', '09232228423', 1, NULL, 'admin'),
-	(44, 'Gabriello', 'A', 'Gerald Herrera', 'gabgerald@yahoo.com', '$2y$10$ciIrE9ap3ClhyOO/Va46Yei.d45M4cFDpz3ZmaaZ1XXl/3ZwYHZEe', '09428098248', 1, NULL, 'admin'),
-	(45, 'Armand', 'G', 'Ledor', 'armand@yahoo.com', '$2y$10$VOYVmUG0OylZnarZlxAJFebWNQzzfO.WLatYb31nEI/RRELW/AEla', '09428098248', 1, NULL, 'employee'),
-	(58, 'Gwennie', 'T.', 'Navarro', 'gwennie@yahoo.com', '$2y$10$MzFgvYLwOENu0aOpeCnzJOZVTZf7THHmqZmw5biXBG/HxaXtonr.W', '09760314957', 1, NULL, 'admin'),
-	(68, 'Best Employee', NULL, 'Employee', 'empl@gmail.com', '$2y$10$XxHQO54EMTDIM1rTgMcgDuJqN1rcC51nXkYaEI9z8T5lC0VZ0uuLi', '09760314957', 1, NULL, 'employee');
+	(35, 'Randolph', 'A', 'Alvarado', 'alvaradorandolph@gmail.com', '$2y$10$h7KPOAmBIsu82fBRuqLid.aYENHJHxfiN/lMogXRzops5eH4j.Z.G', '09052752202', 1, NULL, 'customer'),
+	(70, 'Aleah', '', 'Bautista', 'aleahbautista@gmail.com', '$2y$10$K8NcJU578DpzQAtbAu4QlOEZvNu7mEaT.WD/KdH/dh37xOCec6Ska', '09123456789', 1, NULL, 'admin'),
+	(71, 'Ma. Agustherese', '', 'Soreda', 'masoreda@gmail.com', '$2y$10$eR9g6ovbYZyX5q2cS7wVRO1OhpnMXDN0x6PhPMEku.1URvlU51xP6', '09123456789', 1, NULL, 'employee'),
+	(72, 'Fritzie', 'Y.', 'Santos', 'fritziesantos@gmail.com', '$2y$10$BR5f.ghCUnHdmm5N0ktT1un980pEVuMtnJ0cSDheK36NMbqoCskJe', '09123456789', 1, NULL, 'employee');
 
 /*!40103 SET TIME_ZONE=IFNULL(@OLD_TIME_ZONE, 'system') */;
 /*!40101 SET SQL_MODE=IFNULL(@OLD_SQL_MODE, '') */;
