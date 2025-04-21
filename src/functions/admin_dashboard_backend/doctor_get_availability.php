@@ -17,11 +17,6 @@ ini_set('display_errors', 0);
 ini_set('log_errors', 1);
 ini_set('error_log', 'C:/xampp/htdocs/error.log');
 
-// Remove the session check for now to test
-// if (!isset($_SESSION['user'])) {
-//     echo json_encode(['success' => false, 'message' => 'User is not logged in.']);
-//     exit;
-// }
 
 $conn = new mysqli("localhost", "root", "", "asr");
 

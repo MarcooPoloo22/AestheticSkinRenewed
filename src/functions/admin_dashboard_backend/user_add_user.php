@@ -30,7 +30,7 @@ if ($conn->connect_error) {
 
 $data = json_decode(file_get_contents("php://input"), true);
 
-$requiredFields = ['first_name', 'last_name', 'email', 'contact_no', 'password'];
+$requiredFields = ['first_name', 'last_name', 'email', 'contact_no', 'password', 'role'];
 foreach ($requiredFields as $field) {
     if (!isset($data[$field]) || empty(trim($data[$field]))) {
         echo json_encode(["error" => "Missing required field: $field"]);
@@ -38,15 +38,24 @@ foreach ($requiredFields as $field) {
     }
 }
 
+// Validate role
+$allowedRoles = ['admin', 'employee'];
+if (!in_array($data['role'], $allowedRoles)) {
+    echo json_encode(["error" => "Invalid role specified"]);
+    exit;
+}
+
 $first_name = $conn->real_escape_string($data['first_name']);
 $middle_initial = isset($data['middle_initial']) ? $conn->real_escape_string($data['middle_initial']) : null;
 $last_name = $conn->real_escape_string($data['last_name']);
 $email = $conn->real_escape_string($data['email']);
 $contact_no = $conn->real_escape_string($data['contact_no']);
+$role = $conn->real_escape_string($data['role']);
 $password = password_hash($data['password'], PASSWORD_DEFAULT);
+$verified = 1; // Automatically verify admin-created users
 
-$stmt = $conn->prepare("INSERT INTO users (first_name, middle_initial, last_name, email, contact_no, password) VALUES (?, ?, ?, ?, ?, ?)");
-$stmt->bind_param("ssssss", $first_name, $middle_initial, $last_name, $email, $contact_no, $password);
+$stmt = $conn->prepare("INSERT INTO users (first_name, middle_initial, last_name, email, contact_no, role, password, verified) VALUES (?, ?, ?, ?, ?, ?, ?, ?)");
+$stmt->bind_param("sssssssi", $first_name, $middle_initial, $last_name, $email, $contact_no, $role, $password, $verified);
 
 if ($stmt->execute()) {
     $newId = $conn->insert_id;
