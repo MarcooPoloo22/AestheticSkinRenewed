@@ -209,107 +209,53 @@ const BookingPageRegistered = ({ user }) => {
     }
   }, [formData.staff_id, formData.service_category]);
 
-  useEffect(() => {
-    if (formData.appointment_date && formData.staff_id) {
-      setIsLoading(true);
-      
-      if (formData.service_category === "Surgery") {
-        fetch(`http://localhost/admin_dashboard_backend/doctor_get_availability.php?doctor_id=${formData.staff_id}`)
-          .then((response) => {
-            if (!response.ok) {
-              throw new Error('Network response was not ok');
-            }
-            return response.json();
-          })
-          .then((data) => {
-            if (data.status === 'success') {
-              setDoctorAvailability(data.available_slots || []);
-              fetch(`http://localhost/booking.php?date=${formData.appointment_date}&staff_id=${formData.staff_id}`)
-                .then((response) => {
-                  if (!response.ok) {
-                    throw new Error('Network response was not ok');
-                  }
-                  return response.json();
-                })
-                .then((bookedData) => {
-                  if (bookedData.status === 'success') {
-                    setBookedSlots(bookedData.booked_slots || []);
-                  }
-                })
-                .catch((error) => {
-                  console.error("Error fetching booked slots:", error);
-                });
-            } else {
-              throw new Error(data.message || 'Failed to fetch doctor availability.');
-            }
-          })
-          .catch((error) => {
-            console.error("Error fetching doctor availability:", error);
-            setDoctorAvailability([]);
-            if (!error.message.includes('No availability found')) {
-              Swal.fire({
-                icon: 'error',
-                title: 'Error',
-                text: 'Failed to fetch doctor availability. Please try again.',
-              });
-            }
-            setDoctorAvailability([]);
-          })
-          .finally(() => {
-            setIsLoading(false);
-          });
-      } else {
-        fetch(`http://localhost/booking.php?date=${formData.appointment_date}&staff_id=${formData.staff_id}`)
-          .then((response) => {
-            if (!response.ok) {
-              throw new Error('Network response was not ok');
-            }
-            return response.json();
-          })
-          .then((data) => {
-            if (data.status === 'success') {
-              setBookedSlots(data.booked_slots || []);
-            } else {
-              throw new Error(data.message || 'Failed to fetch booked slots.');
-            }
-          })
-          .catch((error) => {
-            console.error("Error fetching booked slots:", error);
-            Swal.fire({
-              icon: 'error',
-              title: 'Error',
-              text: 'Failed to fetch booked slots. Please try again.',
-            });
-          })
-          .finally(() => {
-            setIsLoading(false);
-          });
-      }
-    } else {
-      setBookedSlots([]);
-      setDoctorAvailability([]);
-    }
-  }, [formData.appointment_date, formData.staff_id, formData.service_category]);
+  // Change from fetch_doctor_availability.php to doctor_get_availability.php
+useEffect(() => {
+  if (formData.service_category === "Surgery" && formData.staff_id) {
+    fetch(`http://localhost/admin_dashboard_backend/doctor_get_availability.php?doctor_id=${formData.staff_id}`)
+      .then(response => {
+        if (!response.ok) throw new Error('Network response was not ok');
+        return response.json();
+      })
+      .then(data => {
+        if (data.success) {  // Changed from data.status === 'success'
+          setDoctorAvailability(data.availability || []);  // Changed from data.available_slots
+          const dates = [...new Set(data.availability.map(slot => slot.split(' ')[0]))];
+          setAvailableDates(dates);
+        } else {
+          throw new Error(data.message || 'Failed to fetch availability');
+        }
+      })
+      .catch(error => {
+        console.error("Error fetching doctor dates:", error);
+        setAvailableDates([]);
+        setDoctorAvailability([]);
+      });
+  } else {
+    setAvailableDates([]);
+    setDoctorAvailability([]);
+  }
+}, [formData.staff_id, formData.service_category]);
 
-  useEffect(() => {
-    if (formData.service_category === "Surgery") {
-      const slotsForDate = Array.isArray(doctorAvailability) 
-        ? doctorAvailability.filter(slot => slot.startsWith(formData.appointment_date))
-        : [];
-        
-      const availableSlots = slotsForDate
-        .map(slot => {
-          const timePart = slot.split(' ')[1]?.substring(0, 5) || '';
-          return convertTime24to12(timePart);
-        })
-        .filter(slot => !bookedSlots.includes(slot));
-        
-      setAvailableTimeSlots(availableSlots);
-    } else {
-      const availableSlots = standardTimeSlots.filter(slot => !bookedSlots.includes(slot));
-      setAvailableTimeSlots(availableSlots);
-    }
-  }, [doctorAvailability, bookedSlots, formData.appointment_date, formData.service_category]);
+useEffect(() => {
+  if (formData.service_category === "Surgery") {
+    const slotsForDate = Array.isArray(doctorAvailability) 
+      ? doctorAvailability.filter(slot => slot.startsWith(formData.appointment_date))
+      : [];
+      
+    const availableSlots = slotsForDate
+      .map(slot => {
+        const [date, time] = slot.split(' ');
+        return convertTime24to12(time.substring(0, 5));
+      })
+      .filter(slot => !bookedSlots.includes(slot));
+      
+    setAvailableTimeSlots(availableSlots);
+  } else {
+    const availableSlots = standardTimeSlots.filter(slot => !bookedSlots.includes(slot));
+    setAvailableTimeSlots(availableSlots);
+  }
+}, [doctorAvailability, bookedSlots, formData.appointment_date, formData.service_category]);
 
   const handleSurgeryPayment = async () => {
     setIsLoadingPayment(true);
@@ -782,10 +728,9 @@ const BookingPageRegistered = ({ user }) => {
               </li>
             ))}
           </ul>
-          <p className="mt-2 mb-0">Please select one of these dates from the date picker.</p>
         </div>
       ) : (
-        <p>No available dates for Dr. {staffList.find(staff => staff.id.toString() === formData.staff_id.toString())?.name}. Please choose another doctor.</p>
+        <p>No available dates for selected doctor. Please choose another doctor.</p>
       )
     ) : (
       "All time slots are booked for the selected date. Please choose another date."
