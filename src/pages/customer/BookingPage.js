@@ -116,13 +116,24 @@ const BookingPageRegistered = ({ user }) => {
             service_category: formData.service_category
           }));
           setServices(servicesWithType);
+  
+          // Check if there's a serviceIdParam from URL and set service_type
+          if (serviceIdParam && serviceTypeParam === formData.service_category) {
+            const selectedService = data.find(s => s.id.toString() === serviceIdParam);
+            if (selectedService) {
+              setFormData(prev => ({
+                ...prev,
+                service_type: selectedService.name
+              }));
+            }
+          }
         })
         .catch((error) => console.error("Error fetching services:", error));
     } else {
       setServices([]);
       setFormData((prev) => ({ ...prev, service: "", service_type: "", branch_id: "", staff_id: "" }));
     }
-  }, [formData.service_category]);
+  }, [formData.service_category, serviceIdParam, serviceTypeParam]); // Add dependencies here
 
   useEffect(() => {
     if (formData.service) {
@@ -814,13 +825,24 @@ const BookingPageGuest = () => {
             service_category: formData.service_category
           }));
           setServices(servicesWithType);
+  
+          // Check if there's a serviceIdParam from URL and set service_type
+          if (serviceIdParam && serviceTypeParam === formData.service_category) {
+            const selectedService = data.find(s => s.id.toString() === serviceIdParam);
+            if (selectedService) {
+              setFormData(prev => ({
+                ...prev,
+                service_type: selectedService.name
+              }));
+            }
+          }
         })
         .catch((error) => console.error("Error fetching services:", error));
     } else {
       setServices([]);
       setFormData((prev) => ({ ...prev, service: "", service_type: "", branch_id: "", staff_id: "" }));
     }
-  }, [formData.service_category]);
+  }, [formData.service_category, serviceIdParam, serviceTypeParam]); // Add dependencies here
 
   useEffect(() => {
     if (formData.service) {
