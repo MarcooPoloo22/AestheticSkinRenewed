@@ -113,7 +113,7 @@ function AppointmentPage() {
 
   return (
     <>
-      <div className="surgery-header">
+      <div className="surgery-header" style={{ backgroundImage: "url('./assets/asr_promo.jpg')" }}>
         <div className="overlay">
           <h1 className="surgery-title">Surgery Appointments</h1>
         </div>
