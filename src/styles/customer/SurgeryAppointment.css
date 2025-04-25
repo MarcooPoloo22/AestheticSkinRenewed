@@ -30,6 +30,7 @@
   line-height: 1.2;
 }
 
+
 @keyframes fadeIn {
   from {
     opacity: 0;
@@ -45,13 +46,13 @@
   animation: fadeIn 0.8s ease-in-out forwards;
 }
 
-.btn-bookprime {
+.btn-bookser {
   background-color: #6cb33f;
   color: white;
   border: none;
 }
 
-.btn-bookprime:hover {
+.btn-bookser:hover {
   background-color: #a2bf5a;
 }
 

@@ -71,7 +71,7 @@ const SurgeryCard = ({ title, description, time, image, updated, id, onBookNow }
         <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
           <small className="text-muted">Price: {updated}</small>
           <button 
-            className="btn btn-bookprime"
+            className="btn btn-bookser"
             onClick={onBookNow}
           >
             Book Now
