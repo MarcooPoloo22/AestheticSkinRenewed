@@ -44,6 +44,28 @@
     height: 100%;
     object-fit: cover;
   }
+
+  .btn-bookser {
+    background: linear-gradient(to right, #8BC34A, #66BB6A); 
+    color: white !important;
+    padding: 20px;
+    border: none;
+    border-radius: 12px;
+    cursor: pointer;
+    width: 50%;
+    caret-color: transparent;
+    font-size: 20px;
+    transition: background 0.3s ease, transform 0.2s ease;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+  }
+  
+  .btn-bookser:hover {
+      background: linear-gradient(to right, #7CB342, #4CAF50); 
+      transform: translateY(-2px);
+      color: white !important;
+      outline: none;
+  }
+  
   
   @keyframes fadeIn {
     from {

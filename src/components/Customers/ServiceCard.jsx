@@ -105,7 +105,7 @@ const ServiceCard = ({ title, description, image, updated, link, id }) => {
           <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
             <small className="text-muted">{updated}</small>
             <button 
-              className="btn btn-sm btn-bookprime book-now-btn"
+              className="btn btn-bookser book-now-btn"
               onClick={handleBookNow}
             >
               {title.includes('Product') ? 'Buy Now' : 'Book Now'}
