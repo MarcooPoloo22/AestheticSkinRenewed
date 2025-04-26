@@ -15,13 +15,10 @@ try {
     $conn = new PDO("mysql:host=$host;dbname=$dbname", $username, $password);
     $conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
     
-    // Calculate date 3 years ago
     $threeYearsAgo = date('Y-m-d H:i:s', strtotime('-3 years'));
     
-    // Begin transaction
     $conn->beginTransaction();
     
-    // Step 1: Move old records to archive
     $stmt = $conn->prepare("
         INSERT INTO bookings_archive 
         SELECT *, NULL as archived_at FROM bookings 
@@ -31,7 +28,6 @@ try {
     $stmt->execute();
     $archivedCount = $stmt->rowCount();
     
-    // Step 2: Delete archived records from main table
     $stmt = $conn->prepare("
         DELETE FROM bookings 
         WHERE created_at < :threeYearsAgo
@@ -40,7 +36,6 @@ try {
     $stmt->execute();
     $deletedCount = $stmt->rowCount();
     
-    // Update archive timestamps
     $stmt = $conn->prepare("
         UPDATE bookings_archive 
         SET archived_at = NOW() 
