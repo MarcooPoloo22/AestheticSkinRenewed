@@ -49,19 +49,33 @@ const App = () => {
         `http://localhost/sse.php?userId=${user.id}&lastEventId=${lastEventId}`
       );
 
-      eventSource.addEventListener('booking-update', (e) => {
+      // Handle cancelled bookings
+      eventSource.addEventListener('booking-cancelled', (e) => {
         try {
           const data = JSON.parse(e.data);
-          const notificationMessage = `
-            ${data.message}
-            Date: ${data.details.date}
-            Time: ${data.details.time}
-          `;
-          setNotification(notificationMessage);
+          setNotification({
+            message: `${data.message}\nDate: ${data.details.date}\nTime: ${data.details.time}`,
+            type: 'cancelled'
+          });
           localStorage.setItem('lastBookingEventId', data.id);
           setTimeout(() => setNotification(null), 10000);
         } catch (error) {
-          console.error('Error parsing SSE data:', error);
+          console.error('Error parsing cancelled booking data:', error);
+        }
+      });
+
+      // Handle confirmed bookings
+      eventSource.addEventListener('booking-confirmed', (e) => {
+        try {
+          const data = JSON.parse(e.data);
+          setNotification({
+            message: `${data.message}\nDate: ${data.details.date}\nTime: ${data.details.time}`,
+            type: 'confirmed'
+          });
+          localStorage.setItem('lastBookingEventId', data.id);
+          setTimeout(() => setNotification(null), 10000);
+        } catch (error) {
+          console.error('Error parsing confirmed booking data:', error);
         }
       });
 
@@ -111,19 +125,20 @@ const App = () => {
         {notification && (
           <div style={{
             position: 'fixed',
-            top: '40px',
+            top: '60px',
             right: '20px',
-            backgroundColor: '#ff4444',
+            backgroundColor: notification.type === 'confirmed' ? '#4CAF50' : '#ff4444',
             color: 'white',
             padding: '15px',
             borderRadius: '8px',
             zIndex: 1000,
             maxWidth: '300px',
             boxShadow: '0 4px 8px rgba(0,0,0,0.2)',
-            whiteSpace: 'pre-line'
+            whiteSpace: 'pre-line',
+            animation: 'fadeIn 0.3s ease-in-out'
           }}>
-            <div style={{ display: 'flex', justifyContent: 'space-between' }}>
-              <strong>Booking Update</strong>
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+              <strong>{notification.type === 'confirmed' ? 'Booking Confirmed' : 'Booking Cancelled'}</strong>
               <button 
                 onClick={() => setNotification(null)}
                 style={{
@@ -131,13 +146,14 @@ const App = () => {
                   border: 'none',
                   color: 'white',
                   cursor: 'pointer',
-                  fontSize: '16px'
+                  fontSize: '16px',
+                  padding: '0 0 0 10px'
                 }}
               >
                 ×
               </button>
             </div>
-            <div style={{ marginTop: '8px' }}>{notification}</div>
+            <div style={{ marginTop: '8px' }}>{notification.message}</div>
           </div>
         )}
 

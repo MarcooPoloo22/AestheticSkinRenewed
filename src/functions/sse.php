@@ -32,7 +32,8 @@ try {
     }
 
     while (true) {
-        $stmt = $conn->prepare("
+        // Check for new cancelled bookings
+        $stmtCancelled = $conn->prepare("
             SELECT 
                 id,
                 first_name,
@@ -49,26 +50,62 @@ try {
             ORDER BY id DESC
             LIMIT 1
         ");
+        $stmtCancelled->bind_param("ii", $userId, $lastEventId);
+        $stmtCancelled->execute();
+        $resultCancelled = $stmtCancelled->get_result();
+        $bookingCancelled = $resultCancelled->fetch_assoc();
 
-        $stmt->bind_param("ii", $userId, $lastEventId);
-        $stmt->execute();
-        $result = $stmt->get_result();
-        $booking = $result->fetch_assoc();
-
-        if ($booking) {
-            $eventData = [
-                'id' => $booking['id'],
-                'message' => "Booking Cancelled: {$booking['service_type']}",
+        if ($bookingCancelled) {
+            $eventDataCancelled = [
+                'id' => $bookingCancelled['id'],
+                'message' => "Booking Cancelled: {$bookingCancelled['service_type']}",
                 'details' => [
-                    'date' => date('F j, Y', strtotime($booking['appointment_date'])),
-                    'time' => date('g:i A', strtotime($booking['appointment_time']))
+                    'date' => date('F j, Y', strtotime($bookingCancelled['appointment_date'])),
+                    'time' => date('g:i A', strtotime($bookingCancelled['appointment_time']))
                 ]
             ];
+            echo "id: {$bookingCancelled['id']}\n";
+            echo "event: booking-cancelled\n";
+            echo "data: " . json_encode($eventDataCancelled) . "\n\n";
+            $lastEventId = $bookingCancelled['id'];
+        }
 
-            echo "id: {$booking['id']}\n";
-            echo "event: booking-update\n";
-            echo "data: " . json_encode($eventData) . "\n\n";
-            $lastEventId = $booking['id'];
+        // Check for new confirmed bookings
+        $stmtConfirmed = $conn->prepare("
+            SELECT 
+                id,
+                first_name,
+                last_name,
+                service_type,
+                appointment_date,
+                appointment_time,
+                status,
+                created_at
+            FROM bookings 
+            WHERE user_id = ? 
+            AND status = 'confirmed'
+            AND id > ?
+            ORDER BY id DESC
+            LIMIT 1
+        ");
+        $stmtConfirmed->bind_param("ii", $userId, $lastEventId);
+        $stmtConfirmed->execute();
+        $resultConfirmed = $stmtConfirmed->get_result();
+        $bookingConfirmed = $resultConfirmed->fetch_assoc();
+
+        if ($bookingConfirmed) {
+            $eventDataConfirmed = [
+                'id' => $bookingConfirmed['id'],
+                'message' => "Booking Confirmed: {$bookingConfirmed['service_type']}",
+                'details' => [
+                    'date' => date('F j, Y', strtotime($bookingConfirmed['appointment_date'])),
+                    'time' => date('g:i A', strtotime($bookingConfirmed['appointment_time']))
+                ]
+            ];
+            echo "id: {$bookingConfirmed['id']}\n";
+            echo "event: booking-confirmed\n";
+            echo "data: " . json_encode($eventDataConfirmed) . "\n\n";
+            $lastEventId = $bookingConfirmed['id'];
         }
 
         ob_flush();
