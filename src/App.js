@@ -44,38 +44,38 @@ const App = () => {
     let reconnectTimer;
 
     const connectSSE = () => {
-      const lastEventId = localStorage.getItem('lastBookingEventId') || 0;
+      const lastEventId = localStorage.getItem("lastBookingEventId") || 0;
       eventSource = new EventSource(
         `http://localhost/sse.php?userId=${user.id}&lastEventId=${lastEventId}`
       );
 
       // Handle cancelled bookings
-      eventSource.addEventListener('booking-cancelled', (e) => {
+      eventSource.addEventListener("booking-cancelled", (e) => {
         try {
           const data = JSON.parse(e.data);
           setNotification({
             message: `${data.message}\nDate: ${data.details.date}\nTime: ${data.details.time}`,
-            type: 'cancelled'
+            type: "cancelled",
           });
-          localStorage.setItem('lastBookingEventId', data.id);
+          localStorage.setItem("lastBookingEventId", data.id);
           setTimeout(() => setNotification(null), 10000);
         } catch (error) {
-          console.error('Error parsing cancelled booking data:', error);
+          console.error("Error parsing cancelled booking data:", error);
         }
       });
 
       // Handle confirmed bookings
-      eventSource.addEventListener('booking-confirmed', (e) => {
+      eventSource.addEventListener("booking-confirmed", (e) => {
         try {
           const data = JSON.parse(e.data);
           setNotification({
             message: `${data.message}\nDate: ${data.details.date}\nTime: ${data.details.time}`,
-            type: 'confirmed'
+            type: "confirmed",
           });
-          localStorage.setItem('lastBookingEventId', data.id);
+          localStorage.setItem("lastBookingEventId", data.id);
           setTimeout(() => setNotification(null), 10000);
         } catch (error) {
-          console.error('Error parsing confirmed booking data:', error);
+          console.error("Error parsing confirmed booking data:", error);
         }
       });
 
@@ -123,42 +123,55 @@ const App = () => {
     <Router>
       <div className="app-container">
         {notification && (
-          <div style={{
-            position: 'fixed',
-            top: '60px',
-            right: '20px',
-            backgroundColor: notification.type === 'confirmed' ? '#4CAF50' : '#ff4444',
-            color: 'white',
-            padding: '15px',
-            borderRadius: '8px',
-            zIndex: 1000,
-            maxWidth: '300px',
-            boxShadow: '0 4px 8px rgba(0,0,0,0.2)',
-            whiteSpace: 'pre-line',
-            animation: 'fadeIn 0.3s ease-in-out'
-          }}>
-            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-              <strong>{notification.type === 'confirmed' ? 'Booking Confirmed' : 'Booking Cancelled'}</strong>
-              <button 
+          <div
+            style={{
+              position: "fixed",
+              top: "60px",
+              right: "20px",
+              backgroundColor:
+                notification.type === "confirmed" ? "#4CAF50" : "#ff4444",
+              color: "white",
+              padding: "15px",
+              borderRadius: "8px",
+              zIndex: 1000,
+              maxWidth: "300px",
+              boxShadow: "0 4px 8px rgba(0,0,0,0.2)",
+              whiteSpace: "pre-line",
+              animation: "fadeIn 0.3s ease-in-out",
+            }}
+          >
+            <div
+              style={{
+                display: "flex",
+                justifyContent: "space-between",
+                alignItems: "center",
+              }}
+            >
+              <strong>
+                {notification.type === "confirmed"
+                  ? "Booking Confirmed"
+                  : "Booking Cancelled"}
+              </strong>
+              <button
                 onClick={() => setNotification(null)}
                 style={{
-                  background: 'none',
-                  border: 'none',
-                  color: 'white',
-                  cursor: 'pointer',
-                  fontSize: '16px',
-                  padding: '0 0 0 10px'
+                  background: "none",
+                  border: "none",
+                  color: "white",
+                  cursor: "pointer",
+                  fontSize: "16px",
+                  padding: "0 0 0 10px",
                 }}
               >
                 ×
               </button>
             </div>
-            <div style={{ marginTop: '8px' }}>{notification.message}</div>
+            <div style={{ marginTop: "8px" }}>{notification.message}</div>
           </div>
         )}
 
         <AppointmentNotifications userId={user?.id} />
-        
+
         <MainContent
           user={user}
           setUser={setUser}
