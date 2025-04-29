@@ -258,15 +258,47 @@ useEffect(() => {
       .map(slot => {
         const [date, time] = slot.split(' ');
         return convertTime24to12(time.substring(0, 5));
-      })
-      .filter(slot => !bookedSlots.includes(slot));
+      });
       
     setAvailableTimeSlots(availableSlots);
   } else {
-    const availableSlots = standardTimeSlots.filter(slot => !bookedSlots.includes(slot));
-    setAvailableTimeSlots(availableSlots);
+    // For Promo/Service, we'll show all standard time slots but grey out the booked ones
+    setAvailableTimeSlots(standardTimeSlots);
   }
-}, [doctorAvailability, bookedSlots, formData.appointment_date, formData.service_category]);
+}, [doctorAvailability, formData.appointment_date, formData.service_category]);
+
+useEffect(() => {
+  if (formData.appointment_date && formData.staff_id && formData.service_category !== "Surgery") {
+    setIsLoading(true);
+    fetch(`http://localhost/booking.php?date=${formData.appointment_date}&staff_id=${formData.staff_id}`)
+      .then((response) => {
+        if (!response.ok) {
+          throw new Error('Network response was not ok');
+        }
+        return response.json();
+      })
+      .then((data) => {
+        if (data.status === 'success') {
+          setBookedSlots(data.booked_slots || []);
+        } else {
+          throw new Error(data.message || 'Failed to fetch booked slots.');
+        }
+      })
+      .catch((error) => {
+        console.error("Error fetching booked slots:", error);
+        Swal.fire({
+          icon: 'error',
+          title: 'Error',
+          text: 'Failed to fetch booked slots. Please try again.',
+        });
+      })
+      .finally(() => {
+        setIsLoading(false);
+      });
+  } else {
+    setBookedSlots([]);
+  }
+}, [formData.appointment_date, formData.staff_id, formData.service_category]);
 
   const handleSurgeryPayment = async () => {
     setIsLoadingPayment(true);
@@ -690,18 +722,27 @@ useEffect(() => {
                 value={formData.appointment_time}
                 onChange={handleChange}
                 required
-                disabled={isLoading || availableTimeSlots.length === 0}
+                disabled={isLoading || (formData.service_category === "Surgery" && availableTimeSlots.length === 0)}
               >
                 <option value="">Select Time</option>
                 {isLoading ? (
                   <option disabled>Loading availability...</option>
-                ) : availableTimeSlots.length === 0 ? (
-                  <option disabled>No available time slots</option>
+                ) : formData.service_category === "Surgery" ? (
+                  availableTimeSlots.length === 0 ? (
+                    <option disabled>No available time slots</option>
+                  ) : (
+                    availableTimeSlots.map((slot) => (
+                      <option key={slot} value={slot}>
+                        {slot}
+                      </option>
+                    ))
+                  )
                 ) : (
-                  availableTimeSlots.map((slot) => (
+                  standardTimeSlots.map((slot) => (
                     <option
                       key={slot}
                       value={slot}
+                      disabled={bookedSlots.includes(slot)}
                       style={{
                         backgroundColor: bookedSlots.includes(slot) ? "#f0f0f0" : "inherit",
                         color: bookedSlots.includes(slot) ? "#a0a0a0" : "inherit",
