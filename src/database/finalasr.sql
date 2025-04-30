@@ -34,7 +34,7 @@ CREATE TABLE IF NOT EXISTS `audit_logs` (
   PRIMARY KEY (`audit_id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=192 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
--- Dumping data for table asr.audit_logs: ~153 rows (approximately)
+-- Dumping data for table asr.audit_logs: ~171 rows (approximately)
 INSERT INTO `audit_logs` (`audit_id`, `user_id`, `user_name`, `user_role`, `action_type`, `table_name`, `new_value`, `timestamp`, `description`, `old_value`) VALUES
 	(21, 44, 'Gabriello', 'admin', 'UPDATE', 'promos', '{"id":7,"name":"Promo 45877","description":"Desc 5","price":"123.00","file_url":null,"start_date":"2025-03-24 17:23:00","end_date":"2025-03-31 13:21:00","duration":6,"created_at":"2025-03-23 13:17:21","updated_at":"2025-03-23 14:35:08","branch_ids":"[\\"7\\",\\"6\\"]","staff_ids":"[\\"1\\",\\"3\\"]"}', '2025-03-23 06:35:08', NULL, '{"id":7,"name":"Promo 45877","description":"Desc 5","price":"123.00","file_url":null,"start_date":"2025-03-24 17:23:00","end_date":"2025-03-31 13:21:00","duration":5,"created_at":"2025-03-23 13:17:21","updated_at":"2025-03-23 13:33:06","branch_ids":"[]","staff_ids":"[]"}'),
 	(22, 44, 'Gabriello', 'admin', 'UPDATE', 'promos', '{"id":7,"name":"Promo 45877","description":"Desc 5","price":"123.00","file_url":null,"start_date":"2025-03-24 17:23:00","end_date":"2025-03-31 13:21:00","duration":6,"created_at":"2025-03-23 13:17:21","updated_at":"2025-03-23 14:40:33","branch_ids":"[\\"6\\",\\"7\\"]","staff_ids":"[\\"1\\",\\"3\\"]"}', '2025-03-23 06:40:33', NULL, '{"id":7,"name":"Promo 45877","description":"Desc 5","price":"123.00","file_url":null,"start_date":"2025-03-24 17:23:00","end_date":"2025-03-31 13:21:00","duration":6,"created_at":"2025-03-23 13:17:21","updated_at":"2025-03-23 14:35:08","branch_ids":"[\\"7\\",\\"6\\"]","staff_ids":"[\\"1\\",\\"3\\"]"}'),
@@ -234,7 +234,7 @@ CREATE TABLE IF NOT EXISTS `bookings` (
   CONSTRAINT `fk_staff` FOREIGN KEY (`staff_id`) REFERENCES `staff` (`id`) ON DELETE CASCADE
 ) ENGINE=InnoDB AUTO_INCREMENT=65 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
--- Dumping data for table asr.bookings: ~13 rows (approximately)
+-- Dumping data for table asr.bookings: ~12 rows (approximately)
 INSERT INTO `bookings` (`id`, `user_id`, `first_name`, `last_name`, `email`, `contact_no`, `service_type`, `appointment_date`, `appointment_time`, `status`, `created_at`, `staff_id`, `branch_id`, `rating`, `file_url`) VALUES
 	(33, 35, 'Randolph', 'Alvarado', 'alvaradorandolph@gmail.com', '09052752202', 'Deep Cleansing Facial', '2025-04-23', '11:00:00', 'cancelled', '2025-04-11 21:24:55', 4, 6, NULL, 'http://localhost/uploads/67f988a7acc7b_67dffdbc9dbb4-body_scrub.jpg'),
 	(42, NULL, 'Randolph', 'Alvarado', 'alvaradorandolph@gmail.com', '09052752202', 'Acne Control Facial', '2025-04-14', '14:00:00', 'cancelled', '2025-04-13 15:41:52', 1, 6, NULL, NULL),
@@ -300,7 +300,7 @@ CREATE TABLE IF NOT EXISTS `contact_info` (
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
--- Dumping data for table asr.contact_info: ~0 rows (approximately)
+-- Dumping data for table asr.contact_info: ~1 rows (approximately)
 INSERT INTO `contact_info` (`id`, `phone`, `facebook`, `instagram`, `twitter`) VALUES
 	(1, '+63 9123456789 / +632123123', 'https://www.facebook.com/ASRSpaPHasdasda', 'https://www.facebook.com/ASRSpaPHsdasd', 'https://www.facebook.com/ASRSpaPHasdads');
 
@@ -315,7 +315,7 @@ CREATE TABLE IF NOT EXISTS `doctor_availability` (
   CONSTRAINT `doctor_availability_ibfk_1` FOREIGN KEY (`doctor_id`) REFERENCES `staff` (`id`) ON DELETE CASCADE
 ) ENGINE=InnoDB AUTO_INCREMENT=8 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
--- Dumping data for table asr.doctor_availability: ~4 rows (approximately)
+-- Dumping data for table asr.doctor_availability: ~6 rows (approximately)
 INSERT INTO `doctor_availability` (`id`, `doctor_id`, `date_time`, `created_at`) VALUES
 	(1, 1, '2025-04-17 10:20:00', '2025-04-17 02:20:09'),
 	(2, 1, '2025-04-17 11:20:00', '2025-04-17 02:21:04'),
@@ -366,7 +366,7 @@ CREATE TABLE IF NOT EXISTS `payment_details` (
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
--- Dumping data for table asr.payment_details: ~0 rows (approximately)
+-- Dumping data for table asr.payment_details: ~1 rows (approximately)
 INSERT INTO `payment_details` (`id`, `gcash_number`, `gcash_name`, `paymaya_number`, `paymaya_name`, `bank_name`, `bank_account_number`, `bank_account_name`, `last_updated`) VALUES
 	(1, '09123456789', 'Juan Dela Cruz', '09123456789', 'Juan Dela Cruz', 'BDO', '09123456789', 'Juan Dela Cruzz', '2025-04-13 04:09:33');
 
@@ -534,7 +534,7 @@ CREATE TABLE IF NOT EXISTS `site_policies` (
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
--- Dumping data for table asr.site_policies: ~0 rows (approximately)
+-- Dumping data for table asr.site_policies: ~1 rows (approximately)
 INSERT INTO `site_policies` (`id`, `privacy_policy`, `terms_condition`, `last_updated`) VALUES
 	(1, 'Add your privacy policy here', 'Add your Terms and Conditions here', '2025-04-13 11:45:19');
 
@@ -596,7 +596,7 @@ CREATE TABLE IF NOT EXISTS `surgery_branches` (
   CONSTRAINT `surgery_branches_ibfk_2` FOREIGN KEY (`branch_id`) REFERENCES `branches` (`id`) ON DELETE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
--- Dumping data for table asr.surgery_branches: ~0 rows (approximately)
+-- Dumping data for table asr.surgery_branches: ~10 rows (approximately)
 INSERT INTO `surgery_branches` (`surgery_id`, `branch_id`) VALUES
 	(2, 6),
 	(2, 7),
@@ -619,7 +619,7 @@ CREATE TABLE IF NOT EXISTS `surgery_staff` (
   CONSTRAINT `surgery_staff_ibfk_2` FOREIGN KEY (`staff_id`) REFERENCES `staff` (`id`) ON DELETE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
--- Dumping data for table asr.surgery_staff: ~0 rows (approximately)
+-- Dumping data for table asr.surgery_staff: ~15 rows (approximately)
 INSERT INTO `surgery_staff` (`surgery_id`, `staff_id`) VALUES
 	(2, 1),
 	(2, 3),
