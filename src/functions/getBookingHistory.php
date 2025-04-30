@@ -13,7 +13,6 @@ if ( $_SERVER[ 'REQUEST_METHOD' ] === 'OPTIONS' ) {
     exit();
 }
 
-// Check if user is logged in
 if ( !isset( $_SESSION[ 'user' ] ) ) {
     echo json_encode( [ 'status' => 'error', 'message' => 'User not logged in.' ] );
     exit();
@@ -21,19 +20,20 @@ if ( !isset( $_SESSION[ 'user' ] ) ) {
 
 $user = $_SESSION[ 'user' ];
 $userId = $user[ 'id' ];
-// or use $user[ 'email' ] if your bookings table references email
 
 try {
     $conn = new PDO( 'mysql:host=localhost;dbname=asr', 'root', '' );
     $conn->setAttribute( PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION );
 
-    // If you store user_id in bookings:
-    $stmt = $conn->prepare( 'SELECT * FROM bookings WHERE user_id = :userId' );
-    // If you only store email in bookings:
-    // $stmt = $conn->prepare( 'SELECT * FROM bookings WHERE email = :email' );
+    $stmt = $conn->prepare(
+        'SELECT * 
+           FROM bookings 
+          WHERE user_id = :userId
+       ORDER BY appointment_date DESC,      
+                appointment_time DESC'
+    );
 
     $stmt->execute( [ ':userId' => $userId ] );
-    // or $stmt->execute( [ ':email' => $user[ 'email' ] ] );
 
     $bookings = $stmt->fetchAll( PDO::FETCH_ASSOC );
 
