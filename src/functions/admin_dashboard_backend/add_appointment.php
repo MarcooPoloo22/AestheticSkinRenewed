@@ -1,7 +1,7 @@
 <?php
 session_start();
 
-header('Access-Control-Allow-Origin: http://localhost:3000');
+header('Access-Control-Allow-Origin: backend:3000');
 header('Content-Type: application/json; charset=UTF-8');
 header('Access-Control-Allow-Methods: POST, OPTIONS');
 header( 'Access-Control-Allow-Credentials: true' );
@@ -87,7 +87,7 @@ if (isset($_FILES['receipt_file']) && $_FILES['receipt_file']['error'] === UPLOA
     $destination  = 'uploads/' . $newFileName;
 
     if (move_uploaded_file($tempPath, $destination)) {
-        $newFileUrl = 'http://localhost/admin_dashboard_backend/' . $destination;
+        $newFileUrl = 'backend/admin_dashboard_backend/' . $destination;
     }
 }
 

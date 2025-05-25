@@ -11,7 +11,7 @@ const Rating = () => {
 
     const fetchRatings = async () => {
         try {
-            const response = await fetch('http://localhost/booking.php?get_ratings=true');
+            const response = await fetch('backend/booking.php?get_ratings=true');
             const data = await response.json();
             
             if (data.status === 'success') {

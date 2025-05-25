@@ -1,6 +1,6 @@
 <?php
 session_start();
-header("Access-Control-Allow-Origin: http://localhost:3000");
+header("Access-Control-Allow-Origin: backend:3000");
 header("Content-Type: application/json; charset=UTF-8");
 header("Access-Control-Allow-Methods: POST, OPTIONS");
 header("Access-Control-Allow-Headers: Content-Type, Authorization");
@@ -74,7 +74,7 @@ try {
             $fileName = uniqid() . '-' . basename($file['name']);
             $filePath = $uploadDir . $fileName;
             if (move_uploaded_file($file['tmp_name'], $filePath)) {
-                $imageUrl = 'http://localhost/admin_dashboard_backend/' . $filePath;
+                $imageUrl = 'backend/admin_dashboard_backend/' . $filePath;
             } else {
                 throw new Exception("Failed to upload image");
             }

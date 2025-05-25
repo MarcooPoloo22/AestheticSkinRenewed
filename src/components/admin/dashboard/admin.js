@@ -30,7 +30,7 @@ const UserTable = ({ setActivePage, users, fetchUsers }) => {
     if (result.isConfirmed) {
       try {
         const response = await fetch(
-          `http://localhost/admin_dashboard_backend/user_delete_user.php?id=${id}`,
+          `backend/admin_dashboard_backend/user_delete_user.php?id=${id}`,
           { 
             method: "DELETE",
             credentials: "include"
@@ -123,7 +123,7 @@ const ManageUserEdit = ({ setActivePage, user, fetchUsers }) => {
     e.preventDefault();
     try {
       const response = await fetch(
-        "http://localhost/admin_dashboard_backend/user_update_user.php",
+        "backend/admin_dashboard_backend/user_update_user.php",
         {
           method: "PUT",
           credentials: "include",
@@ -256,7 +256,7 @@ const ManageUserAdd = ({ setActivePage, fetchUsers }) => {
       };
 
       const response = await fetch(
-        "http://localhost/admin_dashboard_backend/user_add_user.php",
+        "backend/admin_dashboard_backend/user_add_user.php",
         {
           method: "POST",
           credentials: "include",
@@ -378,7 +378,7 @@ const UserManagement = () => {
   const fetchUsers = async () => {
     try {
       const response = await fetch(
-        "http://localhost/admin_dashboard_backend/user_fetch_users.php"
+        "backend/admin_dashboard_backend/user_fetch_users.php"
       );
       const data = await response.json();
       setUsers(data);

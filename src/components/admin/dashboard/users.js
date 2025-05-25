@@ -123,7 +123,7 @@ const FAQs = () => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await fetch('http://localhost/admin_dashboard_backend/fetch_users.php?role=customer');
+        const response = await fetch('backend/admin_dashboard_backend/fetch_users.php?role=customer');
         if (!response.ok) {
           throw new Error('Network response was not ok');
         }
@@ -154,7 +154,7 @@ const FAQs = () => {
     // If the user confirms, proceed with deletion
     if (confirmResult.isConfirmed) {
       try {
-        const response = await fetch('http://localhost/admin_dashboard_backend/delete_user.php', {
+        const response = await fetch('backend/admin_dashboard_backend/delete_user.php', {
           method: 'DELETE',
           credentials: 'include',
           headers: {

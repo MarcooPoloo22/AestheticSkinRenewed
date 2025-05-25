@@ -7,7 +7,7 @@ const FAQ = () => {
 
   // Fetch FAQs from the backend
   useEffect(() => {
-    fetch('http://localhost/admin_dashboard_backend/fetch_faqs.php')
+    fetch('backend/admin_dashboard_backend/fetch_faqs.php')
       .then(response => response.json())
       .then(data => {
         console.log("Fetched FAQs:", data); // Debugging

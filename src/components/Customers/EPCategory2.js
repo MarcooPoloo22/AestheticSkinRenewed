@@ -37,7 +37,7 @@ const Epcategory2 = () => {
     const fetchServices = async () => {
       try {
         const response = await fetch(
-          "http://localhost/admin_dashboard_backend/home_fetch_services.php"
+          "backend/admin_dashboard_backend/home_fetch_services.php"
         );
         
         if (!response.ok) {

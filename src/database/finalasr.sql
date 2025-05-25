@@ -236,7 +236,7 @@ CREATE TABLE IF NOT EXISTS `bookings` (
 
 -- Dumping data for table asr.bookings: ~12 rows (approximately)
 INSERT INTO `bookings` (`id`, `user_id`, `first_name`, `last_name`, `email`, `contact_no`, `service_type`, `appointment_date`, `appointment_time`, `status`, `created_at`, `staff_id`, `branch_id`, `rating`, `file_url`) VALUES
-	(33, 35, 'Randolph', 'Alvarado', 'alvaradorandolph@gmail.com', '09052752202', 'Deep Cleansing Facial', '2025-04-23', '11:00:00', 'cancelled', '2025-04-11 21:24:55', 4, 6, NULL, 'http://localhost/uploads/67f988a7acc7b_67dffdbc9dbb4-body_scrub.jpg'),
+	(33, 35, 'Randolph', 'Alvarado', 'alvaradorandolph@gmail.com', '09052752202', 'Deep Cleansing Facial', '2025-04-23', '11:00:00', 'cancelled', '2025-04-11 21:24:55', 4, 6, NULL, 'backend/uploads/67f988a7acc7b_67dffdbc9dbb4-body_scrub.jpg'),
 	(42, NULL, 'Randolph', 'Alvarado', 'alvaradorandolph@gmail.com', '09052752202', 'Acne Control Facial', '2025-04-14', '14:00:00', 'cancelled', '2025-04-13 15:41:52', 1, 6, NULL, NULL),
 	(44, 35, 'Randolph', 'Alvarado', 'alvaradorandolph@gmail.com', '09052752202', 'Intensive Whitening Facial', '2025-04-15', '14:00:00', 'pending', '2025-04-13 16:43:52', 8, 7, NULL, NULL),
 	(46, NULL, 'Randolph', 'Alvarado', 'alvaradorandolph@gmail.com', '09052752202', 'Promo', '2025-04-14', '11:00:00', 'pending', '2025-04-14 05:12:55', 8, 7, NULL, ''),
@@ -382,10 +382,10 @@ CREATE TABLE IF NOT EXISTS `products` (
 
 -- Dumping data for table asr.products: ~4 rows (approximately)
 INSERT INTO `products` (`id`, `name`, `description`, `price`, `file_url`) VALUES
-	(1018, 'Product 1', 'Description for Product 1', 499.00, 'http://localhost/admin_dashboard_backend/uploads/spongebob.webp'),
-	(1019, 'Product 2', 'Description for Product 2', 599.00, 'http://localhost/admin_dashboard_backend/uploads/tomjerry.jpg'),
-	(1020, 'Product 3', 'Description for Product 3', 999.00, 'http://localhost/admin_dashboard_backend/uploads/spongebob.webp'),
-	(1021, 'Product 4', 'Description for Product 4', 299.00, 'http://localhost/admin_dashboard_backend/uploads/dora.jpg');
+	(1018, 'Product 1', 'Description for Product 1', 499.00, 'backend/admin_dashboard_backend/uploads/spongebob.webp'),
+	(1019, 'Product 2', 'Description for Product 2', 599.00, 'backend/admin_dashboard_backend/uploads/tomjerry.jpg'),
+	(1020, 'Product 3', 'Description for Product 3', 999.00, 'backend/admin_dashboard_backend/uploads/spongebob.webp'),
+	(1021, 'Product 4', 'Description for Product 4', 299.00, 'backend/admin_dashboard_backend/uploads/dora.jpg');
 
 -- Dumping structure for table asr.promos
 CREATE TABLE IF NOT EXISTS `promos` (
@@ -406,10 +406,10 @@ CREATE TABLE IF NOT EXISTS `promos` (
 
 -- Dumping data for table asr.promos: ~4 rows (approximately)
 INSERT INTO `promos` (`id`, `name`, `description`, `price`, `file_url`, `start_date`, `end_date`, `duration`, `created_at`, `updated_at`, `branch_ids`, `staff_ids`) VALUES
-	(10, 'ASR Gluta IV Push or Vit C Drip', 'For Immune System Booster W/ Whitening (5+1 Promo), +1 or 5 Treatment Points', 399.00, 'http://localhost/admin_dashboard_backend/uploads/67e01dd211554-bart.jpg', '2025-04-02 22:42:00', '2025-05-08 22:42:00', 1, '2025-03-23 14:42:26', '2025-04-13 16:02:03', NULL, NULL),
-	(11, 'ASR Immunomax Drip', 'High Dose IV Vitamin C for whitening and to counteract. FREE Radicals, Tumors and Cancer Cells (5+1 Promo), +1 or 10 Treatment Points', 7495.00, 'http://localhost/admin_dashboard_backend/uploads/67e01e47491f1-67e01dd211554-bart.jpg', '2025-04-13 22:44:00', '2025-05-02 22:44:00', 3, '2025-03-23 14:44:23', '2025-04-13 16:03:00', NULL, NULL),
-	(12, 'ASR Pure Glow Drip', 'Single Dose Glutathione Drip with thioctic acid for Whitening, Multivitamins and Kojic Acid (5+1 Promo), +1 or 10 Treatment Points', 6495.00, 'http://localhost/admin_dashboard_backend/uploads/67e01eb758334-spongebob.webp', '2025-03-23 22:46:00', '2025-03-31 22:46:00', 1, '2025-03-23 14:46:15', '2025-03-23 14:46:15', NULL, NULL),
-	(13, 'ASR Cinderella Drip', 'Cocktail mixed of gluta drip, multivitamins, collagen, Vitamin C and Placenta that fights aging with cell rejuvenation plus whitening  (5+1 Promo), +1 or 10 Treatment Points', 9495.00, 'http://localhost/admin_dashboard_backend/uploads/67e01f26a9e58-hellokitty.png', '2025-03-23 22:46:00', '2025-03-31 22:49:00', 3, '2025-03-23 14:48:06', '2025-03-23 14:48:06', NULL, NULL);
+	(10, 'ASR Gluta IV Push or Vit C Drip', 'For Immune System Booster W/ Whitening (5+1 Promo), +1 or 5 Treatment Points', 399.00, 'backend/admin_dashboard_backend/uploads/67e01dd211554-bart.jpg', '2025-04-02 22:42:00', '2025-05-08 22:42:00', 1, '2025-03-23 14:42:26', '2025-04-13 16:02:03', NULL, NULL),
+	(11, 'ASR Immunomax Drip', 'High Dose IV Vitamin C for whitening and to counteract. FREE Radicals, Tumors and Cancer Cells (5+1 Promo), +1 or 10 Treatment Points', 7495.00, 'backend/admin_dashboard_backend/uploads/67e01e47491f1-67e01dd211554-bart.jpg', '2025-04-13 22:44:00', '2025-05-02 22:44:00', 3, '2025-03-23 14:44:23', '2025-04-13 16:03:00', NULL, NULL),
+	(12, 'ASR Pure Glow Drip', 'Single Dose Glutathione Drip with thioctic acid for Whitening, Multivitamins and Kojic Acid (5+1 Promo), +1 or 10 Treatment Points', 6495.00, 'backend/admin_dashboard_backend/uploads/67e01eb758334-spongebob.webp', '2025-03-23 22:46:00', '2025-03-31 22:46:00', 1, '2025-03-23 14:46:15', '2025-03-23 14:46:15', NULL, NULL),
+	(13, 'ASR Cinderella Drip', 'Cocktail mixed of gluta drip, multivitamins, collagen, Vitamin C and Placenta that fights aging with cell rejuvenation plus whitening  (5+1 Promo), +1 or 10 Treatment Points', 9495.00, 'backend/admin_dashboard_backend/uploads/67e01f26a9e58-hellokitty.png', '2025-03-23 22:46:00', '2025-03-31 22:49:00', 3, '2025-03-23 14:48:06', '2025-03-23 14:48:06', NULL, NULL);
 
 -- Dumping structure for table asr.promo_branches
 CREATE TABLE IF NOT EXISTS `promo_branches` (
@@ -580,11 +580,11 @@ CREATE TABLE IF NOT EXISTS `surgeries` (
 
 -- Dumping data for table asr.surgeries: ~5 rows (approximately)
 INSERT INTO `surgeries` (`id`, `title`, `description`, `start_date`, `end_date`, `price`, `image_url`, `duration`, `created_at`, `updated_at`, `branch_ids`, `staff_ids`, `time_slots`) VALUES
-	(2, 'Surgery 1', 'This is the description for Surgery 1', '2025-03-23 00:00:00', '2025-03-31 00:00:00', 9998.00, 'http://localhost/admin_dashboard_backend/uploads/surgeries/67e020c02c2e7-spongebob.webp', 12, '2025-03-19 20:57:12', '2025-03-23 14:54:56', '["6","7"]', '["1","3","4","8","9"]', NULL),
-	(4, 'Surgery 2', 'This is the description for Surgery 1', '2025-03-23 00:00:00', '2025-03-31 00:00:00', 10998.00, 'http://localhost/admin_dashboard_backend/uploads/surgeries/67e020d2f31b1-tomjerry.jpg', 6, '2025-03-23 08:36:02', '2025-03-23 14:55:53', NULL, NULL, NULL),
-	(5, 'Surgery 3', 'This is the description for Surgery 3', '2025-03-23 00:00:00', '2025-03-31 00:00:00', 12999.00, 'http://localhost/admin_dashboard_backend/uploads/surgeries/67e02149c58e4-tomjerry.jpg', 11, '2025-03-23 08:56:09', '2025-03-23 14:57:13', 'Array', 'Array', NULL),
-	(6, 'Surgery 4', 'This is the description for Surgery 4', '2025-03-18 00:00:00', '2025-04-02 00:00:00', 15999.00, 'http://localhost/admin_dashboard_backend/uploads/surgeries/67e0216758af3-dora.jpg', 11, '2025-03-23 08:56:54', '2025-03-23 14:57:43', '["7","6"]', '["3","1","4"]', NULL),
-	(12, 'asda', 'asdads', '2025-04-16 22:19:00', '2025-04-30 13:18:00', 213.00, 'http://localhost/admin_dashboard_backend/uploads/surgeries/67f680c8913e4-67e01dd211554-bart.jpg', 10, '2025-04-09 14:14:32', '2025-04-09 14:14:32', NULL, NULL, NULL);
+	(2, 'Surgery 1', 'This is the description for Surgery 1', '2025-03-23 00:00:00', '2025-03-31 00:00:00', 9998.00, 'backend/admin_dashboard_backend/uploads/surgeries/67e020c02c2e7-spongebob.webp', 12, '2025-03-19 20:57:12', '2025-03-23 14:54:56', '["6","7"]', '["1","3","4","8","9"]', NULL),
+	(4, 'Surgery 2', 'This is the description for Surgery 1', '2025-03-23 00:00:00', '2025-03-31 00:00:00', 10998.00, 'backend/admin_dashboard_backend/uploads/surgeries/67e020d2f31b1-tomjerry.jpg', 6, '2025-03-23 08:36:02', '2025-03-23 14:55:53', NULL, NULL, NULL),
+	(5, 'Surgery 3', 'This is the description for Surgery 3', '2025-03-23 00:00:00', '2025-03-31 00:00:00', 12999.00, 'backend/admin_dashboard_backend/uploads/surgeries/67e02149c58e4-tomjerry.jpg', 11, '2025-03-23 08:56:09', '2025-03-23 14:57:13', 'Array', 'Array', NULL),
+	(6, 'Surgery 4', 'This is the description for Surgery 4', '2025-03-18 00:00:00', '2025-04-02 00:00:00', 15999.00, 'backend/admin_dashboard_backend/uploads/surgeries/67e0216758af3-dora.jpg', 11, '2025-03-23 08:56:54', '2025-03-23 14:57:43', '["7","6"]', '["3","1","4"]', NULL),
+	(12, 'asda', 'asdads', '2025-04-16 22:19:00', '2025-04-30 13:18:00', 213.00, 'backend/admin_dashboard_backend/uploads/surgeries/67f680c8913e4-67e01dd211554-bart.jpg', 10, '2025-04-09 14:14:32', '2025-04-09 14:14:32', NULL, NULL, NULL);
 
 -- Dumping structure for table asr.surgery_branches
 CREATE TABLE IF NOT EXISTS `surgery_branches` (

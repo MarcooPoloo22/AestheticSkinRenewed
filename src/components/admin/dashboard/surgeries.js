@@ -76,7 +76,7 @@ const SurgeryTable = ({ setActivePage, activePage, data, fetchSurgeries }) => {
 
     if (result.isConfirmed) {
       try {
-        const response = await fetch(`http://localhost/admin_dashboard_backend/delete_surgery.php`, {
+        const response = await fetch(`backend/admin_dashboard_backend/delete_surgery.php`, {
           method: 'DELETE',
           credentials: 'include',
           headers: {
@@ -220,7 +220,7 @@ const ManageSurgeryEdit = ({ setActivePage, activePage, fetchSurgeries }) => {
 
   const fetchBranches = async () => {
     try {
-      const response = await fetch("http://localhost/admin_dashboard_backend/branch_fetch_branches.php");
+      const response = await fetch("backend/admin_dashboard_backend/branch_fetch_branches.php");
       const data = await response.json();
       setBranches(data);
     } catch (error) {
@@ -232,7 +232,7 @@ const ManageSurgeryEdit = ({ setActivePage, activePage, fetchSurgeries }) => {
     try {
       setLoadingStaff(true);
       const response = await fetch(
-        `http://localhost/admin_dashboard_backend/branch_fetch_staff.php?branch_ids=${formData.selectedBranches.join(",")}`
+        `backend/admin_dashboard_backend/branch_fetch_staff.php?branch_ids=${formData.selectedBranches.join(",")}`
       );
   
       if (!response.ok) {
@@ -301,7 +301,7 @@ const ManageSurgeryEdit = ({ setActivePage, activePage, fetchSurgeries }) => {
   }
 
   try {
-    const response = await fetch('http://localhost/admin_dashboard_backend/update_surgery.php', {
+    const response = await fetch('backend/admin_dashboard_backend/update_surgery.php', {
       method: 'POST',
       credentials: 'include',
       body: formPayload,
@@ -460,7 +460,7 @@ const ManageSurgeryAdd = ({ setActivePage, activePage, fetchSurgeries }) => {
 
   const fetchBranches = async () => {
     try {
-      const response = await fetch("http://localhost/admin_dashboard_backend/branch_fetch_branches.php");
+      const response = await fetch("backend/admin_dashboard_backend/branch_fetch_branches.php");
       const data = await response.json();
       setBranches(data);
     } catch (error) {
@@ -472,7 +472,7 @@ const ManageSurgeryAdd = ({ setActivePage, activePage, fetchSurgeries }) => {
     try {
       setLoadingStaff(true);
       const response = await fetch(
-        `http://localhost/admin_dashboard_backend/branch_fetch_staff.php?branch_ids=${formData.selectedBranches.join(",")}`
+        `backend/admin_dashboard_backend/branch_fetch_staff.php?branch_ids=${formData.selectedBranches.join(",")}`
       );
   
       if (!response.ok) {
@@ -539,7 +539,7 @@ const ManageSurgeryAdd = ({ setActivePage, activePage, fetchSurgeries }) => {
     }
 
     try {
-      const response = await fetch(`http://localhost/admin_dashboard_backend/add_surgery.php`, {
+      const response = await fetch(`backend/admin_dashboard_backend/add_surgery.php`, {
         method: 'POST',
         credentials: 'include',
         body: formPayload,
@@ -674,7 +674,7 @@ const SurgeryAppointments = () => {
 
   const fetchSurgeries = async () => {
     try {
-      const response = await fetch("http://localhost/admin_dashboard_backend/fetch_surgeries.php");
+      const response = await fetch("backend/admin_dashboard_backend/fetch_surgeries.php");
       if (!response.ok) {
         throw new Error('Failed to fetch surgeries');
       }

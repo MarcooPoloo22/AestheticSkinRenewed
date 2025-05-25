@@ -1,6 +1,6 @@
 <?php
 header('Content-Type: application/json');
-header("Access-Control-Allow-Origin: http://localhost:3000"); // Explicitly allow requests from the frontend
+header("Access-Control-Allow-Origin: backend:3000"); // Explicitly allow requests from the frontend
 header("Access-Control-Allow-Credentials: true"); // Allow credentials (cookies)
 header("Access-Control-Allow-Methods: GET, POST, OPTIONS"); // Allow specific HTTP methods
 header("Access-Control-Allow-Headers: Content-Type, Authorization");

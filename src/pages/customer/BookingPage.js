@@ -91,7 +91,7 @@ const BookingPageRegistered = ({ user }) => {
       }));
       
       // Fetch surgery details to set the service_type
-      fetch(`http://localhost/admin_dashboard_backend/bookingpage_services.php?type=Surgery`)
+      fetch(`backend/admin_dashboard_backend/bookingpage_services.php?type=Surgery`)
         .then((response) => response.json())
         .then((data) => {
           const selectedService = data.find(s => s.id.toString() === serviceIdParam);
@@ -108,7 +108,7 @@ const BookingPageRegistered = ({ user }) => {
 
   useEffect(() => {
     if (formData.service_category) {
-      fetch(`http://localhost/admin_dashboard_backend/bookingpage_services.php?type=${formData.service_category}`)
+      fetch(`backend/admin_dashboard_backend/bookingpage_services.php?type=${formData.service_category}`)
         .then((response) => response.json())
         .then((data) => {
           const servicesWithType = data.map(service => ({
@@ -137,7 +137,7 @@ const BookingPageRegistered = ({ user }) => {
 
   useEffect(() => {
     if (formData.service) {
-      fetch(`http://localhost/admin_dashboard_backend/bookingpage_branches.php?serviceId=${encodeURIComponent(formData.service)}&type=${formData.service_category}`)
+      fetch(`backend/admin_dashboard_backend/bookingpage_branches.php?serviceId=${encodeURIComponent(formData.service)}&type=${formData.service_category}`)
         .then((response) => {
           if (!response.ok) {
             throw new Error('Network response was not ok');
@@ -166,7 +166,7 @@ const BookingPageRegistered = ({ user }) => {
 
   useEffect(() => {
     if (formData.branch_id && formData.service && formData.service_category) {
-      fetch(`http://localhost/admin_dashboard_backend/bookingpage_staff.php?branchId=${encodeURIComponent(formData.branch_id)}&serviceId=${encodeURIComponent(formData.service)}&type=${encodeURIComponent(formData.service_category)}`)
+      fetch(`backend/admin_dashboard_backend/bookingpage_staff.php?branchId=${encodeURIComponent(formData.branch_id)}&serviceId=${encodeURIComponent(formData.service)}&type=${encodeURIComponent(formData.service_category)}`)
         .then((response) => {
           if (!response.ok) {
             throw new Error(`HTTP error! Status: ${response.status}`);
@@ -195,7 +195,7 @@ const BookingPageRegistered = ({ user }) => {
 
   useEffect(() => {
     if (formData.service_category === "Surgery" && formData.staff_id) {
-      fetch(`http://localhost/admin_dashboard_backend/fetch_doctor_availability.php?doctor_id=${formData.staff_id}`)
+      fetch(`backend/admin_dashboard_backend/fetch_doctor_availability.php?doctor_id=${formData.staff_id}`)
         .then(response => {
           if (!response.ok) throw new Error('Network response was not ok');
           return response.json();
@@ -223,7 +223,7 @@ const BookingPageRegistered = ({ user }) => {
   // Change from fetch_doctor_availability.php to doctor_get_availability.php
 useEffect(() => {
   if (formData.service_category === "Surgery" && formData.staff_id) {
-    fetch(`http://localhost/admin_dashboard_backend/doctor_get_availability.php?doctor_id=${formData.staff_id}`)
+    fetch(`backend/admin_dashboard_backend/doctor_get_availability.php?doctor_id=${formData.staff_id}`)
       .then(response => {
         if (!response.ok) throw new Error('Network response was not ok');
         return response.json();
@@ -270,7 +270,7 @@ useEffect(() => {
 useEffect(() => {
   if (formData.appointment_date && formData.staff_id && formData.service_category !== "Surgery") {
     setIsLoading(true);
-    fetch(`http://localhost/booking.php?date=${formData.appointment_date}&staff_id=${formData.staff_id}`)
+    fetch(`backend/booking.php?date=${formData.appointment_date}&staff_id=${formData.staff_id}`)
       .then((response) => {
         if (!response.ok) {
           throw new Error('Network response was not ok');
@@ -304,7 +304,7 @@ useEffect(() => {
     setIsLoadingPayment(true);
     try {
       const serviceObj = services.find(s => s.id.toString() === formData.service.toString());
-      const response = await fetch("http://localhost/admin_dashboard_backend/fetch_payment_details.php");
+      const response = await fetch("backend/admin_dashboard_backend/fetch_payment_details.php");
       if (!response.ok) throw new Error("Failed to fetch payment details");
       const result = await response.json();
       
@@ -550,7 +550,7 @@ useEffect(() => {
       formDataToSend.append('appointment_time', convertedTime);
       formDataToSend.append('send_email', 'true');
   
-      const response = await fetch("http://localhost/booking.php", {
+      const response = await fetch("backend/booking.php", {
         method: "POST",
         body: formDataToSend,
       });
@@ -858,7 +858,7 @@ const BookingPageGuest = () => {
 
   useEffect(() => {
     if (formData.service_category) {
-      fetch(`http://localhost/admin_dashboard_backend/bookingpage_services.php?type=${formData.service_category}`)
+      fetch(`backend/admin_dashboard_backend/bookingpage_services.php?type=${formData.service_category}`)
         .then((response) => response.json())
         .then((data) => {
           const servicesWithType = data.map(service => ({
@@ -887,7 +887,7 @@ const BookingPageGuest = () => {
 
   useEffect(() => {
     if (formData.service) {
-      fetch(`http://localhost/admin_dashboard_backend/bookingpage_branches.php?serviceId=${encodeURIComponent(formData.service)}&type=${formData.service_category}`)
+      fetch(`backend/admin_dashboard_backend/bookingpage_branches.php?serviceId=${encodeURIComponent(formData.service)}&type=${formData.service_category}`)
         .then((response) => {
           if (!response.ok) {
             throw new Error('Network response was not ok');
@@ -916,7 +916,7 @@ const BookingPageGuest = () => {
 
   useEffect(() => {
     if (formData.branch_id && formData.service && formData.service_category) {
-      fetch(`http://localhost/admin_dashboard_backend/bookingpage_staff.php?branchId=${encodeURIComponent(formData.branch_id)}&serviceId=${encodeURIComponent(formData.service)}&type=${encodeURIComponent(formData.service_category)}`)
+      fetch(`backend/admin_dashboard_backend/bookingpage_staff.php?branchId=${encodeURIComponent(formData.branch_id)}&serviceId=${encodeURIComponent(formData.service)}&type=${encodeURIComponent(formData.service_category)}`)
         .then((response) => {
           if (!response.ok) {
             throw new Error(`HTTP error! Status: ${response.status}`);
@@ -946,7 +946,7 @@ const BookingPageGuest = () => {
   useEffect(() => {
     if (formData.appointment_date && formData.staff_id) {
       setIsLoading(true);
-      fetch(`http://localhost/booking.php?date=${formData.appointment_date}&staff_id=${formData.staff_id}`)
+      fetch(`backend/booking.php?date=${formData.appointment_date}&staff_id=${formData.staff_id}`)
         .then((response) => {
           if (!response.ok) {
             throw new Error('Network response was not ok');
@@ -1094,7 +1094,7 @@ const BookingPageGuest = () => {
       formDataToSend.append('appointment_time', convertedTime);
       formDataToSend.append('send_email', 'true');
   
-      const response = await fetch("http://localhost/booking.php", {
+      const response = await fetch("backend/booking.php", {
         method: "POST",
         body: formDataToSend,
       });

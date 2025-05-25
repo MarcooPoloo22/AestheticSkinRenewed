@@ -36,7 +36,7 @@ const AppointmentTable = ({
     if (result.isConfirmed) {
       try {
         const response = await fetch(
-          "http://localhost/admin_dashboard_backend/delete_appointment.php",
+          "backend/admin_dashboard_backend/delete_appointment.php",
           {
             method: "DELETE",
             credentials: "include",
@@ -190,9 +190,9 @@ const AppointmentTable = ({
 const fetchAllServices = async () => {
   try {
     const [servicesRes, promosRes, surgeriesRes] = await Promise.all([
-      fetch("http://localhost/admin_dashboard_backend/fetch_services.php"),
-      fetch("http://localhost/admin_dashboard_backend/fetch_promos.php"),
-      fetch("http://localhost/admin_dashboard_backend/fetch_surgeries.php"),
+      fetch("backend/admin_dashboard_backend/fetch_services.php"),
+      fetch("backend/admin_dashboard_backend/fetch_promos.php"),
+      fetch("backend/admin_dashboard_backend/fetch_surgeries.php"),
     ]);
 
     if (!servicesRes.ok || !promosRes.ok || !surgeriesRes.ok) {
@@ -247,7 +247,7 @@ const fetchAllServices = async () => {
 const fetchRegisteredUsers = async () => {
   try {
     const response = await fetch(
-      "http://localhost/admin_dashboard_backend/fetch_users.php?role=customer"
+      "backend/admin_dashboard_backend/fetch_users.php?role=customer"
     );
     if (!response.ok) throw new Error("Failed to fetch registered users");
     const data = await response.json();
@@ -311,7 +311,7 @@ const ManageAppointmentEdit = ({
   const fetchBranches = async () => {
     try {
       const response = await fetch(
-        "http://localhost/admin_dashboard_backend/branch_fetch_branches.php"
+        "backend/admin_dashboard_backend/branch_fetch_branches.php"
       );
       const data = await response.json();
       setBranches(data);
@@ -324,7 +324,7 @@ const ManageAppointmentEdit = ({
     try {
       setLoadingStaff(true);
       const response = await fetch(
-        `http://localhost/admin_dashboard_backend/branch_fetch_staff.php?branch_ids=${encodeURIComponent(
+        `backend/admin_dashboard_backend/branch_fetch_staff.php?branch_ids=${encodeURIComponent(
           formData.branch_id
         )}`
       );
@@ -384,7 +384,7 @@ const ManageAppointmentEdit = ({
 
     try {
       const response = await fetch(
-        "http://localhost/admin_dashboard_backend/update_appointment.php",
+        "backend/admin_dashboard_backend/update_appointment.php",
         {
           method: "POST",
           credentials: "include",
@@ -677,7 +677,7 @@ const ManageAppointmentAdd = ({ setActivePage, fetchAppointments }) => {
   const fetchBranches = async () => {
     try {
       const response = await fetch(
-        "http://localhost/admin_dashboard_backend/branch_fetch_branches.php"
+        "backend/admin_dashboard_backend/branch_fetch_branches.php"
       );
       const data = await response.json();
       setBranches(data);
@@ -690,7 +690,7 @@ const ManageAppointmentAdd = ({ setActivePage, fetchAppointments }) => {
     try {
       setLoadingStaff(true);
       const response = await fetch(
-        `http://localhost/admin_dashboard_backend/branch_fetch_staff.php?branch_ids=${encodeURIComponent(
+        `backend/admin_dashboard_backend/branch_fetch_staff.php?branch_ids=${encodeURIComponent(
           formData.branch_id
         )}`
       );
@@ -778,7 +778,7 @@ const ManageAppointmentAdd = ({ setActivePage, fetchAppointments }) => {
 
     try {
       const response = await fetch(
-        "http://localhost/admin_dashboard_backend/add_appointment.php",
+        "backend/admin_dashboard_backend/add_appointment.php",
         {
           method: "POST",
           credentials: "include",
@@ -1037,7 +1037,7 @@ const AppointmentAppointments = () => {
   const fetchAppointments = async () => {
     try {
       const response = await fetch(
-        "http://localhost/admin_dashboard_backend/fetch_appointment.php"
+        "backend/admin_dashboard_backend/fetch_appointment.php"
       );
       if (!response.ok) throw new Error("Failed to fetch appointments");
       const data = await response.json();

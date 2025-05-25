@@ -39,7 +39,7 @@ const FAQTable = ({ setActivePage, activePage, data, setServices, setServiceToEd
       cancelButtonText: 'No, cancel!',
     }).then((result) => {
       if (result.isConfirmed) {
-        fetch('http://localhost/admin_dashboard_backend/delete_service.php', {
+        fetch('backend/admin_dashboard_backend/delete_service.php', {
           method: 'DELETE',
           credentials: 'include',
           headers: {
@@ -55,7 +55,7 @@ const FAQTable = ({ setActivePage, activePage, data, setServices, setServiceToEd
               icon: 'success',
               confirmButtonText: 'OK',
             });
-            fetch('http://localhost/admin_dashboard_backend/fetch_services.php')
+            fetch('backend/admin_dashboard_backend/fetch_services.php')
               .then(response => response.json())
               .then(data => setServices(data));
           })
@@ -185,7 +185,7 @@ const ServiceForm = ({ setActivePage, initialData, isEditing, setServices }) => 
 
   const fetchBranches = async () => {
     try {
-      const response = await fetch("http://localhost/admin_dashboard_backend/branch_fetch_branches.php");
+      const response = await fetch("backend/admin_dashboard_backend/branch_fetch_branches.php");
       const data = await response.json();
   
       // Ensure data is an array
@@ -204,7 +204,7 @@ const ServiceForm = ({ setActivePage, initialData, isEditing, setServices }) => 
       try {
         setLoadingStaff(true);
         const response = await fetch(
-          `http://localhost/admin_dashboard_backend/branch_fetch_staff.php?branch_ids=${formData.selectedBranches.join(",")}`
+          `backend/admin_dashboard_backend/branch_fetch_staff.php?branch_ids=${formData.selectedBranches.join(",")}`
         );
     
         if (!response.ok) {
@@ -266,7 +266,7 @@ const ServiceForm = ({ setActivePage, initialData, isEditing, setServices }) => 
       formPayload.append('file', formData.file);
     }
   
-    fetch(`http://localhost/admin_dashboard_backend/${isEditing ? 'update' : 'add'}_service.php`, {
+    fetch(`backend/admin_dashboard_backend/${isEditing ? 'update' : 'add'}_service.php`, {
       method: 'POST',
       credentials: 'include',
       body: formPayload,
@@ -282,7 +282,7 @@ const ServiceForm = ({ setActivePage, initialData, isEditing, setServices }) => 
       .then(data => {
         Swal.fire('Success!', data.message, 'success');
         setActivePage("FAQs");
-        fetch('http://localhost/admin_dashboard_backend/fetch_services.php')
+        fetch('backend/admin_dashboard_backend/fetch_services.php')
           .then(response => response.json())
           .then(data => setServices(data));
       })
@@ -408,7 +408,7 @@ const FAQs = () => {
   const [serviceToEdit, setServiceToEdit] = useState(null);
 
   useEffect(() => {
-    fetch('http://localhost/admin_dashboard_backend/fetch_services.php')
+    fetch('backend/admin_dashboard_backend/fetch_services.php')
       .then(response => response.json())
       .then(data => setServices(data))
       .catch(error => console.error('Error:', error));

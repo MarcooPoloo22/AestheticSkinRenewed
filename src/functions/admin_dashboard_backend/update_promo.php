@@ -1,5 +1,5 @@
 <?php
-header("Access-Control-Allow-Origin: http://localhost:3000");
+header("Access-Control-Allow-Origin: backend:3000");
 header("Content-Type: application/json; charset=UTF-8");
 header("Access-Control-Allow-Methods: POST, OPTIONS");
 header("Access-Control-Allow-Headers: Content-Type");
@@ -87,7 +87,7 @@ if (!empty($file['name']) && $file['error'] == UPLOAD_ERR_OK) {
     $fileName = uniqid() . '-' . basename($file['name']);
     $filePath = $uploadDir . $fileName;
     if (move_uploaded_file($file['tmp_name'], $filePath)) {
-        $fileUrl = 'http://localhost/admin_dashboard_backend/' . $filePath;
+        $fileUrl = 'backend/admin_dashboard_backend/' . $filePath;
     } else {
         echo json_encode(["error" => "Failed to upload file"]);
         exit;

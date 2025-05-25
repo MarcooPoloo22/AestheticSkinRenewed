@@ -233,7 +233,7 @@ const FAQs = () => {
       setError(null);
       
       const response = await fetch(
-        `http://localhost/admin_dashboard_backend/api/audit_logs_get.php?page=${currentPage}&perPage=${perPage}&search=${encodeURIComponent(searchText)}`
+        `backend/admin_dashboard_backend/api/audit_logs_get.php?page=${currentPage}&perPage=${perPage}&search=${encodeURIComponent(searchText)}`
       );
       
       if (!response.ok) throw new Error('Failed to fetch logs');

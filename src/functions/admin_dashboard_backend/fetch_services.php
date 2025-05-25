@@ -1,5 +1,5 @@
 <?php
-header("Access-Control-Allow-Origin: http://localhost:3000");
+header("Access-Control-Allow-Origin: backend:3000");
 header("Content-Type: application/json; charset=UTF-8");
 
 $servername = "localhost";
@@ -49,7 +49,7 @@ if ($result) {
         $row['staff_ids'] = $staff_ids;
 
         // Update file_url to include the correct base path
-        $row['file_url'] = 'http://localhost/admin_dashboard_backend/uploads/' . basename($row['file_url']);
+        $row['file_url'] = 'backend/admin_dashboard_backend/uploads/' . basename($row['file_url']);
 
         // Add the service to the list
         $services[] = $row;

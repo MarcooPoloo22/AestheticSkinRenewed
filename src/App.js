@@ -46,7 +46,7 @@ const App = () => {
     const connectSSE = () => {
       const lastEventId = localStorage.getItem("lastBookingEventId") || 0;
       eventSource = new EventSource(
-        `http://localhost/sse.php?userId=${user.id}&lastEventId=${lastEventId}`
+        `backend/sse.php?userId=${user.id}&lastEventId=${lastEventId}`
       );
 
       // Handle cancelled bookings
@@ -101,7 +101,7 @@ const App = () => {
   }, []);
 
   useEffect(() => {
-    fetch("http://localhost/getProfile.php", {
+    fetch("backend/getProfile.php", {
       method: "GET",
       credentials: "include",
     })

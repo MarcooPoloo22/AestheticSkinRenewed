@@ -12,7 +12,7 @@ const AppointmentNotifications = ({ userId }) => {
     const connectSSE = () => {
       const lastEventId = localStorage.getItem('lastBookingEventId') || 0;
       eventSource = new EventSource(
-        `http://localhost/sse.php?userId=${userId}&lastEventId=${lastEventId}`
+        `backend/sse.php?userId=${userId}&lastEventId=${lastEventId}`
       );
 
       eventSource.addEventListener('booking-update', (e) => {

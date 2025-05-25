@@ -59,7 +59,7 @@ const CreateAccount = () => {
         setIsSubmitting(true);
 
         try {
-            const response = await fetch('http://localhost/createAccount.php', {
+            const response = await fetch('backend/createAccount.php', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',

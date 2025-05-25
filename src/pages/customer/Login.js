@@ -4,7 +4,7 @@ import "../../styles/customer/Login.css";
 import { Link, useNavigate } from "react-router-dom";
 import Swal from "sweetalert2";
 
-const Login = ({ isLoggedIn, setIsLoggedIn, setUser }) => {
+const Login = ({ isLoggedIn, setIsLoggedIn, setUser, user }) => {
   const [formData, setFormData] = useState({
     email: "",
     password: "",
@@ -12,30 +12,37 @@ const Login = ({ isLoggedIn, setIsLoggedIn, setUser }) => {
 
   const navigate = useNavigate();
 
-  // If user is already logged in, redirect to home
+  // Optional fallback: redirect if already logged in
   useEffect(() => {
-    if (isLoggedIn) {
-      navigate("/");
+    if (isLoggedIn && user) {
+      if (["admin", "employee"].includes(user.role)) {
+        navigate("/admindashboard");
+      } else {
+        navigate("/");
+      }
     }
-  }, [isLoggedIn, navigate]);
+  }, [isLoggedIn, user, navigate]);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
-    setFormData({ ...formData, [name]: value });
+    setFormData((prev) => ({ ...prev, [name]: value }));
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
 
     try {
-      const response = await fetch("http://localhost/login.php", {
-        method: "POST",
-        credentials: "include",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(formData),
-      });
+      const response = await fetch(
+        "https://teal-seahorse-572802.hostingersite.com/backend/login.php",
+        {
+          method: "POST",
+          credentials: "include",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(formData),
+        }
+      );
 
       const result = await response.json();
 
@@ -47,11 +54,13 @@ const Login = ({ isLoggedIn, setIsLoggedIn, setUser }) => {
           icon: "success",
           title: "Success!",
           text: result.message,
+          timer: 1500,
+          showConfirmButton: false,
         }).then(() => {
-          if (result.user.role === "admin" || result.user.role === "employee") {
-            window.location.replace("/admindashboard");
+          if (["admin", "employee"].includes(result.user.role)) {
+            navigate("/admindashboard");
           } else {
-            window.location.replace("/");
+            navigate("/");
           }
         });
       } else if (

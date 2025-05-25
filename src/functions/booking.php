@@ -1,5 +1,5 @@
 <?php
-header("Access-Control-Allow-Origin: http://localhost:3000");
+header("Access-Control-Allow-Origin: backend:3000");
 header("Content-Type: application/json; charset=UTF-8");
 header("Access-Control-Allow-Methods: POST, GET, PUT, OPTIONS");
 header("Access-Control-Max-Age: 3600");
@@ -204,7 +204,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $targetPath = $uploadDir . $fileName;
         
         if (move_uploaded_file($_FILES['receipt']['tmp_name'], $targetPath)) {
-            $file_url = 'http://localhost/admin_dashboard_backend/uploads/' . $fileName;
+            $file_url = 'backend/admin_dashboard_backend/uploads/' . $fileName;
         } else {
             error_log('File upload failed: ' . $_FILES['receipt']['error']);
         }

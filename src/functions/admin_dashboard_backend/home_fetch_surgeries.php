@@ -1,6 +1,6 @@
 <?php
 // Allow requests from your React app
-header("Access-Control-Allow-Origin: http://localhost:3000");
+header("Access-Control-Allow-Origin: backend:3000");
 // Allow specific HTTP methods
 header("Access-Control-Allow-Methods: GET, POST, OPTIONS");
 // Allow specific headers

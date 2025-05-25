@@ -1,4 +1,4 @@
-const BASE_URL = "http://localhost:4000";
+const BASE_URL = "backend:4000";
 
 export async function fetchChats(filters = {}) {
   // Calls your Node route: POST /api/livechat/list_chats

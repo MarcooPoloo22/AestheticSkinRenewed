@@ -40,7 +40,7 @@ const FAQTable = ({ setActivePage, activePage, data, setProducts, setProductToEd
       cancelButtonText: 'No, cancel!',
     }).then((result) => {
       if (result.isConfirmed) {
-        fetch('http://localhost/admin_dashboard_backend/delete_product.php', {
+        fetch('backend/admin_dashboard_backend/delete_product.php', {
           method: 'DELETE',
           credentials: 'include',
           headers: {
@@ -63,7 +63,7 @@ const FAQTable = ({ setActivePage, activePage, data, setProducts, setProductToEd
               confirmButtonText: 'OK',
             });
             // Refresh products list
-            fetch('http://localhost/admin_dashboard_backend/fetch_products.php')
+            fetch('backend/admin_dashboard_backend/fetch_products.php')
               .then(response => response.json())
               .then(data => {
                 console.log("Updated products after delete:", data); // Debugging
@@ -169,7 +169,7 @@ const ManageFAQEdit = ({ setActivePage, activePage, productToEdit, setProducts }
       formData.append("file", file);
     }
   
-    fetch('http://localhost/admin_dashboard_backend/update_product.php', {
+    fetch('backend/admin_dashboard_backend/update_product.php', {
       method: 'POST',
       credentials: 'include',
       body: formData,
@@ -189,7 +189,7 @@ const ManageFAQEdit = ({ setActivePage, activePage, productToEdit, setProducts }
         });
         setActivePage("FAQs"); // Redirect back to Products page
         // Refresh products list
-        fetch('http://localhost/admin_dashboard_backend/fetch_products.php')
+        fetch('backend/admin_dashboard_backend/fetch_products.php')
           .then(response => response.json())
           .then(data => {
             console.log("Updated products after edit:", data); // Debugging
@@ -286,7 +286,7 @@ const ManageFAQAdd = ({ setActivePage, activePage, setProducts }) => {
     formData.append("price", price);
     formData.append("file", file);
 
-    fetch('http://localhost/admin_dashboard_backend/add_product.php', {
+    fetch('backend/admin_dashboard_backend/add_product.php', {
       method: 'POST',
       credentials: 'include',
       body: formData,
@@ -306,7 +306,7 @@ const ManageFAQAdd = ({ setActivePage, activePage, setProducts }) => {
         });
         setActivePage("FAQs"); // Redirect back to Products page
         // Refresh products list
-        fetch('http://localhost/admin_dashboard_backend/fetch_products.php')
+        fetch('backend/admin_dashboard_backend/fetch_products.php')
           .then(response => response.json())
           .then(data => {
             console.log("Updated products after add:", data); // Debugging
@@ -398,7 +398,7 @@ const FAQs = () => {
   // Fetch products from backend
   useEffect(() => {
     console.log("Fetching products..."); // Debugging
-    fetch('http://localhost/admin_dashboard_backend/fetch_products.php')
+    fetch('backend/admin_dashboard_backend/fetch_products.php')
       .then(response => {
         console.log("Fetch response:", response); // Debugging
         return response.json();

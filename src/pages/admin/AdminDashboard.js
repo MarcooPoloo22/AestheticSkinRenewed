@@ -65,7 +65,7 @@ const Dashboard = ({ isLoggedIn, user, setUser, setIsLoggedIn }) => {
   // Use useCallback to ensure handleLogout's reference remains stable.
   const handleLogout = useCallback(async () => {
     try {
-      await fetch("http://localhost/admin_dashboard_backend/logout.php", {
+      await fetch("backend/admin_dashboard_backend/logout.php", {
         method: "POST",
         credentials: "include",
       });

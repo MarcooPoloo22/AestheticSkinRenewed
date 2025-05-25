@@ -44,7 +44,7 @@ const ProfilePage = ({ user, setUser, isLoggedIn }) => {
 
   /* ───────────── Load profile ───────────── */
   useEffect(() => {
-    fetch("http://localhost/getProfile.php", {
+    fetch("backend/getProfile.php", {
       method: "GET",
       credentials: "include",
     })
@@ -69,7 +69,7 @@ const ProfilePage = ({ user, setUser, isLoggedIn }) => {
     if (activeTab !== "bookingHistory") return;
 
     setLoadingBookings(true);
-    fetch("http://localhost/getBookingHistory.php", {
+    fetch("backend/getBookingHistory.php", {
       method: "GET",
       credentials: "include",
     })
@@ -112,7 +112,7 @@ const ProfilePage = ({ user, setUser, isLoggedIn }) => {
     if (!rating) return;
 
     try {
-      const res = await fetch("http://localhost/booking.php", {
+      const res = await fetch("backend/booking.php", {
         method: "PUT",
         credentials: "include",
         headers: { "Content-Type": "application/json" },
@@ -138,7 +138,7 @@ const ProfilePage = ({ user, setUser, isLoggedIn }) => {
 
   const handleSave = async () => {
     try {
-      const res = await fetch("http://localhost/updateProfile.php", {
+      const res = await fetch("backend/updateProfile.php", {
         method: "POST",
         credentials: "include",
         headers: { "Content-Type": "application/json" },
@@ -172,7 +172,7 @@ const ProfilePage = ({ user, setUser, isLoggedIn }) => {
     }
     setPasswordError("");
     try {
-      const res = await fetch("http://localhost/updatePassword.php", {
+      const res = await fetch("backend/updatePassword.php", {
         method: "POST",
         credentials: "include",
         headers: { "Content-Type": "application/json" },

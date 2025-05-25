@@ -21,7 +21,7 @@ const ResetPasswordPage = () => {
     }
 
     try {
-      const response = await fetch("http://localhost/resetpassword.php", {
+      const response = await fetch("backend/resetpassword.php", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

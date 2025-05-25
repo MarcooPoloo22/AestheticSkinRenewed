@@ -1,5 +1,5 @@
 <?php
-header("Access-Control-Allow-Origin: http://localhost:3000"); // Allow requests from your frontend
+header("Access-Control-Allow-Origin: backend:3000"); // Allow requests from your frontend
 header("Access-Control-Allow-Credentials: true"); // Allow credentials
 header("Content-Type: application/json; charset=UTF-8");
 

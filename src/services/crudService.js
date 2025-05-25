@@ -1,7 +1,7 @@
   // crudService.js
 export const executeCrud = async (payload, includeCredentials = false) => {
     try {
-      const response = await fetch('http://localhost/admin_dashboard_backend/actions/generic_crud.php', {
+      const response = await fetch('backend/admin_dashboard_backend/actions/generic_crud.php', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

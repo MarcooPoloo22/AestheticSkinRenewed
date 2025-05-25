@@ -1,7 +1,7 @@
 <?php
 session_start();
 
-header('Access-Control-Allow-Origin: http://localhost:3000');
+header('Access-Control-Allow-Origin: backend:3000');
 header('Content-Type: application/json; charset=UTF-8');
 header('Access-Control-Allow-Methods: POST, OPTIONS');
 header('Access-Control-Allow-Headers: Content-Type, Access-Control-Allow-Headers, Authorization, X-Requested-With');
@@ -105,10 +105,10 @@ if (isset($_FILES['receipt_file']) && $_FILES['receipt_file']['error'] === UPLOA
     $destination = 'uploads/' . $newFileName;
 
     if (move_uploaded_file($tempPath, $destination)) {
-        $file_url = 'http://localhost/admin_dashboard_backend/' . $destination;
+        $file_url = 'backend/admin_dashboard_backend/' . $destination;
         // Delete old file if it exists
         if ($oldAppointment['file_url']) {
-            $oldFilePath = str_replace('http://localhost/admin_dashboard_backend/', '', $oldAppointment['file_url']);
+            $oldFilePath = str_replace('backend/admin_dashboard_backend/', '', $oldAppointment['file_url']);
             if (file_exists($oldFilePath)) {
                 @unlink($oldFilePath);
             }

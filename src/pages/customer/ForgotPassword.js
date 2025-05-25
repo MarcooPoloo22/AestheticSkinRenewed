@@ -21,7 +21,7 @@ const ForgotPassword = () => {
         }
 
         try {
-            const response = await fetch('http://localhost/forgotPassword.php', {
+            const response = await fetch('backend/forgotPassword.php', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',

@@ -40,7 +40,7 @@ const FAQTable = ({ setActivePage, activePage, data, setFaqs, setFaqToEdit }) =>
       cancelButtonText: 'No, cancel!',
     }).then((result) => {
       if (result.isConfirmed) {
-        fetch('http://localhost/admin_dashboard_backend/delete_faq.php', {
+        fetch('backend/admin_dashboard_backend/delete_faq.php', {
           method: 'DELETE',
           credentials: 'include',
           headers: {
@@ -63,7 +63,7 @@ const FAQTable = ({ setActivePage, activePage, data, setFaqs, setFaqToEdit }) =>
               confirmButtonText: 'OK',
             });
             // Refresh FAQs list
-            fetch('http://localhost/admin_dashboard_backend/fetch_faqs.php')
+            fetch('backend/admin_dashboard_backend/fetch_faqs.php')
               .then(response => response.json())
               .then(data => {
                 console.log("Updated FAQs after delete:", data); // Debugging
@@ -150,7 +150,7 @@ const ManageFAQEdit = ({ setActivePage, activePage, faqToEdit, setFaqs }) => {
       answer,
     };
   
-    fetch('http://localhost/admin_dashboard_backend/update_faq.php', {
+    fetch('backend/admin_dashboard_backend/update_faq.php', {
       method: 'PUT',
       credentials: 'include',
       headers: {
@@ -174,7 +174,7 @@ const ManageFAQEdit = ({ setActivePage, activePage, faqToEdit, setFaqs }) => {
         });
         setActivePage("FAQs"); // Redirect back to FAQs page
         // Refresh FAQs list
-        fetch('http://localhost/admin_dashboard_backend/fetch_faqs.php')
+        fetch('backend/admin_dashboard_backend/fetch_faqs.php')
           .then(response => response.json())
           .then(data => {
             console.log("Updated FAQs after edit:", data); // Debugging
@@ -246,7 +246,7 @@ const ManageFAQAdd = ({ setActivePage, activePage, setFaqs }) => {
       answer: answer,
     };
   
-    fetch('http://localhost/admin_dashboard_backend/add_faq.php', {
+    fetch('backend/admin_dashboard_backend/add_faq.php', {
       method: 'POST',
       credentials: 'include',
       headers: {
@@ -270,7 +270,7 @@ const ManageFAQAdd = ({ setActivePage, activePage, setFaqs }) => {
         });
         setActivePage("FAQs"); // Redirect back to FAQs page
         // Refresh FAQs list
-        fetch('http://localhost/admin_dashboard_backend/fetch_faqs.php')
+        fetch('backend/admin_dashboard_backend/fetch_faqs.php')
           .then(response => response.json())
           .then(data => {
             console.log("Updated FAQs after add:", data); // Debugging
@@ -339,7 +339,7 @@ const FAQs = () => {
   // Fetch FAQs from backend
   useEffect(() => {
     console.log("Fetching FAQs..."); // Debugging
-    fetch('http://localhost/admin_dashboard_backend/fetch_faqs.php')
+    fetch('backend/admin_dashboard_backend/fetch_faqs.php')
       .then(response => {
         console.log("Fetch response:", response); // Debugging
         return response.json();

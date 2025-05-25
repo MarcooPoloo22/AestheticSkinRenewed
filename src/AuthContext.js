@@ -9,7 +9,7 @@ export const AuthProvider = ({ children }) => {
   useEffect(() => {
     const checkLoginStatus = async () => {
       try {
-        const response = await fetch("http://localhost/checklogin.php", {
+        const response = await fetch("backend/checklogin.php", {
           method: "GET",
           credentials: "include",
         });

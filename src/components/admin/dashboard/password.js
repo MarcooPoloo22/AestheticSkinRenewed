@@ -26,7 +26,7 @@ const AdminPassword = () => {
     };
 
     try {
-      const response = await fetch("http://localhost/admin_dashboard_backend/update_password.php", {
+      const response = await fetch("backend/admin_dashboard_backend/update_password.php", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

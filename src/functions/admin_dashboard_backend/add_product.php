@@ -5,7 +5,7 @@ ini_set('log_errors', 1);
 ini_set('error_log', 'php_errors.log');
 
 // CORS and Content-Type headers
-header("Access-Control-Allow-Origin: http://localhost:3000");
+header("Access-Control-Allow-Origin: backend:3000");
 header("Access-Control-Allow-Credentials: true");
 header("Content-Type: application/json; charset=UTF-8");
 header("Access-Control-Allow-Methods: POST, OPTIONS");
@@ -67,7 +67,7 @@ if (!move_uploaded_file($_FILES['file']['tmp_name'], $filePath)) {
     exit;
 }
 // Adjust URL as needed
-$fileUrl = 'http://localhost/admin_dashboard_backend/' . $filePath;
+$fileUrl = 'backend/admin_dashboard_backend/' . $filePath;
 
 // Insert product
 $stmt = $conn->prepare("INSERT INTO products (name, description, price, file_url) VALUES (?, ?, ?, ?)");

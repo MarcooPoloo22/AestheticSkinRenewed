@@ -6,7 +6,7 @@ import "./Footer4.css";
 const Footer4 = () => {
   const fetchPolicy = async (type) => {
     try {
-      const response = await fetch(`http://localhost/admin_dashboard_backend/fetch_${type}.php`);
+      const response = await fetch(`backend/admin_dashboard_backend/fetch_${type}.php`);
       if (!response.ok) {
         throw new Error(`Failed to fetch ${type}`);
       }

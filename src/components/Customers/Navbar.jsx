@@ -14,7 +14,7 @@ const Navbar = ({ isLoggedIn, setIsLoggedIn, user }) => {
 
   const handleLogout = async () => {
     try {
-      const response = await fetch("http://localhost/logout.php", {
+      const response = await fetch("backend/logout.php", {
         method: "POST",
         credentials: "include",
       });

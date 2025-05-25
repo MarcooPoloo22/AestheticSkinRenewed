@@ -29,7 +29,7 @@ const BranchTable = ({ setActivePage, branches, fetchBranches }) => {
     if (result.isConfirmed) {
       try {
         const response = await fetch(
-          "http://localhost/admin_dashboard_backend/branch_delete_branch.php",
+          "backend/admin_dashboard_backend/branch_delete_branch.php",
           {
             method: "DELETE",
             credentials: "include",
@@ -169,7 +169,7 @@ const ManageBranchEdit = ({ setActivePage, branch, fetchBranches }) => {
   const fetchStaff = async () => {
     try {
       const response = await fetch(
-        `http://localhost/admin_dashboard_backend/branch_fetch_staff.php?branch_ids=${branch.id}`
+        `backend/admin_dashboard_backend/branch_fetch_staff.php?branch_ids=${branch.id}`
       );
       
       if (!response.ok) {
@@ -206,7 +206,7 @@ const ManageBranchEdit = ({ setActivePage, branch, fetchBranches }) => {
     e.preventDefault();
     try {
       const response = await fetch(
-        "http://localhost/admin_dashboard_backend/branch_update_branch.php",
+        "backend/admin_dashboard_backend/branch_update_branch.php",
         {
           method: "PUT",
           credentials: "include",
@@ -246,7 +246,7 @@ const ManageBranchEdit = ({ setActivePage, branch, fetchBranches }) => {
     const fetchAvailability = async () => {
       try {
         const response = await fetch(
-          `http://localhost/admin_dashboard_backend/doctor_get_availability.php?doctor_id=${doctorId}`
+          `backend/admin_dashboard_backend/doctor_get_availability.php?doctor_id=${doctorId}`
         );
         if (response.ok) {
           const data = await response.json();
@@ -313,7 +313,7 @@ const ManageBranchEdit = ({ setActivePage, branch, fetchBranches }) => {
       
       try {
         const response = await fetch(
-          "http://localhost/admin_dashboard_backend/doctor_add_availability.php",
+          "backend/admin_dashboard_backend/doctor_add_availability.php",
           {
             method: "POST",
             credentials: "include",
@@ -405,7 +405,7 @@ const ManageBranchEdit = ({ setActivePage, branch, fetchBranches }) => {
         deleteDateButton.onclick = async () => {
           try {
             const response = await fetch(
-              "http://localhost/admin_dashboard_backend/doctor_remove_availability.php",
+              "backend/admin_dashboard_backend/doctor_remove_availability.php",
               {
                 method: "POST",
                 credentials: "include",
@@ -465,7 +465,7 @@ const ManageBranchEdit = ({ setActivePage, branch, fetchBranches }) => {
           deleteButton.onclick = async () => {
             try {
               const response = await fetch(
-                "http://localhost/admin_dashboard_backend/doctor_remove_availability.php",
+                "backend/admin_dashboard_backend/doctor_remove_availability.php",
                 {
                   method: "POST",
                   credentials: "include",
@@ -544,7 +544,7 @@ const ManageBranchEdit = ({ setActivePage, branch, fetchBranches }) => {
     if (formValues) {
       try {
         const response = await fetch(
-          "http://localhost/admin_dashboard_backend/branch_add_staff.php",
+          "backend/admin_dashboard_backend/branch_add_staff.php",
           {
             method: "POST",
             credentials: "include",
@@ -609,7 +609,7 @@ const ManageBranchEdit = ({ setActivePage, branch, fetchBranches }) => {
     if (result.isConfirmed) {
       try {
         const response = await fetch(
-          "http://localhost/admin_dashboard_backend/branch_delete_staff.php",
+          "backend/admin_dashboard_backend/branch_delete_staff.php",
           {
             method: "DELETE",
             credentials: "include",
@@ -673,7 +673,7 @@ const ManageBranchEdit = ({ setActivePage, branch, fetchBranches }) => {
     if (formValues && (formValues.name !== staffMember.name || formValues.isDoctor !== (staffMember.is_surgery_staff === 1))) {
       try {
         const response = await fetch(
-          "http://localhost/admin_dashboard_backend/branch_update_staff.php",
+          "backend/admin_dashboard_backend/branch_update_staff.php",
           {
             method: "PUT",
             credentials: "include",
@@ -785,7 +785,7 @@ const ManageBranchAdd = ({ setActivePage, fetchBranches }) => {
     if (!branchName) return;
     try {
       const response = await fetch(
-        "http://localhost/admin_dashboard_backend/branch_add_branch.php",
+        "backend/admin_dashboard_backend/branch_add_branch.php",
         {
           method: "POST",
           credentials: "include",
@@ -862,7 +862,7 @@ const Branch = () => {
   const fetchBranches = async () => {
     try {
       const response = await fetch(
-        "http://localhost/admin_dashboard_backend/branching_fetch_branches.php"
+        "backend/admin_dashboard_backend/branching_fetch_branches.php"
       );
       const resData = await response.json();
       if (!response.ok || !resData.success) {

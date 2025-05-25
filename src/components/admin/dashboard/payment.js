@@ -18,7 +18,7 @@ const AdminPayment = ({ setActivePage }) => {
   useEffect(() => {
     const fetchPaymentData = async () => {
       try {
-        const response = await fetch("http://localhost/admin_dashboard_backend/fetch_payment_details.php", {
+        const response = await fetch("backend/admin_dashboard_backend/fetch_payment_details.php", {
           credentials: "include",
           headers: {
             "Content-Type": "application/json"
@@ -61,7 +61,7 @@ const AdminPayment = ({ setActivePage }) => {
     e.preventDefault();
   
     try {
-      const response = await fetch("http://localhost/admin_dashboard_backend/update_payment_details.php", {
+      const response = await fetch("backend/admin_dashboard_backend/update_payment_details.php", {
         method: "POST",
         credentials: "include",
         headers: {

@@ -5,7 +5,7 @@ ini_set('log_errors', 1);
 ini_set('error_log', 'php_errors.log');
 
 // CORS and content type headers
-header("Access-Control-Allow-Origin: http://localhost:3000");
+header("Access-Control-Allow-Origin: backend:3000");
 header("Access-Control-Allow-Methods: POST, GET, OPTIONS, DELETE, PUT");
 header("Access-Control-Allow-Headers: Content-Type, Authorization");
 header("Access-Control-Allow-Credentials: true");
@@ -109,7 +109,7 @@ if ($file && $file['error'] === UPLOAD_ERR_OK) {
     $filePath = $uploadDir . $fileName;
     if (move_uploaded_file($file['tmp_name'], $filePath)) {
         // Adjust the URL as needed
-        $fileUrl = 'http://localhost/admin_dashboard_backend/' . $filePath;
+        $fileUrl = 'backend/admin_dashboard_backend/' . $filePath;
     } else {
         echo json_encode(["error" => "Failed to upload file"]);
         exit;

@@ -77,29 +77,29 @@ const DashboardCalendar = () => {
       setIsLoading(true);
       try {
         // Fetch branches
-        const branchesRes = await fetch("http://localhost/admin_dashboard_backend/dashboard_fetch_branches.php");
+        const branchesRes = await fetch("backend/admin_dashboard_backend/dashboard_fetch_branches.php");
         const branchesData = await branchesRes.json();
         setBranches(branchesData);
 
         // Fetch services count
-        const servicesRes = await fetch("http://localhost/admin_dashboard_backend/fetch_total_services.php");
+        const servicesRes = await fetch("backend/admin_dashboard_backend/fetch_total_services.php");
         if (!servicesRes.ok) throw new Error('Services fetch failed');
         const servicesData = await servicesRes.json();
         setTotalServices(servicesData.total_services || 0);
 
         // Fetch products count
-        const productsRes = await fetch("http://localhost/admin_dashboard_backend/fetch_total_products.php");
+        const productsRes = await fetch("backend/admin_dashboard_backend/fetch_total_products.php");
         if (!productsRes.ok) throw new Error('Products fetch failed');
         const productsData = await productsRes.json();
         setTotalProducts(productsData.total_products || 0);
 
-        const customersRes = await fetch("http://localhost/admin_dashboard_backend/dashboard_fetch_total_customers.php");
+        const customersRes = await fetch("backend/admin_dashboard_backend/dashboard_fetch_total_customers.php");
         if (!customersRes.ok) throw new Error('Customers fetch failed');
         const customersData = await customersRes.json();
         setTotalCustomers(customersData.total_customers || 0);
 
         // Fetch initial appointments
-        const appointmentsRes = await fetch("http://localhost/admin_dashboard_backend/dashboard_fetch_appointments.php");
+        const appointmentsRes = await fetch("backend/admin_dashboard_backend/dashboard_fetch_appointments.php");
         const appointmentsData = await appointmentsRes.json();
         setEvents(formatAppointments(appointmentsData));
       } catch (error) {
@@ -117,7 +117,7 @@ const DashboardCalendar = () => {
   useEffect(() => {
     if (selectedBranch) {
       setIsLoading(true);
-      fetch(`http://localhost/admin_dashboard_backend/dashboard_fetch_staff.php?branch_id=${selectedBranch}`)
+      fetch(`backend/admin_dashboard_backend/dashboard_fetch_staff.php?branch_id=${selectedBranch}`)
         .then(res => res.json())
         .then(data => {
           setStaff(data);
@@ -139,7 +139,7 @@ const DashboardCalendar = () => {
     const fetchAppointments = async () => {
       setIsLoading(true);
       try {
-        let url = "http://localhost/admin_dashboard_backend/dashboard_fetch_appointments.php?";
+        let url = "backend/admin_dashboard_backend/dashboard_fetch_appointments.php?";
         if (selectedBranch) url += `branch_id=${selectedBranch}&`;
         if (selectedStaff) url += `staff_id=${selectedStaff}`;
 

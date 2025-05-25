@@ -122,7 +122,7 @@ function ServicePage() {
   useEffect(() => {
     const fetchServices = async () => {
       try {
-        const response = await fetch('http://localhost/admin_dashboard_backend/fetch_services.php');
+        const response = await fetch('backend/admin_dashboard_backend/fetch_services.php');
         if (!response.ok) {
           throw new Error('Failed to fetch services');
         }

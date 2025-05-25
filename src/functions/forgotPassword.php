@@ -1,5 +1,5 @@
 <?php
-header("Access-Control-Allow-Origin: http://localhost:3000");
+header("Access-Control-Allow-Origin: backend:3000");
 header("Content-Type: application/json; charset=UTF-8");
 header("Access-Control-Allow-Methods: POST, OPTIONS");
 header("Access-Control-Max-Age: 3600");
@@ -105,7 +105,7 @@ try {
         $mail->addAddress($email);
 
         // Redirect URL to the React page for password reset
-        $reset_link = "http://localhost:3000/reset-password?token=$reset_token";
+        $reset_link = "backend:3000/reset-password?token=$reset_token";
         $mail->isHTML(true);
         $mail->Subject = 'Password Reset Request';
         $mail->Body    = "

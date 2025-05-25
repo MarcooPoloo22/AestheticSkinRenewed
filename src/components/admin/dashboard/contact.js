@@ -15,7 +15,7 @@ const AdminContact = ({ setActivePage }) => {
   useEffect(() => {
     const fetchContactData = async () => {
       try {
-        const response = await fetch("http://localhost/admin_dashboard_backend/fetch_contact.php", {
+        const response = await fetch("backend/admin_dashboard_backend/fetch_contact.php", {
           credentials: "include", // Include cookies if needed
         });
 
@@ -54,7 +54,7 @@ const AdminContact = ({ setActivePage }) => {
     };
 
     try {
-      const response = await fetch("http://localhost/admin_dashboard_backend/update_contact.php", {
+      const response = await fetch("backend/admin_dashboard_backend/update_contact.php", {
         method: "POST",
         credentials: "include",
         headers: {

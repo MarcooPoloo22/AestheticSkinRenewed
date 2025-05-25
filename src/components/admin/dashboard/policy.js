@@ -14,7 +14,7 @@ const AdminPolicy = ({ setActivePage }) => {
   useEffect(() => {
     const fetchPolicyData = async () => {
       try {
-        const response = await fetch("http://localhost/admin_dashboard_backend/fetch_policy.php", {
+        const response = await fetch("backend/admin_dashboard_backend/fetch_policy.php", {
           credentials: "include",
         });
 
@@ -51,7 +51,7 @@ const AdminPolicy = ({ setActivePage }) => {
     };
 
     try {
-      const response = await fetch("http://localhost/admin_dashboard_backend/update_policy.php", {
+      const response = await fetch("backend/admin_dashboard_backend/update_policy.php", {
         method: "POST",
         credentials: "include",
         headers: {

@@ -1,6 +1,6 @@
 <?php
 header("Content-Type: application/json; charset=UTF-8");
-header("Access-Control-Allow-Origin: http://localhost:3000");
+header("Access-Control-Allow-Origin: backend:3000");
 header("Access-Control-Allow-Credentials: true");
 header("Access-Control-Allow-Methods: GET, POST, PUT, DELETE, OPTIONS");
 header("Access-Control-Allow-Headers: Content-Type, Access-Control-Allow-Headers, Authorization, X-Requested-With");
@@ -29,7 +29,7 @@ try {
     }
 
     $services = [];
-    $base_url = "http://localhost/admin_dashboard_backend/uploads/";
+    $base_url = "backend/admin_dashboard_backend/uploads/";
 
     if ($result->num_rows > 0) {
         while($row = $result->fetch_assoc()) {

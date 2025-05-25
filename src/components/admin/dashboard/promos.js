@@ -77,7 +77,7 @@ const FAQTable = ({ setActivePage, activePage, data, fetchPromos }) => {
 
     if (result.isConfirmed) {
       try {
-        const response = await fetch(`http://localhost/admin_dashboard_backend/delete_promo.php`, {
+        const response = await fetch(`backend/admin_dashboard_backend/delete_promo.php`, {
           method: 'DELETE',
           credentials: 'include',
           headers: {
@@ -221,7 +221,7 @@ const ManageFAQEdit = ({ setActivePage, activePage, fetchPromos }) => {
 
   const fetchBranches = async () => {
     try {
-      const response = await fetch("http://localhost/admin_dashboard_backend/branch_fetch_branches.php");
+      const response = await fetch("backend/admin_dashboard_backend/branch_fetch_branches.php");
       const data = await response.json();
       setBranches(data);
     } catch (error) {
@@ -233,7 +233,7 @@ const ManageFAQEdit = ({ setActivePage, activePage, fetchPromos }) => {
     try {
       setLoadingStaff(true);
       const response = await fetch(
-        `http://localhost/admin_dashboard_backend/branch_fetch_staff.php?branch_ids=${formData.selectedBranches.join(",")}`
+        `backend/admin_dashboard_backend/branch_fetch_staff.php?branch_ids=${formData.selectedBranches.join(",")}`
       );
   
       if (!response.ok) {
@@ -300,7 +300,7 @@ const ManageFAQEdit = ({ setActivePage, activePage, fetchPromos }) => {
   }
 
   try {
-    const response = await fetch(`http://localhost/admin_dashboard_backend/update_promo.php`, {
+    const response = await fetch(`backend/admin_dashboard_backend/update_promo.php`, {
       method: 'POST',
       credentials: 'include',
       body: formPayload, // Send as FormData
@@ -506,7 +506,7 @@ const ManageFAQAdd = ({ setActivePage, activePage, fetchPromos }) => {
 
   const fetchBranches = async () => {
     try {
-      const response = await fetch("http://localhost/admin_dashboard_backend/branch_fetch_branches.php");
+      const response = await fetch("backend/admin_dashboard_backend/branch_fetch_branches.php");
       const data = await response.json();
       setBranches(data);
     } catch (error) {
@@ -518,7 +518,7 @@ const ManageFAQAdd = ({ setActivePage, activePage, fetchPromos }) => {
     try {
       setLoadingStaff(true);
       const response = await fetch(
-        `http://localhost/admin_dashboard_backend/branch_fetch_staff.php?branch_ids=${formData.selectedBranches.join(",")}`
+        `backend/admin_dashboard_backend/branch_fetch_staff.php?branch_ids=${formData.selectedBranches.join(",")}`
       );
   
       if (!response.ok) {
@@ -584,7 +584,7 @@ const ManageFAQAdd = ({ setActivePage, activePage, fetchPromos }) => {
     }
 
     try {
-      const response = await fetch(`http://localhost/admin_dashboard_backend/add_promo.php`, {
+      const response = await fetch(`backend/admin_dashboard_backend/add_promo.php`, {
         method: 'POST',
         credentials: 'include',
         body: formPayload,
@@ -768,7 +768,7 @@ const FAQs = () => {
 
   const fetchPromos = async () => {
     try {
-      const response = await fetch("http://localhost/admin_dashboard_backend/fetch_promos.php");
+      const response = await fetch("backend/admin_dashboard_backend/fetch_promos.php");
       if (!response.ok) {
         throw new Error('Failed to fetch promos');
       }

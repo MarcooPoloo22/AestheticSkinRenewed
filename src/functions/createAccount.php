@@ -1,5 +1,5 @@
 <?php
-header('Access-Control-Allow-Origin: http://localhost:3000');
+header('Access-Control-Allow-Origin: backend:3000');
 header('Content-Type: application/json; charset=UTF-8');
 header('Access-Control-Allow-Methods: POST, OPTIONS');
 header('Access-Control-Max-Age: 3600');
@@ -111,7 +111,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $mail->setFrom($_ENV['SMTP_FROM_EMAIL'], $_ENV['SMTP_FROM_NAME']);
             $mail->addAddress($email);
 
-            $verificationLink = "http://localhost/verifyemail.php?token=$verification_token";
+            $verificationLink = "backend/verifyemail.php?token=$verification_token";
             $mail->isHTML(true);
             $mail->Subject = 'Verify Your Email Address';
             $mail->Body    = "
