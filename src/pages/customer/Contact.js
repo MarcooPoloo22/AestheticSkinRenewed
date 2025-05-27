@@ -11,15 +11,26 @@ const Contact = () => {
   useEffect(() => {
     const fetchContactData = async () => {
       try {
-        const response = await fetch("backend/admin_dashboard_backend/fetch_contact.php");
+        const response = await fetch(
+          "backend/admin_dashboard_backend/fetch_contact.php"
+        );
+        console.log("Raw response:", response);
+
         if (!response.ok) {
           throw new Error("Failed to fetch contact data");
         }
-        const data = await response.json();
-        setPhone(data.phone);
-        setFacebook(data.facebook);
-        setInstagram(data.instagram);
-        setTwitter(data.twitter);
+
+        const json = await response.json();
+        console.log("Fetched contact data:", json);
+
+        const contact = json.data;
+
+        setPhone(contact.phone);
+        console.log("Phone set to:", contact.phone);
+
+        setFacebook(contact.facebook);
+        setInstagram(contact.instagram);
+        setTwitter(contact.twitter);
       } catch (error) {
         console.error("Error fetching contact data:", error);
       }
@@ -41,24 +52,45 @@ const Contact = () => {
         </div>
       </div>
       <div className="contact-sections">
-      <div className="contact-box fade-in">
-      <i className="phone-icon">📞</i>
-        <h3>Talk to a member of our team</h3>
-        <p>Interested in our services? Give us a call!</p>
-        <p className="contact-number">{phone}</p>
-     </div>
-     <div className="social-box fade-in">
-      <i className="social-icon">🌍</i>
-      <h3>Reach us through our socials</h3>
-        <p>Connect with us on social media. Just click below!</p>
-      <div className="social-icons">
-        <a href={facebook} className="social-link" target="_blank" rel="noopener noreferrer">📘</a>
-        <a href={instagram} className="social-link" target="_blank" rel="noopener noreferrer">📷</a>
-        <a href={twitter} className="social-link" target="_blank" rel="noopener noreferrer">🐦</a>
+        <div className="contact-box fade-in">
+          <i className="phone-icon">📞</i>
+          <h3>Talk to a member of our team</h3>
+          <p>Interested in our services? Give us a call!</p>
+          <p className="contact-number">{phone}</p>
+        </div>
+        <div className="social-box fade-in">
+          <i className="social-icon">🌍</i>
+          <h3>Reach us through our socials</h3>
+          <p>Connect with us on social media. Just click below!</p>
+          <div className="social-icons">
+            <a
+              href={facebook}
+              className="social-link"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              📘
+            </a>
+            <a
+              href={instagram}
+              className="social-link"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              📷
+            </a>
+            <a
+              href={twitter}
+              className="social-link"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              🐦
+            </a>
+          </div>
+        </div>
       </div>
-    </div> 
-  </div>
-</div>
+    </div>
   );
 };
 

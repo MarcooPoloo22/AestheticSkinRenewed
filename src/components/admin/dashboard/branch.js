@@ -106,7 +106,12 @@ const BranchTable = ({ setActivePage, branches, fetchBranches }) => {
   );
 };
 
-const StaffTable = ({ staff, handleEditStaff, handleDeleteStaff, manageDoctorAvailability }) => {
+const StaffTable = ({
+  staff,
+  handleEditStaff,
+  handleDeleteStaff,
+  manageDoctorAvailability,
+}) => {
   const columns = [
     {
       name: "Staff Name",
@@ -120,7 +125,7 @@ const StaffTable = ({ staff, handleEditStaff, handleDeleteStaff, manageDoctorAva
     },
     {
       name: "Role",
-      selector: (row) => row.is_surgery_staff === 1 ? "DOCTOR" : "STAFF",
+      selector: (row) => (row.is_surgery_staff === 1 ? "DOCTOR" : "STAFF"),
       sortable: true,
     },
     {
@@ -131,8 +136,11 @@ const StaffTable = ({ staff, handleEditStaff, handleDeleteStaff, manageDoctorAva
             <FaRegEdit size={16.72} />
           </button>
           {row.is_surgery_staff === 1 && (
-            <button onClick={() => manageDoctorAvailability(row.id, row.name)} className="available-button">
-              <MdOutlineEventAvailable size={16.72}/>
+            <button
+              onClick={() => manageDoctorAvailability(row.id, row.name)}
+              className="available-button"
+            >
+              <MdOutlineEventAvailable size={16.72} />
             </button>
           )}
           <button
@@ -171,19 +179,21 @@ const ManageBranchEdit = ({ setActivePage, branch, fetchBranches }) => {
       const response = await fetch(
         `backend/admin_dashboard_backend/branch_fetch_staff.php?branch_ids=${branch.id}`
       );
-      
+
       if (!response.ok) {
         const errorData = await response.json();
-        throw new Error(errorData.message || 'Failed to fetch staff');
+        throw new Error(errorData.message || "Failed to fetch staff");
       }
-      
+
       const resData = await response.json();
-      
+
       if (resData.success) {
-        setStaff(resData.data.map(member => ({
-          ...member,
-          is_surgery_staff: member.is_surgery_staff === 1 ? 1 : 0
-        })));
+        setStaff(
+          resData.data.map((member) => ({
+            ...member,
+            is_surgery_staff: member.is_surgery_staff === 1 ? 1 : 0,
+          }))
+        );
       } else {
         throw new Error(resData.message);
       }
@@ -214,12 +224,12 @@ const ManageBranchEdit = ({ setActivePage, branch, fetchBranches }) => {
           body: JSON.stringify({ id: branch.id, name: branchName }),
         }
       );
-      
+
       if (!response.ok) {
         const errorData = await response.json();
-        throw new Error(errorData.message || 'Failed to update branch');
+        throw new Error(errorData.message || "Failed to update branch");
       }
-      
+
       const resData = await response.json();
       Swal.fire({
         title: "Success!",
@@ -242,7 +252,7 @@ const ManageBranchEdit = ({ setActivePage, branch, fetchBranches }) => {
 
   const manageDoctorAvailability = async (doctorId, doctorName) => {
     let currentAvailability = [];
-    
+
     const fetchAvailability = async () => {
       try {
         const response = await fetch(
@@ -261,56 +271,57 @@ const ManageBranchEdit = ({ setActivePage, branch, fetchBranches }) => {
 
     await fetchAvailability();
 
-    const container = document.createElement('div');
-    container.style.textAlign = 'left';
-    
-    const title = document.createElement('h4');
+    const container = document.createElement("div");
+    container.style.textAlign = "left";
+
+    const title = document.createElement("h4");
     title.textContent = `Manage Availability for ${doctorName}`;
     container.appendChild(title);
-    
-    const instructions = document.createElement('p');
-    instructions.textContent = 'Add available date and time slots for this doctor:';
+
+    const instructions = document.createElement("p");
+    instructions.textContent =
+      "Add available date and time slots for this doctor:";
     container.appendChild(instructions);
-    
-    const inputGroup = document.createElement('div');
-    inputGroup.style.display = 'grid';
-    inputGroup.style.gridTemplateColumns = '1fr 1fr auto';
-    inputGroup.style.gap = '10px';
-    inputGroup.style.marginBottom = '15px';
-    
-    const dateInput = document.createElement('input');
-    dateInput.type = 'date';
-    dateInput.id = 'availability-date';
-    dateInput.style.padding = '8px';
-    dateInput.min = new Date().toISOString().split('T')[0];
+
+    const inputGroup = document.createElement("div");
+    inputGroup.style.display = "grid";
+    inputGroup.style.gridTemplateColumns = "1fr 1fr auto";
+    inputGroup.style.gap = "10px";
+    inputGroup.style.marginBottom = "15px";
+
+    const dateInput = document.createElement("input");
+    dateInput.type = "date";
+    dateInput.id = "availability-date";
+    dateInput.style.padding = "8px";
+    dateInput.min = new Date().toISOString().split("T")[0];
     inputGroup.appendChild(dateInput);
-    
-    const timeInput = document.createElement('input');
-    timeInput.type = 'time';
-    timeInput.id = 'availability-time';
-    timeInput.style.padding = '8px';
-    timeInput.step = '1800';
+
+    const timeInput = document.createElement("input");
+    timeInput.type = "time";
+    timeInput.id = "availability-time";
+    timeInput.style.padding = "8px";
+    timeInput.step = "1800";
     inputGroup.appendChild(timeInput);
-    
-    const addButton = document.createElement('button');
-    addButton.textContent = 'Add Slot';
-    addButton.style.padding = '8px 15px';
-    addButton.style.backgroundColor = '#4CAF50';
-    addButton.style.color = 'white';
-    addButton.style.border = 'none';
-    addButton.style.borderRadius = '4px';
-    addButton.style.cursor = 'pointer';
+
+    const addButton = document.createElement("button");
+    addButton.textContent = "Add Slot";
+    addButton.style.padding = "8px 15px";
+    addButton.style.backgroundColor = "#4CAF50";
+    addButton.style.color = "white";
+    addButton.style.border = "none";
+    addButton.style.borderRadius = "4px";
+    addButton.style.cursor = "pointer";
     addButton.onclick = async () => {
       const date = dateInput.value;
       const time = timeInput.value;
-      
+
       if (!date || !time) {
-        Swal.showValidationMessage('Please select both date and time');
+        Swal.showValidationMessage("Please select both date and time");
         return;
       }
-      
+
       const dateTime = `${date} ${time}:00`;
-      
+
       try {
         const response = await fetch(
           "backend/admin_dashboard_backend/doctor_add_availability.php",
@@ -318,26 +329,28 @@ const ManageBranchEdit = ({ setActivePage, branch, fetchBranches }) => {
             method: "POST",
             credentials: "include",
             headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({ 
+            body: JSON.stringify({
               doctor_id: doctorId,
-              date_time: dateTime 
+              date_time: dateTime,
             }),
           }
         );
-        
+
         if (!response.ok) {
           throw new Error("Failed to add availability");
         }
-        
+
         const resData = await response.json();
         if (resData.success) {
           await fetchAvailability();
           renderAvailabilityList();
-          dateInput.value = '';
-          timeInput.value = '';
-          setRefreshKey(prev => prev + 1);
+          dateInput.value = "";
+          timeInput.value = "";
+          setRefreshKey((prev) => prev + 1);
         } else {
-          Swal.showValidationMessage(resData.message || "Failed to add availability");
+          Swal.showValidationMessage(
+            resData.message || "Failed to add availability"
+          );
         }
       } catch (error) {
         Swal.showValidationMessage("Failed to add availability");
@@ -346,62 +359,62 @@ const ManageBranchEdit = ({ setActivePage, branch, fetchBranches }) => {
     };
     inputGroup.appendChild(addButton);
     container.appendChild(inputGroup);
-    
-    const availabilityList = document.createElement('div');
-    availabilityList.id = 'availability-list';
-    availabilityList.style.maxHeight = '300px';
-    availabilityList.style.overflowY = 'auto';
+
+    const availabilityList = document.createElement("div");
+    availabilityList.id = "availability-list";
+    availabilityList.style.maxHeight = "300px";
+    availabilityList.style.overflowY = "auto";
     container.appendChild(availabilityList);
-    
+
     const renderAvailabilityList = () => {
-      availabilityList.innerHTML = '';
-      
+      availabilityList.innerHTML = "";
+
       if (currentAvailability.length === 0) {
-        const emptyMsg = document.createElement('p');
-        emptyMsg.textContent = 'No availability slots added yet';
-        emptyMsg.style.textAlign = 'center';
-        emptyMsg.style.color = '#777';
+        const emptyMsg = document.createElement("p");
+        emptyMsg.textContent = "No availability slots added yet";
+        emptyMsg.style.textAlign = "center";
+        emptyMsg.style.color = "#777";
         availabilityList.appendChild(emptyMsg);
         return;
       }
-      
+
       const groupedByDate = currentAvailability.reduce((acc, dt) => {
-        const date = dt.split(' ')[0];
+        const date = dt.split(" ")[0];
         if (!acc[date]) acc[date] = [];
-        acc[date].push(dt.split(' ')[1].substring(0, 5));
+        acc[date].push(dt.split(" ")[1].substring(0, 5));
         return acc;
       }, {});
-      
+
       Object.entries(groupedByDate).forEach(([date, times]) => {
-        const dateGroup = document.createElement('div');
-        dateGroup.style.marginBottom = '15px';
-        
-        const dateHeader = document.createElement('div');
-        dateHeader.style.display = 'flex';
-        dateHeader.style.justifyContent = 'space-between';
-        dateHeader.style.alignItems = 'center';
-        dateHeader.style.marginBottom = '5px';
-        dateHeader.style.paddingBottom = '5px';
-        dateHeader.style.borderBottom = '1px solid #eee';
-        
-        const dateText = document.createElement('strong');
-        dateText.textContent = new Date(date).toLocaleDateString('en-US', { 
-          weekday: 'long', 
-          year: 'numeric', 
-          month: 'long', 
-          day: 'numeric' 
+        const dateGroup = document.createElement("div");
+        dateGroup.style.marginBottom = "15px";
+
+        const dateHeader = document.createElement("div");
+        dateHeader.style.display = "flex";
+        dateHeader.style.justifyContent = "space-between";
+        dateHeader.style.alignItems = "center";
+        dateHeader.style.marginBottom = "5px";
+        dateHeader.style.paddingBottom = "5px";
+        dateHeader.style.borderBottom = "1px solid #eee";
+
+        const dateText = document.createElement("strong");
+        dateText.textContent = new Date(date).toLocaleDateString("en-US", {
+          weekday: "long",
+          year: "numeric",
+          month: "long",
+          day: "numeric",
         });
         dateHeader.appendChild(dateText);
-        
-        const deleteDateButton = document.createElement('button');
-        deleteDateButton.textContent = 'Remove All';
-        deleteDateButton.style.padding = '3px 8px';
-        deleteDateButton.style.fontSize = '12px';
-        deleteDateButton.style.backgroundColor = '#f44336';
-        deleteDateButton.style.color = 'white';
-        deleteDateButton.style.border = 'none';
-        deleteDateButton.style.borderRadius = '3px';
-        deleteDateButton.style.cursor = 'pointer';
+
+        const deleteDateButton = document.createElement("button");
+        deleteDateButton.textContent = "Remove All";
+        deleteDateButton.style.padding = "3px 8px";
+        deleteDateButton.style.fontSize = "12px";
+        deleteDateButton.style.backgroundColor = "#f44336";
+        deleteDateButton.style.color = "white";
+        deleteDateButton.style.border = "none";
+        deleteDateButton.style.borderRadius = "3px";
+        deleteDateButton.style.cursor = "pointer";
         deleteDateButton.onclick = async () => {
           try {
             const response = await fetch(
@@ -410,24 +423,26 @@ const ManageBranchEdit = ({ setActivePage, branch, fetchBranches }) => {
                 method: "POST",
                 credentials: "include",
                 headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({ 
+                body: JSON.stringify({
                   doctor_id: doctorId,
-                  date_time: `${date}%`
+                  date_time: `${date}%`,
                 }),
               }
             );
-            
+
             if (!response.ok) {
               throw new Error("Failed to remove availability");
             }
-            
+
             const resData = await response.json();
             if (resData.success) {
               await fetchAvailability();
               renderAvailabilityList();
-              setRefreshKey(prev => prev + 1);
+              setRefreshKey((prev) => prev + 1);
             } else {
-              Swal.showValidationMessage(resData.message || "Failed to remove availability");
+              Swal.showValidationMessage(
+                resData.message || "Failed to remove availability"
+              );
             }
           } catch (error) {
             Swal.showValidationMessage("Failed to remove availability");
@@ -436,32 +451,32 @@ const ManageBranchEdit = ({ setActivePage, branch, fetchBranches }) => {
         };
         dateHeader.appendChild(deleteDateButton);
         dateGroup.appendChild(dateHeader);
-        
-        const timesContainer = document.createElement('div');
-        timesContainer.style.display = 'flex';
-        timesContainer.style.flexWrap = 'wrap';
-        timesContainer.style.gap = '5px';
-        
-        times.forEach(time => {
-          const timeItem = document.createElement('div');
-          timeItem.style.display = 'flex';
-          timeItem.style.alignItems = 'center';
-          timeItem.style.gap = '5px';
-          timeItem.style.padding = '3px 8px';
-          timeItem.style.backgroundColor = '#e3f2fd';
-          timeItem.style.borderRadius = '3px';
-          
-          const timeText = document.createElement('span');
+
+        const timesContainer = document.createElement("div");
+        timesContainer.style.display = "flex";
+        timesContainer.style.flexWrap = "wrap";
+        timesContainer.style.gap = "5px";
+
+        times.forEach((time) => {
+          const timeItem = document.createElement("div");
+          timeItem.style.display = "flex";
+          timeItem.style.alignItems = "center";
+          timeItem.style.gap = "5px";
+          timeItem.style.padding = "3px 8px";
+          timeItem.style.backgroundColor = "#e3f2fd";
+          timeItem.style.borderRadius = "3px";
+
+          const timeText = document.createElement("span");
           timeText.textContent = time;
           timeItem.appendChild(timeText);
-          
-          const deleteButton = document.createElement('button');
-          deleteButton.textContent = '×';
-          deleteButton.style.background = 'none';
-          deleteButton.style.border = 'none';
-          deleteButton.style.color = '#f44336';
-          deleteButton.style.cursor = 'pointer';
-          deleteButton.style.padding = '0';
+
+          const deleteButton = document.createElement("button");
+          deleteButton.textContent = "×";
+          deleteButton.style.background = "none";
+          deleteButton.style.border = "none";
+          deleteButton.style.color = "#f44336";
+          deleteButton.style.cursor = "pointer";
+          deleteButton.style.padding = "0";
           deleteButton.onclick = async () => {
             try {
               const response = await fetch(
@@ -470,24 +485,26 @@ const ManageBranchEdit = ({ setActivePage, branch, fetchBranches }) => {
                   method: "POST",
                   credentials: "include",
                   headers: { "Content-Type": "application/json" },
-                  body: JSON.stringify({ 
+                  body: JSON.stringify({
                     doctor_id: doctorId,
-                    date_time: `${date} ${time}:00`
+                    date_time: `${date} ${time}:00`,
                   }),
                 }
               );
-              
+
               if (!response.ok) {
                 throw new Error("Failed to remove availability");
               }
-              
+
               const resData = await response.json();
               if (resData.success) {
                 await fetchAvailability();
                 renderAvailabilityList();
-                setRefreshKey(prev => prev + 1);
+                setRefreshKey((prev) => prev + 1);
               } else {
-                Swal.showValidationMessage(resData.message || "Failed to remove availability");
+                Swal.showValidationMessage(
+                  resData.message || "Failed to remove availability"
+                );
               }
             } catch (error) {
               Swal.showValidationMessage("Failed to remove availability");
@@ -497,20 +514,20 @@ const ManageBranchEdit = ({ setActivePage, branch, fetchBranches }) => {
           timeItem.appendChild(deleteButton);
           timesContainer.appendChild(timeItem);
         });
-        
+
         dateGroup.appendChild(timesContainer);
         availabilityList.appendChild(dateGroup);
       });
     };
-    
+
     renderAvailabilityList();
-    
+
     await Swal.fire({
       title: `Manage Doctor Availability`,
       html: container,
-      width: '700px',
+      width: "700px",
       showConfirmButton: false,
-      showCloseButton: true
+      showCloseButton: true,
     });
   };
 
@@ -530,15 +547,15 @@ const ManageBranchEdit = ({ setActivePage, branch, fetchBranches }) => {
       showCancelButton: true,
       preConfirm: () => {
         return {
-          name: document.getElementById('staff-name').value,
-          isDoctor: document.getElementById('doctor-checkbox').checked
+          name: document.getElementById("staff-name").value,
+          isDoctor: document.getElementById("doctor-checkbox").checked,
         };
       },
       inputValidator: (value) => {
-        if (!document.getElementById('staff-name').value) {
+        if (!document.getElementById("staff-name").value) {
           return "You need to enter a staff name!";
         }
-      }
+      },
     });
 
     if (formValues) {
@@ -549,37 +566,37 @@ const ManageBranchEdit = ({ setActivePage, branch, fetchBranches }) => {
             method: "POST",
             credentials: "include",
             headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({ 
-              name: formValues.name, 
+            body: JSON.stringify({
+              name: formValues.name,
               branch_id: branch.id,
-              is_surgery_staff: formValues.isDoctor ? 1 : 0
+              is_surgery_staff: formValues.isDoctor ? 1 : 0,
             }),
           }
         );
 
         if (!response.ok) {
           const errorData = await response.json();
-          throw new Error(errorData.message || 'Failed to add staff');
+          throw new Error(errorData.message || "Failed to add staff");
         }
 
         const resData = await response.json();
-        
+
         if (resData.status === "success") {
-          const newStaff = { 
-            id: resData.id, 
+          const newStaff = {
+            id: resData.id,
             name: formValues.name,
             branch_name: branch.name,
-            is_surgery_staff: resData.is_surgery_staff
+            is_surgery_staff: resData.is_surgery_staff,
           };
-          
+
           setStaff([...staff, newStaff]);
-          
+
           Swal.fire({
             title: "Success!",
             text: "Staff added successfully!",
             icon: "success",
           });
-          
+
           if (formValues.isDoctor) {
             await manageDoctorAvailability(resData.id, formValues.name);
           }
@@ -605,7 +622,7 @@ const ManageBranchEdit = ({ setActivePage, branch, fetchBranches }) => {
       confirmButtonText: "Yes, delete it!",
       cancelButtonText: "No, cancel!",
     });
-    
+
     if (result.isConfirmed) {
       try {
         const response = await fetch(
@@ -617,12 +634,12 @@ const ManageBranchEdit = ({ setActivePage, branch, fetchBranches }) => {
             body: JSON.stringify({ id: staffId }),
           }
         );
-        
+
         if (!response.ok) {
           const errorData = await response.json();
-          throw new Error(errorData.message || 'Failed to delete staff');
+          throw new Error(errorData.message || "Failed to delete staff");
         }
-        
+
         const resData = await response.json();
         Swal.fire({
           title: "Deleted!",
@@ -647,10 +664,14 @@ const ManageBranchEdit = ({ setActivePage, branch, fetchBranches }) => {
     const { value: formValues } = await Swal.fire({
       title: "Edit Staff",
       html: `
-        <input id="staff-name" class="swal2-input" placeholder="Staff Name" value="${staffMember.name}">
+        <input id="staff-name" class="swal2-input" placeholder="Staff Name" value="${
+          staffMember.name
+        }">
         <div style="margin-top: 4rem; text-align: center;">
           <label>
-            <input type="checkbox" id="doctor-checkbox" ${staffMember.is_surgery_staff === 1 ? 'checked' : ''}> 
+            <input type="checkbox" id="doctor-checkbox" ${
+              staffMember.is_surgery_staff === 1 ? "checked" : ""
+            }> 
             This staff member is a DOCTOR (Surgery Staff)
           </label>
         </div>
@@ -659,18 +680,22 @@ const ManageBranchEdit = ({ setActivePage, branch, fetchBranches }) => {
       showCancelButton: true,
       preConfirm: () => {
         return {
-          name: document.getElementById('staff-name').value,
-          isDoctor: document.getElementById('doctor-checkbox').checked
+          name: document.getElementById("staff-name").value,
+          isDoctor: document.getElementById("doctor-checkbox").checked,
         };
       },
       inputValidator: (value) => {
-        if (!document.getElementById('staff-name').value) {
+        if (!document.getElementById("staff-name").value) {
           return "You need to enter a staff name!";
         }
-      }
+      },
     });
 
-    if (formValues && (formValues.name !== staffMember.name || formValues.isDoctor !== (staffMember.is_surgery_staff === 1))) {
+    if (
+      formValues &&
+      (formValues.name !== staffMember.name ||
+        formValues.isDoctor !== (staffMember.is_surgery_staff === 1))
+    ) {
       try {
         const response = await fetch(
           "backend/admin_dashboard_backend/branch_update_staff.php",
@@ -678,17 +703,17 @@ const ManageBranchEdit = ({ setActivePage, branch, fetchBranches }) => {
             method: "PUT",
             credentials: "include",
             headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({ 
-              id: staffMember.id, 
+            body: JSON.stringify({
+              id: staffMember.id,
               name: formValues.name,
-              is_surgery_staff: formValues.isDoctor ? 1 : 0
+              is_surgery_staff: formValues.isDoctor ? 1 : 0,
             }),
           }
         );
 
         if (!response.ok) {
           const errorData = await response.json();
-          throw new Error(errorData.message || 'Failed to update staff');
+          throw new Error(errorData.message || "Failed to update staff");
         }
 
         const resData = await response.json();
@@ -701,12 +726,12 @@ const ManageBranchEdit = ({ setActivePage, branch, fetchBranches }) => {
         });
 
         const updatedStaff = staff.map((member) =>
-          member.id === staffMember.id 
-            ? { 
-                ...member, 
+          member.id === staffMember.id
+            ? {
+                ...member,
                 name: formValues.name,
-                is_surgery_staff: resData.is_surgery_staff
-              } 
+                is_surgery_staff: resData.is_surgery_staff,
+              }
             : member
         );
 
@@ -768,7 +793,7 @@ const ManageBranchEdit = ({ setActivePage, branch, fetchBranches }) => {
           />
           <div className="edit-branch-button-center">
             <button onClick={handleAddStaff} className="button-ManageFAQEdit">
-                Add Staff
+              Add Staff
             </button>
           </div>
         </div>

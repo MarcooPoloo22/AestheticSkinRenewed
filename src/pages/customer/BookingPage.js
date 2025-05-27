@@ -16,18 +16,18 @@ const validateDate = (dateString) => {
 };
 
 const convertTime12to24 = (time12h) => {
-  const [time, modifier] = time12h.split(' ');
-  let [hours, minutes] = time.split(':');
-  if (hours === '12') hours = '00';
-  if (modifier === 'PM') hours = parseInt(hours, 10) + 12;
-  return `${hours.toString().padStart(2, '0')}:${minutes}:00`;
+  const [time, modifier] = time12h.split(" ");
+  let [hours, minutes] = time.split(":");
+  if (hours === "12") hours = "00";
+  if (modifier === "PM") hours = parseInt(hours, 10) + 12;
+  return `${hours.toString().padStart(2, "0")}:${minutes}:00`;
 };
 
 const BookingPageRegistered = ({ user }) => {
   const location = useLocation();
   const queryParams = new URLSearchParams(location.search);
-  const serviceTypeParam = queryParams.get('type');
-  const serviceIdParam = queryParams.get('serviceId');
+  const serviceTypeParam = queryParams.get("type");
+  const serviceIdParam = queryParams.get("serviceId");
 
   const [formData, setFormData] = useState({
     service_category: serviceTypeParam || "",
@@ -53,11 +53,11 @@ const BookingPageRegistered = ({ user }) => {
   const navigate = useNavigate();
 
   const convertTime24to12 = (time24) => {
-    const [hours, minutes] = time24.split(':');
+    const [hours, minutes] = time24.split(":");
     const hour = parseInt(hours, 10);
-    const ampm = hour >= 12 ? 'PM' : 'AM';
+    const ampm = hour >= 12 ? "PM" : "AM";
     const twelveHour = hour % 12 || 12;
-    return `${twelveHour.toString().padStart(2, '0')}:${minutes} ${ampm}`;
+    return `${twelveHour.toString().padStart(2, "0")}:${minutes} ${ampm}`;
   };
 
   const standardTimeSlots = [
@@ -84,46 +84,59 @@ const BookingPageRegistered = ({ user }) => {
 
   useEffect(() => {
     if (serviceTypeParam === "Surgery" && serviceIdParam) {
-      setFormData(prev => ({
+      setFormData((prev) => ({
         ...prev,
         service_category: "Surgery",
-        service: serviceIdParam
+        service: serviceIdParam,
       }));
-      
+
       // Fetch surgery details to set the service_type
-      fetch(`backend/admin_dashboard_backend/bookingpage_services.php?type=Surgery`)
+      fetch(
+        `backend/admin_dashboard_backend/bookingpage_services.php?type=Surgery`
+      )
         .then((response) => response.json())
         .then((data) => {
-          const selectedService = data.find(s => s.id.toString() === serviceIdParam);
+          const selectedService = data.find(
+            (s) => s.id.toString() === serviceIdParam
+          );
           if (selectedService) {
-            setFormData(prev => ({
+            setFormData((prev) => ({
               ...prev,
-              service_type: selectedService.name
+              service_type: selectedService.name,
             }));
           }
         })
-        .catch((error) => console.error("Error fetching surgery details:", error));
+        .catch((error) =>
+          console.error("Error fetching surgery details:", error)
+        );
     }
   }, [serviceTypeParam, serviceIdParam]);
 
   useEffect(() => {
     if (formData.service_category) {
-      fetch(`backend/admin_dashboard_backend/bookingpage_services.php?type=${formData.service_category}`)
+      fetch(
+        `backend/admin_dashboard_backend/bookingpage_services.php?type=${formData.service_category}`
+      )
         .then((response) => response.json())
         .then((data) => {
-          const servicesWithType = data.map(service => ({
+          const servicesWithType = data.map((service) => ({
             ...service,
-            service_category: formData.service_category
+            service_category: formData.service_category,
           }));
           setServices(servicesWithType);
-  
+
           // Check if there's a serviceIdParam from URL and set service_type
-          if (serviceIdParam && serviceTypeParam === formData.service_category) {
-            const selectedService = data.find(s => s.id.toString() === serviceIdParam);
+          if (
+            serviceIdParam &&
+            serviceTypeParam === formData.service_category
+          ) {
+            const selectedService = data.find(
+              (s) => s.id.toString() === serviceIdParam
+            );
             if (selectedService) {
-              setFormData(prev => ({
+              setFormData((prev) => ({
                 ...prev,
-                service_type: selectedService.name
+                service_type: selectedService.name,
               }));
             }
           }
@@ -131,16 +144,26 @@ const BookingPageRegistered = ({ user }) => {
         .catch((error) => console.error("Error fetching services:", error));
     } else {
       setServices([]);
-      setFormData((prev) => ({ ...prev, service: "", service_type: "", branch_id: "", staff_id: "" }));
+      setFormData((prev) => ({
+        ...prev,
+        service: "",
+        service_type: "",
+        branch_id: "",
+        staff_id: "",
+      }));
     }
   }, [formData.service_category, serviceIdParam, serviceTypeParam]); // Add dependencies here
 
   useEffect(() => {
     if (formData.service) {
-      fetch(`backend/admin_dashboard_backend/bookingpage_branches.php?serviceId=${encodeURIComponent(formData.service)}&type=${formData.service_category}`)
+      fetch(
+        `backend/admin_dashboard_backend/bookingpage_branches.php?serviceId=${encodeURIComponent(
+          formData.service
+        )}&type=${formData.service_category}`
+      )
         .then((response) => {
           if (!response.ok) {
-            throw new Error('Network response was not ok');
+            throw new Error("Network response was not ok");
           }
           return response.json();
         })
@@ -153,9 +176,9 @@ const BookingPageRegistered = ({ user }) => {
         .catch((error) => {
           console.error("Error fetching branches:", error);
           Swal.fire({
-            icon: 'error',
-            title: 'Error',
-            text: 'Failed to load branches. Please try again.',
+            icon: "error",
+            title: "Error",
+            text: "Failed to load branches. Please try again.",
           });
         });
     } else {
@@ -166,7 +189,13 @@ const BookingPageRegistered = ({ user }) => {
 
   useEffect(() => {
     if (formData.branch_id && formData.service && formData.service_category) {
-      fetch(`backend/admin_dashboard_backend/bookingpage_staff.php?branchId=${encodeURIComponent(formData.branch_id)}&serviceId=${encodeURIComponent(formData.service)}&type=${encodeURIComponent(formData.service_category)}`)
+      fetch(
+        `backend/admin_dashboard_backend/bookingpage_staff.php?branchId=${encodeURIComponent(
+          formData.branch_id
+        )}&serviceId=${encodeURIComponent(
+          formData.service
+        )}&type=${encodeURIComponent(formData.service_category)}`
+      )
         .then((response) => {
           if (!response.ok) {
             throw new Error(`HTTP error! Status: ${response.status}`);
@@ -182,9 +211,9 @@ const BookingPageRegistered = ({ user }) => {
         .catch((error) => {
           console.error("Error fetching staff:", error);
           Swal.fire({
-            icon: 'error',
-            title: 'Error',
-            text: 'Failed to load staff. Please try again.',
+            icon: "error",
+            title: "Error",
+            text: "Failed to load staff. Please try again.",
           });
         });
     } else {
@@ -195,21 +224,27 @@ const BookingPageRegistered = ({ user }) => {
 
   useEffect(() => {
     if (formData.service_category === "Surgery" && formData.staff_id) {
-      fetch(`backend/admin_dashboard_backend/fetch_doctor_availability.php?doctor_id=${formData.staff_id}`)
-        .then(response => {
-          if (!response.ok) throw new Error('Network response was not ok');
+      fetch(
+        `backend/admin_dashboard_backend/fetch_doctor_availability.php?doctor_id=${formData.staff_id}`
+      )
+        .then((response) => {
+          if (!response.ok) throw new Error("Network response was not ok");
           return response.json();
         })
-        .then(data => {
-          if (data.status === 'success') {
+        .then((data) => {
+          if (data.status === "success") {
             setDoctorAvailability(data.available_slots || []);
-            const dates = [...new Set(data.available_slots.map(slot => slot.split(' ')[0]))];
+            const dates = [
+              ...new Set(
+                data.available_slots.map((slot) => slot.split(" ")[0])
+              ),
+            ];
             setAvailableDates(dates);
           } else {
-            throw new Error(data.message || 'Failed to fetch availability');
+            throw new Error(data.message || "Failed to fetch availability");
           }
         })
-        .catch(error => {
+        .catch((error) => {
           console.error("Error fetching doctor dates:", error);
           setAvailableDates([]);
           setDoctorAvailability([]);
@@ -221,97 +256,117 @@ const BookingPageRegistered = ({ user }) => {
   }, [formData.staff_id, formData.service_category]);
 
   // Change from fetch_doctor_availability.php to doctor_get_availability.php
-useEffect(() => {
-  if (formData.service_category === "Surgery" && formData.staff_id) {
-    fetch(`backend/admin_dashboard_backend/doctor_get_availability.php?doctor_id=${formData.staff_id}`)
-      .then(response => {
-        if (!response.ok) throw new Error('Network response was not ok');
-        return response.json();
-      })
-      .then(data => {
-        if (data.success) {  // Changed from data.status === 'success'
-          setDoctorAvailability(data.availability || []);  // Changed from data.available_slots
-          const dates = [...new Set(data.availability.map(slot => slot.split(' ')[0]))];
-          setAvailableDates(dates);
-        } else {
-          throw new Error(data.message || 'Failed to fetch availability');
-        }
-      })
-      .catch(error => {
-        console.error("Error fetching doctor dates:", error);
-        setAvailableDates([]);
-        setDoctorAvailability([]);
-      });
-  } else {
-    setAvailableDates([]);
-    setDoctorAvailability([]);
-  }
-}, [formData.staff_id, formData.service_category]);
+  useEffect(() => {
+    if (formData.service_category === "Surgery" && formData.staff_id) {
+      fetch(
+        `backend/admin_dashboard_backend/doctor_get_availability.php?doctor_id=${formData.staff_id}`
+      )
+        .then((response) => {
+          if (!response.ok) throw new Error("Network response was not ok");
+          return response.json();
+        })
+        .then((data) => {
+          if (data.success) {
+            // Changed from data.status === 'success'
+            setDoctorAvailability(data.availability || []); // Changed from data.available_slots
+            const dates = [
+              ...new Set(data.availability.map((slot) => slot.split(" ")[0])),
+            ];
+            setAvailableDates(dates);
+          } else {
+            throw new Error(data.message || "Failed to fetch availability");
+          }
+        })
+        .catch((error) => {
+          console.error("Error fetching doctor dates:", error);
+          setAvailableDates([]);
+          setDoctorAvailability([]);
+        });
+    } else {
+      setAvailableDates([]);
+      setDoctorAvailability([]);
+    }
+  }, [formData.staff_id, formData.service_category]);
 
-useEffect(() => {
-  if (formData.service_category === "Surgery") {
-    const slotsForDate = Array.isArray(doctorAvailability) 
-      ? doctorAvailability.filter(slot => slot.startsWith(formData.appointment_date))
-      : [];
-      
-    const availableSlots = slotsForDate
-      .map(slot => {
-        const [date, time] = slot.split(' ');
+  useEffect(() => {
+    if (formData.service_category === "Surgery") {
+      const slotsForDate = Array.isArray(doctorAvailability)
+        ? doctorAvailability.filter((slot) =>
+            slot.startsWith(formData.appointment_date)
+          )
+        : [];
+
+      const availableSlots = slotsForDate.map((slot) => {
+        const [date, time] = slot.split(" ");
         return convertTime24to12(time.substring(0, 5));
       });
-      
-    setAvailableTimeSlots(availableSlots);
-  } else {
-    // For Promo/Service, we'll show all standard time slots but grey out the booked ones
-    setAvailableTimeSlots(standardTimeSlots);
-  }
-}, [doctorAvailability, formData.appointment_date, formData.service_category]);
 
-useEffect(() => {
-  if (formData.appointment_date && formData.staff_id && formData.service_category !== "Surgery") {
-    setIsLoading(true);
-    fetch(`backend/booking.php?date=${formData.appointment_date}&staff_id=${formData.staff_id}`)
-      .then((response) => {
-        if (!response.ok) {
-          throw new Error('Network response was not ok');
-        }
-        return response.json();
-      })
-      .then((data) => {
-        if (data.status === 'success') {
-          setBookedSlots(data.booked_slots || []);
-        } else {
-          throw new Error(data.message || 'Failed to fetch booked slots.');
-        }
-      })
-      .catch((error) => {
-        console.error("Error fetching booked slots:", error);
-        Swal.fire({
-          icon: 'error',
-          title: 'Error',
-          text: 'Failed to fetch booked slots. Please try again.',
+      setAvailableTimeSlots(availableSlots);
+    } else {
+      // For Promo/Service, we'll show all standard time slots but grey out the booked ones
+      setAvailableTimeSlots(standardTimeSlots);
+    }
+  }, [
+    doctorAvailability,
+    formData.appointment_date,
+    formData.service_category,
+  ]);
+
+  useEffect(() => {
+    if (
+      formData.appointment_date &&
+      formData.staff_id &&
+      formData.service_category !== "Surgery"
+    ) {
+      setIsLoading(true);
+      fetch(
+        `backend/booking.php?date=${formData.appointment_date}&staff_id=${formData.staff_id}`
+      )
+        .then((response) => {
+          if (!response.ok) {
+            throw new Error("Network response was not ok");
+          }
+          return response.json();
+        })
+        .then((data) => {
+          if (data.status === "success") {
+            setBookedSlots(data.booked_slots || []);
+          } else {
+            throw new Error(data.message || "Failed to fetch booked slots.");
+          }
+        })
+        .catch((error) => {
+          console.error("Error fetching booked slots:", error);
+          Swal.fire({
+            icon: "error",
+            title: "Error",
+            text: "Failed to fetch booked slots. Please try again.",
+          });
+        })
+        .finally(() => {
+          setIsLoading(false);
         });
-      })
-      .finally(() => {
-        setIsLoading(false);
-      });
-  } else {
-    setBookedSlots([]);
-  }
-}, [formData.appointment_date, formData.staff_id, formData.service_category]);
+    } else {
+      setBookedSlots([]);
+    }
+  }, [formData.appointment_date, formData.staff_id, formData.service_category]);
 
   const handleSurgeryPayment = async () => {
     setIsLoadingPayment(true);
     try {
-      const serviceObj = services.find(s => s.id.toString() === formData.service.toString());
-      const response = await fetch("backend/admin_dashboard_backend/fetch_payment_details.php");
+      const serviceObj = services.find(
+        (s) => s.id.toString() === formData.service.toString()
+      );
+      const response = await fetch(
+        "backend/admin_dashboard_backend/fetch_payment_details.php"
+      );
       if (!response.ok) throw new Error("Failed to fetch payment details");
       const result = await response.json();
-      
+
       if (!result.data || !result.data.gcash_number) {
         throw new Error("Invalid payment details format");
       }
-      
+
       setPaymentDetails(result);
       showPaymentModal(result.data, serviceObj.price);
     } catch (error) {
@@ -328,12 +383,18 @@ useEffect(() => {
   };
 
   const showConfirmationModal = () => {
-    const serviceObj = services.find(s => s.id.toString() === formData.service.toString());
-    const branchObj = branches.find(b => b.id.toString() === formData.branch_id.toString());
-    const staffObj = staffList.find(s => s.id.toString() === formData.staff_id.toString());
-  
+    const serviceObj = services.find(
+      (s) => s.id.toString() === formData.service.toString()
+    );
+    const branchObj = branches.find(
+      (b) => b.id.toString() === formData.branch_id.toString()
+    );
+    const staffObj = staffList.find(
+      (s) => s.id.toString() === formData.staff_id.toString()
+    );
+
     MySwal.fire({
-      title: '<strong>Booking Summary</strong>',
+      title: "<strong>Booking Summary</strong>",
       html: `
         <div class="booking-summary">
           <div class="summary-row">
@@ -346,15 +407,15 @@ useEffect(() => {
           </div>
           <div class="summary-row">
             <span class="summary-label">Price:</span>
-            <span class="summary-value">₱${serviceObj?.price || 'N/A'}</span>
+            <span class="summary-value">₱${serviceObj?.price || "N/A"}</span>
           </div>
           <div class="summary-row">
             <span class="summary-label">Branch:</span>
-            <span class="summary-value">${branchObj?.name || 'N/A'}</span>
+            <span class="summary-value">${branchObj?.name || "N/A"}</span>
           </div>
           <div class="summary-row">
             <span class="summary-label">Staff:</span>
-            <span class="summary-value">${staffObj?.name || 'N/A'}</span>
+            <span class="summary-value">${staffObj?.name || "N/A"}</span>
           </div>
           <div class="summary-row">
             <span class="summary-label">Date:</span>
@@ -364,23 +425,29 @@ useEffect(() => {
             <span class="summary-label">Time:</span>
             <span class="summary-value">${formData.appointment_time}</span>
           </div>
-          ${formData.service_category === "Surgery" ? `
+          ${
+            formData.service_category === "Surgery"
+              ? `
           <div class="summary-row">
             <span class="summary-label" style="color: #4169E1; font-weight: bold;">Required Down Payment (50%):</span>
-            <span class="summary-value" style="color: #4169E1; font-weight: bold;">₱${(serviceObj?.price * 0.5).toFixed(2) || 'N/A'}</span>
+            <span class="summary-value" style="color: #4169E1; font-weight: bold;">₱${
+              (serviceObj?.price * 0.5).toFixed(2) || "N/A"
+            }</span>
           </div>
-          ` : ''}
+          `
+              : ""
+          }
         </div>
       `,
       showCancelButton: true,
-      confirmButtonText: 'Book Now',
-      cancelButtonText: 'Cancel',
+      confirmButtonText: "Book Now",
+      cancelButtonText: "Cancel",
       reverseButtons: true,
       customClass: {
-        popup: 'booking-summary-popup',
-        confirmButton: 'btn btn-confirm',
-        cancelButton: 'btn btn-cancel'
-      }
+        popup: "booking-summary-popup",
+        confirmButton: "btn btn-confirm",
+        cancelButton: "btn btn-cancel",
+      },
     }).then((result) => {
       if (result.isConfirmed) {
         if (formData.service_category === "Surgery") {
@@ -394,15 +461,23 @@ useEffect(() => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    
-    const requiredFields = ['service_category', 'service', 'service_type', 'branch_id', 'staff_id', 'appointment_date', 'appointment_time'];
-    
+
+    const requiredFields = [
+      "service_category",
+      "service",
+      "service_type",
+      "branch_id",
+      "staff_id",
+      "appointment_date",
+      "appointment_time",
+    ];
+
     for (const field of requiredFields) {
       if (!formData[field]) {
         Swal.fire({
-          icon: 'error',
-          title: 'Missing Information',
-          text: `Please fill in ${field.replace('_', ' ')}.`,
+          icon: "error",
+          title: "Missing Information",
+          text: `Please fill in ${field.replace("_", " ")}.`,
         });
         return;
       }
@@ -413,33 +488,33 @@ useEffect(() => {
 
   const handleChange = (e) => {
     const { name, value } = e.target;
-  
+
     if (name === "service") {
-      const selectedService = services.find(s => s.id.toString() === value);
-      setFormData(prev => ({
+      const selectedService = services.find((s) => s.id.toString() === value);
+      setFormData((prev) => ({
         ...prev,
         [name]: value,
         service_type: selectedService?.name || "",
         branch_id: "",
-        staff_id: ""
+        staff_id: "",
       }));
     } else if (name === "service_category") {
-      setFormData(prev => ({
+      setFormData((prev) => ({
         ...prev,
         [name]: value,
         service: "",
         service_type: "",
         branch_id: "",
-        staff_id: ""
+        staff_id: "",
       }));
-      
+
       // If switching away from surgery, clear any surgery-specific data
       if (value !== "Surgery") {
         setDoctorAvailability([]);
         setAvailableDates([]);
       }
     } else {
-      setFormData(prev => ({ ...prev, [name]: value }));
+      setFormData((prev) => ({ ...prev, [name]: value }));
     }
   };
   const showPaymentModal = (paymentData, price) => {
@@ -447,64 +522,96 @@ useEffect(() => {
     MySwal.fire({
       html: (
         <>
-          <div className="container" style={{ width: "100%", maxWidth: "700px", padding: "10px", margin: "0 auto" }}>
-            <p 
+          <div
+            className="container"
+            style={{
+              width: "100%",
+              maxWidth: "700px",
+              padding: "10px",
+              margin: "0 auto",
+            }}
+          >
+            <p
               style={{
                 fontSize: "1.5rem",
                 fontWeight: "bold",
                 color: "#4169E1",
                 textAlign: "center",
                 textTransform: "uppercase",
-                marginBottom: "20px"
+                marginBottom: "20px",
               }}
             >
               Minimum 50% Down Payment Required
             </p>
-    
-            <p className="total-price" style={{ fontSize: "1.2rem", fontWeight: "bold" }}>
+
+            <p
+              className="total-price"
+              style={{ fontSize: "1.2rem", fontWeight: "bold" }}
+            >
               Total Price: ₱{price}
             </p>
-            <p className="down-payment" style={{ fontSize: "1.2rem", fontWeight: "bold", color: "#4169E1" }}>
+            <p
+              className="down-payment"
+              style={{
+                fontSize: "1.2rem",
+                fontWeight: "bold",
+                color: "#4169E1",
+              }}
+            >
               Required Down Payment (50%): ₱{downPayment}
             </p>
-    
+
             <p className="gcash-label">GCash payment Details</p>
-            <p className="gcash-details">GCash Number: {paymentData.gcash_number}</p>
-            <p className="gcash-details">GCash Name: {paymentData.gcash_name}</p>
-    
+            <p className="gcash-details">
+              GCash Number: {paymentData.gcash_number}
+            </p>
+            <p className="gcash-details">
+              GCash Name: {paymentData.gcash_name}
+            </p>
+
             <p className="paymaya-label">PayMaya payment Details</p>
-            <p className="paymaya-details">PayMaya Number: {paymentData.paymaya_number}</p>
-            <p className="paymaya-details">PayMaya Name: {paymentData.paymaya_name}</p>
-    
+            <p className="paymaya-details">
+              PayMaya Number: {paymentData.paymaya_number}
+            </p>
+            <p className="paymaya-details">
+              PayMaya Name: {paymentData.paymaya_name}
+            </p>
+
             <p className="bank-label">Bank payment Details</p>
             <p className="bank-details">Bank: {paymentData.bank_name}</p>
-            <p className="bank-details">Account Number: {paymentData.bank_account_number}</p>
-            <p className="bank-details">Account Name: {paymentData.bank_account_name}</p>
-    
+            <p className="bank-details">
+              Account Number: {paymentData.bank_account_number}
+            </p>
+            <p className="bank-details">
+              Account Name: {paymentData.bank_account_name}
+            </p>
+
             <div className="mb-3">
               <p className="receipt-label">Upload Payment Receipt (Required)</p>
-              <input 
-                className="form-control" 
-                type="file" 
+              <input
+                className="form-control"
+                type="file"
                 id="receiptFile"
                 accept="image/*,.pdf"
                 onChange={(e) => setReceiptFile(e.target.files[0])}
                 required
               />
-              <small className="text-muted">Accepted formats: JPG, PNG, PDF (Max 5MB)</small>
+              <small className="text-muted">
+                Accepted formats: JPG, PNG, PDF (Max 5MB)
+              </small>
             </div>
-    
+
             <div className="d-grid gap-2 col-6 mx-auto">
               <br />
-              <button 
-                className="btn btn-payment" 
+              <button
+                className="btn btn-payment"
                 type="button"
                 onClick={() => {
                   if (!receiptFile) {
                     Swal.fire({
-                      icon: 'error',
-                      title: 'Missing Receipt',
-                      text: 'Please upload your payment receipt to continue',
+                      icon: "error",
+                      title: "Missing Receipt",
+                      text: "Please upload your payment receipt to continue",
                     });
                     return;
                   }
@@ -519,44 +626,44 @@ useEffect(() => {
         </>
       ),
       showConfirmButton: false,
-      width: '100%',
+      width: "100%",
       customClass: {
-        popup: 'custom-payment-modal',
-        htmlContainer: 'custom-html-container'
-      }
-    });    
+        popup: "custom-payment-modal",
+        htmlContainer: "custom-html-container",
+      },
+    });
   };
 
   const handleAppointmentSubmission = async () => {
     try {
       const convertedTime = convertTime12to24(formData.appointment_time);
-      
+
       const formDataToSend = new FormData();
-      
+
       if (receiptFile) {
-        formDataToSend.append('receipt', receiptFile);
+        formDataToSend.append("receipt", receiptFile);
       }
-      
-      formDataToSend.append('user_id', user.id);
-      formDataToSend.append('first_name', user.first_name);
-      formDataToSend.append('last_name', user.last_name);
-      formDataToSend.append('email', user.email);
-      formDataToSend.append('contact_no', user.contact_no);
-      formDataToSend.append('service', formData.service);
-      formDataToSend.append('service_type', formData.service_type);
-      formDataToSend.append('branch_id', formData.branch_id);
-      formDataToSend.append('staff_id', formData.staff_id);
-      formDataToSend.append('appointment_date', formData.appointment_date);
-      formDataToSend.append('appointment_time', convertedTime);
-      formDataToSend.append('send_email', 'true');
-  
+
+      formDataToSend.append("user_id", user.id);
+      formDataToSend.append("first_name", user.first_name);
+      formDataToSend.append("last_name", user.last_name);
+      formDataToSend.append("email", user.email);
+      formDataToSend.append("contact_no", user.contact_no);
+      formDataToSend.append("service", formData.service);
+      formDataToSend.append("service_type", formData.service_type);
+      formDataToSend.append("branch_id", formData.branch_id);
+      formDataToSend.append("staff_id", formData.staff_id);
+      formDataToSend.append("appointment_date", formData.appointment_date);
+      formDataToSend.append("appointment_time", convertedTime);
+      formDataToSend.append("send_email", "true");
+
       const response = await fetch("backend/booking.php", {
         method: "POST",
         body: formDataToSend,
       });
-  
+
       const result = await response.json();
-  
+
       if (result.status === "success") {
         Swal.fire({
           icon: "success",
@@ -586,6 +693,8 @@ useEffect(() => {
       });
     }
   };
+
+  console.log("Branches loaded:", branches);
 
   return (
     <>
@@ -638,10 +747,12 @@ useEffect(() => {
                   </option>
                 ))}
               </select>
-              {(serviceIdParam && formData.service_category === "Surgery") && (
+              {serviceIdParam && formData.service_category === "Surgery" && (
                 <div className="alert alert-info mt-2 mb-3 small">
                   <i className="bi bi-info-circle me-2"></i>
-                  Auto-selected: {services.find(s => s.id.toString() === serviceIdParam)?.name || 'Surgery'}
+                  Auto-selected:{" "}
+                  {services.find((s) => s.id.toString() === serviceIdParam)
+                    ?.name || "Surgery"}
                 </div>
               )}
             </div>
@@ -681,7 +792,7 @@ useEffect(() => {
                 <option value="">Select Staff</option>
                 {staffList.map((staff) => (
                   <option key={staff.id} value={staff.id}>
-                    {staff.name} {staff.role === 'DOCTOR' ? '(Doctor)' : ''}
+                    {staff.name} {staff.role === "DOCTOR" ? "(Doctor)" : ""}
                   </option>
                 ))}
               </select>
@@ -702,14 +813,14 @@ useEffect(() => {
                     handleChange(e);
                   } else {
                     Swal.fire({
-                      icon: 'error',
-                      title: 'Invalid Date',
-                      text: 'You cannot book appointments for past dates.',
+                      icon: "error",
+                      title: "Invalid Date",
+                      text: "You cannot book appointments for past dates.",
                     });
-                    setFormData({...formData, appointment_date: ""});
+                    setFormData({ ...formData, appointment_date: "" });
                   }
                 }}
-                min={new Date().toISOString().split('T')[0]}
+                min={new Date().toISOString().split("T")[0]}
                 required
               />
             </div>
@@ -722,7 +833,11 @@ useEffect(() => {
                 value={formData.appointment_time}
                 onChange={handleChange}
                 required
-                disabled={isLoading || (formData.service_category === "Surgery" && availableTimeSlots.length === 0)}
+                disabled={
+                  isLoading ||
+                  (formData.service_category === "Surgery" &&
+                    availableTimeSlots.length === 0)
+                }
               >
                 <option value="">Select Time</option>
                 {isLoading ? (
@@ -744,8 +859,12 @@ useEffect(() => {
                       value={slot}
                       disabled={bookedSlots.includes(slot)}
                       style={{
-                        backgroundColor: bookedSlots.includes(slot) ? "#f0f0f0" : "inherit",
-                        color: bookedSlots.includes(slot) ? "#a0a0a0" : "inherit",
+                        backgroundColor: bookedSlots.includes(slot)
+                          ? "#f0f0f0"
+                          : "inherit",
+                        color: bookedSlots.includes(slot)
+                          ? "#a0a0a0"
+                          : "inherit",
                       }}
                     >
                       {slot}
@@ -762,33 +881,48 @@ useEffect(() => {
             </div>
           </div>
 
-          {formData.appointment_date && availableTimeSlots.length === 0 && !isLoading && (
-  <div className="alert alert-warning mt-3">
-    {formData.service_category === "Surgery" ? (
-      availableDates.length > 0 ? (
-        <div>
-          <p>No available slots for Dr. {staffList.find(staff => staff.id.toString() === formData.staff_id.toString())?.name} on {formData.appointment_date}. Available dates:</p>
-          <ul className="available-dates-list">
-            {availableDates.map(date => (
-              <li key={date}>
-                {new Date(date).toLocaleDateString('en-US', {
-                  weekday: 'short',
-                  year: 'numeric',
-                  month: 'short',
-                  day: 'numeric'
-                })}
-              </li>
-            ))}
-          </ul>
-        </div>
-      ) : (
-        <p>No available dates for selected doctor. Please choose another doctor.</p>
-      )
-    ) : (
-      "All time slots are booked for the selected date. Please choose another date."
-    )}
-  </div>
-)}
+          {formData.appointment_date &&
+            availableTimeSlots.length === 0 &&
+            !isLoading && (
+              <div className="alert alert-warning mt-3">
+                {formData.service_category === "Surgery" ? (
+                  availableDates.length > 0 ? (
+                    <div>
+                      <p>
+                        No available slots for Dr.{" "}
+                        {
+                          staffList.find(
+                            (staff) =>
+                              staff.id.toString() ===
+                              formData.staff_id.toString()
+                          )?.name
+                        }{" "}
+                        on {formData.appointment_date}. Available dates:
+                      </p>
+                      <ul className="available-dates-list">
+                        {availableDates.map((date) => (
+                          <li key={date}>
+                            {new Date(date).toLocaleDateString("en-US", {
+                              weekday: "short",
+                              year: "numeric",
+                              month: "short",
+                              day: "numeric",
+                            })}
+                          </li>
+                        ))}
+                      </ul>
+                    </div>
+                  ) : (
+                    <p>
+                      No available dates for selected doctor. Please choose
+                      another doctor.
+                    </p>
+                  )
+                ) : (
+                  "All time slots are booked for the selected date. Please choose another date."
+                )}
+              </div>
+            )}
 
           <div className="d-grid gap-2 col-6 mx-auto">
             <button
@@ -797,8 +931,11 @@ useEffect(() => {
               onClick={handleSubmit}
               disabled={isLoadingPayment || availableTimeSlots.length === 0}
             >
-              {isLoadingPayment ? "Loading..." : 
-               formData.service_category === "Surgery" ? "Continue to Payment" : "Book Appointment"}
+              {isLoadingPayment
+                ? "Loading..."
+                : formData.service_category === "Surgery"
+                ? "Continue to Payment"
+                : "Book Appointment"}
             </button>
           </div>
         </div>
@@ -811,8 +948,8 @@ const BookingPageGuest = () => {
   const location = useLocation();
   const queryParams = new URLSearchParams(location.search);
   const [receiptFile, setReceiptFile] = useState(null);
-  const serviceTypeParam = queryParams.get('type');
-  const serviceIdParam = queryParams.get('serviceId');
+  const serviceTypeParam = queryParams.get("type");
+  const serviceIdParam = queryParams.get("serviceId");
 
   const [formData, setFormData] = useState({
     first_name: "",
@@ -847,33 +984,40 @@ const BookingPageGuest = () => {
 
   useEffect(() => {
     if (formData.service_category === "Surgery") {
-      setFormData(prev => ({ ...prev, service_category: "" }));
+      setFormData((prev) => ({ ...prev, service_category: "" }));
       Swal.fire({
-        icon: 'info',
-        title: 'Registered Customers Only',
-        text: 'Please login or register to book surgery services.',
+        icon: "info",
+        title: "Registered Customers Only",
+        text: "Please login or register to book surgery services.",
       });
     }
   }, [formData.service_category]);
 
   useEffect(() => {
     if (formData.service_category) {
-      fetch(`backend/admin_dashboard_backend/bookingpage_services.php?type=${formData.service_category}`)
+      fetch(
+        `backend/admin_dashboard_backend/bookingpage_services.php?type=${formData.service_category}`
+      )
         .then((response) => response.json())
         .then((data) => {
-          const servicesWithType = data.map(service => ({
+          const servicesWithType = data.map((service) => ({
             ...service,
-            service_category: formData.service_category
+            service_category: formData.service_category,
           }));
           setServices(servicesWithType);
-  
+
           // Check if there's a serviceIdParam from URL and set service_type
-          if (serviceIdParam && serviceTypeParam === formData.service_category) {
-            const selectedService = data.find(s => s.id.toString() === serviceIdParam);
+          if (
+            serviceIdParam &&
+            serviceTypeParam === formData.service_category
+          ) {
+            const selectedService = data.find(
+              (s) => s.id.toString() === serviceIdParam
+            );
             if (selectedService) {
-              setFormData(prev => ({
+              setFormData((prev) => ({
                 ...prev,
-                service_type: selectedService.name
+                service_type: selectedService.name,
               }));
             }
           }
@@ -881,16 +1025,26 @@ const BookingPageGuest = () => {
         .catch((error) => console.error("Error fetching services:", error));
     } else {
       setServices([]);
-      setFormData((prev) => ({ ...prev, service: "", service_type: "", branch_id: "", staff_id: "" }));
+      setFormData((prev) => ({
+        ...prev,
+        service: "",
+        service_type: "",
+        branch_id: "",
+        staff_id: "",
+      }));
     }
   }, [formData.service_category, serviceIdParam, serviceTypeParam]); // Add dependencies here
 
   useEffect(() => {
     if (formData.service) {
-      fetch(`backend/admin_dashboard_backend/bookingpage_branches.php?serviceId=${encodeURIComponent(formData.service)}&type=${formData.service_category}`)
+      fetch(
+        `backend/admin_dashboard_backend/bookingpage_branches.php?serviceId=${encodeURIComponent(
+          formData.service
+        )}&type=${formData.service_category}`
+      )
         .then((response) => {
           if (!response.ok) {
-            throw new Error('Network response was not ok');
+            throw new Error("Network response was not ok");
           }
           return response.json();
         })
@@ -903,9 +1057,9 @@ const BookingPageGuest = () => {
         .catch((error) => {
           console.error("Error fetching branches:", error);
           Swal.fire({
-            icon: 'error',
-            title: 'Error',
-            text: 'Failed to load branches. Please try again.',
+            icon: "error",
+            title: "Error",
+            text: "Failed to load branches. Please try again.",
           });
         });
     } else {
@@ -916,7 +1070,13 @@ const BookingPageGuest = () => {
 
   useEffect(() => {
     if (formData.branch_id && formData.service && formData.service_category) {
-      fetch(`backend/admin_dashboard_backend/bookingpage_staff.php?branchId=${encodeURIComponent(formData.branch_id)}&serviceId=${encodeURIComponent(formData.service)}&type=${encodeURIComponent(formData.service_category)}`)
+      fetch(
+        `backend/admin_dashboard_backend/bookingpage_staff.php?branchId=${encodeURIComponent(
+          formData.branch_id
+        )}&serviceId=${encodeURIComponent(
+          formData.service
+        )}&type=${encodeURIComponent(formData.service_category)}`
+      )
         .then((response) => {
           if (!response.ok) {
             throw new Error(`HTTP error! Status: ${response.status}`);
@@ -932,9 +1092,9 @@ const BookingPageGuest = () => {
         .catch((error) => {
           console.error("Error fetching staff:", error);
           Swal.fire({
-            icon: 'error',
-            title: 'Error',
-            text: 'Failed to load staff. Please try again.',
+            icon: "error",
+            title: "Error",
+            text: "Failed to load staff. Please try again.",
           });
         });
     } else {
@@ -946,26 +1106,28 @@ const BookingPageGuest = () => {
   useEffect(() => {
     if (formData.appointment_date && formData.staff_id) {
       setIsLoading(true);
-      fetch(`backend/booking.php?date=${formData.appointment_date}&staff_id=${formData.staff_id}`)
+      fetch(
+        `backend/booking.php?date=${formData.appointment_date}&staff_id=${formData.staff_id}`
+      )
         .then((response) => {
           if (!response.ok) {
-            throw new Error('Network response was not ok');
+            throw new Error("Network response was not ok");
           }
           return response.json();
         })
         .then((data) => {
-          if (data.status === 'success') {
+          if (data.status === "success") {
             setBookedSlots(data.booked_slots || []);
           } else {
-            throw new Error(data.message || 'Failed to fetch booked slots.');
+            throw new Error(data.message || "Failed to fetch booked slots.");
           }
         })
         .catch((error) => {
           console.error("Error fetching booked slots:", error);
           Swal.fire({
-            icon: 'error',
-            title: 'Error',
-            text: 'Failed to fetch booked slots. Please try again.',
+            icon: "error",
+            title: "Error",
+            text: "Failed to fetch booked slots. Please try again.",
           });
         })
         .finally(() => {
@@ -975,14 +1137,20 @@ const BookingPageGuest = () => {
       setBookedSlots([]);
     }
   }, [formData.appointment_date, formData.staff_id]);
-  
+
   const showConfirmationModal = () => {
-    const serviceObj = services.find(s => s.id.toString() === formData.service.toString());
-    const branchObj = branches.find(b => b.id.toString() === formData.branch_id.toString());
-    const staffObj = staffList.find(s => s.id.toString() === formData.staff_id.toString());
-  
+    const serviceObj = services.find(
+      (s) => s.id.toString() === formData.service.toString()
+    );
+    const branchObj = branches.find(
+      (b) => b.id.toString() === formData.branch_id.toString()
+    );
+    const staffObj = staffList.find(
+      (s) => s.id.toString() === formData.staff_id.toString()
+    );
+
     MySwal.fire({
-      title: '<strong>Booking Summary</strong>',
+      title: "<strong>Booking Summary</strong>",
       html: `
         <div class="booking-summary">
           <div class="summary-row">
@@ -995,11 +1163,11 @@ const BookingPageGuest = () => {
           </div>
           <div class="summary-row">
             <span class="summary-label">Branch:</span>
-            <span class="summary-value">${branchObj?.name || 'N/A'}</span>
+            <span class="summary-value">${branchObj?.name || "N/A"}</span>
           </div>
           <div class="summary-row">
             <span class="summary-label">Staff:</span>
-            <span class="summary-value">${staffObj?.name || 'N/A'}</span>
+            <span class="summary-value">${staffObj?.name || "N/A"}</span>
           </div>
           <div class="summary-row">
             <span class="summary-label">Date:</span>
@@ -1012,14 +1180,14 @@ const BookingPageGuest = () => {
         </div>
       `,
       showCancelButton: true,
-      confirmButtonText: 'Book Now',
-      cancelButtonText: 'Cancel',
+      confirmButtonText: "Book Now",
+      cancelButtonText: "Cancel",
       reverseButtons: true,
       customClass: {
-        popup: 'booking-summary-popup',
-        confirmButton: 'btn btn-confirm',
-        cancelButton: 'btn btn-cancel'
-      }
+        popup: "booking-summary-popup",
+        confirmButton: "btn btn-confirm",
+        cancelButton: "btn btn-cancel",
+      },
     }).then((result) => {
       if (result.isConfirmed) {
         handleAppointmentSubmission();
@@ -1029,15 +1197,27 @@ const BookingPageGuest = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    
-    const requiredFields = ['first_name', 'last_name', 'email', 'contact_no', 'service_category', 'service', 'service_type', 'branch_id', 'staff_id', 'appointment_date', 'appointment_time'];
-    
+
+    const requiredFields = [
+      "first_name",
+      "last_name",
+      "email",
+      "contact_no",
+      "service_category",
+      "service",
+      "service_type",
+      "branch_id",
+      "staff_id",
+      "appointment_date",
+      "appointment_time",
+    ];
+
     for (const field of requiredFields) {
       if (!formData[field]) {
         Swal.fire({
-          icon: 'error',
-          title: 'Missing Information',
-          text: `Please fill in ${field.replace('_', ' ')}.`,
+          icon: "error",
+          title: "Missing Information",
+          text: `Please fill in ${field.replace("_", " ")}.`,
         });
         return;
       }
@@ -1048,59 +1228,59 @@ const BookingPageGuest = () => {
 
   const handleChange = (e) => {
     const { name, value } = e.target;
-  
+
     if (name === "service") {
-      const selectedService = services.find(s => s.id.toString() === value);
-      setFormData(prev => ({
+      const selectedService = services.find((s) => s.id.toString() === value);
+      setFormData((prev) => ({
         ...prev,
         [name]: value,
         service_type: selectedService?.name || "",
         branch_id: "",
-        staff_id: ""
+        staff_id: "",
       }));
     } else if (name === "service_category") {
-      setFormData(prev => ({
+      setFormData((prev) => ({
         ...prev,
         [name]: value,
         service: "",
         service_type: "",
         branch_id: "",
-        staff_id: ""
+        staff_id: "",
       }));
     } else {
-      setFormData(prev => ({ ...prev, [name]: value }));
+      setFormData((prev) => ({ ...prev, [name]: value }));
     }
   };
-  
+
   const handleAppointmentSubmission = async () => {
     try {
       const convertedTime = convertTime12to24(formData.appointment_time);
-      
+
       const formDataToSend = new FormData();
-      
+
       if (receiptFile) {
-        formDataToSend.append('receipt', receiptFile);
+        formDataToSend.append("receipt", receiptFile);
       }
-      
-      formDataToSend.append('first_name', formData.first_name);
-      formDataToSend.append('last_name', formData.last_name);
-      formDataToSend.append('email', formData.email);
-      formDataToSend.append('contact_no', formData.contact_no);
-      formDataToSend.append('service', formData.service);
-      formDataToSend.append('service_type', formData.service_type);
-      formDataToSend.append('branch_id', formData.branch_id);
-      formDataToSend.append('staff_id', formData.staff_id);
-      formDataToSend.append('appointment_date', formData.appointment_date);
-      formDataToSend.append('appointment_time', convertedTime);
-      formDataToSend.append('send_email', 'true');
-  
+
+      formDataToSend.append("first_name", formData.first_name);
+      formDataToSend.append("last_name", formData.last_name);
+      formDataToSend.append("email", formData.email);
+      formDataToSend.append("contact_no", formData.contact_no);
+      formDataToSend.append("service", formData.service);
+      formDataToSend.append("service_type", formData.service_type);
+      formDataToSend.append("branch_id", formData.branch_id);
+      formDataToSend.append("staff_id", formData.staff_id);
+      formDataToSend.append("appointment_date", formData.appointment_date);
+      formDataToSend.append("appointment_time", convertedTime);
+      formDataToSend.append("send_email", "true");
+
       const response = await fetch("backend/booking.php", {
         method: "POST",
         body: formDataToSend,
       });
-  
+
       const result = await response.json();
-  
+
       if (result.status === "success") {
         Swal.fire({
           icon: "success",
@@ -1212,10 +1392,10 @@ const BookingPageGuest = () => {
                 <option value="">Select Type</option>
                 <option value="Promo">Promo</option>
                 <option value="Service">Service</option>
-                <option 
-                  value="Surgery" 
+                <option
+                  value="Surgery"
                   disabled
-                  style={{ color: '#ccc', backgroundColor: '#f5f5f5' }}
+                  style={{ color: "#ccc", backgroundColor: "#f5f5f5" }}
                 >
                   Surgery (Registered Customers Only)
                 </option>
@@ -1230,14 +1410,14 @@ const BookingPageGuest = () => {
                 value={formData.service}
                 onChange={handleChange}
                 required
-                disabled={!formData.service_category || formData.service_category === "Surgery"}
+                disabled={
+                  !formData.service_category ||
+                  formData.service_category === "Surgery"
+                }
               >
                 <option value="">Select service</option>
                 {services.map((service) => (
-                  <option 
-                    key={service.id} 
-                    value={service.id}
-                  >
+                  <option key={service.id} value={service.id}>
                     {service.name} (₱{service.price})
                   </option>
                 ))}
@@ -1300,14 +1480,14 @@ const BookingPageGuest = () => {
                     handleChange(e);
                   } else {
                     Swal.fire({
-                      icon: 'error',
-                      title: 'Invalid Date',
-                      text: 'You cannot book appointments for past dates.',
+                      icon: "error",
+                      title: "Invalid Date",
+                      text: "You cannot book appointments for past dates.",
                     });
-                    setFormData({...formData, appointment_date: ""});
+                    setFormData({ ...formData, appointment_date: "" });
                   }
                 }}
-                min={new Date().toISOString().split('T')[0]}
+                min={new Date().toISOString().split("T")[0]}
                 required
               />
             </div>
@@ -1332,8 +1512,12 @@ const BookingPageGuest = () => {
                       value={slot}
                       disabled={bookedSlots.includes(slot)}
                       style={{
-                        backgroundColor: bookedSlots.includes(slot) ? "#f0f0f0" : "inherit",
-                        color: bookedSlots.includes(slot) ? "#a0a0a0" : "inherit",
+                        backgroundColor: bookedSlots.includes(slot)
+                          ? "#f0f0f0"
+                          : "inherit",
+                        color: bookedSlots.includes(slot)
+                          ? "#a0a0a0"
+                          : "inherit",
                       }}
                     >
                       {slot}
@@ -1346,7 +1530,8 @@ const BookingPageGuest = () => {
 
           {bookedSlots.length === standardTimeSlots.length && (
             <div className="alert alert-warning mt-3">
-              All time slots are booked for the selected date. Please choose another date.
+              All time slots are booked for the selected date. Please choose
+              another date.
             </div>
           )}
           <br />

@@ -50,6 +50,9 @@ const Login = ({ isLoggedIn, setIsLoggedIn, setUser, user }) => {
         setIsLoggedIn(true);
         setUser(result.user);
 
+        console.log("Full user object:", result.user);
+        console.log("Logged in user role:", result.user.role);
+
         Swal.fire({
           icon: "success",
           title: "Success!",

@@ -9,20 +9,21 @@ function ProductsPage() {
   const MAX_CHARS = 100;
 
   useEffect(() => {
-    fetch("https://teal-seahorse-572802.hostingersite.com/backend/admin_dashboard_backend/fetch_products.php")
-      .then(response => response.json())
-      .then(data => {
+    fetch("backend/admin_dashboard_backend/fetch_products.php")
+      .then((response) => response.json())
+      .then((data) => {
         console.log("Fetched products:", data);
         const productsArray = Array.isArray(data) ? data : data.data || [];
         setProducts(productsArray);
       })
-      .catch(error => console.error("Error fetching products:", error));
+      .catch((error) => console.error("Error fetching products:", error));
   }, []);
 
   const truncateDescription = (text) => {
     if (!text) return "";
 
-    let truncated = text.length > MAX_CHARS ? text.substring(0, MAX_CHARS) + "..." : text;
+    let truncated =
+      text.length > MAX_CHARS ? text.substring(0, MAX_CHARS) + "..." : text;
 
     const words = truncated.split(" ");
     if (words.length > MAX_WORDS) {
@@ -42,7 +43,10 @@ function ProductsPage() {
 
   return (
     <>
-      <div className="service-header" style={{ backgroundImage: "url('./assets/spa_products.jpg')" }}>
+      <div
+        className="service-header"
+        style={{ backgroundImage: "url('./assets/spa_products.jpg')" }}
+      >
         <div className="overlay">
           <h1 className="service-title">Our Products</h1>
         </div>
@@ -54,7 +58,10 @@ function ProductsPage() {
             <div
               className="col-12 col-md-6 fade-in"
               key={product.id}
-              style={{ animationDelay: `${index * 100}ms`, animationFillMode: "both" }}
+              style={{
+                animationDelay: `${index * 100}ms`,
+                animationFillMode: "both",
+              }}
             >
               <div
                 className="card mb-4 mx-auto shadow-sm"
@@ -67,9 +74,11 @@ function ProductsPage() {
                 }}
                 onClick={(e) => handleCardClick(product, e)}
               >
-                <div style={{ width: "40%", height: "100%", overflow: "hidden" }}>
+                <div
+                  style={{ width: "40%", height: "100%", overflow: "hidden" }}
+                >
                   <img
-                    src={product.file_url || "./assets/default-image.jpg"}
+                    src={"backend/admin_dashboard_backend/" + product.file_url}
                     alt={product.name}
                     style={{
                       width: "100%",
@@ -111,21 +120,21 @@ function ProductsPage() {
                       }}
                     >
                       {truncateDescription(product.description)}
-                      {(product.description &&
+                      {product.description &&
                         (product.description.split(" ").length > MAX_WORDS ||
-                          product.description.length > MAX_CHARS)) && (
-                        <span
-                          className="see-more-link text-primary"
-                          onClick={(e) => {
-                            e.stopPropagation();
-                            setSelectedProduct(product);
-                            setShowModal(true);
-                          }}
-                          style={{ cursor: "pointer", marginLeft: "5px" }}
-                        >
-                          See More
-                        </span>
-                      )}
+                          product.description.length > MAX_CHARS) && (
+                          <span
+                            className="see-more-link text-primary"
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              setSelectedProduct(product);
+                              setShowModal(true);
+                            }}
+                            style={{ cursor: "pointer", marginLeft: "5px" }}
+                          >
+                            See More
+                          </span>
+                        )}
                     </p>
                   </div>
                   <div>
@@ -188,7 +197,9 @@ function ProductsPage() {
             >
               ×
             </button>
-            <div style={{ display: "flex", flexDirection: "column", gap: "20px" }}>
+            <div
+              style={{ display: "flex", flexDirection: "column", gap: "20px" }}
+            >
               <div
                 style={{
                   display: "flex",
@@ -198,7 +209,10 @@ function ProductsPage() {
               >
                 <div style={{ flex: 1 }}>
                   <img
-                    src={selectedProduct.file_url || "./assets/default-image.jpg"}
+                    src={
+                      "backend/admin_dashboard_backend/" +
+                      selectedProduct.file_url
+                    }
                     alt={selectedProduct.name}
                     style={{
                       width: "100%",
