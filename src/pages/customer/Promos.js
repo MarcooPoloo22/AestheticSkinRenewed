@@ -50,10 +50,7 @@ const PromoCard = ({
     >
       <div style={{ width: "40%", height: "100%", overflow: "hidden" }}>
         <img
-          src={
-            "backend/admin_dashboard_backend/" + image ||
-            "./assets/default-image.jpg"
-          }
+          src={image || "./assets/default-image.jpg"}
           alt={title}
           style={{ width: "100%", height: "100%", objectFit: "cover" }}
           onError={(e) => {
@@ -306,8 +303,7 @@ function PromosPage() {
                 <div style={{ flex: 1 }}>
                   <img
                     src={
-                      "backend/admin_dashboard_backend/" +
-                        selectedPromo.image_url || "./assets/default-image.jpg"
+                      selectedPromo.image_url || "./assets/default-image.jpg"
                     }
                     alt={selectedPromo.title}
                     style={{

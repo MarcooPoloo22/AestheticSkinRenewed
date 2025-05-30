@@ -15,19 +15,27 @@ const AdminContact = ({ setActivePage }) => {
   useEffect(() => {
     const fetchContactData = async () => {
       try {
-        const response = await fetch("backend/admin_dashboard_backend/fetch_contact.php", {
-          credentials: "include", // Include cookies if needed
-        });
+        const response = await fetch(
+          "backend/admin_dashboard_backend/fetch_contact.php",
+          {
+            credentials: "include",
+          }
+        );
 
         if (!response.ok) {
           throw new Error("Failed to fetch contact data");
         }
 
-        const data = await response.json();
-        setPhone(data.phone);
-        setFacebook(data.facebook);
-        setInstagram(data.instagram);
-        setTwitter(data.twitter);
+        const res = await response.json();
+
+        if (res.status === "success" && res.data) {
+          setPhone(res.data.phone || "");
+          setFacebook(res.data.facebook || "");
+          setInstagram(res.data.instagram || "");
+          setTwitter(res.data.twitter || "");
+        } else {
+          throw new Error(res.message || "Unexpected response format");
+        }
       } catch (error) {
         console.error("Error fetching contact data:", error);
         Swal.fire({
@@ -54,14 +62,17 @@ const AdminContact = ({ setActivePage }) => {
     };
 
     try {
-      const response = await fetch("backend/admin_dashboard_backend/update_contact.php", {
-        method: "POST",
-        credentials: "include",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(contactData),
-      });
+      const response = await fetch(
+        "backend/admin_dashboard_backend/update_contact.php",
+        {
+          method: "POST",
+          credentials: "include",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(contactData),
+        }
+      );
 
       if (!response.ok) {
         throw new Error("Failed to update contact data");
@@ -93,7 +104,9 @@ const AdminContact = ({ setActivePage }) => {
         </div>
         <form className="faq-edit" onSubmit={handleSubmit}>
           <div className="form-group">
-            <label className="questionLabel" htmlFor="phone">Phone Number</label>
+            <label className="questionLabel" htmlFor="phone">
+              Phone Number
+            </label>
             <input
               className="questionInput"
               type="text"
@@ -104,7 +117,9 @@ const AdminContact = ({ setActivePage }) => {
             />
           </div>
           <div className="form-group">
-            <label className="answerLabel" htmlFor="facebook">Facebook Link</label>
+            <label className="answerLabel" htmlFor="facebook">
+              Facebook Link
+            </label>
             <input
               className="answerInput"
               type="url"
@@ -115,7 +130,9 @@ const AdminContact = ({ setActivePage }) => {
             />
           </div>
           <div className="form-group">
-            <label className="answerLabel" htmlFor="instagram">Instagram Link</label>
+            <label className="answerLabel" htmlFor="instagram">
+              Instagram Link
+            </label>
             <input
               className="answerInput"
               type="url"
@@ -126,7 +143,9 @@ const AdminContact = ({ setActivePage }) => {
             />
           </div>
           <div className="form-group">
-            <label className="answerLabel" htmlFor="twitter">Twitter Link</label>
+            <label className="answerLabel" htmlFor="twitter">
+              Twitter Link
+            </label>
             <input
               className="answerInput"
               type="url"
@@ -136,7 +155,9 @@ const AdminContact = ({ setActivePage }) => {
               required
             />
           </div>
-          <button type="submit" className="button-ManageFAQEdit">Save Changes</button>
+          <button type="submit" className="button-ManageFAQEdit">
+            Save Changes
+          </button>
         </form>
       </div>
     </div>

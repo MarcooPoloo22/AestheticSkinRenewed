@@ -126,7 +126,7 @@ const Epcategory2 = () => {
                   >
                     <div className="ezy__epcategory2-card-img">
                       <img
-                        src={"backend/admin_dashboard_backend/" + promo.image}
+                        src={promo.image}
                         alt={promo.title}
                         className="img-fluid w-100"
                       />
@@ -234,9 +234,7 @@ const Epcategory2 = () => {
               >
                 <div style={{ flex: 1 }}>
                   <img
-                    src={
-                      "backend/admin_dashboard_backend/" + selectedPromo.image
-                    }
+                    src={selectedPromo.image}
                     alt={selectedPromo.title}
                     style={{
                       width: "100%",

@@ -190,9 +190,11 @@ const MainContent = ({ user, setUser, isLoggedIn, setIsLoggedIn, loading }) => {
 
   if (loading) return null;
 
-  const isAdmin = user?.role === "admin" || user?.role === "employee";
-  const isAdminPage = currentPath.startsWith("/admindashboard");
-  const hideAdminUI = isAdmin && isAdminPage;
+  const isAdmin = ["admin", "employee"].includes(user?.role);
+  const onDash = currentPath.startsWith("/admindashboard");
+
+  /* navbar + footer disappear only on the dashboard */
+  const hideAdminUI = isAdmin && onDash;
 
   return (
     <div className="main-content">
@@ -262,7 +264,7 @@ const MainContent = ({ user, setUser, isLoggedIn, setIsLoggedIn, loading }) => {
       </div>
 
       {!hideAdminUI && <Footer4 />}
-      {!hideAdminUI && <LiveChatWidget />}
+      {!isAdmin && <LiveChatWidget />}
     </div>
   );
 };

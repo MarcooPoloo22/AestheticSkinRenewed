@@ -5,30 +5,25 @@ function Messages() {
   const [chats, setChats] = useState([]);
   const [selectedChat, setSelectedChat] = useState(null);
   const [replyText, setReplyText] = useState("");
-
   const [pollInterval, setPollInterval] = useState(10000);
   const [lastEventCount, setLastEventCount] = useState(0);
   const inactivityTimerRef = useRef(null);
 
   const handleActivity = () => {
     if (pollInterval === 3000) return;
-
-    console.log("Activity detected - switching to 3s poll interval");
     setPollInterval(3000);
-
-    if (inactivityTimerRef.current) {
-      clearTimeout(inactivityTimerRef.current);
-    }
-
-    inactivityTimerRef.current = setTimeout(() => {
-      console.log("No further activity, reverting to 10s poll interval");
-      setPollInterval(10000);
-    }, 30000);
+    if (inactivityTimerRef.current) clearTimeout(inactivityTimerRef.current);
+    inactivityTimerRef.current = setTimeout(
+      () => setPollInterval(10000),
+      30000
+    );
   };
 
   const fetchChats = async () => {
     try {
-      const res = await fetch("/api/livechat/chats");
+      const res = await fetch("backend/livechat_proxy.php?action=get_chats", {
+        credentials: "include",
+      });
       const data = await res.json();
       setChats(data.chats_summary || []);
     } catch (err) {
@@ -38,17 +33,65 @@ function Messages() {
 
   const fetchChatDetails = async (chatId) => {
     try {
-      const res = await fetch(`/api/livechat/chats/${chatId}`);
+      const res = await fetch(
+        `backend/livechat_proxy.php?action=get_chat_details&id=${chatId}`,
+        { credentials: "include" }
+      );
       const data = await res.json();
       setSelectedChat(data);
-
       const newCount = data?.thread?.events?.length || 0;
-      if (newCount > lastEventCount) {
-        handleActivity();
-      }
+      if (newCount > lastEventCount) handleActivity();
       setLastEventCount(newCount);
     } catch (err) {
       console.error("Error fetching chat details:", err);
+    }
+  };
+
+  const getAgentId = async () => {
+    const res = await fetch("backend/livechat_proxy.php?action=get_me", {
+      credentials: "include",
+    });
+    const data = await res.json();
+    return data.id;
+  };
+
+  const assignChat = async (chatId) => {
+    try {
+      const agentId = await getAgentId();
+      await fetch(
+        `backend/livechat_proxy.php?action=assign_chat&id=${chatId}`,
+        {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          credentials: "include",
+          body: JSON.stringify({ agent_id: agentId }),
+        }
+      );
+    } catch (err) {
+      console.error("Error assigning chat:", err);
+    }
+  };
+
+  const joinChat = async (chatId) => {
+    try {
+      const threadId = selectedChat?.thread?.id;
+      if (!threadId) throw new Error("Missing thread_id");
+
+      await assignChat(chatId);
+
+      const res = await fetch(
+        `backend/livechat_proxy.php?action=join_chat&id=${chatId}`,
+        {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          credentials: "include",
+          body: JSON.stringify({ thread_id: threadId }),
+        }
+      );
+
+      if (!res.ok) throw new Error("Failed to join chat");
+    } catch (err) {
+      console.error("Error joining chat:", err);
     }
   };
 
@@ -56,11 +99,16 @@ function Messages() {
     if (!selectedChat?.id || !replyText.trim()) return;
     const chatId = selectedChat.id;
     try {
-      await fetch(`/api/livechat/chats/${chatId}/send`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ message: replyText }),
-      });
+      await joinChat(chatId);
+      await fetch(
+        `backend/livechat_proxy.php?action=send_message&id=${chatId}`,
+        {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          credentials: "include",
+          body: JSON.stringify({ message: replyText }),
+        }
+      );
       setReplyText("");
       handleActivity();
       fetchChatDetails(chatId);
@@ -70,23 +118,18 @@ function Messages() {
   };
 
   const handleKeyPress = (e) => {
-    if (e.key === "Enter") {
-      sendMessage();
-    }
+    if (e.key === "Enter") sendMessage();
   };
 
   useEffect(() => {
     fetchChats();
-
     const intervalId = setInterval(() => {
       fetchChats();
-      if (selectedChat?.id) {
-        fetchChatDetails(selectedChat.id);
-      }
+      if (selectedChat?.id) fetchChatDetails(selectedChat.id);
     }, pollInterval);
-
     return () => clearInterval(intervalId);
   }, [pollInterval, selectedChat]);
+
   const handleSelectChat = (chatId) => {
     setSelectedChat(null);
     setLastEventCount(0);
@@ -105,7 +148,7 @@ function Messages() {
             <li
               key={chat.id}
               className={`chat-item ${
-                selectedChat && selectedChat.id === chat.id ? "active" : ""
+                selectedChat?.id === chat.id ? "active" : ""
               }`}
               onClick={() => handleSelectChat(chat.id)}
             >

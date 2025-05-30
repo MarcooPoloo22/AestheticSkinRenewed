@@ -78,7 +78,7 @@ function ProductsPage() {
                   style={{ width: "40%", height: "100%", overflow: "hidden" }}
                 >
                   <img
-                    src={"backend/admin_dashboard_backend/" + product.file_url}
+                    src={product.file_url}
                     alt={product.name}
                     style={{
                       width: "100%",
@@ -139,7 +139,7 @@ function ProductsPage() {
                   </div>
                   <div>
                     <small className="text-muted">
-                      Price: ₱{parseFloat(product.price).toLocaleString()}
+                      Price: ₱{product.price}
                     </small>
                   </div>
                 </div>
@@ -209,10 +209,7 @@ function ProductsPage() {
               >
                 <div style={{ flex: 1 }}>
                   <img
-                    src={
-                      "backend/admin_dashboard_backend/" +
-                      selectedProduct.file_url
-                    }
+                    src={selectedProduct.file_url}
                     alt={selectedProduct.name}
                     style={{
                       width: "100%",
@@ -226,7 +223,7 @@ function ProductsPage() {
                   <h2 style={{ marginTop: 0 }}>{selectedProduct.name}</h2>
                   <p>{selectedProduct.description}</p>
                   <small className="text-muted">
-                    Price: ₱{parseFloat(selectedProduct.price).toLocaleString()}
+                    Price: ₱{selectedProduct.price}
                   </small>
                 </div>
               </div>

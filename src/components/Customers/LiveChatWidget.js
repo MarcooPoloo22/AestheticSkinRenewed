@@ -3,8 +3,8 @@ import React, { useEffect } from "react";
 const LiveChatWidget = () => {
   useEffect(() => {
     window.__lc = window.__lc || {};
-    window.__lc.license = 19143441;
-    window.__lc.integration_name = "manual_channels";
+    window.__lc.license = 19180507;
+    window.__lc.integration_name = "manual_onboarding";
     window.__lc.product_name = "livechat";
 
     (function (n, t, c) {
@@ -51,7 +51,7 @@ const LiveChatWidget = () => {
 
   return (
     <noscript>
-      <a href="https://www.livechat.com/chat-with/19143441/" rel="nofollow">
+      <a href="https://www.livechat.com/chat-with/19180507/" rel="nofollow">
         Chat with us
       </a>
       , powered by{" "}

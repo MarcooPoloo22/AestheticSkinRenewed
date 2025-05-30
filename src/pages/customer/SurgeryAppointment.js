@@ -164,9 +164,7 @@ function AppointmentPage() {
                   title={appointment.title}
                   description={appointment.description}
                   time={`${appointment.start_date} - ${appointment.end_date}`}
-                  image={
-                    "backend/admin_dashboard_backend/" + appointment.image_url
-                  }
+                  image={appointment.image_url}
                   updated={`₱${appointment.price}`}
                   id={appointment.id}
                   onBookNow={() => handleBookNow(appointment)}

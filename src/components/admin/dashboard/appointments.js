@@ -313,10 +313,19 @@ const ManageAppointmentEdit = ({
       const response = await fetch(
         "backend/admin_dashboard_backend/branch_fetch_branches.php"
       );
-      const data = await response.json();
-      setBranches(data);
-    } catch (error) {
-      console.error("Error fetching branches:", error);
+      const json = await response.json();
+
+      // Accept either raw array or {success,data}
+      const branchArr = Array.isArray(json)
+        ? json
+        : json.success
+        ? json.data
+        : [];
+
+      setBranches(branchArr); // <- ALWAYS an array
+    } catch (err) {
+      console.error("Error fetching branches:", err);
+      setBranches([]); // keep type stable
     }
   };
 
@@ -679,10 +688,19 @@ const ManageAppointmentAdd = ({ setActivePage, fetchAppointments }) => {
       const response = await fetch(
         "backend/admin_dashboard_backend/branch_fetch_branches.php"
       );
-      const data = await response.json();
-      setBranches(data);
-    } catch (error) {
-      console.error("Error fetching branches:", error);
+      const json = await response.json();
+
+      // Accept either raw array or {success,data}
+      const branchArr = Array.isArray(json)
+        ? json
+        : json.success
+        ? json.data
+        : [];
+
+      setBranches(branchArr); // <- ALWAYS an array
+    } catch (err) {
+      console.error("Error fetching branches:", err);
+      setBranches([]); // keep type stable
     }
   };
 
